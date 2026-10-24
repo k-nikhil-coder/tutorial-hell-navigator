@@ -1,0 +1,1081 @@
+[
+  {
+    "id": "GS-01",
+    "category": "Full-stack development: getting started",
+    "question": "I know basic HTML, CSS, and JavaScript. What exact learning path should I follow to become a full-stack developer, and what should I build at each stage?",
+    "expected_rubric": [
+      "3-4 stage sequential roadmap (JS DOM -> Backend API -> Relational DB -> Full Deployment)",
+      "Specific non-trivial project at each phase",
+      "Direct choice of backend framework rather than a laundry list"
+    ],
+    "negative_constraints": [
+      "Generic advice like 'build projects' without milestones",
+      "Recommending 10 frameworks at once"
+    ]
+  },
+  {
+    "id": "GS-02",
+    "category": "Full-stack development: getting started",
+    "question": "Should I learn React + Node.js or React + Python/FastAPI as a CS student? Compare the learning curve, job opportunities, and project potential.",
+    "expected_rubric": [
+      "Objective comparison of JS ecosystem vs Python/AI/Data synergy",
+      "Direct career guidance for entry-level hiring in India and global remote",
+      "Clear recommendation based on student intent (pure web vs AI/ML)"
+    ],
+    "negative_constraints": [
+      "Indecisive answer saying 'both are good' without a concrete choice framework"
+    ]
+  },
+  {
+    "id": "GS-03",
+    "category": "Full-stack development: getting started",
+    "question": "I can build static websites but don't understand how a frontend communicates with a backend. Walk me through building my first working full-stack application.",
+    "expected_rubric": [
+      "Clear mental model: HTTP Request -> API Endpoint -> Logic -> JSON Response -> DOM update",
+      "Concrete code snippet using fetch() on frontend and FastAPI/Express route on backend",
+      "Running both services locally with port mapping"
+    ],
+    "negative_constraints": [
+      "Theoretical explanation without runnable frontend/backend code snippets"
+    ]
+  },
+  {
+    "id": "GS-04",
+    "category": "Full-stack development: getting started",
+    "question": "I know basic JavaScript but have never used a database. Teach me how to connect a web app to PostgreSQL, store user data, and retrieve it safely.",
+    "expected_rubric": [
+      "Relational table schema (DDL) for a user table",
+      "Parameterized queries / ORM explanation to prevent SQL injection",
+      "Step-by-step connection setup with environment variables"
+    ],
+    "negative_constraints": [
+      "Concatenating user inputs into raw SQL strings (security hazard)",
+      "Omitting DB connection string details"
+    ]
+  },
+  {
+    "id": "GS-05",
+    "category": "Full-stack development: getting started",
+    "question": "Suggest one beginner-friendly full-stack project I can finish in 14 days, including features, folder structure, technologies, and daily milestones.",
+    "expected_rubric": [
+      "Scoped 14-day schedule with daily checkpoints (Days 1-3 DB/Backend, 4-7 Frontend, 8-10 Auth/Integration, 11-14 Deploy)",
+      "Clean monorepo or client/server directory structure",
+      "Definition of Done (MVP features vs out-of-scope backlog)"
+    ],
+    "negative_constraints": [
+      "Unrealistic scope (e.g. building an e-commerce clone or social network)",
+      "Missing folder layout"
+    ]
+  },
+  {
+    "id": "GS-06",
+    "category": "Full-stack development: getting started",
+    "question": "How do login, signup, sessions, cookies, and JWTs actually work in a full-stack application? Show me a sensible implementation path without overwhelming me.",
+    "expected_rubric": [
+      "Diagram/flow of password hashing (bcrypt) -> verification -> JWT signing -> Authorization header / HttpOnly cookie",
+      "Clear tradeoff: JWT in localStorage (XSS risk) vs HttpOnly cookies",
+      "A minimal, recommended implementation path for beginner/intermediate apps"
+    ],
+    "negative_constraints": [
+      "Storing plain-text passwords",
+      "Recommending complex OAuth2 before standard password hashing"
+    ]
+  },
+  {
+    "id": "GS-07",
+    "category": "Full-stack development: getting started",
+    "question": "My app works locally, but I don't know how to deploy the frontend, backend, and database. Give me a beginner-friendly production deployment checklist.",
+    "expected_rubric": [
+      "Decoupled deployment recommendation (e.g., Vercel/Netlify for frontend, Render/Cloud Run for backend, Supabase/Neon for managed Postgres)",
+      "Environment variable mapping between local .env and cloud settings",
+      "Health check endpoint verification and CORS production setup"
+    ],
+    "negative_constraints": [
+      "Suggesting deploying DB inside a local container on an unmanaged single VM without backups",
+      "Vague instructions without platform names"
+    ]
+  },
+  {
+    "id": "GS-08",
+    "category": "Full-stack development: getting started",
+    "question": "I'm overwhelmed by React, TypeScript, APIs, SQL, Git, Docker, and cloud platforms. What should I learn first, and what can I safely postpone?",
+    "expected_rubric": [
+      "Strict 'Learn Now vs Postpone' matrix with justification",
+      "Core tier: Vanilla JS/Python + Git + Basic SQL + Simple REST API",
+      "Postponed tier: Kubernetes, microservices, complex cloud IAM, advanced caching"
+    ],
+    "negative_constraints": [
+      "Encouraging learning all listed technologies simultaneously"
+    ]
+  },
+  {
+    "id": "GS-09",
+    "category": "Projects and independent building",
+    "question": "I finished a Python basics course. What exact project should I build next to learn FastAPI and Docker without getting stuck?",
+    "expected_rubric": [
+      "Specific scoped project (e.g., Bookmarks / Task REST API with SQLite/Postgres)",
+      "Directory layout with main.py, requirements.txt, Dockerfile",
+      "Exact docker build and docker run commands with port binding (-p 8000:8000)"
+    ],
+    "negative_constraints": [
+      "Suggesting building a full-scale microservice swarm",
+      "Omitting container port binding"
+    ]
+  },
+  {
+    "id": "GS-10",
+    "category": "Projects and independent building",
+    "question": "I want to build a student task manager with authentication, PostgreSQL, and reminders. Break it into small milestones I can complete independently.",
+    "expected_rubric": [
+      "5 progressive milestones: Schema/DB -> CRUD endpoints -> Auth & JWT -> Frontend/UI -> Background worker/reminders",
+      "Explicit Definition of Done per milestone",
+      "Warning against trying to build the UI before APIs are tested"
+    ],
+    "negative_constraints": [
+      "Monolithic single-step breakdown without verification gates"
+    ]
+  },
+  {
+    "id": "GS-11",
+    "category": "Projects and independent building",
+    "question": "I can follow coding tutorials but freeze when starting from a blank editor. Give me a repeatable process for turning an idea into working code without copying a tutorial.",
+    "expected_rubric": [
+      "Top-down decomposition: User Story -> API Contract / Data Schema -> Stubbed Functions -> Implementation",
+      "Rule of 'Trace 1 Happy Path' before building edge cases",
+      "Technique for writing README and interface signatures first"
+    ],
+    "negative_constraints": [
+      "Saying 'just start coding' or 'practice more' without a mechanical framework"
+    ]
+  },
+  {
+    "id": "GS-12",
+    "category": "Projects and independent building",
+    "question": "I keep abandoning projects because I add too many features. Help me define an MVP for a campus event platform and separate essential features from future improvements.",
+    "expected_rubric": [
+      "Strict 3-feature MVP core (e.g., Browse events, RSVP count, Host creates event)",
+      "Explicit 'Do NOT build yet' list (ticketing payments, chat rooms, AI recommendations)",
+      "Target shipping deadline (under 10 days)"
+    ],
+    "negative_constraints": [
+      "Validating bloated feature requests"
+    ]
+  },
+  {
+    "id": "GS-13",
+    "category": "Projects and independent building",
+    "question": "Every beginner builds a weather app or to-do list. How can I turn a common project into something distinctive that demonstrates real engineering ability?",
+    "expected_rubric": [
+      "Specific engineering additions: Redis rate limiting, automated CI/CD with pytest, Docker containerization, structured logging",
+      "Adding real metrics: latency under load, test coverage, P95 benchmark",
+      "Turning a to-do list into an event-driven task queue or audited ledger"
+    ],
+    "negative_constraints": [
+      "Suggesting purely cosmetic CSS improvements instead of engineering depth"
+    ]
+  },
+  {
+    "id": "GS-14",
+    "category": "Projects and independent building",
+    "question": "I repeatedly start tutorials and quit halfway. Give me a seven-day micro-project plan with daily deliverables, a time limit, and a definition of done.",
+    "expected_rubric": [
+      "Strict 1-hour/day time box with concrete daily outputs",
+      "Day 7 Definition of Done: public live link + GitHub repo with README",
+      "Zero-theory rule: only build tasks"
+    ],
+    "negative_constraints": [
+      "Vague daily goals like 'study backend'"
+    ]
+  },
+  {
+    "id": "GS-15",
+    "category": "Projects and independent building",
+    "question": "I get stuck for hours whenever my project throws an unfamiliar error. Teach me a systematic debugging workflow, including what to inspect before asking AI for help.",
+    "expected_rubric": [
+      "5-step triage: Traceback line origin -> Inspect variable state/types -> Reproduce in isolation -> Check recent Git diff -> Formulate specific query",
+      "Specific instruction on reading stack traces from bottom-up",
+      "Rule for writing a minimal reproducible example"
+    ],
+    "negative_constraints": [
+      "Recommending blindly copying the error into ChatGPT without reading logs"
+    ]
+  },
+  {
+    "id": "GS-16",
+    "category": "Projects and independent building",
+    "question": "I have five half-finished GitHub repositories and no completed projects. Help me choose one to finish, cut unnecessary features, and ship it within one week.",
+    "expected_rubric": [
+      "Heuristic to pick: choose the one with the smallest delta to a working 'happy path'",
+      "Ruthless pruning checklist: kill auth, kill social features, keep core single function",
+      "One-week sprint plan to deploy and document"
+    ],
+    "negative_constraints": [
+      "Suggesting finishing all 5 in parallel"
+    ]
+  },
+  {
+    "id": "GS-17",
+    "category": "Debugging and developer tooling",
+    "question": "My Docker container throws `ModuleNotFoundError: No module named 'psycopg2'`. How do I diagnose whether the problem is my requirements file, image build, virtual environment, or Docker cache?",
+    "expected_rubric": [
+      "Exact diagnostic triage commands: `docker run --rm -it <image> pip list`, checking `--no-cache` rebuild",
+      "Explaining `psycopg2` vs `psycopg2-binary` and missing C-compiler dependencies (`libpq-dev`, `gcc`) in slim images",
+      "Verifying COPY requirements.txt placement before pip install in Dockerfile"
+    ],
+    "negative_constraints": [
+      "Saying 'reinstall python' or giving generic container restart advice"
+    ]
+  },
+  {
+    "id": "GS-18",
+    "category": "Debugging and developer tooling",
+    "question": "I can run my Python application locally but Docker confuses me. Explain how to write a Dockerfile, build an image, run a container, and debug common errors.",
+    "expected_rubric": [
+      "Annotated minimal Dockerfile explaining FROM, WORKDIR, COPY, RUN, EXPOSE, and CMD",
+      "Exact CLI commands for build, run with `-p`, and running interactive bash inside container",
+      "Crucial difference between host machine localhost and container internal networking"
+    ],
+    "negative_constraints": [
+      "Omitting port binding `-p 8000:8000`",
+      "Using heavy base images without explanation"
+    ]
+  },
+  {
+    "id": "GS-19",
+    "category": "Debugging and developer tooling",
+    "question": "My project works on my laptop but fails on another machine because of package versions. How should I use virtual environments, dependency pinning, and lockfiles?",
+    "expected_rubric": [
+      "Virtual environment creation and activation walkthrough",
+      "Difference between loose requirements (`package>=1.0`) and locked requirements (`pip freeze` / `uv.lock` / `poetry.lock`)",
+      "Why system Python should never be used directly"
+    ],
+    "negative_constraints": [
+      "Recommending global pip install commands"
+    ]
+  },
+  {
+    "id": "GS-20",
+    "category": "Debugging and developer tooling",
+    "question": "I accidentally committed a `.env` file containing an API key to GitHub. What should I do immediately, how do I remove the secret safely, and how do I prevent this happening again?",
+    "expected_rubric": [
+      "Step 1: IMMEDIATELY revoke and rotate the API key at the provider dashboard (git history purge does not undo leakage)",
+      "Step 2: Remove from git cache (`git rm --cached .env`) and add to `.gitignore`",
+      "Step 3: Tools for repo history scrubbing (git-filter-repo or BFG Repo-Cleaner)"
+    ],
+    "negative_constraints": [
+      "Treating git commit --amend as sufficient without revoking the exposed credential"
+    ]
+  },
+  {
+    "id": "GS-21",
+    "category": "Debugging and developer tooling",
+    "question": "I'm working with two classmates on a full-stack app. Explain a practical branch strategy, pull requests, merge conflicts, and code review for a beginner team.",
+    "expected_rubric": [
+      "Feature branch workflow (`main` branch locked, feature branches `feat/name`)",
+      "Resolving merge conflicts step-by-step using git status and conflict markers",
+      "Basic PR checklist: does it run, does it have tests, is .env excluded"
+    ],
+    "negative_constraints": [
+      "Recommending everyone commit directly to `main`",
+      "Over-complicating with enterprise GitFlow release trains"
+    ]
+  },
+  {
+    "id": "GS-22",
+    "category": "Debugging and developer tooling",
+    "question": "My frontend receives a 500 response from my backend, but the browser only shows a generic error. How do I trace the request from the UI to the database and identify the root cause?",
+    "expected_rubric": [
+      "Tracing chain: Network tab status & payload -> Backend server stdout/stderr console -> DB query logs",
+      "Adding structured error handlers in backend to return helpful dev errors while logging stack trace",
+      "Using tools like Postman / curl to isolate backend from frontend"
+    ],
+    "negative_constraints": [
+      "Telling user to debug by changing frontend code when the error is a 500 Internal Server Error"
+    ]
+  },
+  {
+    "id": "GS-23",
+    "category": "Debugging and developer tooling",
+    "question": "My React frontend on one port cannot call my FastAPI backend on another port because of CORS. Explain the cause and show how to configure it correctly for development and production.",
+    "expected_rubric": [
+      "Browser Same-Origin Policy (SOP) explanation and preflight OPTIONS request",
+      "Exact FastAPI `CORSMiddleware` configuration with `allow_origins`",
+      "Clear distinction between local dev (`http://localhost:3000`) and production domain setup"
+    ],
+    "negative_constraints": [
+      "Recommending `allow_origins=['*']` in production with credentials enabled",
+      "Disabling browser security as a permanent fix"
+    ]
+  },
+  {
+    "id": "GS-24",
+    "category": "Debugging and developer tooling",
+    "question": "My API works locally but fails after deployment because environment variables are missing. Explain how to configure secrets locally, in Docker, and on a hosting platform without exposing them.",
+    "expected_rubric": [
+      "Pattern for local `.env` vs cloud environment settings dashboard",
+      "Docker `--env-file` or `docker-compose.yml` environment blocks",
+      "Loading via Pydantic BaseSettings / os.environ with fail-fast validation at boot"
+    ],
+    "negative_constraints": [
+      "Hardcoding secrets in Dockerfiles or committing `.env`"
+    ]
+  },
+  {
+    "id": "GS-25",
+    "category": "AI and machine learning engineering",
+    "question": "I've learned basic Python, NumPy, pandas, and introductory machine learning. What should I build to move from notebooks to an end-to-end ML application?",
+    "expected_rubric": [
+      "End-to-end scope: Data prep -> Model training (scikit-learn/XGBoost) -> Pipeline serialization (joblib) -> FastAPI serving -> Docker container",
+      "Why standalone Jupyter notebooks are invisible to recruiters without API interfaces",
+      "Suggested project: Tabular predictor with Pydantic validation"
+    ],
+    "negative_constraints": [
+      "Suggesting building a custom LLM from scratch",
+      "Leaving model evaluation only in notebook cells"
+    ]
+  },
+  {
+    "id": "GS-26",
+    "category": "AI and machine learning engineering",
+    "question": "I'm confused about data science, machine learning engineering, deep learning, and AI engineering. What does each role actually do, and which starter project would help me explore them?",
+    "expected_rubric": [
+      "Clear taxonomy: Data Science (business insights/stats) vs MLE (training/scaling models) vs AI Engineering (APIs, RAG, agents, evals, software integration)",
+      "Starter project contrasting training a model vs integrating/evaluating an LLM application",
+      "Skill breakdown: SQL/stats vs Docker/FastAPI/VectorDBs"
+    ],
+    "negative_constraints": [
+      "Muddling all roles into a single vague 'AI specialist'"
+    ]
+  },
+  {
+    "id": "GS-27",
+    "category": "AI and machine learning engineering",
+    "question": "I want to build an AI-powered app but only know basic Python. Suggest a small LLM project that teaches API integration, prompt design, error handling, and deployment.",
+    "expected_rubric": [
+      "Specific project: Structured Text Summarizer or CLI Documentation Explainer",
+      "Direct API integration with structured JSON outputs (Pydantic)",
+      "Error handling for rate limits, timeouts, and malformed outputs deployed to HF Spaces/Render"
+    ],
+    "negative_constraints": [
+      "Relying entirely on complex third-party agent frameworks before learning native API calls"
+    ]
+  },
+  {
+    "id": "GS-28",
+    "category": "AI and machine learning engineering",
+    "question": "I want to build a chatbot that answers questions from my college notes and PDFs. Explain how to build a basic retrieval-augmented generation pipeline and evaluate whether its answers are grounded in the documents.",
+    "expected_rubric": [
+      "4-stage RAG architecture: Chunking -> Vector Embedding -> Vector Search (Qdrant/FAISS) -> Prompt Context Injection",
+      "Grounding & evaluation metrics: Context Relevance and Faithfulness (detecting hallucinations)",
+      "Inline citation enforcement: forcing model to attribute responses to chunk IDs"
+    ],
+    "negative_constraints": [
+      "Suggesting dumping entire multi-hundred page PDF into the prompt context",
+      "Ignoring evaluation"
+    ]
+  },
+  {
+    "id": "GS-29",
+    "category": "AI and machine learning engineering",
+    "question": "My AI chatbot gives impressive answers in some cases and incorrect ones in others. How do I create an evaluation dataset, define quality metrics, and compare changes systematically?",
+    "expected_rubric": [
+      "Building a Golden Dataset (Questions + Contexts + Ground Truth Answers)",
+      "Metrics: Retrieval Hit-Rate, Faithfulness, Answer Correctness (using Ragas/DeepEval or LLM-as-a-judge)",
+      "Ablation testing framework to verify whether adding hybrid search/reranking actually improved the score"
+    ],
+    "negative_constraints": [
+      "Recommending informal manual prompt testing ('vibe checks') as a replacement for evals"
+    ]
+  },
+  {
+    "id": "GS-30",
+    "category": "AI and machine learning engineering",
+    "question": "My LLM application is slow and API calls are expensive. Explain how to measure latency and token usage, add timeouts and retries, and control cost without breaking the app.",
+    "expected_rubric": [
+      "Instrumenting Time-To-First-Token (TTFT) and P95 latency tracking",
+      "Prompt caching and context pruning to cut repeated static token overhead",
+      "Semantic caching or routing simple queries to smaller/faster models (e.g. Flash/Haiku)"
+    ],
+    "negative_constraints": [
+      "Suggesting lowering model quality without benchmarking the eval score"
+    ]
+  },
+  {
+    "id": "GS-31",
+    "category": "AI and machine learning engineering",
+    "question": "As a student building an AI portfolio, when should I use an existing model API, a locally hosted open-weight model, or train a model myself? Give examples based on cost and complexity.",
+    "expected_rubric": [
+      "Decision tree: API first for prototyping/reasoning, Open-weight (Ollama/vLLM) for privacy/cost at scale, Fine-tuning/Training only for niche domain syntax/latency",
+      "Cost reality check: GPU compute costs vs API pay-per-token",
+      "Portfolio value: showing you know *when not to train* is a senior signal"
+    ],
+    "negative_constraints": [
+      "Recommending pre-training a foundation model from scratch"
+    ]
+  },
+  {
+    "id": "GS-32",
+    "category": "AI and machine learning engineering",
+    "question": "What does it take to turn a machine learning notebook into a maintainable service? Cover data validation, model serialization, API serving, tests, monitoring, and reproducible experiments.",
+    "expected_rubric": [
+      "6-pillar MLOps checklist: Input schema validation (Pydantic) -> Pipeline artifact (Joblib) -> REST endpoint (FastAPI lifespan) -> Unit tests (pytest) -> Containerization (Docker) -> Drift/Latency monitoring",
+      "Concrete code example of separating training logic from inference serving",
+      "Automated CI testing"
+    ],
+    "negative_constraints": [
+      "Deploying Jupyter notebooks directly to production with notebook-serving hacks"
+    ]
+  },
+  {
+    "id": "GS-33",
+    "category": "GitHub portfolio, resumes, and internships",
+    "question": "How should I structure a GitHub repository for a machine learning project so an interviewer can understand the purpose, setup, results, and architecture in 30 seconds?",
+    "expected_rubric": [
+      "30-second skim structure: 1-line problem statement -> Demo GIF -> Benchmark/Performance table -> Architecture diagram -> Quickstart",
+      "Clean folder layout: `src/`, `tests/`, `notebooks/`, `Dockerfile`, `Makefile` or `docker-compose.yml`",
+      "Working 1-command startup instructions"
+    ],
+    "negative_constraints": [
+      "Recommending burying results below 50 lines of local installation instructions",
+      "Leaving default untitled notebooks in root"
+    ]
+  },
+  {
+    "id": "GS-34",
+    "category": "GitHub portfolio, resumes, and internships",
+    "question": "Write a checklist for a strong project README with a demo, screenshots, installation instructions, environment configuration, architecture, and known limitations.",
+    "expected_rubric": [
+      "8-point comprehensive checklist covering demo, architecture diagram, tech stack badges, environment variables, test instructions, eval benchmarks, and honest known limitations",
+      "Explicit instruction to include real failure modes and tradeoffs"
+    ],
+    "negative_constraints": [
+      "Treating README as just generic code installation without context or benchmarks"
+    ]
+  },
+  {
+    "id": "GS-35",
+    "category": "GitHub portfolio, resumes, and internships",
+    "question": "I have three months before internship applications. Should I build three small projects or one polished full-stack project? Help me decide based on my current skills and available time.",
+    "expected_rubric": [
+      "Recommendation: 1 deeply engineered, deployed anchor project + 1 small focused micro-tool beats 5 shallow tutorial clones",
+      "Definition of 'deeply engineered': has tests, CI/CD, evals/metrics, and actual users",
+      "Time allocation breakdown across the 3 months"
+    ],
+    "negative_constraints": [
+      "Telling students to build dozens of shallow projects to fill their resume"
+    ]
+  },
+  {
+    "id": "GS-36",
+    "category": "GitHub portfolio, resumes, and internships",
+    "question": "I used AI assistance while building my project. How can I verify that I understand the code, document my decisions, and prepare to explain my implementation honestly in an interview?",
+    "expected_rubric": [
+      "The 'Code Defense Audit': be able to explain every line, why alternative X was rejected, and what breaks under 100x scale",
+      "Documenting architecture decision records (ADRs) explaining tradeoffs",
+      "Mock interview drill: walking through failure logs and debugging history"
+    ],
+    "negative_constraints": [
+      "Advising students to hide AI usage or pretend they wrote boilerplate without understanding it"
+    ]
+  },
+  {
+    "id": "GS-37",
+    "category": "GitHub portfolio, resumes, and internships",
+    "question": "My GitHub contains several projects that only run locally. Which project should I deploy first, and what evidence should I include to demonstrate that it works reliably?",
+    "expected_rubric": [
+      "Triage criteria: pick the project solving a real problem with the cleanest codebase",
+      "Deployment evidence: live public URL, uptime/health check badge, benchmark table, and video walkthrough",
+      "Adding monitoring/logging to capture live queries"
+    ],
+    "negative_constraints": [
+      "Leaving repositories with broken links or 'coming soon' tags"
+    ]
+  },
+  {
+    "id": "GS-38",
+    "category": "GitHub portfolio, resumes, and internships",
+    "question": "I built a full-stack expense tracker with authentication and PostgreSQL. Help me turn its actual features and measured results into concise, truthful resume bullets without inventing impact metrics.",
+    "expected_rubric": [
+      "XYZ resume formula (Accomplished [X], as measured by [Y], by doing [Z])",
+      "Focus on technical architecture metrics: database indexing, query latency, test coverage, P95 response time, rather than fabricated revenue figures",
+      "3 polished bullet points"
+    ],
+    "negative_constraints": [
+      "Inventing fake enterprise business metrics (e.g. 'increased corporate revenue by 40%') for student projects"
+    ]
+  },
+  {
+    "id": "GS-39",
+    "category": "GitHub portfolio, resumes, and internships",
+    "question": "I'm a second-year CS student without professional experience. What should I prioritize over the next eight weeks to become a credible candidate for software or AI engineering internships?",
+    "expected_rubric": [
+      "8-week high-impact sprint: Weeks 1-4 Ship 1 deployed production-style anchor project; Weeks 5-6 Practice core DSA patterns (NeetCode 75/150); Weeks 7-8 Targeted cold outreach with demo links",
+      "Prioritizing public proof of work over passive course certificates",
+      "Focus on software engineering fundamentals"
+    ],
+    "negative_constraints": [
+      "Suggesting collecting theoretical certificates without building code"
+    ]
+  },
+  {
+    "id": "GS-40",
+    "category": "GitHub portfolio, resumes, and internships",
+    "question": "Review my GitHub project as a hiring manager. Identify the five biggest weaknesses in its code quality, documentation, testing, architecture, or deployment, and rank fixes by impact.",
+    "expected_rubric": [
+      "Top 5 failure points ranked: 1. No live demo or proof it works; 2. Hardcoded secrets / no .env guide; 3. Zero tests (no pytest/CI); 4. Bloated monolithic code without separation of concerns; 5. Missing benchmarks/evals",
+      "Actionable remediation steps ranked by impact on recruiter perception"
+    ],
+    "negative_constraints": [
+      "Vague critiques without clear remediation steps"
+    ]
+  },
+  {
+    "id": "GS-41",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "I've watched hours of tutorials but struggle to write code independently. Give me a two-week recovery plan that forces active problem-solving while still allowing documentation and targeted help.",
+    "expected_rubric": [
+      "14-day progressive desensitization: Days 1-3 Modify existing tutorials with new features; Days 4-7 Rebuild from scratch with docs only; Days 8-14 Build a novel project from a blank editor",
+      "The 20-minute struggle rule before looking up solutions",
+      "Definition of Done for each day"
+    ],
+    "negative_constraints": [
+      "Recommending watching a different beginner tutorial series"
+    ]
+  },
+  {
+    "id": "GS-42",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "I study programming intensely for three days and then stop for a week. Design a sustainable daily routine for a college student that balances classes, coding practice, and project work.",
+    "expected_rubric": [
+      "Non-negotiable 60-90 minute daily block rather than weekend 10-hour marathons",
+      "Clear division of time: 30 mins DSA / problem solving + 60 mins project building",
+      "Streak protection strategy: minimal 20-minute fallback on exam days"
+    ],
+    "negative_constraints": [
+      "Proposing an unsustainable 5-hour daily schedule on top of college classes"
+    ]
+  },
+  {
+    "id": "GS-43",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "Every developer recommends a different roadmap, and I keep switching technologies. Help me choose one stack and define clear conditions under which I should\u2014and should not\u2014change direction.",
+    "expected_rubric": [
+      "Commitment contract: pick 1 established backend stack (e.g., Python/FastAPI or TypeScript/Node) for minimum 90 days",
+      "Clear rule: never switch because syntax feels difficult or a new trendy library dropped",
+      "Only valid condition to pivot: job market requirement for a signed offer or core architectural impossibility"
+    ],
+    "negative_constraints": [
+      "Suggesting learning whatever tech is trending on Twitter this week"
+    ]
+  },
+  {
+    "id": "GS-44",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "AI tools can generate most of my application, but I'm worried I won't learn anything. Give me rules for using AI as a coding tutor without outsourcing my understanding.",
+    "expected_rubric": [
+      "3 strict rules: 1. Prompt for explanations and architectural alternatives, not copy-paste code; 2. Type out code manually rather than blind copying; 3. Force yourself to explain every line in comments before committing",
+      "Using AI as an interactive debugger and Socratic code reviewer"
+    ],
+    "negative_constraints": [
+      "Telling user to avoid AI completely or to blindly autocomplete everything"
+    ]
+  },
+  {
+    "id": "GS-45",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "I'm preparing for internships and don't know how to divide time between data structures and algorithms, full-stack projects, CS fundamentals, and interview preparation. Propose a weekly allocation.",
+    "expected_rubric": [
+      "Balanced weekly ratio: 40% DSA (pattern-based NeetCode practice) + 40% Project Engineering (shipping features/evals) + 20% CS Fundamentals & Mock Interviews",
+      "Concrete 15-20 hours/week student schedule",
+      "Adjusting weights based on upcoming interview stages"
+    ],
+    "negative_constraints": [
+      "Recommending 100% DSA to the total exclusion of building projects, or vice versa"
+    ]
+  },
+  {
+    "id": "GS-46",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "I want to document my coding journey on GitHub or LinkedIn but feel my projects are too basic. What should I share, how often, and how can I communicate progress without exaggerating my skills?",
+    "expected_rubric": [
+      "The 'Lesson & Bug' framing: share specific technical errors solved, latency benchmarks measured, and architecture decisions made rather than bragging",
+      "Posting frequency (1-2 high-signal technical posts/week)",
+      "Authenticity guidelines: never fake metrics; share honest failure logs and before/after comparisons"
+    ],
+    "negative_constraints": [
+      "Encouraging empty engagement bait or generic motivational quotes"
+    ]
+  },
+  {
+    "id": "GS-47",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "I'm interested in frontend, backend, cloud, and AI, and I can't decide what to specialize in. Give me a four-week experiment with small tasks that helps me choose based on actual experience.",
+    "expected_rubric": [
+      "4-week rotation: Week 1 Frontend UI/State; Week 2 Backend APIs & Relational DBs; Week 3 Docker & Cloud Deploy; Week 4 AI API & Eval Suite",
+      "Decision criteria based on what energized vs drained you",
+      "Synthesizing towards AI Engineering / Full-Stack Backend"
+    ],
+    "negative_constraints": [
+      "Theoretical career descriptions without weekly hands-on experiments"
+    ]
+  },
+  {
+    "id": "GS-48",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "I can build simple applications but don't understand HTTP, DNS, processes, threads, memory, or SQL indexing well. Which fundamentals should I learn first, and how can I practice them through a project?",
+    "expected_rubric": [
+      "Prioritized list: 1. HTTP/REST & Status codes; 2. Relational Indexing & B-Trees; 3. Processes vs Threads & Concurrency (asyncio); 4. OS Memory & Sockets",
+      "Hands-on project verification: load test an unindexed vs indexed database query and measure latency delta",
+      "Connecting theory directly to production debugging"
+    ],
+    "negative_constraints": [
+      "Recommending reading a 1,000-page textbook cover-to-cover without writing code"
+    ]
+  },
+  {
+    "id": "GS-49",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "My college team project is falling behind because tasks are unclear and teammates work on conflicting code. Help us establish task ownership, milestones, Git practices, and a lightweight weekly review.",
+    "expected_rubric": [
+      "Single-owner interface contract: define API schemas (Pydantic/OpenAPI) upfront so frontend and backend work independently",
+      "Feature-branch Git workflow and 15-minute weekly sync agenda",
+      "Clear issue board (GitHub Projects / Trello) with definition of done"
+    ],
+    "negative_constraints": [
+      "Recommending complicated enterprise agile ceremonies for a 3-person college project"
+    ]
+  },
+  {
+    "id": "GS-50",
+    "category": "Study habits, career decisions, and computer science fundamentals",
+    "question": "I know Python and basic web development but have never shipped a production-style app. Assess my readiness for a junior developer internship using a practical skills checklist and a prioritized 30-day improvement plan.",
+    "expected_rubric": [
+      "Practical readiness scorecard across 5 pillars: Code Quality, Database/API Design, Docker/Deployment, Version Control/Testing, and Problem Solving",
+      "Prioritized 30-day sprint to ship 1 production-grade microservice with CI/CD and public URL",
+      "Realistic benchmark of what differentiates entry-level candidates in 2026"
+    ],
+    "negative_constraints": [
+      "Sugarcoating readiness or giving vague encouragement without a diagnostic checklist"
+    ]
+  },
+  {
+    "id": "GS-51",
+    "category": "Data structures and algorithms",
+    "question": "I'm a second-year CS student who knows basic Python but has never studied DSA seriously. Give me a structured 60-day roadmap with topics, practice problems, and weekly milestones.",
+    "expected_rubric": [
+      "Sequenced 8-week breakdown: Arrays/Hashing -> Two Pointers/Sliding Window -> Linked Lists/Stacks/Queues -> Binary Search/Trees -> Heaps/Backtracking -> Graphs (BFS/DFS) -> Intro DP",
+      "Specific curated problem sets per milestone (e.g. NeetCode 75/150 or Striver A2Z)",
+      "Daily time-box guideline (60-90 mins/day) and definition of milestone completion"
+    ],
+    "negative_constraints": [
+      "Dumping 500 problems without topic sequencing",
+      "Introducing advanced Graph/DP topics before foundational pointers and linear structures"
+    ]
+  },
+  {
+    "id": "GS-52",
+    "category": "Data structures and algorithms",
+    "question": "Should I learn DSA in Python, C++, or Java for internships and coding interviews? I already know Python. Explain the trade-offs and whether switching languages is worth it.",
+    "expected_rubric": [
+      "Direct language trade-off analysis: Python (fast prototyping, clean syntax, easy in 45-min live interviews) vs C++ (STL control, competitive programming speed, online assessment execution limits) vs Java (OOP enterprise standard, strong collections)",
+      "Clear guidance for someone already knowing Python: stick with Python for interviews unless targeting systems/embedded roles or strict OA time limits",
+      "Pragmatic recommendation avoiding language paralysis"
+    ],
+    "negative_constraints": [
+      "Claiming one language is universally superior without context",
+      "Advising a student with upcoming interviews to switch languages unnecessarily"
+    ]
+  },
+  {
+    "id": "GS-53",
+    "category": "Data structures and algorithms",
+    "question": "I can write working solutions but struggle to calculate time and space complexity. Teach me Big-O notation using five progressively harder code examples and explain how to analyze loops and recursion.",
+    "expected_rubric": [
+      "5 distinct progression examples: O(1) direct access -> O(N) single loop -> O(N^2) nested loops -> O(log N) binary search / halving -> O(2^N) or O(N log N) recursive branching",
+      "Explicit breakdown of the Call Stack memory footprint for recursive space complexity",
+      "Rules for ignoring constants and keeping only dominant terms"
+    ],
+    "negative_constraints": [
+      "Purely mathematical definition without runnable code snippets",
+      "Ignoring auxiliary stack space in recursion"
+    ]
+  },
+  {
+    "id": "GS-54",
+    "category": "Data structures and algorithms",
+    "question": "I've solved a few easy array problems but get stuck on medium questions. Teach me how to recognize two pointers, sliding windows, prefix sums, and hashing, with practice problems for each.",
+    "expected_rubric": [
+      "Trigger heuristics for each pattern: Two Pointers (sorted array, pairs, palindromes), Sliding Window (contiguous sub-arrays/strings, min/max length), Prefix Sum (subarray sum queries, range sums), Hashing (frequency count, O(1) lookups)",
+      "1 concrete classic LeetCode problem example per pattern",
+      "Diagnostic checklist to test problem statements against each pattern"
+    ],
+    "negative_constraints": [
+      "Giving solutions without explaining the recognition triggers",
+      "Muddling Two Pointers with Sliding Window without distinguishing fixed vs variable bounds"
+    ]
+  },
+  {
+    "id": "GS-55",
+    "category": "Data structures and algorithms",
+    "question": "Recursion makes no sense to me, especially the call stack and base cases. Explain it visually with factorial, binary search, and a backtracking example, then give me exercises.",
+    "expected_rubric": [
+      "ASCII or step-by-step visual trace of stack frames pushing on call and popping on return",
+      "Three distinct patterns explained: linear recursion (factorial), divide-and-conquer (binary search), and state exploration/reversion (backtracking)",
+      "Explicit emphasis on base cases as return triggers to avoid RecursionError/StackOverflow"
+    ],
+    "negative_constraints": [
+      "Explaining recursion solely through mathematical induction without the hardware call stack",
+      "Skipping the undo/backtrack state restoration step"
+    ]
+  },
+  {
+    "id": "GS-56",
+    "category": "Data structures and algorithms",
+    "question": "I understand arrays and linked lists but find trees and graphs confusing. What prerequisites should I learn, and how should I practice BFS, DFS, tree traversals, and shortest paths?",
+    "expected_rubric": [
+      "Prerequisite hierarchy: Recursion -> Call Stack -> Queues (for BFS) -> Tree Traversals -> Graph Adjacency List representation",
+      "Side-by-side comparison of BFS (queue-based level order / shortest path unweighted) vs DFS (stack/recursive exploration)",
+      "Step-by-step progression from Tree traversals to Graph cycle detection and Dijkstra"
+    ],
+    "negative_constraints": [
+      "Jumping straight to Dijkstra or Bellman-Ford before basic BFS/DFS graph traversal",
+      "Omitting visited sets in cyclic graphs"
+    ]
+  },
+  {
+    "id": "GS-57",
+    "category": "Data structures and algorithms",
+    "question": "I can solve basic recursion problems but cannot figure out dynamic programming. Explain how to identify overlapping subproblems, define states, write transitions, and move from memoization to tabulation.",
+    "expected_rubric": [
+      "4-step DP pipeline: 1. Recursive brute-force -> 2. Draw recursion tree to spot overlapping subproblems -> 3. Add memoization cache (Top-Down) -> 4. Convert to iterative DP table (Bottom-Up)",
+      "Explicit state definition: what `dp[i]` represents mathematically and the transition relation",
+      "Demonstrated through a classic canonical example (e.g., Climbing Stairs or 0/1 Knapsack/Coin Change)"
+    ],
+    "negative_constraints": [
+      "Giving bottom-up code without deriving the recursive recurrence relation first",
+      "Vague definitions of state and transition"
+    ]
+  },
+  {
+    "id": "GS-58",
+    "category": "Data structures and algorithms",
+    "question": "When I read a DSA problem, I don't know which algorithm or data structure to use. Give me a decision-making framework for identifying common patterns without simply memorizing solutions.",
+    "expected_rubric": [
+      "Input constraint clues ($N \\le 10^5 \\implies O(N \\log N)$ or $O(N)$, $N \\le 20 \\implies O(2^N)$ backtracking)",
+      "Keyword association cheat sheet: 'Top K' -> Heap; 'Shortest path' -> BFS/Dijkstra; 'Connected components' -> DFS/Union-Find; 'Subarray sum' -> Prefix Sum / Sliding Window",
+      "A 3-minute structured problem breakdown routine"
+    ],
+    "negative_constraints": [
+      "Advising blind memorization of problem IDs",
+      "Ignoring input constraint sizing ($N$) as a time complexity indicator"
+    ]
+  },
+  {
+    "id": "GS-59",
+    "category": "Data structures and algorithms",
+    "question": "I solve a problem after reading the editorial but cannot solve a similar one independently later. Design a revision system using spaced repetition, hints, and timed reattempts.",
+    "expected_rubric": [
+      "Spaced repetition cadence: reattempt at Day 1, Day 3, Day 7, Day 21",
+      "The 'Progressive Hint' protocol: 10 mins pure thought -> read only pattern tag -> read 1-line clue -> code from scratch without looking at editorial",
+      "Active logging system tracking failure modes (e.g., didn't spot pattern, syntax bug, edge case miss)"
+    ],
+    "negative_constraints": [
+      "Telling student to immediately re-read the code solution when stuck",
+      "Lacking a scheduled reattempt interval"
+    ]
+  },
+  {
+    "id": "GS-60",
+    "category": "Data structures and algorithms",
+    "question": "I've spent 45 minutes on a LeetCode medium problem without progress. Walk me through a hint-based approach that helps me discover the solution without revealing the entire answer immediately.",
+    "expected_rubric": [
+      "Tiered 4-level hint system: Tier 1 (Clarifying example & manual trace) -> Tier 2 (Pattern/DS identification) -> Tier 3 (Algorithm invariant/state) -> Tier 4 (Pseudocode skeleton)",
+      "Actionable diagnosis questions (e.g. 'What is the brute force? Why is it slow? What repeated work can be cached?')",
+      "Strict rule to implement the actual code independently after receiving the clue"
+    ],
+    "negative_constraints": [
+      "Dumping the full solution code immediately",
+      "Giving cryptic unhelpful non-answers"
+    ]
+  },
+  {
+    "id": "GS-61",
+    "category": "Competitive programming and problem-solving",
+    "question": "I want to start competitive programming but have never participated in a contest. Explain how to begin with Codeforces or AtCoder, choose an initial difficulty, and review my mistakes after each contest.",
+    "expected_rubric": [
+      "Platform entry guide: Codeforces Div 3 / Div 4 or AtCoder Beginner Contest (ABC)",
+      "Selecting rating-appropriate problems (e.g. CF 800-1000 rating band)",
+      "Post-contest 'upsolving' routine: solving the first problem you failed within 24 hours of contest end"
+    ],
+    "negative_constraints": [
+      "Recommending beginners start with Div 1/Div 2 contests",
+      "Skipping upsolving (the core mechanism of CP rating growth)"
+    ]
+  },
+  {
+    "id": "GS-62",
+    "category": "Competitive programming and problem-solving",
+    "question": "My solution passes sample tests but gets Wrong Answer on hidden tests. How do I find edge cases, test invariants, use brute-force comparisons, and identify logical errors?",
+    "expected_rubric": [
+      "Stress testing methodology: writing a random test generator comparing suspect fast solution vs slow brute-force solution in a loop",
+      "Exhaustive edge case checklist: empty input, $N=1$, all identical values, negative numbers, integer overflow (32-bit vs 64-bit int), extreme constraints",
+      "Checking loop invariants and off-by-one boundary conditions"
+    ],
+    "negative_constraints": [
+      "Guessing edge cases manually without systematic testing",
+      "Failing to mention stress testing or integer overflow"
+    ]
+  },
+  {
+    "id": "GS-63",
+    "category": "Competitive programming and problem-solving",
+    "question": "My algorithm passes small tests but receives Time Limit Exceeded on larger inputs. Teach me how to inspect constraints, estimate complexity, and optimize the bottleneck without guessing.",
+    "expected_rubric": [
+      "Rule of thumb for competitive programming platforms: $\\sim 10^8$ operations per second limit",
+      "Constraint-to-complexity mapping table ($N \\le 10^3 \\implies O(N^2)$, $N \\le 10^5 \\implies O(N \\log N)$, $N \\le 10^7 \\implies O(N)$)",
+      "Techniques for identifying bottlenecks: profiling nested loops, I/O speed (Fast I/O in C++/Python), and replacing linear searches with hashmaps/binary search"
+    ],
+    "negative_constraints": [
+      "Advising micro-optimizations (like bitwise hacks) when the asymptotic Big-O is fundamentally too slow",
+      "Omitting operations-per-second hardware benchmarks"
+    ]
+  },
+  {
+    "id": "GS-64",
+    "category": "Competitive programming and problem-solving",
+    "question": "I can solve practice problems at home but freeze during timed contests. Give me a practical contest strategy for choosing problems, managing time, and learning from unsolved questions.",
+    "expected_rubric": [
+      "Time allocation strategy: spending first 5 minutes reading without coding, strict 20-minute abandonment/switch rule if stuck on early problem",
+      "Contest psychology: treating contests as rating-agnostic diagnostic diagnostics; hiding live rating during contest",
+      "Structured post-contest review protocol"
+    ],
+    "negative_constraints": [
+      "Recommending stubborn persistence on a single problem for the entire contest duration",
+      "Ignoring time-management rules"
+    ]
+  },
+  {
+    "id": "GS-65",
+    "category": "Competitive programming and problem-solving",
+    "question": "I'm stuck at beginner-level competitive programming problems. Build a four-week training plan that balances topic practice, virtual contests, upsolving, and reviewing failed submissions.",
+    "expected_rubric": [
+      "Balanced weekly schedule: 2 virtual contests + 2 upsolving sessions + 2 targeted topic days (greedy, math, binary search, two pointers)",
+      "Targeting rating band $+100$ to $+200$ above current comfort zone",
+      "Clear weekly review scorecard measuring submission accuracy and speed"
+    ],
+    "negative_constraints": [
+      "Grinding only easy problems already mastered",
+      "Omitting virtual timed contests"
+    ]
+  },
+  {
+    "id": "GS-66",
+    "category": "Core computer science fundamentals",
+    "question": "I know basic Python but don't understand processes, threads, concurrency, and parallelism. Explain the differences with practical examples and small experiments I can run on my laptop.",
+    "expected_rubric": [
+      "Clear distinction: Process (independent memory space) vs Thread (shared memory inside process); Concurrency (interleaving/context switching) vs Parallelism (simultaneous multi-core execution)",
+      "Python-specific reality: Global Interpreter Lock (GIL) and when to use `multiprocessing` (CPU-bound) vs `threading`/`asyncio` (I/O-bound)",
+      "Two short runnable Python experiments demonstrating CPU-bound vs I/O-bound execution time"
+    ],
+    "negative_constraints": [
+      "Claiming Python `threading` achieves true multi-core parallel execution on CPU-bound tasks without mentioning the GIL",
+      "Confusing concurrency with parallelism"
+    ]
+  },
+  {
+    "id": "GS-67",
+    "category": "Core computer science fundamentals",
+    "question": "I know basic SQL but struggle with joins, normalization, indexes, and transactions. Create a practical learning plan using a small e-commerce database and progressively harder queries.",
+    "expected_rubric": [
+      "Schema definition: `users`, `orders`, `order_items`, `products` tables",
+      "Progressive queries: INNER/LEFT JOINs -> Grouped aggregations & Window functions -> Index design (B-Tree lookups on `user_id` / `created_at`) -> ACID transactions with `BEGIN`/`COMMIT`/`ROLLBACK`",
+      "Explanation of 1NF, 2NF, 3NF normalization tradeoffs"
+    ],
+    "negative_constraints": [
+      "Listing SQL syntax without a concrete multi-table relational schema",
+      "Ignoring indexing mechanics and transaction isolation"
+    ]
+  },
+  {
+    "id": "GS-68",
+    "category": "Core computer science fundamentals",
+    "question": "Explain HTTP, TCP, DNS, TLS, and REST APIs by tracing what happens when I type a website URL into a browser. Include a simple way to inspect the process myself.",
+    "expected_rubric": [
+      "End-to-end journey in order: DNS resolution (local cache -> resolver -> root/TLD/authoritative) -> TCP 3-Way Handshake (SYN, SYN-ACK, ACK) -> TLS 1.3 Handshake (key exchange, encryption) -> HTTP GET request -> Server response -> Browser rendering",
+      "Exact diagnostic commands to inspect each step: `dig` / `nslookup`, `curl -v`, and browser DevTools Network tab",
+      "Clear REST API protocol context (methods, status codes, statelessness)"
+    ],
+    "negative_constraints": [
+      "Muddled chronological order (e.g. putting TLS before TCP)",
+      "Failing to provide inspectable terminal/browser commands"
+    ]
+  },
+  {
+    "id": "GS-69",
+    "category": "Core computer science fundamentals",
+    "question": "I understand classes and objects but don't know when to use inheritance, composition, interfaces, or dependency injection. Teach these concepts through a realistic application design.",
+    "expected_rubric": [
+      "Concrete domain example (e.g., Notification Service or Payment Processor)",
+      "The 'Favor Composition over Inheritance' principle demonstrated with code (avoiding brittle deep inheritance hierarchies)",
+      "Abstract Base Classes / Interfaces and Dependency Injection explained by swapping a Mock implementation for testing vs a Real production implementation"
+    ],
+    "negative_constraints": [
+      "Using toy animal examples (Dog extends Animal) that fail to explain composition and DI in production",
+      "Advocating deep inheritance trees"
+    ]
+  },
+  {
+    "id": "GS-70",
+    "category": "Core computer science fundamentals",
+    "question": "I keep confusing stack memory, heap memory, references, and pointers. Explain how they differ across Python and C++ and why those differences matter when debugging.",
+    "expected_rubric": [
+      "Stack (fast, contiguous, LIFO, automatic scope deallocation) vs Heap (dynamic allocation, pointer indirection, requires garbage collection or manual free)",
+      "Language comparison: C++ explicit stack vs heap (`int a` vs `int* p = new int()`) and pointers vs Python where everything is an object reference on the private heap",
+      "Debugging implications: stack overflow, memory leaks, dangling pointers (C++), and unexpected mutation of mutable default args/references (Python)"
+    ],
+    "negative_constraints": [
+      "Claiming Python primitive variables reside directly on the hardware call stack like C++ primitives",
+      "Failing to distinguish pointers from object references"
+    ]
+  },
+  {
+    "id": "GS-71",
+    "category": "Core computer science fundamentals",
+    "question": "I can code independently but don't understand unit tests, integration tests, code reviews, continuous integration, or refactoring. Teach me how these practices fit into a real development workflow.",
+    "expected_rubric": [
+      "The Software Engineering lifecycle: Writing feature -> Unit test (fast, isolated, mocked dependencies via pytest) -> Integration test (testing DB/API boundaries) -> PR & Code Review -> CI Pipeline (.github/workflows) -> Automated merge/deploy",
+      "The Testing Pyramid (Unit vs Integration vs E2E)",
+      "Safe refactoring under the safety net of passing tests"
+    ],
+    "negative_constraints": [
+      "Treating automated tests as optional or advising testing manually via print statements",
+      "Vague explanations without a CI/CD pipeline context"
+    ]
+  },
+  {
+    "id": "GS-72",
+    "category": "Core computer science fundamentals",
+    "question": "I have an upcoming software engineering interview and need to revise OS, DBMS, networking, and OOP. Build a 14-day revision plan with questions, practical exercises, and spaced review.",
+    "expected_rubric": [
+      "Structured 14-day schedule allocating 3-4 days per core pillar (Days 1-3 OS, Days 4-7 DBMS, Days 8-10 Networking, Days 11-12 OOP/Design, Days 13-14 Mock integration drill)",
+      "Top 5 high-yield interview questions per subject",
+      "Hands-on diagnostic drills (inspecting SQL EXPLAIN plans, curl traces, thread pool runs)"
+    ],
+    "negative_constraints": [
+      "Recommending reading 800-page textbooks in 14 days",
+      "Lacking a mock test / spaced review checkpoint"
+    ]
+  },
+  {
+    "id": "GS-73",
+    "category": "Coding interviews and assessment preparation",
+    "question": "I'm applying for software engineering internships in three months. How should I balance DSA, CS fundamentals, project work, aptitude tests, and mock interviews each week?",
+    "expected_rubric": [
+      "Percentage-based weekly time allocation (e.g., 40% DSA, 30% Project polish & deployment, 15% CS Fundamentals, 15% Mocks & Aptitude)",
+      "Phased 3-month transition: Month 1 (Core topics + Project) -> Month 2 (Medium problem patterns + Resume/Fundamentals) -> Month 3 (Timed Mocks + Company-specific preparation)",
+      "Sustainable hourly guidelines for a college student (15-20 hours/week)"
+    ],
+    "negative_constraints": [
+      "Recommending 100% DSA to the total exclusion of building projects",
+      "Ignoring mock interviews until the final week"
+    ]
+  },
+  {
+    "id": "GS-74",
+    "category": "Coding interviews and assessment preparation",
+    "question": "I can solve coding questions but struggle to explain my reasoning out loud. Show me a repeatable interview framework for clarifying requirements, proposing an approach, analyzing complexity, coding, and testing.",
+    "expected_rubric": [
+      "The 5-step UMPIRE / REACT framework: 1. Clarify constraints & edge cases -> 2. Propose brute force & state Big-O -> 3. Discuss optimized approach & verify before coding -> 4. Clean coding with modular naming -> 5. Dry-run trace with sample and edge cases",
+      "Explicit verbal scripts ('Before I write code, let me verify my understanding with an example...')",
+      "Technique for handling silence and interviewer hints"
+    ],
+    "negative_constraints": [
+      "Telling candidate to immediately start typing code in silence",
+      "Skipping dry-run verification"
+    ]
+  },
+  {
+    "id": "GS-75",
+    "category": "Coding interviews and assessment preparation",
+    "question": "During interviews, I usually jump straight into coding the first idea I get. Teach me how to establish a brute-force baseline, identify bottlenecks, and systematically derive a more efficient solution.",
+    "expected_rubric": [
+      "The BUD framework: Bottlenecks, Unnecessary work, Duplicated work",
+      "Protocol: State brute-force time/space explicitly, explain *why* it is suboptimal (e.g. repeated $O(N)$ linear scans), and identify what data structure eliminates the bottleneck (e.g. Hash Map $O(1)$ lookup)",
+      "Get interviewer buy-in on the plan before typing a single line of code"
+    ],
+    "negative_constraints": [
+      "Encouraging premature optimization or jumping straight into optimal code without explaining tradeoffs",
+      "Failing to articulate the root bottleneck"
+    ]
+  },
+  {
+    "id": "GS-76",
+    "category": "Coding interviews and assessment preparation",
+    "question": "I have a 90-minute coding assessment with three questions. How should I allocate time, prioritize questions, handle partial solutions, and test code before submission?",
+    "expected_rubric": [
+      "Strict time triage: first 5 mins scanning all 3 problems; order: Easy/Medium first for bankable points, leave hardest for last",
+      "Per-problem budget: 20 mins for Q1, 30 mins for Q2, 30 mins for Q3, 10 mins buffer for testing edge cases",
+      "The 'Partial Points' strategy: submitting working brute force ($O(N^2)$) if optimal solution isn't clear within 15 minutes rather than scoring 0"
+    ],
+    "negative_constraints": [
+      "Spending 60 minutes stuck on Question 1 without looking at the others",
+      "Submitting code without testing custom boundary cases"
+    ]
+  },
+  {
+    "id": "GS-77",
+    "category": "Coding interviews and assessment preparation",
+    "question": "I failed a coding interview because I couldn't solve a graph problem. How do I conduct a useful post-interview review, identify the actual knowledge gap, and create a targeted recovery plan?",
+    "expected_rubric": [
+      "Post-interview debrief within 2 hours: write down problem statement, constraints, exact point of failure (pattern recognition vs implementation vs edge case bug)",
+      "Targeted 7-day remediation sprint focused on that exact archetype (e.g., BFS/DFS cycle detection or topological sort)",
+      "Constructive framing separating rejection from identity"
+    ],
+    "negative_constraints": [
+      "Ruminating emotionally without documenting the failure taxonomy",
+      "Immediately switching to unrelated topics instead of closing the discovered gap"
+    ]
+  },
+  {
+    "id": "GS-78",
+    "category": "Coding interviews and assessment preparation",
+    "question": "Act as an interviewer for a beginner software engineering internship. Give me one DSA problem at a time, ask clarifying questions, provide hints only when needed, and evaluate my reasoning after the interview.",
+    "expected_rubric": [
+      "Interviewer persona protocol: state problem cleanly, prompt user for clarifying questions, demand time/space complexity before coding, provide tiered Socratic hints only on request, and provide a structured scorecard at the end",
+      "Evaluation scorecard covering Problem Solving, Communication, Code Quality, and Testing",
+      "Realistic interview environment simulation"
+    ],
+    "negative_constraints": [
+      "Dumping the problem and solution simultaneously",
+      "Skipping the interactive dialogue and evaluation scorecard"
+    ]
+  },
+  {
+    "id": "GS-79",
+    "category": "Coding interviews and assessment preparation",
+    "question": "I have solved 150 coding problems, but my resume still looks weak. How should I present my problem-solving ability alongside projects without treating problem counts as proof of engineering skill?",
+    "expected_rubric": [
+      "Resume restructuring rule: LeetCode counts go into a compact 1-line 'Technical Skills & Competitive Programming' section, not as headline project bullets",
+      "Translating DSA into software engineering impact: showcasing real systems built with algorithms (e.g., custom rate limiter, cache eviction, graph traversal tool)",
+      "Pairing DSA with demonstrated software engineering proof (deployed apps, Docker, CI/CD, tests)"
+    ],
+    "negative_constraints": [
+      "Listing LeetCode as a major resume project",
+      "Treating raw problem counts as a substitute for production engineering artifacts"
+    ]
+  },
+  {
+    "id": "GS-80",
+    "category": "Coding interviews and assessment preparation",
+    "question": "Assess whether I'm ready for a software engineering internship. Test my DSA, complexity analysis, debugging, SQL, OS, networking, and project knowledge, then create a prioritized 30-day improvement plan.",
+    "expected_rubric": [
+      "Diagnostic readiness audit across 6 pillars: DSA (Medium competence in core patterns), SQL (Joins & window functions), OS/Concurrency, Networking (HTTP/DNS/REST), System/Project quality (Docker, tests, deployment), and Live Communication",
+      "Objective pass/fail criteria per pillar to identify the primary bottleneck",
+      "A prioritized 30-day corrective action roadmap focusing only on the lowest-scoring areas"
+    ],
+    "negative_constraints": [
+      "Sugarcoating readiness or giving vague motivational advice",
+      "Failing to provide a diagnostic scoring mechanism"
+    ]
+  }
+]
