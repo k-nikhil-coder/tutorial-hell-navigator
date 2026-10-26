@@ -471,5 +471,5 @@ Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more informa
 ---
 
 <div align="center">
-  <sub>Built by <a href="https://github.com/kunbh">Kumbham Nikhil</a> • Escaping Tutorial Hell through Engineering Rigor</sub>
+  <sub>Built by <a href="https://github.com/k-nikhil-coder/">Kumbham Nikhil</a> • Escaping Tutorial Hell through Engineering Rigor</sub>
 </div>
