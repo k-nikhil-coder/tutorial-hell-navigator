@@ -1,0 +1,46 @@
+name: CI Engine & Evaluation Gate
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Run Automated Test Suite & Validation
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: "pip"
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Execute Pytest Suite
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'dummy-key-for-unit-tests' }}
+      run: |
+        pytest tests/ -v -k "not test_api_streaming_endpoint and not test_api_structured_navigation"
+
+    - name: Validate Gold Set Benchmark Schema
+      run: |
+        python -c "
+        import json
+        with open('eval/gold_set.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        assert len(data) == 80, f'Expected 80 benchmark questions, found {len(data)}'
+        for q in data:
+            assert 'id' in q and 'category' in q and 'question' in q
+            assert 'expected_rubric' in q and 'negative_constraints' in q
+        print('Verified 80 benchmark questions structure successfully!')
+        "

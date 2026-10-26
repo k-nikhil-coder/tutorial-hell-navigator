@@ -1,0 +1,110 @@
+{
+  "total": 2,
+  "passed": 2,
+  "pass_rate": 100.0,
+  "items": [
+    {
+      "id": "GS-01",
+      "category": "Full-stack development: getting started",
+      "question": "I know basic HTML, CSS, and JavaScript. What exact learning path should I follow to become a full-stack developer, and what should I build at each stage?",
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 5,
+        "command_count": 5
+      },
+      "response": {
+        "summary": "To transition from tutorial hell to independent full-stack developer, follow a structured milestone roadmap focusing on clean separation of concerns, starting from local state persistence up to deployed full-stack architectures.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Master Backend Basics and REST APIs",
+            "command": "npm init -y && npm install express",
+            "explanation": "Build a Node.js and Express server with explicit CRUD routes before connecting any database to understand HTTP request/response lifecycles.",
+            "verification": "curl -X GET http://localhost:3000/api/health"
+          },
+          {
+            "step_number": 2,
+            "title": "Integrate Relational Database and Migrations",
+            "command": "npm install pg sequelize",
+            "explanation": "Replace in-memory arrays with PostgreSQL to learn relational schemas, foreign keys, and migration scripts.",
+            "verification": "npx sequelize-cli db:migrate"
+          },
+          {
+            "step_number": 3,
+            "title": "Build a Frontend Client with API Integration",
+            "command": "npm create vite@latest client -- --template vanilla",
+            "explanation": "Connect a vanilla JavaScript or React frontend to your Express backend using fetch() and handle async loading/error states.",
+            "verification": "npm run dev"
+          },
+          {
+            "step_number": 4,
+            "title": "Implement Authentication and Authorization",
+            "command": "npm install jsonwebtoken bcrypt",
+            "explanation": "Secure your API endpoints using hashed passwords and JWT-based session tokens.",
+            "verification": "curl -X POST http://localhost:3000/api/login -d '{\"email\":\"test@test.com\",\"password\":\"123\"}'"
+          },
+          {
+            "step_number": 5,
+            "title": "Containerize with Docker",
+            "command": "docker compose up --build",
+            "explanation": "Package your frontend, backend, and database into multi-container Docker services to ensure environment parity.",
+            "verification": "docker compose ps"
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Copying large boilerplates or code generators without understanding what every single file does",
+          "Jumping straight into complex ORMs and meta-frameworks before mastering raw SQL and basic HTTP routing",
+          "Skipping input validation and error handling on both frontend and backend",
+          "Building giant monolithic files instead of separating routes, business logic, and data access"
+        ],
+        "architecture_contract": "app/\n\u251c\u2500\u2500 backend/\n\u2502   \u251c\u2500\u2500 src/\n\u2502   \u2502   \u251c\u2500\u2500 controllers/\n\u2502   \u2502   \u251c\u2500\u2500 models/\n\u2502   \u2502   \u251c\u2500\u2500 routes/\n\u2502   \u2502   \u2514\u2500\u2500 server.js\n\u2502   \u2514\u2500\u2500 package.json\n\u2514\u2500\u2500 frontend/\n    \u251c\u2500\u2500 src/\n    \u2502   \u251c\u2500\u2500 api/\n    \u2502   \u251c\u2500\u2500 components/\n    \u2502   \u2514\u2500\u2500 main.js\n    \u2514\u2500\u2500 package.json",
+        "key_takeaway": "Build projects feature by feature rather than layer by layer, and always write error handling and validation before moving to the next feature."
+      }
+    },
+    {
+      "id": "GS-02",
+      "category": "Full-stack development: getting started",
+      "question": "Should I learn React + Node.js or React + Python/FastAPI as a CS student? Compare the learning curve, job opportunities, and project potential.",
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 3,
+        "command_count": 2
+      },
+      "response": {
+        "summary": "Comparison between React + Node.js and React + Python/FastAPI for a CS student transitioning out of tutorial hell. Both stacks are highly employable, but React + Node.js keeps your language context unified in JavaScript/TypeScript, while React + FastAPI introduces Python and strict API typing via Pydantic.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Evaluate your current language proficiency",
+            "command": null,
+            "explanation": "If you are comfortable with JavaScript/TypeScript, choosing React + Node.js minimizes context switching. If you plan on doing AI/ML or data science coursework, choose React + FastAPI.",
+            "verification": "Choose the stack that aligns with 70 percent of your existing code confidence."
+          },
+          {
+            "step_number": 2,
+            "title": "Build a minimum viable project using React + FastAPI",
+            "command": "pip install fastapi uvicorn && uvicorn main:app --reload",
+            "explanation": "FastAPI enforces schema validation via Pydantic out of the box, teaching you strict API contract design early.",
+            "verification": "Navigate to http://localhost:8000/docs to view the auto-generated Swagger UI."
+          },
+          {
+            "step_number": 3,
+            "title": "Build a minimum viable project using React + Node.js",
+            "command": "npm init -y && npm install express cors",
+            "explanation": "Express provides minimal boilerplate to connect your React frontend to a backend database.",
+            "verification": "Run node server.js and verify your endpoint responds via curl or Postman."
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Switching stacks halfway through a project because a new tutorial looked trendier",
+          "Writing monolithic code where React components directly query databases instead of going through the API",
+          "Copy-pasting boilerplate authentication code without understanding JWTs or session cookies"
+        ],
+        "architecture_contract": "Client (React Vite) <--> HTTP / JSON <--> Server (Node.js/Express or Python/FastAPI) <--> Database (PostgreSQL)",
+        "key_takeaway": "Master the fundamentals of HTTP requests, state management, and schema validation rather than worrying about which backend framework is currently trending."
+      }
+    }
+  ]
+}

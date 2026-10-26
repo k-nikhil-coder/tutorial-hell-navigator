@@ -149,8 +149,19 @@ activemq-data/
 # SageMath parsed files
 *.sage.py
 
-# Environments
+# Environments & Secrets
 .env
+.env.*
+!.env.example
+*.env
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*credentials*.json
+client_secret*.json
 .envrc
 .venv
 env/
