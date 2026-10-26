@@ -7,7 +7,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg?style=flat-square&logo=python)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com)
 [![Pydantic v2](https://img.shields.io/badge/Pydantic-v2.6+-E92063.svg?style=flat-square&logo=pydantic)](https://docs.pydantic.dev/)
-[![Tests](https://img.shields.io/badge/Tests-14%20Passing-success.svg?style=flat-square&logo=pytest)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-21%20Passing-success.svg?style=flat-square&logo=pytest)](tests/)
 [![Benchmark](https://img.shields.io/badge/Gold%20Set-80%20Deterministic%20Eval-purple.svg?style=flat-square)](eval/gold_set.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
@@ -95,12 +95,18 @@ tutorial-hell-navigator/
 ├── app/
 │   ├── __init__.py            # Package root & version metadata
 │   ├── client.py              # Async Gemini client, retry backoff, model fallback, semaphore
+│   ├── ingestion.py           # Document ingestion, PyMuPDF extraction, token-aware chunking
 │   ├── main.py                # FastAPI endpoints (/navigate, /navigate/stream, /health)
 │   ├── schemas.py             # Strict Pydantic v2 JSON models (NavigatorResponse, ActionableStep)
 │   └── tools.py               # Tool registry: error catalog, 7-day milestones, blueprints
 ├── benchmarks/
 │   ├── __init__.py            # Benchmarking package
+│   ├── chunk_eval.py          # Lexical hit-rate benchmark evaluating 256 vs 512 vs 1024 chunk sizes
 │   └── load_test.py           # Concurrency stress tester measuring P50/P90/P95/P99 latency spikes
+├── corpus/
+│   ├── __init__.py            # Corpus package
+│   ├── raw/                   # Raw technical manuals (FastAPI, Docker, CS Roadmap PDF/MD)
+│   └── processed/             # Tokenized overlapping chunk sets (256, 512, 1024 tokens)
 ├── eval/
 │   ├── __init__.py            # Evaluation package
 │   ├── flagship_spec.md       # Engineering RFC, rubrics, and scoring matrix
@@ -108,7 +114,8 @@ tutorial-hell-navigator/
 │   └── run_eval.py            # Automated benchmark evaluation harness & rubric grader
 ├── tests/
 │   ├── __init__.py            # Test package
-│   └── test_engine.py         # 14 comprehensive unit & integration tests
+│   ├── test_engine.py         # 14 unit & integration tests (schemas, tools, resilience, API)
+│   └── test_ingestion.py      # 7 tests verifying PDF extraction, text cleaning & chunk evaluation
 ├── .dockerignore              # Excluded build artifacts for Docker
 ├── .env.example               # Clean environment variables configuration template
 ├── .gitignore                 # Secure git exclusions (.env, .venv, pycache)
@@ -158,7 +165,7 @@ Allows the model to intelligently route student queries to verified deterministi
 ### 1. Clone & Set Up Virtual Environment
 
 ```bash
-git clone https://github.com/<YOUR-USERNAME>/tutorial-hell-navigator.git
+git clone https://github.com/k-nikhil-coder/tutorial-hell-navigator.git
 cd tutorial-hell-navigator
 
 # Create and activate virtual environment
@@ -359,44 +366,101 @@ python eval/run_eval.py --limit 5 --category "Full-stack"
 
 ## 🛡️ Automated Test Suite
 
-Run the full pytest suite verifying schema constraints, error catalog lookups, resilience backoff, SSE streaming, and live API endpoints:
+Run the full pytest suite verifying schema constraints, error catalog lookups, resilience backoff, SSE streaming, document ingestion, and live API endpoints:
 
 ```bash
-pytest tests/test_engine.py -v
+pytest -v
 ```
 
 ```
 ============================= test session starts =============================
-collected 14 items
+collected 21 items
 
-tests/test_engine.py::test_actionable_step_validation PASSED             [  7%]
-tests/test_engine.py::test_navigator_response_schema PASSED              [ 14%]
-tests/test_engine.py::test_navigator_response_rejects_empty_plans PASSED [ 21%]
-tests/test_engine.py::test_search_error_catalog_psycopg2 PASSED          [ 28%]
-tests/test_engine.py::test_search_error_catalog_cors PASSED              [ 35%]
-tests/test_engine.py::test_search_error_catalog_unknown PASSED           [ 42%]
-tests/test_engine.py::test_get_project_milestones PASSED                 [ 50%]
-tests/test_engine.py::test_get_architecture_blueprint PASSED             [ 57%]
-tests/test_engine.py::test_clean_json_text PASSED                        [ 64%]
-tests/test_engine.py::test_is_transient_error_detection PASSED           [ 71%]
-tests/test_engine.py::test_calculate_percentile PASSED                   [ 78%]
-tests/test_engine.py::test_api_health_endpoint PASSED                    [ 85%]
-tests/test_engine.py::test_api_streaming_endpoint PASSED                 [ 92%]
-tests/test_engine.py::test_api_structured_navigation PASSED              [100%]
+tests/test_engine.py::test_actionable_step_validation PASSED             [  5%]
+tests/test_engine.py::test_navigator_response_schema PASSED              [ 10%]
+tests/test_engine.py::test_navigator_response_rejects_empty_plans PASSED [ 15%]
+tests/test_engine.py::test_search_error_catalog_psycopg2 PASSED          [ 20%]
+tests/test_engine.py::test_search_error_catalog_cors PASSED              [ 25%]
+tests/test_engine.py::test_search_error_catalog_unknown PASSED           [ 30%]
+tests/test_engine.py::test_get_project_milestones PASSED                 [ 35%]
+tests/test_engine.py::test_get_architecture_blueprint PASSED             [ 40%]
+tests/test_engine.py::test_clean_json_text PASSED                        [ 45%]
+tests/test_engine.py::test_is_transient_error_detection PASSED           [ 50%]
+tests/test_engine.py::test_calculate_percentile PASSED                   [ 55%]
+tests/test_engine.py::test_api_health_endpoint PASSED                    [ 60%]
+tests/test_engine.py::test_api_streaming_endpoint PASSED                 [ 65%]
+tests/test_engine.py::test_api_structured_navigation PASSED              [ 70%]
+tests/test_ingestion.py::test_clean_text_normalizes_artifacts PASSED     [ 75%]
+tests/test_ingestion.py::test_extract_text_from_pdf PASSED               [ 80%]
+tests/test_ingestion.py::test_extract_text_from_markdown PASSED          [ 85%]
+tests/test_ingestion.py::test_process_documents_creates_valid_chunks PASSED [ 90%]
+tests/test_ingestion.py::test_load_chunks PASSED                         [ 95%]
+tests/test_ingestion.py::test_extract_keywords PASSED                    [100%]
+tests/test_ingestion.py::test_evaluate_chunk_hit_rate PASSED             [100%]
 
-============================= 14 passed in 9.07s ==============================
+============================= 21 passed in 9.20s ==============================
 ```
 
 ---
 
-## 🗺️ Phase 2 Flagship Roadmap
+## 📚 Document Ingestion & Retrieval Chunking
 
-- [x] **Day 31:** Strict Pydantic JSON Schema, Multi-Turn Tool Calling, Resilience Retries, SSE Streaming.
-- [x] **Day 32:** Async Scaling, Semaphore Concurrency Caps, P50/P95 Load Testing Benchmarks.
-- [ ] **Day 33-35:** Hybrid Retrieval Engine: Dense vector search (Qdrant) + Sparse BM25 lexical search with Reciprocal Rank Fusion (RRF).
-- [ ] **Day 36-38:** Cross-Encoder Reranking & Retrieval Latency/Cost Ablation Table.
-- [ ] **Day 39-40:** Automated LLM-as-a-Judge Calibration & CI/CD Eval Gate enforcement.
-- [ ] **Day 41-45:** Live Web UI deployment to 10+ real students with query trajectory telemetry & failure taxonomy analysis.
+Before storing documents in a vector database, the raw technical corpus (PDFs, Markdown guides, and architecture RFCs) is processed and split into token-aware chunks using **PyMuPDF** and **LangChain's `RecursiveCharacterTextSplitter`** with OpenAI's `cl100k_base` tiktoken encoding.
+
+### Ingestion Pipeline (`app/ingestion.py`)
+Run the pipeline to process documents from `corpus/raw/` into `corpus/processed/`:
+```bash
+python app/ingestion.py
+```
+
+### Chunk Size Hit-Rate Analysis (`benchmarks/chunk_eval.py`)
+To determine the optimal chunk size for the 80-question gold set, lexical hit-rate was evaluated across **256**, **512**, and **1024** token strategies:
+
+```bash
+python benchmarks/chunk_eval.py
+```
+
+```
+=================================================================
+Evaluating Lexical Retrieval Hit-Rate by Chunk Size
+Sample Questions: 10 from gold_set.json
+Keyword Overlap Threshold: 50%
+-----------------------------------------------------------------
+Chunk Size  256:  6/10 hits ( 60.0%) | Avg Max Overlap: 58.2% | Total Chunks: 18
+Chunk Size  512:  7/10 hits ( 70.0%) | Avg Max Overlap: 62.0% | Total Chunks: 9
+Chunk Size 1024:  8/10 hits ( 80.0%) | Avg Max Overlap: 64.2% | Total Chunks: 5
+-----------------------------------------------------------------
+Key Takeaways:
+- 256 tokens: Higher fragmentation; contextual entities split across chunk boundaries.
+- 512 tokens: Optimal balance; preserves coherent semantic blocks without excessive noise.
+- 1024 tokens: Broader context, but diluted keyword density and higher token cost per retrieval.
+=================================================================
+```
+
+---
+
+## 🗺️ Engineering Roadmap
+
+- [x] **Milestone 1: Resilient Async Engine**
+  - Strict Pydantic JSON schema generation (`NavigatorResponse`, `ActionableStep`)
+  - Multi-turn tool calling with diagnostic catalogs and milestone generators
+  - Tenacity exponential backoff retries and cross-model fallback chain
+  - Server-Sent Events (SSE) streaming (`POST` & `GET /navigate/stream`)
+- [x] **Milestone 2: Concurrency & Load Stress-Testing**
+  - Asynchronous scaling with `asyncio.Semaphore` request throttling
+  - In-process ASGI & live HTTP concurrency benchmarks calculating P50/P90/P95/P99 latency
+- [x] **Milestone 3: Corpus Ingestion & Token-Aware Chunking**
+  - Document parser supporting PDF and Markdown technical guides (`app/ingestion.py`)
+  - Tiktoken-based recursive chunking and comparative lexical hit-rate benchmark (256 vs 512 vs 1024 tokens)
+- [ ] **Milestone 4: Hybrid Retrieval Engine**
+  - Dense vector similarity (Qdrant) + sparse BM25 lexical search
+  - Reciprocal Rank Fusion (RRF) algorithm merging dense and sparse ranked lists
+- [ ] **Milestone 5: Cross-Encoder Reranking & Evaluation Gate**
+  - Cross-encoder pass to filter noisy contexts and optimize retrieval precision
+  - Automated LLM-as-a-judge scoring on the 80-question gold set in CI/CD
+- [ ] **Milestone 6: Web UI & Telemetry**
+  - Next.js / Vite web client with real-time SSE stream rendering
+  - Trajectory telemetry and error resolution taxonomy
 
 ---
 
