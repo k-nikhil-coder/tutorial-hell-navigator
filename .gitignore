@@ -229,3 +229,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Vector Database and Runtime Telemetry
+data/qdrant_db/
+logs/*.jsonl
+scratch/

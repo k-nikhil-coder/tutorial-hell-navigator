@@ -27,6 +27,7 @@ dependencies = [
     "pymupdf>=1.23.0",
     "langchain-text-splitters>=0.0.1",
     "tiktoken>=0.6.0",
+    "qdrant-client>=1.8.0",
 ]
 
 [project.optional-dependencies]

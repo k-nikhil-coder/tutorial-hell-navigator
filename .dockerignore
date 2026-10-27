@@ -17,6 +17,8 @@ htmlcov
 *.key
 *credentials*.json
 client_secret*.json
+data/qdrant_db/
+logs/*.jsonl
 .idea
 .vscode
 eval/eval_report.json

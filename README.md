@@ -7,7 +7,8 @@
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg?style=flat-square&logo=python)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com)
 [![Pydantic v2](https://img.shields.io/badge/Pydantic-v2.6+-E92063.svg?style=flat-square&logo=pydantic)](https://docs.pydantic.dev/)
-[![Tests](https://img.shields.io/badge/Tests-21%20Passing-success.svg?style=flat-square&logo=pytest)](tests/)
+[![Qdrant](https://img.shields.io/badge/Qdrant-Vector%20DB-red.svg?style=flat-square&logo=qdrant)](https://qdrant.tech/)
+[![Tests](https://img.shields.io/badge/Tests-29%20Passing-success.svg?style=flat-square&logo=pytest)](tests/)
 [![Benchmark](https://img.shields.io/badge/Gold%20Set-80%20Deterministic%20Eval-purple.svg?style=flat-square)](eval/gold_set.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
@@ -94,10 +95,12 @@ tutorial-hell-navigator/
 │       └── ci.yml             # GitHub Actions CI workflow (Pytest + Gold Set validation)
 ├── app/
 │   ├── __init__.py            # Package root & version metadata
-│   ├── client.py              # Async Gemini client, retry backoff, model fallback, semaphore
+│   ├── client.py              # Async Gemini client, retry backoff, model fallback, semaphore, RAG prompt
 │   ├── ingestion.py           # Document ingestion, PyMuPDF extraction, token-aware chunking
-│   ├── main.py                # FastAPI endpoints (/navigate, /navigate/stream, /health)
-│   ├── schemas.py             # Strict Pydantic v2 JSON models (NavigatorResponse, ActionableStep)
+│   ├── main.py                # FastAPI endpoints (/navigate, /navigate/stream, /health, /telemetry)
+│   ├── rag.py                 # Qdrant client, dense vector indexing, cosine similarity retrieval
+│   ├── schemas.py             # Strict Pydantic v2 JSON models (citations, refusal flags, trajectories)
+│   ├── telemetry.py           # JSONL query trajectory logger & retrieval for error taxonomy analysis
 │   └── tools.py               # Tool registry: error catalog, 7-day milestones, blueprints
 ├── benchmarks/
 │   ├── __init__.py            # Benchmarking package
@@ -107,6 +110,8 @@ tutorial-hell-navigator/
 │   ├── __init__.py            # Corpus package
 │   ├── raw/                   # Raw technical manuals (FastAPI, Docker, CS Roadmap PDF/MD)
 │   └── processed/             # Tokenized overlapping chunk sets (256, 512, 1024 tokens)
+├── data/                      # Local Qdrant vector database persistence
+├── logs/                      # Runtime telemetry logs (query_trajectories.jsonl)
 ├── eval/
 │   ├── __init__.py            # Evaluation package
 │   ├── flagship_spec.md       # Engineering RFC, rubrics, and scoring matrix
@@ -115,10 +120,11 @@ tutorial-hell-navigator/
 ├── tests/
 │   ├── __init__.py            # Test package
 │   ├── test_engine.py         # 14 unit & integration tests (schemas, tools, resilience, API)
-│   └── test_ingestion.py      # 7 tests verifying PDF extraction, text cleaning & chunk evaluation
+│   ├── test_ingestion.py      # 7 tests verifying PDF extraction, text cleaning & chunk evaluation
+│   └── test_rag.py            # 8 tests verifying Qdrant retrieval, citations, refusal path & telemetry
 ├── .dockerignore              # Excluded build artifacts for Docker
 ├── .env.example               # Clean environment variables configuration template
-├── .gitignore                 # Secure git exclusions (.env, .venv, pycache)
+├── .gitignore                 # Secure git exclusions (.env, .venv, pycache, local db)
 ├── docker-compose.yml         # One-command orchestration
 ├── Dockerfile                 # Multi-stage production container build
 ├── LICENSE                    # MIT License
@@ -154,6 +160,19 @@ Allows the model to intelligently route student queries to verified deterministi
 - Streams response tokens in real-time using **Server-Sent Events** (`text/event-stream`).
 - Exposes both `POST /navigate/stream` for programmatic clients and `GET /navigate/stream?query=...` for native browser `EventSource` connections.
 
+### 6. Naive RAG Baseline with Qdrant (`app/rag.py`)
+- Vectorizes 512-token documentation chunks using **`gemini-embedding-001`** (3072 dimensions).
+- Persists and queries vectors via local **Qdrant** with Cosine similarity search, retrieving top-3 grounded passages.
+- Injects structured context headers (`[CHUNK_ID: ...]`) directly into the generation prompt.
+
+### 7. Strict Inline Citations & Out-of-Bounds Refusal
+- Mandates exact `chunk_id` references attached to every claim in `ActionableStep.citations` and aggregated in `NavigatorResponse.cited_chunk_ids`.
+- Prevents ungrounded hallucination: triggers `is_refusal=True` and a clear `refusal_reason` whenever similarity drops below the out-of-corpus threshold (0.40) or no verified technical documentation exists.
+
+### 8. Query Trajectory Telemetry (`app/telemetry.py`)
+- Logs every request, retrieved chunk scores, inline citations, latency (ms), and refusal triggers to `logs/query_trajectories.jsonl`.
+- Exposes `GET /telemetry/trajectories` for runtime inspection and Day 47 failure taxonomy analysis.
+
 ---
 
 ## 🚀 Quickstart
@@ -165,7 +184,7 @@ Allows the model to intelligently route student queries to verified deterministi
 ### 1. Clone & Set Up Virtual Environment
 
 ```bash
-git clone https://github.com/k-nikhil-coder/tutorial-hell-navigator.git
+git clone https://github.com/<YOUR-USERNAME>/tutorial-hell-navigator.git
 cd tutorial-hell-navigator
 
 # Create and activate virtual environment
@@ -366,46 +385,26 @@ python eval/run_eval.py --limit 5 --category "Full-stack"
 
 ## 🛡️ Automated Test Suite
 
-Run the full pytest suite verifying schema constraints, error catalog lookups, resilience backoff, SSE streaming, document ingestion, and live API endpoints:
+Run the full pytest suite (29 tests) verifying schemas, error catalog tools, resilience backoff, SSE streaming, document ingestion, Qdrant vector retrieval, citation grounding, refusal paths, and trajectory telemetry:
 
 ```bash
-pytest -v
+pytest tests/ -v
 ```
 
 ```
 ============================= test session starts =============================
-collected 21 items
+tests/test_engine.py ..............                                      [ 48%]
+tests/test_ingestion.py .......                                          [ 72%]
+tests/test_rag.py ........                                               [100%]
 
-tests/test_engine.py::test_actionable_step_validation PASSED             [  5%]
-tests/test_engine.py::test_navigator_response_schema PASSED              [ 10%]
-tests/test_engine.py::test_navigator_response_rejects_empty_plans PASSED [ 15%]
-tests/test_engine.py::test_search_error_catalog_psycopg2 PASSED          [ 20%]
-tests/test_engine.py::test_search_error_catalog_cors PASSED              [ 25%]
-tests/test_engine.py::test_search_error_catalog_unknown PASSED           [ 30%]
-tests/test_engine.py::test_get_project_milestones PASSED                 [ 35%]
-tests/test_engine.py::test_get_architecture_blueprint PASSED             [ 40%]
-tests/test_engine.py::test_clean_json_text PASSED                        [ 45%]
-tests/test_engine.py::test_is_transient_error_detection PASSED           [ 50%]
-tests/test_engine.py::test_calculate_percentile PASSED                   [ 55%]
-tests/test_engine.py::test_api_health_endpoint PASSED                    [ 60%]
-tests/test_engine.py::test_api_streaming_endpoint PASSED                 [ 65%]
-tests/test_engine.py::test_api_structured_navigation PASSED              [ 70%]
-tests/test_ingestion.py::test_clean_text_normalizes_artifacts PASSED     [ 75%]
-tests/test_ingestion.py::test_extract_text_from_pdf PASSED               [ 80%]
-tests/test_ingestion.py::test_extract_text_from_markdown PASSED          [ 85%]
-tests/test_ingestion.py::test_process_documents_creates_valid_chunks PASSED [ 90%]
-tests/test_ingestion.py::test_load_chunks PASSED                         [ 95%]
-tests/test_ingestion.py::test_extract_keywords PASSED                    [100%]
-tests/test_ingestion.py::test_evaluate_chunk_hit_rate PASSED             [100%]
-
-============================= 21 passed in 9.20s ==============================
+============================= 29 passed in 11.50s =============================
 ```
 
 ---
 
-## 📚 Document Ingestion & Retrieval Chunking
+## 📚 Document Ingestion & Chunk Size Benchmarks (Day 33)
 
-Before storing documents in a vector database, the raw technical corpus (PDFs, Markdown guides, and architecture RFCs) is processed and split into token-aware chunks using **PyMuPDF** and **LangChain's `RecursiveCharacterTextSplitter`** with OpenAI's `cl100k_base` tiktoken encoding.
+Before storing documents in a vector database, the raw technical corpus (PDFs, Markdown guides, and architecture RFCs) is processed and split into token-aware chunks using **PyMuPDF** and **LangChain's `RecursiveCharacterTextSplitter`** with the OpenAI `cl100k_base` tiktoken encoding.
 
 ### Ingestion Pipeline (`app/ingestion.py`)
 Run the pipeline to process documents from `corpus/raw/` into `corpus/processed/`:
@@ -413,7 +412,7 @@ Run the pipeline to process documents from `corpus/raw/` into `corpus/processed/
 python app/ingestion.py
 ```
 
-### Chunk Size Hit-Rate Analysis (`benchmarks/chunk_eval.py`)
+### Scientific Chunking Evaluation (`benchmarks/chunk_eval.py`)
 To determine the optimal chunk size for the 80-question gold set, lexical hit-rate was evaluated across **256**, **512**, and **1024** token strategies:
 
 ```bash
@@ -439,28 +438,51 @@ Key Takeaways:
 
 ---
 
-## 🗺️ Engineering Roadmap
+## 🔎 Naive RAG Baseline & Citations (Day 34)
 
-- [x] **Milestone 1: Resilient Async Engine**
-  - Strict Pydantic JSON schema generation (`NavigatorResponse`, `ActionableStep`)
-  - Multi-turn tool calling with diagnostic catalogs and milestone generators
-  - Tenacity exponential backoff retries and cross-model fallback chain
-  - Server-Sent Events (SSE) streaming (`POST` & `GET /navigate/stream`)
-- [x] **Milestone 2: Concurrency & Load Stress-Testing**
-  - Asynchronous scaling with `asyncio.Semaphore` request throttling
-  - In-process ASGI & live HTTP concurrency benchmarks calculating P50/P90/P95/P99 latency
-- [x] **Milestone 3: Corpus Ingestion & Token-Aware Chunking**
-  - Document parser supporting PDF and Markdown technical guides (`app/ingestion.py`)
-  - Tiktoken-based recursive chunking and comparative lexical hit-rate benchmark (256 vs 512 vs 1024 tokens)
-- [ ] **Milestone 4: Hybrid Retrieval Engine**
-  - Dense vector similarity (Qdrant) + sparse BM25 lexical search
-  - Reciprocal Rank Fusion (RRF) algorithm merging dense and sparse ranked lists
-- [ ] **Milestone 5: Cross-Encoder Reranking & Evaluation Gate**
-  - Cross-encoder pass to filter noisy contexts and optimize retrieval precision
-  - Automated LLM-as-a-judge scoring on the 80-question gold set in CI/CD
-- [ ] **Milestone 6: Web UI & Telemetry**
-  - Next.js / Vite web client with real-time SSE stream rendering
-  - Trajectory telemetry and error resolution taxonomy
+Transitions the system from an ungrounded LLM agent into a grounded retrieval engine:
+
+### 1. Vector Database Integration (`app/rag.py`)
+- Indexes 512-token documentation chunks into **Qdrant** using `gemini-embedding-001` (3072 dimensions, Cosine distance).
+- Index the corpus into Qdrant:
+```bash
+python app/rag.py
+```
+
+### 2. Retrieval & Context Injection
+- When a user submits a query to `POST /navigate`, the engine computes the dense query embedding and retrieves top-3 matching chunks.
+- Formats chunks into unambiguous blocks (`--- [CHUNK_ID: ...] (Source: ...) ---`) and prepends to the system prompt.
+
+### 3. Inline Citations & Out-of-Bounds Refusal
+- Enforces that all action steps cite the exact `chunk_id` they reference (`ActionableStep.citations`).
+- Hardcoded refusal trigger: If top cosine similarity falls below `0.40` (out-of-corpus query like cooking, pop culture, or ungrounded technologies), the model outputs:
+  ```json
+  {
+    "is_refusal": true,
+    "refusal_reason": "Out-of-corpus query",
+    "summary": "This query falls outside the verified engineering corpus..."
+  }
+  ```
+
+### 4. Query Trajectory Telemetry (`logs/query_trajectories.jsonl`)
+- Every query, retrieved chunk IDs, cosine scores, LLM output, refusal status, and latency is logged for the Day 47 failure taxonomy.
+- Query logged trajectories via API:
+```bash
+curl http://localhost:8000/telemetry/trajectories?limit=10
+```
+
+---
+
+## 🗺️ Phase 2 Flagship Roadmap
+
+- [x] **Day 31:** Strict Pydantic JSON Schema, Multi-Turn Tool Calling, Resilience Retries, SSE Streaming.
+- [x] **Day 32:** Async Scaling, Semaphore Concurrency Caps, P50/P95 Load Testing Benchmarks.
+- [x] **Day 33:** Ingestion Pipeline (`app/ingestion.py`), PDF Text Extraction (PyMuPDF), and Token-Aware Chunking Benchmarks (256 vs 512 vs 1024).
+- [x] **Day 34:** Naive RAG Baseline: Qdrant Vector DB, Cosine Embeddings (`gemini-embedding-001`), Grounded Context Injection, Strict Inline Chunk Citations, Out-of-Bounds Refusal, and Trajectory Telemetry.
+- [ ] **Day 35:** Sparse BM25 Lexical Matching & Reciprocal Rank Fusion (RRF) Hybrid Search.
+- [ ] **Day 36-38:** Cross-Encoder Reranking & Retrieval Latency/Cost Ablation Table.
+- [ ] **Day 39-40:** Automated LLM-as-a-Judge Calibration & CI/CD Eval Gate enforcement.
+- [ ] **Day 41-45:** Live Web UI deployment to 10+ real students with query trajectory telemetry & failure taxonomy analysis.
 
 ---
 

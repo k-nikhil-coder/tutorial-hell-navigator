@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import asyncio
-from typing import AsyncGenerator, Optional, Any, Dict
+from typing import AsyncGenerator, Optional, Any, Dict, List, Tuple
 from dotenv import load_dotenv
 import httpx
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception
@@ -11,6 +11,10 @@ from google.genai import types, errors
 
 from app.schemas import NavigatorResponse
 from app.tools import AVAILABLE_TOOLS
+from app.rag import (
+    retrieve_relevant_chunks_async,
+    format_retrieved_context,
+)
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -29,11 +33,17 @@ DEFAULT_CONCURRENCY_LIMIT = MAX_CONCURRENT_REQUESTS
 GLOBAL_SEMAPHORE = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
 
 SYSTEM_PROMPT = (
-    "You are Tutorial Hell Navigator, a pragmatic mentor for CS students. "
-    "Help students transition from copying tutorials to building software independently. "
-    "When they run into errors, use your error catalog or roadmap tools to diagnose the issue. "
-    "Provide exact commands, explain why the fix works, and always highlight specific anti-patterns to avoid. "
-    "Never give empty advice like 'just keep practicing' or dump unverified code blocks."
+    "You are Tutorial Hell Navigator, an eval-first technical mentor for computer science students. "
+    "You must ground your guidance in the provided verified technical context when available. "
+    "\n\nSTRICT CITATION & REFUSAL RULES:\n"
+    "1. CITATIONS: In your action_plan, each ActionableStep MUST include the exact chunk_id (e.g. 'fastapi_fullstack_guide_chunk_2') in its 'citations' list for every technical claim made.\n"
+    "2. OUT-OF-CORPUS REFUSAL: If the provided verified context is empty or does not contain information to answer the question, you MUST:\n"
+    "   - Set is_refusal = True\n"
+    "   - Set refusal_reason = 'Question is out-of-corpus and cannot be verified against the technical documentation.'\n"
+    "   - State clearly in the summary that the question is outside the scope of the verified corpus.\n"
+    "   - Provide 1 advisory step pointing to standard documentation resources rather than inventing commands.\n"
+    "3. ACTIONABLE STEPS: When context is present, provide concrete terminal CLI commands, rationale, and verification checks.\n"
+    "4. ANTI-PATTERNS: List specific pitfalls to avoid."
 )
 
 
@@ -112,17 +122,49 @@ async def _execute_chat_with_fallback(
 async def generate_structured_response_async(
     user_query: str,
     semaphore: Optional[asyncio.Semaphore] = None,
+    enable_rag: bool = True,
 ) -> NavigatorResponse:
     sem = semaphore or GLOBAL_SEMAPHORE
     async with sem:
+        retrieved_chunks: List[Dict[str, Any]] = []
+
+        if enable_rag:
+            try:
+                retrieved_chunks = await retrieve_relevant_chunks_async(user_query, top_k=3)
+            except Exception as e:
+                logger.warning("RAG retrieval failed (falling back to tools): %s", e)
+
+        if retrieved_chunks:
+            # Check if top score is below out-of-corpus threshold
+            top_score = retrieved_chunks[0].get("score", 0.0)
+            if top_score < 0.40:
+                context_str = "[NO VERIFIED CORPUS FOUND FOR THIS TOPIC - OUT OF BOUNDS]"
+            else:
+                context_str = format_retrieved_context(retrieved_chunks)
+            prompt = f"VERIFIED CONTEXT:\n{context_str}\n\nSTUDENT QUESTION:\n{user_query}"
+        else:
+            prompt = user_query
+
         raw_output = await _execute_chat_with_fallback(
-            user_query=user_query,
+            user_query=prompt,
             response_schema=NavigatorResponse,
             response_mime_type="application/json",
             temperature=0.1,
         )
         cleaned = clean_json_text(raw_output)
-        return NavigatorResponse.model_validate_json(cleaned)
+        resp_model = NavigatorResponse.model_validate_json(cleaned)
+
+        # Aggregate citations across action steps
+        all_citations = []
+        for step in resp_model.action_plan:
+            if step.citations:
+                all_citations.extend(step.citations)
+        resp_model.cited_chunk_ids = list(dict.fromkeys(all_citations))
+
+        # Attach retrieved chunks for telemetry logging
+        object.__setattr__(resp_model, "_retrieved_chunks", retrieved_chunks)
+
+        return resp_model
 
 
 def generate_structured_response(user_query: str) -> str:
@@ -147,12 +189,26 @@ def generate_structured_response(user_query: str) -> str:
 async def stream_response_sse(
     user_query: str,
     semaphore: Optional[asyncio.Semaphore] = None,
+    enable_rag: bool = True,
 ) -> AsyncGenerator[str, None]:
     """Stream model output as Server-Sent Events."""
     sem = semaphore or GLOBAL_SEMAPHORE
     client = get_genai_client()
 
     async with sem:
+        retrieved_chunks: List[Dict[str, Any]] = []
+        if enable_rag:
+            try:
+                retrieved_chunks = await retrieve_relevant_chunks_async(user_query, top_k=3)
+            except Exception as e:
+                logger.warning("RAG retrieval failed during stream: %s", e)
+
+        if retrieved_chunks and retrieved_chunks[0].get("score", 0.0) >= 0.40:
+            context_str = format_retrieved_context(retrieved_chunks)
+            prompt = f"VERIFIED CONTEXT:\n{context_str}\n\nSTUDENT QUESTION:\n{user_query}"
+        else:
+            prompt = user_query
+
         last_err: Optional[Exception] = None
         for model_name in FALLBACK_MODELS:
             try:
@@ -164,7 +220,7 @@ async def stream_response_sse(
                         system_instruction=SYSTEM_PROMPT,
                     ),
                 )
-                stream = await chat.send_message_stream(user_query)
+                stream = await chat.send_message_stream(prompt)
                 async for chunk in stream:
                     if chunk.text:
                         yield f"data: {json.dumps({'text': chunk.text})}\n\n"
