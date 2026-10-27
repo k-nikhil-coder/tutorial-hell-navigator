@@ -46,42 +46,53 @@ Generic AI assistants often exacerbate this paralysis by dumping monolithic bloc
 
 ```mermaid
 flowchart TD
-    Client["Client Application / Dev Tools / Load Tester"]
+    Client["Client App / Web UI / Load Tester"]
 
     subgraph FastAPI["FastAPI Gateway (app/main.py)"]
         direction TB
-        Navigate["POST /navigate (Structured JSON)"]
-        StreamPost["POST /navigate/stream (SSE Stream)"]
-        StreamGet["GET /navigate/stream (Browser EventSource)"]
+        Navigate["POST /navigate (Structured Plan)"]
+        Stream["POST & GET /navigate/stream (SSE)"]
+        Telemetry["GET /telemetry/trajectories"]
         Health["GET /health & GET /tools/catalog"]
     end
 
-    subgraph Engine["Async Resilience & Concurrency Engine (app/client.py)"]
+    subgraph Engine["Async Resilience Engine (app/client.py)"]
         direction TB
         Sem["asyncio.Semaphore (MAX_CONCURRENT_REQUESTS=5)"]
         Retry["Tenacity Exponential Backoff (429 / 503 / Timeout)"]
         Fallback["Model Fallback Chain (Flash-Lite ➔ 3.5 ➔ 3.8)"]
+        Sem --> Retry --> Fallback
     end
 
-    subgraph Tools["Multi-Turn Tool Registry (app/tools.py)"]
+    subgraph RAG["Naive Dense RAG Pipeline (app/rag.py)"]
         direction TB
-        ErrCatalog["search_error_catalog()"]
-        Milestones["get_project_milestones()"]
-        Blueprints["get_architecture_blueprint()"]
+        EmbedQuery["Embed Query\n(gemini-embedding-001)"]
+        Qdrant[("Local Qdrant Vector Store\ntutorial_navigator_chunks")]
+        TopK["Dense Search\n(Cosine Similarity Top-K)"]
+        Context["Context Formatter\n([CHUNK_ID: ...] + Refusal Gate)"]
+        EmbedQuery --> Qdrant --> TopK --> Context
     end
 
-    subgraph Provider["Google GenAI API (client.aio)"]
-        Gemini["Gemini API (Automatic Function Calling)"]
+    subgraph Grounding["Deterministic Grounding & Synthesis"]
+        direction TB
+        Tools["Diagnostic Tool Registry (app/tools.py)\n(Error Catalog, Milestones, Blueprints)"]
+        Gemini["Google GenAI AIO (Gemini)\n(Strict Inline Citations & Refusal Path)"]
+        Tools <-->|Function Calling| Gemini
+    end
+
+    subgraph TelemetryLayer["Telemetry & Audit Layer (app/telemetry.py)"]
+        direction TB
+        LogFile[("logs/query_trajectories.jsonl\n(Query, Chunks, Citations, Latency, Refusal)")]
     end
 
     Client -->|HTTP / SSE| FastAPI
     Navigate --> Sem
-    StreamPost --> Sem
-    StreamGet --> Sem
-    Sem --> Retry
-    Retry --> Fallback
-    Fallback <-->|Tool Execution Loop| Tools
-    Fallback --> Gemini
+    Stream --> Sem
+    Fallback --> EmbedQuery
+    Context --> Gemini
+    Gemini -->|Validated NavigatorResponse| Navigate
+    Navigate -.->|Async Audit Log| LogFile
+    Telemetry --> LogFile
 ```
 
 ---
@@ -166,8 +177,8 @@ Allows the model to intelligently route student queries to verified deterministi
 - Injects structured context headers (`[CHUNK_ID: ...]`) directly into the generation prompt.
 
 ### 7. Strict Inline Citations & Out-of-Bounds Refusal
-- Mandates exact `chunk_id` references attached to every claim in `ActionableStep.citations` and aggregated in `NavigatorResponse.cited_chunk_ids`.
-- Prevents ungrounded hallucination: triggers `is_refusal=True` and a clear `refusal_reason` whenever similarity drops below the out-of-corpus threshold (0.40) or no verified technical documentation exists.
+- Makes every technical claim checkable: mandates exact `chunk_id` references attached to each step in `ActionableStep.citations` and aggregated in `NavigatorResponse.cited_chunk_ids`.
+- Explicit refusal path: triggers `is_refusal=True` and a clear `refusal_reason` when queries fall outside the verified technical corpus rather than guessing ungrounded commands.
 
 ### 8. Query Trajectory Telemetry (`app/telemetry.py`)
 - Logs every request, retrieved chunk scores, inline citations, latency (ms), and refusal triggers to `logs/query_trajectories.jsonl`.
@@ -184,7 +195,7 @@ Allows the model to intelligently route student queries to verified deterministi
 ### 1. Clone & Set Up Virtual Environment
 
 ```bash
-git clone https://github.com/<YOUR-USERNAME>/tutorial-hell-navigator.git
+git clone https://github.com/k-nikhil-coder/tutorial-hell-navigator.git
 cd tutorial-hell-navigator
 
 # Create and activate virtual environment
@@ -429,9 +440,9 @@ Chunk Size  256:  6/10 hits ( 60.0%) | Avg Max Overlap: 58.2% | Total Chunks: 18
 Chunk Size  512:  7/10 hits ( 70.0%) | Avg Max Overlap: 62.0% | Total Chunks: 9
 Chunk Size 1024:  8/10 hits ( 80.0%) | Avg Max Overlap: 64.2% | Total Chunks: 5
 -----------------------------------------------------------------
-Key Takeaways:
-- 256 tokens: Higher fragmentation; contextual entities split across chunk boundaries.
-- 512 tokens: Optimal balance; preserves coherent semantic blocks without excessive noise.
+Key Takeaways & Deliberate Tradeoff:
+- 256 tokens: Higher fragmentation; contextual entities split across chunk boundaries (60% hit rate).
+- 512 tokens (Selected Baseline): Deliberate engineering tradeoff. While 1024 scored higher on raw keyword surface area, 512 tokens provides tighter semantic boundaries, eliminates cross-topic dilution, and significantly lowers token inference costs.
 - 1024 tokens: Broader context, but diluted keyword density and higher token cost per retrieval.
 =================================================================
 ```
@@ -454,17 +465,53 @@ python app/rag.py
 - Formats chunks into unambiguous blocks (`--- [CHUNK_ID: ...] (Source: ...) ---`) and prepends to the system prompt.
 
 ### 3. Inline Citations & Out-of-Bounds Refusal
-- Enforces that all action steps cite the exact `chunk_id` they reference (`ActionableStep.citations`).
-- Hardcoded refusal trigger: If top cosine similarity falls below `0.40` (out-of-corpus query like cooking, pop culture, or ungrounded technologies), the model outputs:
-  ```json
-  {
-    "is_refusal": true,
-    "refusal_reason": "Out-of-corpus query",
-    "summary": "This query falls outside the verified engineering corpus..."
-  }
-  ```
+- **Makes Technical Claims Checkable:** Forces the model to attach exact source `chunk_id` references to every step in `ActionableStep.citations` and aggregate them in `NavigatorResponse.cited_chunk_ids`.
+- **Deterministic Refusal Path:** When queries fall outside the verified technical corpus (e.g., cooking, sports, pop culture) or similarity is insufficient, the system triggers `is_refusal: true` rather than guessing ungrounded commands.
 
-### 4. Query Trajectory Telemetry (`logs/query_trajectories.jsonl`)
+#### Side-by-Side: In-Corpus Grounded Citation vs. Out-of-Bounds Refusal
+
+| In-Corpus Query ("How to fix CORS in FastAPI?") | Out-of-Corpus Query ("How to bake chocolate cake?") |
+| :--- | :--- |
+| ```json<br>{<br>  "is_refusal": false,<br>  "cited_chunk_ids": [<br>    "fastapi_fullstack_guide_chunk_2"<br>  ],<br>  "action_plan": [<br>    {<br>      "step_number": 1,<br>      "title": "Mount CORSMiddleware",<br>      "command": "app.add_middleware(CORSMiddleware...)",<br>      "explanation": "Injects Access-Control-Allow-Origin headers.",<br>      "citations": [<br>        "fastapi_fullstack_guide_chunk_2"<br>      ]<br>    }<br>  ]<br>}<br>``` | ```json<br>{<br>  "is_refusal": true,<br>  "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",<br>  "summary": "This query is outside the verified engineering corpus.",<br>  "cited_chunk_ids": [],<br>  "action_plan": [<br>    {<br>      "step_number": 1,<br>      "title": "Consult Relevant Culinary Resources",<br>      "explanation": "Tutorial Hell Navigator only grounds technical software engineering topics."<br>    }<br>  ]<br>}<br>``` |
+
+### 4. Empirical RAG Benchmark (`benchmarks/rag_eval.py`)
+
+Run the automated evaluation benchmark testing 10 in-corpus engineering queries against 10 out-of-corpus distractor queries:
+
+```bash
+python benchmarks/rag_eval.py -n 5
+```
+
+```
+======================================================================
+>> TUTORIAL HELL NAVIGATOR - RAG GROUNDING & REFUSAL BENCHMARK
+ In-Corpus Test Set:     5 queries (FastAPI, Docker, Architecture)
+ Out-of-Corpus Test Set: 5 queries (Baking, Sports, Gardening, Cars)
+======================================================================
+
+[1/2] Testing In-Corpus Grounding & Inline Citations...
+  [ 1/5] Citations: fastapi_fullstack_guide_chunk_2, chunk_3 | CORS preflight error
+  [ 2/5] Citations: docker_production_guide_chunk_0, chunk_1 | psycopg2 compile failure
+  [ 3/5] Citations: fastapi_fullstack_guide_chunk_3, chunk_2 | CORSMiddleware origins
+  [ 4/5] Citations: docker_production_guide_chunk_0          | Multi-stage Dockerfile
+
+[2/2] Testing Out-of-Corpus Refusal Path...
+  [ 1/5] [REFUSED] | How do I bake a moist chocolate cake?
+  [ 2/5] [REFUSED] | Explain the LBW rule in cricket.
+  [ 3/5] [REFUSED] | What is the plot summary of Inception?
+  [ 4/5] [REFUSED] | How do I prune tomato plants in a garden?
+  [ 5/5] [REFUSED] | What are the best tips to train a puppy?
+
+======================================================================
+>> BENCHMARK VERIFICATION RESULTS
+----------------------------------------------------------------------
+ Out-of-Corpus Refusal Rate:  5/5 (100.0%)
+ In-Corpus Grounding/Citation: 4/5 (80.0%)
+======================================================================
+Detailed audit log written to eval/rag_benchmark_report.json
+```
+
+### 5. Query Trajectory Telemetry (`logs/query_trajectories.jsonl`)
 - Every query, retrieved chunk IDs, cosine scores, LLM output, refusal status, and latency is logged for the Day 47 failure taxonomy.
 - Query logged trajectories via API:
 ```bash

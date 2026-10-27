@@ -1,0 +1,86 @@
+{
+  "out_of_corpus_refused": "5/5",
+  "out_of_corpus_refusal_rate_pct": 100.0,
+  "in_corpus_grounded": "4/5",
+  "in_corpus_grounding_rate_pct": 80.0,
+  "in_corpus_results": [
+    {
+      "index": 1,
+      "query": "How do I fix a CORS preflight error in FastAPI when connecting from React?",
+      "is_refusal": false,
+      "has_citations": true,
+      "cited_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_3"
+      ]
+    },
+    {
+      "index": 2,
+      "query": "Why does psycopg2 fail to compile in my Docker container with missing pg_config?",
+      "is_refusal": false,
+      "has_citations": true,
+      "cited_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ]
+    },
+    {
+      "index": 3,
+      "query": "How to mount CORSMiddleware in FastAPI with explicit origins?",
+      "is_refusal": false,
+      "has_citations": true,
+      "cited_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_2"
+      ]
+    },
+    {
+      "index": 4,
+      "query": "What is the multi-stage Dockerfile pattern for Python FastAPI apps?",
+      "is_refusal": false,
+      "has_citations": true,
+      "cited_chunk_ids": [
+        "docker_production_guide_chunk_0"
+      ]
+    },
+    {
+      "index": 5,
+      "query": "How do I handle SQLite database locked operational errors in async FastAPI?",
+      "is_refusal": true,
+      "has_citations": false,
+      "cited_chunk_ids": []
+    }
+  ],
+  "out_of_corpus_results": [
+    {
+      "index": 1,
+      "query": "How do I bake a moist chocolate cake with buttercream frosting?",
+      "is_refusal": true,
+      "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation."
+    },
+    {
+      "index": 2,
+      "query": "Explain the LBW (Leg Before Wicket) rule in cricket.",
+      "is_refusal": true,
+      "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation."
+    },
+    {
+      "index": 3,
+      "query": "What is the plot summary of the movie Inception?",
+      "is_refusal": true,
+      "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation."
+    },
+    {
+      "index": 4,
+      "query": "How do I prune tomato plants in a home garden?",
+      "is_refusal": true,
+      "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation."
+    },
+    {
+      "index": 5,
+      "query": "What are the best tips to train a puppy to stop biting?",
+      "is_refusal": true,
+      "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation."
+    }
+  ]
+}
