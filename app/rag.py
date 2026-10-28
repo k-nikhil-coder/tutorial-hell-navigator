@@ -1,11 +1,16 @@
 import os
+import sys
 import json
 import logging
 import asyncio
-import atexit
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
+
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 from google import genai
 from qdrant_client import QdrantClient
@@ -45,20 +50,6 @@ def get_qdrant_client(path: Optional[Path] = None, in_memory: bool = False) -> Q
     return _qdrant_client
 
 
-def close_qdrant_client():
-    """Gracefully close local Qdrant storage before shutdown."""
-    global _qdrant_client
-    if _qdrant_client is not None:
-        try:
-            _qdrant_client.close()
-        except Exception:
-            pass
-        _qdrant_client = None
-
-
-atexit.register(close_qdrant_client)
-
-
 def ensure_collection(client: QdrantClient, collection_name: str = COLLECTION_NAME, vector_size: int = VECTOR_DIMENSION):
     """Ensure the target Qdrant collection exists with cosine distance."""
     if not client.collection_exists(collection_name):
@@ -84,16 +75,33 @@ async def embed_text_async(text: str) -> List[float]:
 
 
 def embed_batch(texts: List[str]) -> List[List[float]]:
-    """Generate embeddings for a list of texts in batches."""
+    """Generate embeddings for a list of texts in batches with rate-limit throttling."""
+    import time
     client = get_genai_client()
-    batch_size = 50
+    batch_size = 15
     all_embeddings = []
 
     for i in range(0, len(texts), batch_size):
         batch = texts[i:i + batch_size]
-        response = client.models.embed_content(model=EMBEDDING_MODEL, contents=batch)
-        for emb in response.embeddings:
-            all_embeddings.append(emb.values)
+        for attempt in range(6):
+            try:
+                response = client.models.embed_content(model=EMBEDDING_MODEL, contents=batch)
+                for emb in response.embeddings:
+                    all_embeddings.append(emb.values)
+                print(f"Embedded batch {i // batch_size + 1}/{(len(texts) + batch_size - 1) // batch_size} ({len(batch)} chunks)")
+                break
+            except Exception as e:
+                err_str = str(e)
+                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "503" in err_str:
+                    wait_secs = 25 * (attempt + 1)
+                    print(f"Rate limit / transient error on batch {i // batch_size + 1}: {e}. Retrying in {wait_secs}s...")
+                    time.sleep(wait_secs)
+                else:
+                    raise e
+
+        # Throttle between batches to remain safely below the 30k tokens/min free tier cap
+        if i + batch_size < len(texts):
+            time.sleep(8)
 
     return all_embeddings
 
@@ -102,6 +110,7 @@ def index_corpus(
     chunks_path: Path = PROCESSED_CHUNKS_FILE,
     collection_name: str = COLLECTION_NAME,
     qdrant_client: Optional[QdrantClient] = None,
+    recreate: bool = False,
 ) -> int:
     """Index processed 512-token chunks into Qdrant."""
     if not chunks_path.exists():
@@ -116,6 +125,8 @@ def index_corpus(
         return 0
 
     client = qdrant_client or get_qdrant_client()
+    if recreate and client.collection_exists(collection_name):
+        client.delete_collection(collection_name)
     ensure_collection(client, collection_name=collection_name)
 
     print(f"Generating embeddings for {len(chunks)} chunks using {EMBEDDING_MODEL}...")
@@ -233,6 +244,6 @@ def get_indexed_count(collection_name: str = COLLECTION_NAME) -> int:
 
 
 if __name__ == "__main__":
-    print("Running initial Qdrant indexing for Day 34 baseline...")
-    count = index_corpus()
-    print(f"Done. Indexed {count} chunks.")
+    print("Running Qdrant indexing for Day 34/35 baseline...")
+    count = index_corpus(recreate=True)
+    print(f"Done. Indexed {count} chunks into Qdrant collection '{COLLECTION_NAME}'.")

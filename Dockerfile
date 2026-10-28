@@ -30,16 +30,17 @@ ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONPATH=/app
+ENV PORT=8000
 
 # Copy application source code
 COPY . .
 
-# Expose FastAPI service port
-EXPOSE 8000
+# Expose ports: 8000 (standard/Render), 7860 (Hugging Face Spaces), 8080 (Cloud Run)
+EXPOSE 8000 7860 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-# Start Uvicorn ASGI server
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start Uvicorn ASGI server with dynamic port binding
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

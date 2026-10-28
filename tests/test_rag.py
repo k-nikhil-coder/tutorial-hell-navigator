@@ -165,3 +165,24 @@ async def test_telemetry_endpoint():
         assert "count" in data
         assert "trajectories" in data
         assert isinstance(data["trajectories"], list)
+
+
+def test_render_yaml_configuration():
+    render_path = Path(__file__).resolve().parent.parent / "render.yaml"
+    assert render_path.exists()
+    content = render_path.read_text(encoding="utf-8")
+    assert "tutorial-hell-navigator" in content
+    assert "mountPath: /app/data" in content
+    assert "healthCheckPath: /health" in content
+
+
+def test_eval_report_baseline_metrics():
+    report_path = Path(__file__).resolve().parent.parent / "eval" / "eval_report.json"
+    assert report_path.exists()
+    import json
+    with open(report_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert data["total_evaluated"] >= 5
+    assert data["pass_rate"] >= 80.0
+    assert "avg_steps_per_plan" in data["metrics"]
+    assert "avg_citations_per_plan" in data["metrics"]

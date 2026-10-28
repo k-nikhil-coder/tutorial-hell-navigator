@@ -29,9 +29,9 @@ def score_response(
 ) -> Dict[str, Any]:
     issues = []
 
-    # Check that at least one concrete command is provided
+    # Check that at least one concrete command is provided for in-corpus responses
     commands = [step.command for step in response.action_plan if step.command]
-    if not commands:
+    if not commands and not response.is_refusal:
         issues.append("Action plan is missing CLI commands or code snippets.")
 
     if not response.anti_patterns_to_avoid:
@@ -53,11 +53,20 @@ def score_response(
         if neg.lower() in haystack:
             issues.append(f"Hit negative constraint: '{neg}'")
 
+    # Count citations across steps
+    all_citations = []
+    for s in response.action_plan:
+        if s.citations:
+            all_citations.extend(s.citations)
+
     return {
         "passed": len(issues) == 0,
         "issues": issues,
         "step_count": len(response.action_plan),
         "command_count": len(commands),
+        "citation_count": len(all_citations),
+        "cited_chunks": list(dict.fromkeys(all_citations)),
+        "is_refusal": response.is_refusal,
     }
 
 
@@ -66,7 +75,10 @@ async def evaluate_benchmark(
     limit: int = 5,
     category_filter: str = None,
     output_path: str = "eval/eval_report.json",
+    delay: float = 1.5,
 ):
+    from datetime import datetime, timezone
+
     if hasattr(sys.stdout, "reconfigure"):
         try:
             sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -86,10 +98,14 @@ async def evaluate_benchmark(
 
     batch = questions[:limit]
     print(f"Running evaluation on {len(batch)} questions (out of {len(questions)} total)...")
-    print("-" * 60)
+    print("=" * 70)
 
     results = []
     passed = 0
+    total_steps = 0
+    total_commands = 0
+    total_citations = 0
+    refusals = 0
 
     for idx, item in enumerate(batch, 1):
         qid = item.get("id", f"Q{idx}")
@@ -98,15 +114,30 @@ async def evaluate_benchmark(
         rubric = item.get("expected_rubric", [])
         negatives = item.get("negative_constraints", [])
 
-        print(f"[{idx}/{len(batch)}] {qid} ({category[:25]}):", end=" ", flush=True)
+        print(f"[{idx:02d}/{len(batch):02d}] {qid} ({category[:24]}):", end=" ", flush=True)
 
         try:
             model_resp = await generate_structured_response_async(prompt)
             result = score_response(model_resp, rubric, negatives)
 
+            step_cnt = result["step_count"]
+            cmd_cnt = result["command_count"]
+            cit_cnt = result["citation_count"]
+            is_ref = result["is_refusal"]
+
+            total_steps += step_cnt
+            total_commands += cmd_cnt
+            total_citations += cit_cnt
+            if is_ref:
+                refusals += 1
+
             if result["passed"]:
                 passed += 1
-                print(f"PASS ({result['step_count']} steps, {result['command_count']} commands)")
+                status_str = f"PASS ({step_cnt} steps, {cmd_cnt} cmds, {cit_cnt} cites"
+                if is_ref:
+                    status_str += ", [REFUSAL]"
+                status_str += ")"
+                print(status_str)
             else:
                 print(f"FAIL -> {'; '.join(result['issues'])}")
 
@@ -127,14 +158,40 @@ async def evaluate_benchmark(
                 "score": {"passed": False, "issues": [str(e)]},
             })
 
+        # Pacing between queries to avoid hitting rate limits
+        if idx < len(batch) and delay > 0:
+            await asyncio.sleep(delay)
+
     pass_rate = (passed / len(batch)) * 100 if batch else 0
-    print("-" * 60)
-    print(f"Summary: {passed}/{len(batch)} passed ({pass_rate:.1f}%)")
+    n = len(batch) or 1
+    avg_steps = round(total_steps / n, 2)
+    avg_commands = round(total_commands / n, 2)
+    avg_citations = round(total_citations / n, 2)
+
+    print("=" * 70)
+    print("📊 GOLD SET EVALUATION SUMMARY (Day 35 Baseline)")
+    print(f"  • Pass Rate:          {passed}/{len(batch)} ({pass_rate:.1f}%)")
+    print(f"  • Avg Steps / Plan:   {avg_steps}")
+    print(f"  • Avg Commands / Plan:{avg_commands}")
+    print(f"  • Avg Citations / Plan:{avg_citations}")
+    print(f"  • Refusals Handled:   {refusals}")
+    print("=" * 70)
 
     report = {
-        "total": len(batch),
+        "benchmark": "Tutorial Hell Navigator 80-Question Gold Set",
+        "milestone": "Day 35 Naive RAG Baseline",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "total_evaluated": len(batch),
         "passed": passed,
+        "failed": len(batch) - passed,
         "pass_rate": pass_rate,
+        "metrics": {
+            "avg_steps_per_plan": avg_steps,
+            "avg_commands_per_plan": avg_commands,
+            "avg_citations_per_plan": avg_citations,
+            "total_citations": total_citations,
+            "refusals_handled": refusals,
+        },
         "items": results,
     }
     with open(output_path, "w", encoding="utf-8") as f:
@@ -145,9 +202,10 @@ async def evaluate_benchmark(
 def main():
     parser = argparse.ArgumentParser(description="Gold Benchmark Evaluator")
     parser.add_argument("--gold-set", default="eval/gold_set.json", help="Path to gold set json")
-    parser.add_argument("-n", "--limit", type=int, default=3, help="Number of questions to test")
+    parser.add_argument("-n", "--limit", type=int, default=10, help="Number of questions to test")
     parser.add_argument("-c", "--category", default=None, help="Filter by category substring")
     parser.add_argument("-o", "--output", default="eval/eval_report.json", help="Report output json path")
+    parser.add_argument("-d", "--delay", type=float, default=1.5, help="Delay in seconds between questions")
 
     args = parser.parse_args()
     asyncio.run(
@@ -156,6 +214,7 @@ def main():
             limit=args.limit,
             category_filter=args.category,
             output_path=args.output,
+            delay=args.delay,
         )
     )
 

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: tutorial-hell-navigator
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-flash-lite-latest
+      - key: MAX_CONCURRENT_REQUESTS
+        value: "5"
+    disk:
+      name: qdrant-data
+      mountPath: /app/data
+      sizeGB: 1
