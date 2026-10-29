@@ -38,9 +38,9 @@ jobs:
         import json
         with open('eval/gold_set.json', 'r', encoding='utf-8') as f:
             data = json.load(f)
-        assert len(data) == 80, f'Expected 80 benchmark questions, found {len(data)}'
+        assert len(data) >= 88, f'Expected at least 88 benchmark questions, found {len(data)}'
         for q in data:
             assert 'id' in q and 'category' in q and 'question' in q
             assert 'expected_rubric' in q and 'negative_constraints' in q
-        print('Verified 80 benchmark questions structure successfully!')
+        print(f'Verified {len(data)} benchmark questions structure successfully!')
         "
