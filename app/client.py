@@ -124,6 +124,7 @@ async def generate_structured_response_async(
     user_query: str,
     semaphore: Optional[asyncio.Semaphore] = None,
     enable_rag: bool = True,
+    search_mode: str = "hybrid",
 ) -> NavigatorResponse:
     sem = semaphore or GLOBAL_SEMAPHORE
     async with sem:
@@ -131,14 +132,24 @@ async def generate_structured_response_async(
 
         if enable_rag:
             try:
-                retrieved_chunks = await retrieve_relevant_chunks_async(user_query, top_k=3)
+                retrieved_chunks = await retrieve_relevant_chunks_async(
+                    user_query, top_k=3, search_mode=search_mode
+                )
             except Exception as e:
                 logger.warning("RAG retrieval failed (falling back to tools): %s", e)
 
         if retrieved_chunks:
-            # Check if top score is below out-of-corpus threshold
-            top_score = retrieved_chunks[0].get("score", 0.0)
-            if top_score < 0.40:
+            top_chunk = retrieved_chunks[0]
+            # Grounding check: works with dense cosine scores and hybrid RRF composite scores
+            method = top_chunk.get("retrieval_method", "dense")
+            if method == "dense":
+                is_grounded = top_chunk.get("score", 0.0) >= 0.40
+            elif method == "hybrid_rrf":
+                is_grounded = bool(top_chunk.get("dense_score", 0.0) >= 0.40 or top_chunk.get("sparse_score", 0.0) > 0.0)
+            else:
+                is_grounded = top_chunk.get("is_grounded", True)
+
+            if not is_grounded:
                 context_str = "[NO VERIFIED CORPUS FOUND FOR THIS TOPIC - OUT OF BOUNDS]"
             else:
                 context_str = format_retrieved_context(retrieved_chunks)
@@ -191,6 +202,7 @@ async def stream_response_sse(
     user_query: str,
     semaphore: Optional[asyncio.Semaphore] = None,
     enable_rag: bool = True,
+    search_mode: str = "hybrid",
 ) -> AsyncGenerator[str, None]:
     """Stream model output as Server-Sent Events."""
     sem = semaphore or GLOBAL_SEMAPHORE
@@ -200,11 +212,24 @@ async def stream_response_sse(
         retrieved_chunks: List[Dict[str, Any]] = []
         if enable_rag:
             try:
-                retrieved_chunks = await retrieve_relevant_chunks_async(user_query, top_k=3)
+                retrieved_chunks = await retrieve_relevant_chunks_async(
+                    user_query, top_k=3, search_mode=search_mode
+                )
             except Exception as e:
                 logger.warning("RAG retrieval failed during stream: %s", e)
 
-        if retrieved_chunks and retrieved_chunks[0].get("score", 0.0) >= 0.40:
+        is_grounded = False
+        if retrieved_chunks:
+            top_chunk = retrieved_chunks[0]
+            method = top_chunk.get("retrieval_method", "dense")
+            if method == "dense":
+                is_grounded = top_chunk.get("score", 0.0) >= 0.40
+            elif method == "hybrid_rrf":
+                is_grounded = bool(top_chunk.get("dense_score", 0.0) >= 0.40 or top_chunk.get("sparse_score", 0.0) > 0.0)
+            else:
+                is_grounded = top_chunk.get("is_grounded", True)
+
+        if retrieved_chunks and is_grounded:
             context_str = format_retrieved_context(retrieved_chunks)
             prompt = f"VERIFIED CONTEXT:\n{context_str}\n\nSTUDENT QUESTION:\n{user_query}"
         else:

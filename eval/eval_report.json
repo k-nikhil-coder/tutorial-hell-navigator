@@ -1,1036 +1,575 @@
 {
-  "benchmark": "Tutorial Hell Navigator 80-Question Gold Set",
-  "milestone": "Day 35 Naive RAG Baseline",
-  "timestamp": "2026-10-28T08:28:22.833659+00:00",
-  "total_evaluated": 15,
-  "passed": 15,
-  "failed": 0,
-  "pass_rate": 100.0,
-  "metrics": {
-    "avg_steps_per_plan": 3.2,
-    "avg_commands_per_plan": 2.93,
-    "avg_citations_per_plan": 4.0,
-    "total_citations": 60,
-    "refusals_handled": 0
+  "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
+  "search_mode": "hybrid",
+  "retrieval_only": false,
+  "timestamp": "2026-10-29T12:11:07.711935+00:00",
+  "total_evaluated": 8,
+  "ground_truth_count": 8,
+  "retrieval_metrics": {
+    "recall_at_3": 87.5,
+    "recall_at_5": 87.5,
+    "mrr": 0.7292,
+    "recall_3_hits": 7,
+    "recall_5_hits": 7
+  },
+  "llm_metrics": {
+    "passed": 8,
+    "pass_rate": 100.0,
+    "avg_steps_per_plan": 1.62,
+    "avg_commands_per_plan": 1.62,
+    "avg_citations_per_plan": 2.5,
+    "refusals_handled": 1
   },
   "items": [
     {
-      "id": "GS-01",
-      "category": "Full-stack development: getting started",
-      "question": "I know basic HTML, CSS, and JavaScript. What exact learning path should I follow to become a full-stack developer, and what should I build at each stage?",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 4,
-        "command_count": 4,
-        "citation_count": 4,
-        "cited_chunks": [
-          "fastapi_fullstack_guide_chunk_0",
-          "fastapi_fullstack_guide_chunk_1"
-        ],
-        "is_refusal": false
+      "id": "GS-81",
+      "category": "Hardened Retrieval: Exact-Keyword Trap (CORS Credentials)",
+      "question": "In FastAPI CORSMiddleware, why is it forbidden to set allow_origins=['*'] when allow_credentials=True, and what exact error or behavior occurs in browsers?",
+      "expected_chunk_ids": [
+        "fastapi_cors_chunk_2",
+        "fastapi_cors_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_2",
+        "fastapi_cors_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_cors_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
       },
-      "response": {
-        "summary": "Provided a structured 4-stage learning path from modern JavaScript and DOM manipulation to backend REST APIs with FastAPI, relational databases with PostgreSQL, and frontend framework integration with React, based on the verified technical corpus.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Master Modern JavaScript & DOM Manipulation (Stage 1)",
-            "command": "mkdir expense-tracker && cd expense-tracker && touch index.html app.js",
-            "explanation": "Focus on ES6+ syntax, asynchronous programming, event listeners, and DOM manipulation without libraries. Build an interactive Expense Tracker saving to localStorage.",
-            "verification": "node -v && open index.html",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Build Backend REST APIs with Python FastAPI (Stage 2)",
-            "command": "pip install fastapi uvicorn pydantic && uvicorn main:app --reload",
-            "explanation": "Learn HTTP methods, status codes, and Pydantic validation. Build a Student Course Registration REST API with automatic Swagger docs at /docs.",
-            "verification": "curl http://127.0.0.1:8000/docs",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Implement Relational Databases & PostgreSQL Persistence (Stage 3)",
-            "command": "docker run --name postgres-db -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres:15",
-            "explanation": "Refactor the Course Registration API using SQLAlchemy 2.0 async engine and Alembic migrations to persist records into a Dockerized PostgreSQL database.",
-            "verification": "docker ps",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 4,
-            "title": "Integrate Frontend Framework & Deploy Full-Stack App (Stage 4)",
-            "command": "npm create vite@latest frontend -- --template react && cd frontend && npm install",
-            "explanation": "Build the frontend using React with Vite, React Router, TailwindCSS, and TanStack Query, connecting it to your FastAPI backend.",
-            "verification": "npm run dev",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_1"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Falling into Tutorial Hell by copying long video courses line-by-line without active problem decomposition.",
-          "Trying to learn Kubernetes, distributed caching with Redis, and complex microservices before mastering REST APIs and relational SQL.",
-          "Skipping input validation and type checking on backend request payloads."
-        ],
-        "architecture_contract": "backend/\n  main.py\n  models.py\n  schemas.py\n  database.py\nfrontend/\n  src/\n    components/\n    App.jsx\n    main.jsx",
-        "key_takeaway": "Follow a strict 4-stage roadmap starting from vanilla JS DOM manipulation up to React and FastAPI containerized deployments to avoid tutorial hell.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "fastapi_fullstack_guide_chunk_0",
-          "fastapi_fullstack_guide_chunk_1"
-        ]
-      }
-    },
-    {
-      "id": "GS-02",
-      "category": "Full-stack development: getting started",
-      "question": "Should I learn React + Node.js or React + Python/FastAPI as a CS student? Compare the learning curve, job opportunities, and project potential.",
       "score": {
         "passed": true,
         "issues": [],
-        "step_count": 2,
-        "command_count": 2,
-        "citation_count": 2,
-        "cited_chunks": [
-          "fastapi_fullstack_guide_chunk_0",
-          "fastapi_fullstack_guide_chunk_2"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "As a Computer Science student, learning React + Python FastAPI is highly recommended due to Python's expressiveness, native data validation via Pydantic, and its unique advantage in bridging web development with AI and data platforms.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Set up a FastAPI Backend Environment",
-            "command": "pip install fastapi uvicorn pydantic\nuvicorn main:app --reload",
-            "explanation": "Initialize a Python FastAPI server to leverage automatic OpenAPI documentation and strict Pydantic validation.",
-            "verification": "Navigate to http://localhost:8000/docs to confirm the interactive Swagger documentation loads successfully.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Configure CORS Middleware for Frontend Integration",
-            "command": "python -c \"from fastapi.middleware.cors import CORSMiddleware; print('CORS ready')\"",
-            "explanation": "Mount CORSMiddleware in your FastAPI app so that a React frontend running on port 3000 can communicate with the backend on port 8000 without browser blocks.",
-            "verification": "Perform a fetch request from your React frontend to the FastAPI endpoint and ensure no CORS policy errors appear in the browser console.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_2"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Relying solely on frontend validation without enforcing backend schema checks using Pydantic.",
-          "Forgetting to configure CORS middleware, leading to silent network failures when connecting React to FastAPI."
-        ],
-        "architecture_contract": null,
-        "key_takeaway": "Python FastAPI provides automated schema enforcement and positions you well for AI integrations and enterprise microservices, whereas Node.js offers single-language consistency across the stack.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "fastapi_fullstack_guide_chunk_0",
-          "fastapi_fullstack_guide_chunk_2"
-        ]
-      }
-    },
-    {
-      "id": "GS-03",
-      "category": "Full-stack development: getting started",
-      "question": "I can build static websites but don't understand how a frontend communicates with a backend. Walk me through building my first working full-stack application.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 2,
-        "command_count": 2,
-        "citation_count": 2,
-        "cited_chunks": [
-          "fastapi_fullstack_guide_chunk_2"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "To connect a frontend to a backend, you need to understand the Request-Response lifecycle using asynchronous JavaScript (`fetch` or `axios`), handle JSON data validation on the backend using Pydantic, and configure Cross-Origin Resource Sharing (CORS) so your frontend running on port 3000 can talk to your FastAPI backend running on port 8000.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Create the FastAPI Backend with CORS Enabled",
-            "command": "cat << 'EOF' > main.py\nfrom fastapi import FastAPI, status\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"http://localhost:3000\"],\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n\nclass TaskCreate(BaseModel):\n    title: str\n    priority: str = \"medium\"\n\n@app.post(\"/api/tasks\", status_code=status.HTTP_201_CREATED)\nasync def create_task(task: TaskCreate):\n    return {\"id\": 1, \"title\": task.title, \"status\": \"pending\"}\nEOF\nuvicorn main:app --reload --port 8000",
-            "explanation": "Initialize a FastAPI application with Pydantic validation and configure CORSMiddleware to permit requests originating from the frontend development server.",
-            "verification": "Run 'uvicorn main:app --reload --port 8000' and open http://localhost:8000/docs to view the interactive Swagger documentation.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_2"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Dispatch Asynchronous HTTP Requests from the Frontend",
-            "command": "cat << 'EOF' > client.js\nasync function submitTask() {\n  const response = await fetch(\"http://localhost:8000/api/tasks\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n      \"Authorization\": `Bearer fake-token`\n    },\n    body: JSON.stringify({ title: \"Finish Docker tutorial\", priority: \"high\" })\n  });\n  const data = await response.json();\n  console.log(data);\n}\nsubmitTask();\nEOF\nnode client.js",
-            "explanation": "Use JavaScript async/await and the fetch API to send a JSON payload with appropriate headers to your running FastAPI backend.",
-            "verification": "Ensure the FastAPI terminal logs a successful POST request and the Node script outputs the JSON response from the server.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_2"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Forgetting to mount CORSMiddleware, which results in browser security blocking requests between different localhost ports.",
-          "Sending raw string data instead of serializing payloads with JSON.stringify and setting the 'Content-Type: application/json' header."
-        ],
-        "architecture_contract": "frontend (React/Vite on port 3000) ---> HTTP POST (JSON + Bearer Token) ---> FastAPI backend (port 8000) ---> Pydantic Validation ---> JSON Response",
-        "key_takeaway": "Bridging frontend and backend requires coordinating asynchronous HTTP requests, explicit JSON serialization, strict Pydantic request models, and proper CORS middleware configuration.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "fastapi_fullstack_guide_chunk_2"
-        ]
-      }
-    },
-    {
-      "id": "GS-04",
-      "category": "Full-stack development: getting started",
-      "question": "I know basic JavaScript but have never used a database. Teach me how to connect a web app to PostgreSQL, store user data, and retrieve it safely.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 2,
-        "command_count": 2,
-        "citation_count": 2,
-        "cited_chunks": [
-          "fastapi_fullstack_guide_chunk_3"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "Guided transition on connecting a web application to PostgreSQL safely using an asynchronous SQLAlchemy engine and Alembic migrations, avoiding raw string concatenation.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Configure Asynchronous PostgreSQL Engine and Session",
-            "command": "from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker\n\nengine = create_async_engine(\"postgresql+asyncpg://postgres:secret@localhost:5432/navigator\")\nAsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)\n\nasync def get_db():\n    async with AsyncSessionLocal() as session:\n        yield session",
-            "explanation": "Set up an asynchronous connection string and session dependency using asyncpg and SQLAlchemy to interact with PostgreSQL safely without blocking the event loop.",
-            "verification": "Run a test import or FastAPI startup to verify that the connection factory initializes without syntax or driver errors.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_3"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Manage Database Migrations with Alembic",
-            "command": "alembic init migrations\nalembic revision --autogenerate -m \"Create users and tasks tables\"\nalembic upgrade head",
-            "explanation": "Initialize and execute Alembic database migrations to version control your PostgreSQL database schema changes cleanly.",
-            "verification": "Check your PostgreSQL database instance to confirm that the tables defined in your models have been successfully created.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_3"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Never concatenate raw user strings into SQL queries as it leads to severe SQL injection vulnerabilities.",
-          "Do not use synchronous database drivers with an asynchronous FastAPI application."
-        ],
-        "architecture_contract": "app/\n  \u251c\u2500\u2500 main.py\n  \u251c\u2500\u2500 database.py\n  \u251c\u2500\u2500 models.py\n  \u2514\u2500\u2500 migrations/\n      \u2514\u2500\u2500 versions/",
-        "key_takeaway": "Always use asynchronous connection strings, dependency-injected scoped sessions, and parameterized ORM queries or migrations rather than raw string concatenation to ensure secure database persistence.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "fastapi_fullstack_guide_chunk_3"
-        ]
-      }
-    },
-    {
-      "id": "GS-05",
-      "category": "Full-stack development: getting started",
-      "question": "Suggest one beginner-friendly full-stack project I can finish in 14 days, including features, folder structure, technologies, and daily milestones.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 3,
-        "command_count": 3,
-        "citation_count": 5,
-        "cited_chunks": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0",
-          "fastapi_fullstack_guide_chunk_1"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "To escape tutorial hell and build an independent full-stack application, you should follow a scoped 14-day milestone plan using a beginner-friendly tech stack like React and Python FastAPI with PostgreSQL.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Architecture RFC & Database Schemas",
-            "command": "mkdir -p student-task-manager/backend student-task-manager/frontend && cd student-task-manager",
-            "explanation": "Decompose the project into tables and foreign keys (Users, Tasks, Reminders) before writing code to prevent architectural drift.",
-            "verification": "Confirm directory structure and verify database schema diagrams are documented in an RFC markdown file.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Async Backend Core Setup",
-            "command": "cd backend && python3 -m venv venv && source venv/bin/activate && pip install fastapi uvicorn sqlalchemy alembic psycopg2-binary",
-            "explanation": "Initialize the FastAPI backend with SQLAlchemy 2.0 and Pydantic validation for robust REST API endpoints.",
-            "verification": "Run 'uvicorn main:app --reload' and check that the interactive docs load at http://127.0.0.1:8000/docs.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Frontend Shell & API Integration",
-            "command": "cd ../frontend && npm create vite@latest . -- --template react-ts && npm install && npm install tailwindcss postcss autoprefixer",
-            "explanation": "Setup React with Vite and TailwindCSS to build component-based state management and integrate with your FastAPI backend.",
-            "verification": "Run 'npm run dev' and confirm the frontend development server starts without errors.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_1"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Copying video tutorials line-by-line without active problem decomposition.",
-          "Learning Kubernetes, distributed caching with Redis, or complex cloud IAM too early.",
-          "Attempting to build the entire app without defining database schemas and API contracts first."
-        ],
-        "architecture_contract": "student-task-manager/\n\u251c\u2500\u2500 backend/\n\u2502   \u251c\u2500\u2500 main.py\n\u2502   \u251c\u2500\u2500 models.py\n\u2502   \u251c\u2500\u2500 schemas.py\n\u2502   \u2514\u2500\u2500 database.py\n\u2514\u2500\u2500 frontend/\n    \u251c\u2500\u2500 src/\n    \u2502   \u251c\u2500\u2500 App.tsx\n    \u2502   \u2514\u2500\u2500 components/\n    \u2514\u2500\u2500 package.json",
-        "key_takeaway": "Active problem decomposition and scoped 14-day milestones prevent tutorial hell and build true engineering independence.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0",
-          "fastapi_fullstack_guide_chunk_1"
-        ]
-      }
-    },
-    {
-      "id": "GS-06",
-      "category": "Full-stack development: getting started",
-      "question": "How do login, signup, sessions, cookies, and JWTs actually work in a full-stack application? Show me a sensible implementation path without overwhelming me.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 2,
-        "command_count": 2,
-        "citation_count": 2,
-        "cited_chunks": [
-          "fastapi_fullstack_guide_chunk_3"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "Authentication in full-stack applications relies on secure communication between frontend clients and backend servers using sessions, cookies, or JSON Web Tokens (JWTs). This guide outlines how login and signup work using a sensible implementation pattern with short-lived access tokens and secure, HTTP-only refresh token cookies.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Configure Database and Async Engine",
-            "command": "alembic init migrations",
-            "explanation": "Set up an asynchronous database connection using SQLAlchemy and Alembic migrations to store user credentials safely without SQL injection.",
-            "verification": "Run alembic upgrade head to confirm connection to PostgreSQL succeeds.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_3"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Implement Sensible JWT Authentication Pattern",
-            "command": "python -m uvicorn main:app --reload",
-            "explanation": "Use short-lived access tokens for API authorization and long-lived refresh tokens stored in httpOnly, SameSite=Strict cookies.",
-            "verification": "Inspect browser cookies upon login to verify HttpOnly and Secure flags are set correctly.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_3"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Never concatenate raw user strings into SQL queries",
-          "Never store sensitive JWT tokens or passwords in localStorage where they are vulnerable to XSS attacks",
-          "Never rely on long-lived access tokens without a refresh token strategy"
-        ],
-        "architecture_contract": "frontend (React + Vite) <-> REST API (FastAPI) <-> PostgreSQL Database",
-        "key_takeaway": "Separate access tokens (short-lived, memory-stored) from refresh tokens (long-lived, HttpOnly cookies) for secure authentication.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "fastapi_fullstack_guide_chunk_3"
-        ]
-      }
-    },
-    {
-      "id": "GS-07",
-      "category": "Full-stack development: getting started",
-      "question": "My app works locally, but I don't know how to deploy the frontend, backend, and database. Give me a beginner-friendly production deployment checklist.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 3,
-        "command_count": 3,
-        "citation_count": 3,
-        "cited_chunks": [
-          "docker_production_guide_chunk_1",
-          "docker_production_guide_chunk_2"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "To deploy your full-stack application safely into production, you must separate your infrastructure tiers: deploy the database to a managed provider, containerize or host your backend securely with environment variables, and build your frontend assets for static distribution via a CDN.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Deploy and Configure the Database Tier",
-            "command": "alembic upgrade head",
-            "explanation": "Deploy a managed database instance (e.g., Supabase, Neon, AWS RDS, or Render PostgreSQL). Run your database migrations as part of your CI/CD build step before new server instances launch.",
-            "verification": "Verify that your migration command successfully applies schema changes to your production database without connection errors.",
-            "citations": [
-              "docker_production_guide_chunk_1"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Secure and Deploy the Backend Tier",
-            "command": "docker compose up -d",
-            "explanation": "Store all secrets strictly in environment variables and never commit .env files to GitHub. Ensure your backend exposes a deterministic /health endpoint and is fronted by a reverse proxy.",
-            "verification": "Test the production backend health check endpoint using curl or a browser to ensure it returns a successful status code.",
-            "citations": [
-              "docker_production_guide_chunk_2"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Build and Deploy the Frontend Tier",
-            "command": "npm run build",
-            "explanation": "Build production assets using your framework build tool (e.g., npm run build or vite build) and deploy the static bundles to a CDN like Vercel, Netlify, or Cloudflare Pages, injecting the production API URL via environment variables.",
-            "verification": "Open the deployed frontend URL in your browser and verify that network requests successfully communicate with your production backend domain.",
-            "citations": [
-              "docker_production_guide_chunk_2"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Committing .env files or raw API secrets directly to public GitHub repositories.",
-          "Running raw database containers on unbacked VPS instances instead of managed database services.",
-          "Hardcoding development localhost URLs in production frontend bundle code."
-        ],
-        "architecture_contract": "Database Tier (Managed PostgreSQL) -> Backend Tier (FastAPI with Environment Variables & Health Check) -> Frontend Tier (Static CDN Build with VITE_API_URL)",
-        "key_takeaway": "Production deployments require decoupling your database, backend, and frontend tiers, relying on managed infrastructure, secure environment variables, and CDN static asset hosting.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "docker_production_guide_chunk_1",
-          "docker_production_guide_chunk_2"
-        ]
-      }
-    },
-    {
-      "id": "GS-08",
-      "category": "Full-stack development: getting started",
-      "question": "I'm overwhelmed by React, TypeScript, APIs, SQL, Git, Docker, and cloud platforms. What should I learn first, and what can I safely postpone?",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 2,
+        "step_count": 1,
         "command_count": 1,
-        "citation_count": 3,
+        "citation_count": 2,
         "cited_chunks": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "You are feeling overwhelmed because you are trying to learn every tool in the modern ecosystem simultaneously. According to the engineering roadmap, the key to escaping tutorial hell is prioritization: focus immediately on foundational core technologies like Git, REST APIs, relational SQL, and FastAPI, while postponing advanced infrastructure like Kubernetes, Redis, and microservices until later.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Master Immediate Priorities: Git, SQL, and FastAPI",
-            "command": "git init && pip install fastapi uvicorn",
-            "explanation": "Start by establishing version control with Git, learning relational SQL fundamentals, and building your first REST API using Python and FastAPI for automated validation.",
-            "verification": "python -m uvicorn main:app --reload",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Postpone Complex Infrastructure",
-            "command": null,
-            "explanation": "Explicitly ignore Kubernetes, distributed caching with Redis, microservices, and complex cloud IAM for now. These will only contribute to cognitive overload.",
-            "verification": null,
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Trying to learn React, TypeScript, Docker, Kubernetes, and AWS all on day one.",
-          "Copying 10-hour tutorials line-by-line without active problem decomposition.",
-          "Skipping relational SQL fundamentals in favor of complex distributed caching."
-        ],
-        "architecture_contract": null,
-        "key_takeaway": "Decompose your learning into manageable milestones. Learn Git, REST APIs, relational SQL, and FastAPI immediately, and postpone Kubernetes and microservices to later stages.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0"
-        ]
-      }
-    },
-    {
-      "id": "GS-09",
-      "category": "Projects and independent building",
-      "question": "I finished a Python basics course. What exact project should I build next to learn FastAPI and Docker without getting stuck?",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 3,
-        "command_count": 3,
-        "citation_count": 4,
-        "cited_chunks": [
-          "fastapi_fullstack_guide_chunk_0",
-          "cs_engineering_roadmap_chunk_0",
+          "fastapi_cors_chunk_2",
           "fastapi_fullstack_guide_chunk_2"
         ],
         "is_refusal": false
       },
       "response": {
-        "summary": "To transition from Python basics to FastAPI and Docker without falling into tutorial hell, follow a structured 14-day scoped milestone approach focusing on backend REST APIs, Pydantic validation, relational databases, and containerization as outlined in the engineering roadmap.",
+        "summary": "Explaining why FastAPI/Starlette CORSMiddleware disallows setting allow_origins=['*'] when allow_credentials=True due to security constraints, and how browsers block credentialed requests with wildcard origins.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Set up your FastAPI backend project environment",
-            "command": "mkdir student_api && cd student_api && python -m venv venv && source venv/bin/activate && pip install fastapi uvicorn pydantic",
-            "explanation": "Initialize a clean Python virtual environment and install FastAPI along with uvicorn for running the async development server.",
-            "verification": "python -c \"import fastapi, uvicorn, pydantic; print('Setup verified!')\"",
+            "title": "Configure Explicit Origins with Credentials",
+            "command": "python -c 'from fastapi import FastAPI; from fastapi.middleware.cors import CORSMiddleware; app = FastAPI(); app.add_middleware(CORSMiddleware, allow_origins=[\"http://localhost:3000\"], allow_credentials=True, allow_methods=[\"*\"], allow_headers=[\"*\"])'",
+            "explanation": "When allow_credentials is True, you must explicitly declare allowed origins instead of using the wildcard ['*'] to prevent unauthorized sites from stealing authenticated session data.",
+            "verification": "uvicorn main:app --reload",
             "citations": [
-              "fastapi_fullstack_guide_chunk_0",
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Create your core FastAPI application with Pydantic validation",
-            "command": "cat << 'EOF' > main.py\nfrom fastapi import FastAPI, status\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass TaskCreate(BaseModel):\n    title: str\n    priority: str = \"medium\"\n\n@app.post(\"/api/tasks\", status_code=status.HTTP_201_CREATED)\nasync def create_task(task: TaskCreate):\n    return {\"id\": 1, \"title\": task.title, \"priority\": task.priority, \"status\": \"pending\"}\nEOF\nuvicorn main:app --reload\n",
-            "explanation": "Build your first REST API endpoint using FastAPI and Pydantic schemas to handle JSON validation automatically.",
-            "verification": "curl -X POST \"http://localhost:8000/api/tasks\" -H \"Content-Type: application/json\" -d '{\"title\": \"Learn FastAPI\", \"priority\": \"high\"}'",
-            "citations": [
+              "fastapi_cors_chunk_2",
               "fastapi_fullstack_guide_chunk_2"
             ]
-          },
-          {
-            "step_number": 3,
-            "title": "Containerize your application with Docker",
-            "command": "cat << 'EOF' > Dockerfile\nFROM python:3.10-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nEXPOSE 8000\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]\nEOF\npip freeze > requirements.txt\ndocker build -t student-api .\ndocker run -p 8000:8000 student-api",
-            "explanation": "Create a Dockerfile to package your Python FastAPI application into an isolated container for reproducible deployments.",
-            "verification": "curl -X POST \"http://localhost:8000/api/tasks\" -H \"Content-Type: application/json\" -d '{\"title\": \"Docker Test\", \"priority\": \"low\"}'",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Copying code line-by-line from a 10-hour video without attempting to modify schemas or write independent endpoints.",
-          "Jumping straight into complex microservices, Kubernetes, or distributed Redis caching before mastering foundational REST APIs and relational SQL.",
-          "Leaving CORS unconfigured when attempting to connect frontend clients to the FastAPI backend."
+          "Setting allow_origins=['*'] alongside allow_credentials=True in production or development",
+          "Ignoring browser CORS console errors regarding credentials and wildcards"
         ],
-        "architecture_contract": "student_api/\n\u251c\u2500\u2500 main.py\n\u251c\u2500\u2500 Dockerfile\n\u2514\u2500\u2500 requirements.txt",
-        "key_takeaway": "Deconstruct your learning into 14-day scoped milestones\u2014build a solid FastAPI CRUD core with Pydantic first, and wrap it in Docker before attempting advanced cloud deployments.",
+        "architecture_contract": null,
+        "key_takeaway": "Browsers reject credentialed cross-origin requests (such as cookies or Authorization headers) if the server responds with a wildcard origin ('*').",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
-          "fastapi_fullstack_guide_chunk_0",
-          "cs_engineering_roadmap_chunk_0",
+          "fastapi_cors_chunk_2",
           "fastapi_fullstack_guide_chunk_2"
         ]
       }
     },
     {
-      "id": "GS-10",
-      "category": "Projects and independent building",
-      "question": "I want to build a student task manager with authentication, PostgreSQL, and reminders. Break it into small milestones I can complete independently.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 5,
-        "command_count": 5,
-        "citation_count": 7,
-        "cited_chunks": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0",
-          "fastapi_fullstack_guide_chunk_1"
-        ],
-        "is_refusal": false
+      "id": "GS-82",
+      "category": "Hardened Retrieval: Exact-Keyword Trap (Docker C-Extensions)",
+      "question": "When building a minimal Docker image with python:3.12-slim, why does pip install psycopg2 fail with 'fatal error: libpq-fe.h: No such file or directory', and how do libpq-dev and gcc resolve it in a multi-stage build?",
+      "expected_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
       },
-      "response": {
-        "summary": "To build a student task manager with authentication, PostgreSQL, and reminders without falling into tutorial hell, we decompose the project into a 14-day scoped milestone plan using React, Python FastAPI, and PostgreSQL.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Architecture RFC & Database Schemas",
-            "command": "git init student-task-manager && mkdir -p backend frontend",
-            "explanation": "Days 1-2 focus on designing the relational database schema (Users, Tasks, Reminders, Foreign Keys) before writing application logic.",
-            "verification": "Verify that your architecture diagram clearly outlines foreign key constraints between Users, Tasks, and Reminders.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Async Backend Core Setup",
-            "command": "cd backend && pip install fastapi uvicorn sqlalchemy asyncpg alembic",
-            "explanation": "Days 3-5 involve building the FastAPI CRUD endpoints, configuring status codes, and setting up dependency injection.",
-            "verification": "Run 'uvicorn main:app --reload' and navigate to 'http://127.0.0.1:8000/docs' to test automatic Swagger documentation.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Authentication & Security",
-            "command": "pip install passlib[bcrypt] python-jose[cryptography]",
-            "explanation": "Days 6-8 cover implementing password hashing with Bcrypt and securing endpoints using JWT tokens.",
-            "verification": "Send a POST request to your /token endpoint with invalid credentials and verify a 401 Unauthorized response is returned.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 4,
-            "title": "Frontend Shell & API Integration",
-            "command": "cd ../frontend && npm create vite@latest . -- --template react && npm install tailwindcss",
-            "explanation": "Days 9-11 focus on scaffolding the React and TailwindCSS client to consume your FastAPI backend endpoints.",
-            "verification": "Run 'npm run dev' and confirm the frontend successfully fetches data from the backend API without CORS errors.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_1"
-            ]
-          },
-          {
-            "step_number": 5,
-            "title": "Testing & Containerization",
-            "command": "docker compose up --build",
-            "explanation": "Days 12-14 involve writing Pytest tests with HTTPX async clients and orchestrating your containers with Docker Compose.",
-            "verification": "Run 'pytest' in your backend directory and ensure all database migration and container services start cleanly via Docker Compose.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Copying 10-hour video tutorials line-by-line without active problem decomposition.",
-          "Attempting to learn Kubernetes, Redis, and complex cloud IAM before mastering basic Git, SQL, and FastAPI.",
-          "Writing frontend UI components before defining the backend REST API contract and database foreign keys."
-        ],
-        "architecture_contract": "student-task-manager/\n\u251c\u2500\u2500 backend/\n\u2502   \u251c\u2500\u2500 app/\n\u2502   \u2502   \u251c\u2500\u2500 models.py\n\u2502   \u2502   \u251c\u2500\u2500 schemas.py\n\u2502   \u2502   \u251c\u2500\u2500 crud.py\n\u2502   \u2502   \u2514\u2500\u2500 main.py\n\u2502   \u2514\u2500\u2500 requirements.txt\n\u251c\u2500\u2500 frontend/\n\u2502   \u251c\u2500\u2500 src/\n\u2502   \u2502   \u251c\u2500\u2500 components/\n\u2502   \u2502   \u2514\u2500\u2500 App.jsx\n\u2502   \u2514\u2500\u2500 package.json\n\u2514\u2500\u2500 docker-compose.yml",
-        "key_takeaway": "Decomposing a complex application into strict 14-day milestone phases eliminates the illusion of competence and forces genuine architectural synthesis.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0",
-          "fastapi_fullstack_guide_chunk_1"
-        ]
-      }
-    },
-    {
-      "id": "GS-11",
-      "category": "Projects and independent building",
-      "question": "I can follow coding tutorials but freeze when starting from a blank editor. Give me a repeatable process for turning an idea into working code without copying a tutorial.",
       "score": {
         "passed": true,
         "issues": [],
-        "step_count": 4,
-        "command_count": 3,
-        "citation_count": 5,
-        "cited_chunks": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0",
-          "cs_engineering_roadmap_chunk_1"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "To overcome the paralysis of starting from a blank editor, you must replace passive tutorial copying with a structured, incremental 14-day milestone framework and active problem decomposition. Instead of trying to build the entire app at once, break your project into non-negotiable phases ranging from architecture RFCs and backend CRUD to database migrations, testing, and containerization.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Adopt the 14-Day Scoped Milestone Framework",
-            "command": null,
-            "explanation": "Deconstruct your project idea into sequential, non-negotiable phases so you never face an overwhelming blank editor. Focus on architecture first, backend core second, authentication third, frontend fourth, testing fifth, and deployment last.",
-            "verification": "Create a project roadmap markdown file in your repository listing your Day 1-14 milestones.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Define Database Schemas and Architecture RFC",
-            "command": "touch architecture_rfc.md database_schema.sql",
-            "explanation": "Before writing application code, map out your database entities (Users, Tasks, Reminders), foreign keys, and relationships to establish clear data boundaries.",
-            "verification": "Confirm that your schema covers all primary keys, foreign keys, and relational constraints without any missing fields.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Build Async Backend Core with FastAPI",
-            "command": "pip install fastapi uvicorn pydantic sqlalchemy alembic asyncpg && uvicorn main:app --reload",
-            "explanation": "Implement your core REST API endpoints using FastAPI and Pydantic for strict type validation and automatic OpenAPI documentation at /docs.",
-            "verification": "Navigate to http://localhost:8000/docs and verify that your API endpoints respond successfully without frontend code.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 4,
-            "title": "Apply the Production Debugging Methodology when Errors Occur",
-            "command": "pytest -v",
-            "explanation": "When encountering HTTP 500 or crash errors, read the stack trace from the bottom up to locate the exact line of user code, reproduce using minimal curl or httpx scripts, inspect data boundaries, and write an automated pytest regression test.",
-            "verification": "Run pytest to ensure all tests pass and your failure condition is permanently covered by a regression test.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_1"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Copying code line-by-line from a 10-hour video without actively decomposing the problem",
-          "Trying to learn React, TypeScript, APIs, SQL, Git, Docker, and Kubernetes all at the exact same time",
-          "Starting code implementation before defining database schemas and foreign key relationships",
-          "Reading stack traces from the top down instead of starting at the bottom root cause"
-        ],
-        "architecture_contract": "Project Directory Layout:\n\u251c\u2500\u2500 architecture_rfc.md\n\u251c\u2500\u2500 database_schema.sql\n\u251c\u2500\u2500 backend/\n\u2502   \u251c\u2500\u2500 main.py\n\u2502   \u251c\u2500\u2500 models.py\n\u2502   \u251c\u2500\u2500 schemas.py\n\u2502   \u2514\u2500\u2500 database.py\n\u251c\u2500\u2500 tests/\n\u2502   \u2514\u2500\u2500 test_main.py\n\u2514\u2500\u2500 docker-compose.yml",
-        "key_takeaway": "Tutorial hell is defeated by active problem decomposition and strict 14-day scoped milestones, moving your focus from passive copying to architectural synthesis.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0",
-          "cs_engineering_roadmap_chunk_1"
-        ]
-      }
-    },
-    {
-      "id": "GS-12",
-      "category": "Projects and independent building",
-      "question": "I keep abandoning projects because I add too many features. Help me define an MVP for a campus event platform and separate essential features from future improvements.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 3,
+        "step_count": 2,
         "command_count": 2,
         "citation_count": 3,
         "cited_chunks": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "To prevent project abandonment and escape tutorial hell, you must strictly scope your campus event platform into a 14-day MVP focusing solely on core CRUD and relational persistence, while deferring complex features to future iterations.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Define the 14-Day Scoped Milestones",
-            "command": null,
-            "explanation": "Decompose your campus event platform into sequential, non-negotiable phases mirroring a robust engineering roadmap rather than piling on unstructured features.",
-            "verification": "Ensure your project plan is partitioned into architecture, backend, auth, frontend, testing, and deployment phases.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Build the FastAPI Backend Core",
-            "command": "pip install fastapi uvicorn pydantic\npython -m uvicorn main:app --reload",
-            "explanation": "Focus strictly on essential REST API endpoints (GET, POST) for events and RSVPs using FastAPI and Pydantic validation.",
-            "verification": "Navigate to http://127.0.0.1:8000/docs to verify your auto-generated Swagger documentation.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Establish Relational Persistence with PostgreSQL",
-            "command": "docker run --name campus_postgres -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres:15",
-            "explanation": "Persist your events and user records in a containerized PostgreSQL database using SQLAlchemy to handle relational constraints.",
-            "verification": "Run a test connection script or inspect tables via psql to confirm database creation and foreign key relationships.",
-            "citations": [
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Building real-time WebSockets or chat features before establishing basic REST CRUD operations.",
-          "Implementing complex Kubernetes or distributed caching (Redis) during the initial MVP phase.",
-          "Adding unverified features mid-project without completing database schema design and architecture RFCs first."
-        ],
-        "architecture_contract": "campus_platform/\n\u251c\u2500\u2500 backend/\n\u2502   \u251c\u2500\u2500 main.py\n\u2502   \u251c\u2500\u2500 models.py\n\u2502   \u2514\u2500\u2500 schemas.py\n\u2514\u2500\u2500 frontend/\n    \u251c\u2500\u2500 src/\n    \u2514\u2500\u2500 package.json",
-        "key_takeaway": "An MVP is defined by what you intentionally exclude; stick to core relational CRUD and FastAPI validation before exploring advanced cloud or real-time features.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0"
-        ]
-      }
-    },
-    {
-      "id": "GS-13",
-      "category": "Projects and independent building",
-      "question": "Every beginner builds a weather app or to-do list. How can I turn a common project into something distinctive that demonstrates real engineering ability?",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 4,
-        "command_count": 3,
-        "citation_count": 5,
-        "cited_chunks": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "To turn a common project like a to-do list into a distinctive engineering portfolio piece, you must elevate it from a static tutorial clone into a production-grade application by adding rigorous problem decomposition, relational database constraints, automated testing, and containerized deployment.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Deconstruct the Project into 14-Day Scoped Milestones",
-            "command": null,
-            "explanation": "Avoid tutorial hell by structuring your project into explicit architectural phases: database schemas, async backend core, authentication, frontend shell, testing, and containerization.",
-            "verification": "Ensure you have a written specification document mapping out each of the 14 days before writing any code.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Implement a Robust Backend with Python FastAPI and PostgreSQL",
-            "command": "pip install fastapi uvicorn sqlalchemy alembic psycopg2-binary pydantic\nuvicorn main:app --reload",
-            "explanation": "Use FastAPI for automated Pydantic schema validation and interactive OpenAPI docs, paired with PostgreSQL for true relational modeling instead of transient browser storage.",
-            "verification": "Navigate to http://localhost:8000/docs to verify your auto-generated Swagger documentation renders correctly.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Add Comprehensive Testing and Error Handling",
-            "command": "pip install pytest httpx\npytest",
-            "explanation": "Demonstrate production engineering ability by writing asynchronous integration tests using Pytest and HTTPX Async Client to validate edge cases and status codes.",
-            "verification": "Run pytest in your terminal and verify that all test suites pass successfully with zero unhandled exceptions.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 4,
-            "title": "Containerize with Docker and Docker Compose",
-            "command": "docker compose up --build",
-            "explanation": "Package your FastAPI backend and PostgreSQL database into containers to guarantee environmental reproducibility across development and production.",
-            "verification": "Run docker compose up and confirm both services spin up without connection timeouts or missing environment variables.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Copying code line-by-line from a 10-hour video without understanding architectural synthesis.",
-          "Postponing version control; commit your code to Git incrementally from day one.",
-          "Over-engineering prematurely by jumping into Kubernetes, microservices, or Redis before mastering basic relational SQL and REST APIs."
-        ],
-        "architecture_contract": "student_task_manager/\n\u251c\u2500\u2500 backend/\n\u2502   \u251c\u2500\u2500 app/\n\u2502   \u2502   \u251c\u2500\u2500 main.py\n\u2502   \u2502   \u251c\u2500\u2500 models.py\n\u2502   \u2502   \u2514\u2500\u2500 schemas.py\n\u2502   \u251c\u2500\u2500 alembic/\n\u2502   \u2514\u2500\u2500 requirements.txt\n\u251c\u2500\u2500 frontend/\n\u2502   \u251c\u2500\u2500 src/\n\u2502   \u2514\u2500\u2500 package.json\n\u2514\u2500\u2500 docker-compose.yml",
-        "key_takeaway": "Real engineering ability is demonstrated not by building a novel app idea, but by executing standard projects with exceptional rigor: proper architecture RFCs, strict type validation, relational database constraints, automated testing, and containerized deployment.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0"
-        ]
-      }
-    },
-    {
-      "id": "GS-14",
-      "category": "Projects and independent building",
-      "question": "I repeatedly start tutorials and quit halfway. Give me a seven-day micro-project plan with daily deliverables, a time limit, and a definition of done.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 5,
-        "command_count": 5,
-        "citation_count": 8,
-        "cited_chunks": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0",
-          "cs_engineering_roadmap_chunk_1"
-        ],
-        "is_refusal": false
-      },
-      "response": {
-        "summary": "To escape the cycle of tutorial quitting, transition from passive video following to active problem decomposition by breaking your project into 14-day scoped milestones or a focused 7-day micro-project plan with concrete daily deliverables.",
-        "action_plan": [
-          {
-            "step_number": 1,
-            "title": "Define Architecture and Database Schema",
-            "command": "python3 -m venv venv && source venv/bin/activate && pip install fastapi uvicorn sqlalchemy psycopg2-binary alembic",
-            "explanation": "Start by setting up your project repository, virtual environment, and database schema before writing any business logic.",
-            "verification": "Verify that your virtual environment activates successfully and required packages install without error.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Build Async Backend Core with FastAPI",
-            "command": "uvicorn main:app --reload",
-            "explanation": "Implement your core CRUD endpoints and Pydantic validation schemas to ensure robust request and response handling.",
-            "verification": "Navigate to http://127.0.0.1:8000/docs to verify that the automatic Swagger UI loads successfully.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "fastapi_fullstack_guide_chunk_0"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Add Authentication and Security",
-            "command": "pip install python-jose[cryptography] passlib[bcrypt]",
-            "explanation": "Incorporate password hashing with bcrypt and secure your endpoints using JWT tokens.",
-            "verification": "Test your protected endpoints using curl or Postman with a valid and invalid JWT bearer token.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          },
-          {
-            "step_number": 4,
-            "title": "Write Automated Tests with Pytest",
-            "command": "pytest -v",
-            "explanation": "Ensure your application handles edge cases and expected errors correctly using Pytest and HTTPX async client.",
-            "verification": "Run pytest in your terminal and verify that all test cases pass successfully.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0",
-              "cs_engineering_roadmap_chunk_1"
-            ]
-          },
-          {
-            "step_number": 5,
-            "title": "Containerize and Deploy",
-            "command": "docker compose up --build",
-            "explanation": "Package your application and database into containers using Docker and Docker Compose for reliable local and cloud execution.",
-            "verification": "Verify that your containers start and communicate properly without crashing.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_0"
-            ]
-          }
-        ],
-        "anti_patterns_to_avoid": [
-          "Copying code line-by-line from a video without understanding architectural synthesis",
-          "Jumping straight into complex cloud platforms, microservices, or Kubernetes before mastering relational SQL and FastAPI",
-          "Starting to debug from the top of the stack trace instead of reading the root cause from the bottom"
-        ],
-        "architecture_contract": "project_root/\n\u251c\u2500\u2500 app/\n\u2502   \u251c\u2500\u2500 __init__.py\n\u2502   \u251c\u2500\u2500 main.py\n\u2502   \u251c\u2500\u2500 models.py\n\u2502   \u251c\u2500\u2500 schemas.py\n\u2502   \u2514\u2500\u2500 database.py\n\u251c\u2500\u2500 tests/\n\u2502   \u2514\u2500\u2500 test_main.py\n\u251c\u2500\u2500 Dockerfile\n\u251c\u2500\u2500 docker-compose.yml\n\u2514\u2500\u2500 requirements.txt",
-        "key_takeaway": "Escape tutorial hell by enforcing active problem decomposition, building scoped milestones, and prioritizing foundational engineering skills like Git, relational SQL, and FastAPI over complex distributed abstractions.",
-        "is_refusal": false,
-        "refusal_reason": null,
-        "cited_chunk_ids": [
-          "cs_engineering_roadmap_chunk_0",
-          "fastapi_fullstack_guide_chunk_0",
-          "cs_engineering_roadmap_chunk_1"
-        ]
-      }
-    },
-    {
-      "id": "GS-15",
-      "category": "Projects and independent building",
-      "question": "I get stuck for hours whenever my project throws an unfamiliar error. Teach me a systematic debugging workflow, including what to inspect before asking AI for help.",
-      "score": {
-        "passed": true,
-        "issues": [],
-        "step_count": 4,
-        "command_count": 4,
-        "citation_count": 5,
-        "cited_chunks": [
-          "cs_engineering_roadmap_chunk_1",
+          "docker_production_guide_chunk_0",
           "docker_production_guide_chunk_1"
         ],
         "is_refusal": false
       },
       "response": {
-        "summary": "This guidance outlines a systematic production debugging methodology using the 4-Step Failure Tree Isolation approach to help students independently troubleshoot errors before turning to AI.",
+        "summary": "When building a Python service with psycopg2 on a minimal python:3.12-slim image, the build fails because psycopg2 requires native C bindings and header files (libpq-fe.h) along with a C compiler (gcc) to compile against PostgreSQL. Using a multi-stage Dockerfile that installs libpq-dev and gcc in the builder stage allows compilation of wheels without bloating the final runtime image.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Read the Root Cause in the Stack Trace",
-            "command": "python -c \"import traceback; print('Read from the bottom of the stack trace up to your user code line.')\"",
-            "explanation": "Start from the bottom of the trace rather than the top to identify the exact line of user code where the exception originated.",
-            "verification": "Locate the exact file name and line number of your code in the traceback.",
+            "title": "Implement Multi-Stage Dockerfile with Builder Dependencies",
+            "command": "FROM python:3.12-slim AS builder\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    gcc \\\n    libpq-dev \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY requirements.txt .\nRUN pip install --no-cache-dir --user -r requirements.txt",
+            "explanation": "Installs gcc and libpq-dev (which provides libpq-fe.h) in the builder stage so psycopg2 can successfully compile its C extensions.",
+            "verification": "docker build -t test-build .",
             "citations": [
-              "cs_engineering_roadmap_chunk_1"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Reproduce with a Minimal Script",
-            "command": "curl -X GET http://localhost:8000/health",
-            "explanation": "Disconnect the frontend and UI to isolate the backend endpoint using curl or Python httpx with the exact payload.",
-            "verification": "Confirm whether the endpoint replicates the failure independently of the browser or frontend client.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_1"
-            ]
-          },
-          {
-            "step_number": 3,
-            "title": "Inspect Network & Data Boundaries",
-            "command": "docker exec -it navigator-db pg_isready -U navigator_user -d navigator_db",
-            "explanation": "Verify that database migrations have executed correctly and that environment variables are non-empty and accessible.",
-            "verification": "Ensure database connectivity and check that required environment variables are set.",
-            "citations": [
-              "cs_engineering_roadmap_chunk_1",
+              "docker_production_guide_chunk_0",
               "docker_production_guide_chunk_1"
             ]
           },
           {
-            "step_number": 4,
-            "title": "Add an Automated Regression Test",
-            "command": "pytest -v",
-            "explanation": "Before closing the issue, write an automated test in pytest that replicates the failure condition to prevent future regressions.",
-            "verification": "Run pytest and verify that the new test fails without the fix and passes with it.",
+            "step_number": 2,
+            "title": "Copy Compiled Wheels to Minimal Runner Stage",
+            "command": "FROM python:3.12-slim AS runner\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    curl \\\n    libpq5 \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\nCOPY . .\nCMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
+            "explanation": "Copies only the compiled user wheels and runtime libraries (libpq5) into the final runner image, leaving heavy compilers behind.",
+            "verification": "docker run --rm -p 8000:8000 test-build",
             "citations": [
-              "cs_engineering_roadmap_chunk_1"
+              "docker_production_guide_chunk_0"
             ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Reading stack traces from the top instead of starting from the bottom root cause.",
-          "Asking AI or posting code online without first reproducing the error via a minimal script or curl request.",
-          "Guessing at fixes by randomly changing configuration files or dependencies without checking environment variables and database boundaries."
+          "Installing compilers like gcc and development headers like libpq-dev directly in single-stage production Docker images, which unnecessarily inflates image size.",
+          "Ignoring container healthchecks or relying solely on container process uptime rather than verifying HTTP endpoints."
         ],
-        "architecture_contract": null,
-        "key_takeaway": "Systematic debugging requires isolating failures step-by-step from stack trace root causes to minimal reproduction scripts before asking for outside help.",
+        "architecture_contract": "Multi-stage Dockerfile dividing dependencies into a 'builder' stage with compilation tools and a 'runner' stage containing only runtime libraries.",
+        "key_takeaway": "Minimal base images lack C compilers and PostgreSQL header files required by packages like psycopg2; multi-stage builds isolate compilation tools to the build phase while keeping production images lightweight.",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
-          "cs_engineering_roadmap_chunk_1",
+          "docker_production_guide_chunk_0",
           "docker_production_guide_chunk_1"
         ]
+      }
+    },
+    {
+      "id": "GS-83",
+      "category": "Hardened Retrieval: Exact-Keyword Trap (Pydantic Field Validator)",
+      "question": "In Pydantic v2, how do I configure a custom validator using @field_validator with mode='before' and classmethod to cast raw inputs before type validation?",
+      "expected_chunk_ids": [
+        "pydantic_validation_chunk_14",
+        "pydantic_validation_chunk_4"
+      ],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_2",
+        "pydantic_validation_chunk_3",
+        "pydantic_validation_chunk_4",
+        "pydantic_validation_chunk_14",
+        "pydantic_validation_chunk_8"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3
+      },
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "pydantic_validation_chunk_3"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "To configure a custom field validator in Pydantic v2 using the decorator pattern with mode='before', you define a classmethod decorated with @field_validator('field_name', mode='before') that takes any raw input, processes or casts it, and returns the modified value for subsequent internal validation.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Create a Pydantic model with a before field validator",
+            "command": "cat << 'EOF' > model.py\nfrom typing import Any\nfrom pydantic import BaseModel, ValidationError, field_validator\n\nclass Model(BaseModel):\n    numbers: list[int]\n\n    @field_validator('numbers', mode='before')\n    @classmethod\n    def ensure_list(cls, value: Any) -> Any:\n        if not isinstance(value, list):\n            return [value]\n        else:\n            return value\n\nprint(Model(numbers=2))\nEOF\npython3 model.py",
+            "explanation": "We define a model where the 'numbers' field expects a list of integers. By using @field_validator with mode='before' and @classmethod, we intercept raw inputs (like an integer scalar) and wrap them into a list before Pydantic validates the list elements.",
+            "verification": "Running the python script should output 'numbers=[2]'.",
+            "citations": [
+              "pydantic_validation_chunk_3"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Forgetting to use @classmethod beneath @field_validator, which causes a TypeError when Pydantic attempts to bind the validator method.",
+          "Assuming plain validators perform internal type checking\u2014remember that plain validators terminate validation immediately, whereas before validators still allow Pydantic to validate the returned value against the type annotation."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Using @field_validator with mode='before' allows you to handle raw, unparsed inputs and preprocess or cast them before Pydantic runs its standard type validation against your annotations.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "pydantic_validation_chunk_3"
+        ]
+      }
+    },
+    {
+      "id": "GS-84",
+      "category": "Hardened Retrieval: Exact-Keyword Trap (Validator Exceptions)",
+      "question": "Inside a Pydantic custom validator, which exception types can be raised to trigger a ValidationError rather than crashing the application?",
+      "expected_chunk_ids": [
+        "pydantic_validation_chunk_9"
+      ],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_9",
+        "pydantic_models_chunk_14",
+        "pydantic_validation_chunk_1",
+        "pydantic_validation_chunk_10",
+        "pydantic_validation_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      },
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 3,
+        "cited_chunks": [
+          "pydantic_validation_chunk_9",
+          "pydantic_validation_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Inside a Pydantic custom validator, you can raise standard exceptions like ValueError and AssertionError, or Pydantic's specialized PydanticCustomError to cleanly trigger a ValidationError without crashing the application.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Use ValueError or AssertionError in Field Validators",
+            "command": "python3 -c \"from pydantic import BaseModel, field_routers, field_validator, ValidationError\nclass Model(BaseModel):\n    number: int\n    @field_validator('number')\n    @classmethod\n    def check_even(cls, v: int) -> int:\n        if v % 2 != 0:\n            raise ValueError('Must be even')\n        return v\ntry:\n    Model(number=3)\nexcept ValidationError as e:\n    print('Caught expected validation error:', e)\"",
+            "explanation": "Raising a standard ValueError inside a field validator is the most common and recommended way to trigger a Pydantic ValidationError safely.",
+            "verification": "python3 -c \"...\"",
+            "citations": [
+              "pydantic_validation_chunk_9",
+              "pydantic_validation_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Use PydanticCustomError for Rich Error Metadata",
+            "command": "python3 -c \"from pydantic_core import PydanticCustomError\nfrom pydantic import BaseModel, ValidationError, field_validator\nclass Model(BaseModel):\n    x: int\n    @field_validator('x')\n    @classmethod\n    def validate_x(cls, v: int) -> int:\n        if v == 42:\n            raise PydanticCustomError('custom_error_code', '{val} is forbidden', {'val': v})\n        return v\ntry:\n    Model(x=42)\nexcept ValidationError as e:\n    print(e)\"",
+            "explanation": "PydanticCustomError provides extra flexibility by allowing custom error codes and template variables within the validation error structure.",
+            "verification": "python3 -c \"...\"",
+            "citations": [
+              "pydantic_validation_chunk_9"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Defining a custom __init__() method which breaks validation parameters and context.",
+          "Forgetting to return the validated value from an 'after' validator function.",
+          "Relying solely on AssertionError when running Python with optimization flags (-O), which skips assert statements."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Pydantic converts ValueError, AssertionError, and PydanticCustomError raised inside validators into a clean ValidationError instance rather than crashing the application.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "pydantic_validation_chunk_9",
+          "pydantic_validation_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-85",
+      "category": "Hardened Retrieval: Multi-Hop Synthesis (Docker Compose & C-Extensions)",
+      "question": "How can an engineering team combine Docker Compose isolated testing environments with multi-stage Docker builds to prevent PostgreSQL C-extension build failures in CI?",
+      "expected_chunk_ids": [
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "docker_compose_best_practices_chunk_0",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      },
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 3,
+        "command_count": 3,
+        "citation_count": 5,
+        "cited_chunks": [
+          "docker_production_guide_chunk_0",
+          "docker_production_guide_chunk_1",
+          "docker_compose_best_practices_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Engineering teams can combine multi-stage Docker builds with Docker Compose to prevent psycopg2 C-extension build failures by leveraging a builder stage containing gcc and libpq-dev, while keeping production and testing runtime images minimal.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Implement Multi-Stage Dockerfile with Builder and Runner Stages",
+            "command": "FROM python:3.12-slim AS builder\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && rm -rf /var/lib/apt/lists/*\nCOPY requirements.txt .\nRUN pip install --no-cache-dir --user -r requirements.txt\n\nFROM python:3.12-slim AS runner\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends curl libpq5 && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\nEXPOSE 8000\nCMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
+            "explanation": "Separating the build stage containing compilation tools (gcc, libpq-dev) from the minimal runner stage prevents psycopg2 build failures while ensuring the final image remains clean and lightweight.",
+            "verification": "docker build -t my-app .",
+            "citations": [
+              "docker_production_guide_chunk_0",
+              "docker_production_guide_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Orchestrate Services with Docker Compose and Healthchecks",
+            "command": "docker compose up -d",
+            "explanation": "Docker Compose allows spinning up both the database and the multi-stage backend container in an isolated environment, using healthchecks to ensure the database is ready before the application starts.",
+            "verification": "docker compose ps",
+            "citations": [
+              "docker_compose_best_practices_chunk_1",
+              "docker_production_guide_chunk_0"
+            ]
+          },
+          {
+            "step_number": 3,
+            "title": "Run Test Suite and Clean Up Isolated Environment",
+            "command": "./run_tests && docker compose down",
+            "explanation": "Execute automated end-to-end tests inside the orchestrated environment and cleanly destroy the containers once the test run completes.",
+            "verification": "docker compose logs",
+            "citations": [
+              "docker_compose_best_practices_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using single-stage builds that leave heavy compilers and libpq-dev headers in production runtime images",
+          "Relying on local machine states instead of isolated Docker Compose environments for automated testing",
+          "Ignoring database healthchecks and allowing backend services to crash due to premature connection attempts"
+        ],
+        "architecture_contract": "version: '3.8'\nservices:\n  database:\n    image: postgres:16-alpine\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U navigator_user -d navigator_db\"]\n  backend:\n    build: .\n    depends_on:\n      database:\n        condition: service_healthy",
+        "key_takeaway": "Multi-stage builds separate native compilation dependencies from the runtime image, while Docker Compose orchestrates reproducible, isolated testing environments.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_production_guide_chunk_0",
+          "docker_production_guide_chunk_1",
+          "docker_compose_best_practices_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-86",
+      "category": "Hardened Retrieval: Multi-Hop Synthesis (FastAPI Background Tasks & Architecture)",
+      "question": "How do you integrate FastAPI BackgroundTasks into a relational CRUD route using dependency injection, and when should you upgrade from BackgroundTasks to a Redis task queue?",
+      "expected_chunk_ids": [
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_2",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_2",
+        "fastapi_background_tasks_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      },
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 4,
+        "cited_chunks": [
+          "fastapi_background_tasks_chunk_0",
+          "fastapi_background_tasks_chunk_1",
+          "fastapi_background_tasks_chunk_2"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "FastAPI BackgroundTasks can be seamlessly integrated into CRUD routes using dependency injection by declaring a parameter of type BackgroundTasks in your path operation function or dependencies. For heavy, distributed, or multi-server workloads, you should upgrade from BackgroundTasks to a robust task queue like Celery backed by Redis.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Define and Inject BackgroundTasks in CRUD Route",
+            "command": "cat << 'EOF' > main.py\nfrom fastapi import BackgroundTasks, FastAPI, Depends\n\napp = FastAPI()\n\ndef write_notification(email: str, message: str = \"\"):\n    with open(\"log.txt\", mode=\"w\") as email_file:\n        email_file.write(f\"Notification sent to {email}: {message}\\n\")\n\n@app.post(\"/items/\")\nasync def create_item(email: str, background_tasks: BackgroundTasks):\n    background_tasks.add_task(write_notification, email, message=\"Item created successfully\")\n    return {\"message\": \"Item received and processing in background\"}\nEOF\npython3 -m uvicorn main:app --reload\n",
+            "explanation": "You can declare a parameter of type BackgroundTasks in your path operation function or through the dependency injection system. FastAPI automatically handles creating and merging these background tasks so they execute after the response is sent to the client.",
+            "verification": "curl -X POST \"http://127.0.0.1:8000/items/?email=test%40example.com\"",
+            "citations": [
+              "fastapi_background_tasks_chunk_0",
+              "fastapi_background_tasks_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Evaluate When to Upgrade to Celery and Redis",
+            "command": "echo \"Reviewing requirements for Celery/Redis upgrade\"",
+            "explanation": "If your application needs to execute heavy background computations across multiple processes or multiple servers without sharing memory, or if task persistence across server restarts is critical, you must upgrade from built-in BackgroundTasks to a distributed task runner like Celery with Redis or RabbitMQ.",
+            "verification": "Verify that your workload exceeds simple single-process tasks like sending small email notifications.",
+            "citations": [
+              "fastapi_background_tasks_chunk_1",
+              "fastapi_background_tasks_chunk_2"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using BackgroundTasks for heavy CPU-bound computations or long-running jobs that require a distributed worker pool across multiple servers.",
+          "Importing `BackgroundTask` (without the 's') from `starlette.background` inside FastAPI path operations instead of using FastAPI's `BackgroundTasks`.",
+          "Expecting background tasks to persist if the single FastAPI process crashes or restarts, as they run in-memory within the same process."
+        ],
+        "architecture_contract": "app/\n\u251c\u2500\u2500 main.py\n\u2514\u2500\u2500 log.txt",
+        "key_takeaway": "FastAPI's BackgroundTasks integrates smoothly via dependency injection for lightweight post-response actions (like emails or logging) within a single process, but requires distributed tools like Celery and Redis when scaling to multiple servers or heavy workloads.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_background_tasks_chunk_0",
+          "fastapi_background_tasks_chunk_1",
+          "fastapi_background_tasks_chunk_2"
+        ]
+      }
+    },
+    {
+      "id": "GS-87",
+      "category": "Hardened Retrieval: Multi-Hop Synthesis (Fullstack CORS & Credentials)",
+      "question": "How do you configure cross-origin cookie authentication between a React dev server on port 3000 and a FastAPI backend on port 8000 without hitting the wildcard origin restriction?",
+      "expected_chunk_ids": [
+        "fastapi_cors_chunk_2",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_cors_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2
+      },
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "fastapi_cors_chunk_0",
+          "fastapi_fullstack_guide_chunk_2"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "To configure cross-origin cookie or credentialed authentication between a React dev server on port 3000 and a FastAPI backend on port 8000 without hitting wildcard origin restrictions, you must explicitly add the frontend origin (\"http://localhost:3000\") to CORSMiddleware and set allow_credentials=True.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Configure CORSMiddleware in FastAPI with explicit origin and credentials",
+            "command": "from fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\n\napp = FastAPI()\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"http://localhost:3000\"],\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)",
+            "explanation": "Browsers block responses when frontends and backends run on different origins (ports 3000 vs 8000). Wildcards (\"*\") cannot be used alongside credentials like cookies or Authorization headers. Explicitly setting allow_origins to your exact React dev server origin while enabling allow_credentials satisfies browser security requirements.",
+            "verification": "Start your FastAPI server with uvicorn and check that OPTIONS preflight requests return the 'Access-Control-Allow-Origin: http://localhost:3000' and 'Access-Control-Allow-Credentials: true' headers.",
+            "citations": [
+              "fastapi_cors_chunk_0",
+              "fastapi_fullstack_guide_chunk_2"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using allow_origins=[\"*\"] when attempting to send cookies or Authorization bearer tokens, which will fail browser CORS policy restrictions.",
+          "Forgetting to specify the protocol or port in the origin string (e.g. using localhost instead of http://localhost:3000)."
+        ],
+        "architecture_contract": "main.py -> FastAPI app instance with CORSMiddleware mounted before any routers are registered.",
+        "key_takeaway": "Credentialed cross-origin requests require an explicit list of allowed origins paired with allow_credentials=True; wildcards are strictly incompatible with cookies and bearer tokens.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_cors_chunk_0",
+          "fastapi_fullstack_guide_chunk_2"
+        ]
+      }
+    },
+    {
+      "id": "GS-88",
+      "category": "Hardened Retrieval: Multi-Hop Synthesis (Pydantic Sanitization in FastAPI)",
+      "question": "How do you sanitize and validate incoming request payloads in FastAPI by combining Pydantic before-validators with API route dependency schemas?",
+      "expected_chunk_ids": [
+        "pydantic_validation_chunk_14",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_10",
+        "pydantic_validation_chunk_7",
+        "pydantic_validation_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_validation_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null
+      },
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The student asked about sanitizing and validating incoming request payloads in FastAPI using Pydantic before-validators combined with API route dependency schemas. However, the provided corpus only contains documentation for Pydantic V2 models, data validation methods, and field/model validators (including before and after validators), but lacks FastAPI specific dependency integration. Therefore, this request is out-of-corpus.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Official FastAPI and Pydantic Documentation",
+            "command": "python -m pip install fastapi pydantic",
+            "explanation": "Since the specific integration between FastAPI route dependencies and Pydantic model-level before-validators is outside the verified corpus, please refer to the official FastAPI dependency injection and Pydantic custom validators documentation.",
+            "verification": "python -c \"import fastapi, pydantic; print(fastapi.__version__, pydantic.__version__)\"",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing FastAPI dependency injection patterns without verifying against official documentation.",
+          "Mutating raw input dictionaries directly inside Pydantic before-validators when raising validation errors."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always verify framework-level integrations against official documentation when the local technical corpus is constrained.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
       }
     }
   ]

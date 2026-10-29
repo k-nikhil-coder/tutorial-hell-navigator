@@ -183,6 +183,83 @@ def test_eval_report_baseline_metrics():
     with open(report_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["total_evaluated"] >= 5
-    assert data["pass_rate"] >= 80.0
-    assert "avg_steps_per_plan" in data["metrics"]
-    assert "avg_citations_per_plan" in data["metrics"]
+    assert "retrieval_metrics" in data
+    assert "recall_at_3" in data["retrieval_metrics"]
+    assert "mrr" in data["retrieval_metrics"]
+
+
+def test_bm25_encoder_sparse_vector():
+    from app.rag import BM25Encoder
+    encoder = BM25Encoder()
+    corpus = [
+        "FastAPI CORSMiddleware with allow_credentials=True forbids wildcard origins.",
+        "Minimal Docker image requires libpq-dev and gcc to build psycopg2 native wheel.",
+        "Pydantic custom validator using @field_validator with mode='before'.",
+    ]
+    encoder.fit(corpus)
+    assert len(encoder.vocab) > 5
+
+    doc_sparse = encoder.encode_doc(corpus[0])
+    assert len(doc_sparse.indices) > 0
+    assert len(doc_sparse.values) == len(doc_sparse.indices)
+
+    query_sparse = encoder.encode_query("allow_credentials=True")
+    assert len(query_sparse.indices) > 0
+
+
+def test_reciprocal_rank_fusion():
+    from app.rag import reciprocal_rank_fusion
+    dense_res = [
+        {"chunk_id": "chunk_A", "score": 0.85},
+        {"chunk_id": "chunk_B", "score": 0.80},
+    ]
+    sparse_res = [
+        {"chunk_id": "chunk_B", "score": 9.5},
+        {"chunk_id": "chunk_C", "score": 7.2},
+    ]
+    fused = reciprocal_rank_fusion(dense_res, sparse_res, k=60, top_k=3)
+    # chunk_B appears in both lists (rank 2 and rank 1), so its score should be highest
+    assert fused[0]["chunk_id"] == "chunk_B"
+    assert fused[0]["rrf_score"] > fused[1]["rrf_score"]
+    assert len(fused) == 3
+
+
+def test_calculate_retrieval_metrics():
+    from eval.run_eval import calculate_retrieval_metrics
+    retrieved = ["chunk_0", "chunk_1", "chunk_2", "chunk_3", "chunk_4"]
+    
+    # Target at rank 1 -> Recall@3=1, Recall@5=1, MRR=1.0
+    m1 = calculate_retrieval_metrics(retrieved, ["chunk_0"])
+    assert m1["recall_at_3"] == 1.0
+    assert m1["recall_at_5"] == 1.0
+    assert m1["reciprocal_rank"] == 1.0
+
+    # Target at rank 2 -> Recall@3=1, Recall@5=1, MRR=0.5
+    m2 = calculate_retrieval_metrics(retrieved, ["chunk_1"])
+    assert m2["recall_at_3"] == 1.0
+    assert m2["reciprocal_rank"] == 0.5
+
+    # Target at rank 4 -> Recall@3=0, Recall@5=1, MRR=0.25
+    m3 = calculate_retrieval_metrics(retrieved, ["chunk_3"])
+    assert m3["recall_at_3"] == 0.0
+    assert m3["recall_at_5"] == 1.0
+    assert m3["reciprocal_rank"] == 0.25
+
+    # Target not in top 5 -> Recall@3=0, Recall@5=0, MRR=0.0
+    m4 = calculate_retrieval_metrics(retrieved, ["chunk_99"])
+    assert m4["recall_at_3"] == 0.0
+    assert m4["recall_at_5"] == 0.0
+    assert m4["reciprocal_rank"] == 0.0
+
+
+def test_gold_set_contains_hardened_retrieval_traps():
+    import json
+    gold_path = Path(__file__).resolve().parent.parent / "eval" / "gold_set.json"
+    with open(gold_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert len(data) >= 88
+    hard_questions = [q for q in data if "Hardened Retrieval" in q.get("category", "")]
+    assert len(hard_questions) == 8
+    for q in hard_questions:
+        assert "expected_chunk_ids" in q
+        assert len(q["expected_chunk_ids"]) >= 1

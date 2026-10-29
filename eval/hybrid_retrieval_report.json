@@ -1,0 +1,1846 @@
+{
+  "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
+  "search_mode": "hybrid",
+  "retrieval_only": true,
+  "timestamp": "2026-10-29T12:09:25.870589+00:00",
+  "total_evaluated": 88,
+  "ground_truth_count": 23,
+  "retrieval_metrics": {
+    "recall_at_3": 69.57,
+    "recall_at_5": 78.26,
+    "mrr": 0.5725,
+    "recall_3_hits": 16,
+    "recall_5_hits": 18
+  },
+  "llm_metrics": null,
+  "items": [
+    {
+      "id": "GS-01",
+      "category": "Full-stack development: getting started",
+      "question": "I know basic HTML, CSS, and JavaScript. What exact learning path should I follow to become a full-stack developer, and what should I build at each stage?",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_production_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-02",
+      "category": "Full-stack development: getting started",
+      "question": "Should I learn React + Node.js or React + Python/FastAPI as a CS student? Compare the learning curve, job opportunities, and project potential.",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-03",
+      "category": "Full-stack development: getting started",
+      "question": "I can build static websites but don't understand how a frontend communicates with a backend. Walk me through building my first working full-stack application.",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 0.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "first_hit_rank": 4
+      }
+    },
+    {
+      "id": "GS-04",
+      "category": "Full-stack development: getting started",
+      "question": "I know basic JavaScript but have never used a database. Teach me how to connect a web app to PostgreSQL, store user data, and retrieve it safely.",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 0.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "first_hit_rank": 4
+      }
+    },
+    {
+      "id": "GS-05",
+      "category": "Full-stack development: getting started",
+      "question": "Suggest one beginner-friendly full-stack project I can finish in 14 days, including features, folder structure, technologies, and daily milestones.",
+      "expected_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-06",
+      "category": "Full-stack development: getting started",
+      "question": "How do login, signup, sessions, cookies, and JWTs actually work in a full-stack application? Show me a sensible implementation path without overwhelming me.",
+      "expected_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_cors_chunk_0",
+        "pydantic_models_chunk_12"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-07",
+      "category": "Full-stack development: getting started",
+      "question": "My app works locally, but I don't know how to deploy the frontend, backend, and database. Give me a beginner-friendly production deployment checklist.",
+      "expected_chunk_ids": [
+        "fastapi_cors_chunk_0",
+        "fastapi_cors_chunk_1",
+        "fastapi_cors_chunk_2"
+      ],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "docker_production_guide_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-08",
+      "category": "Full-stack development: getting started",
+      "question": "I'm overwhelmed by React, TypeScript, APIs, SQL, Git, Docker, and cloud platforms. What should I learn first, and what can I safely postpone?",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2
+      }
+    },
+    {
+      "id": "GS-09",
+      "category": "Projects and independent building",
+      "question": "I finished a Python basics course. What exact project should I build next to learn FastAPI and Docker without getting stuck?",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2
+      }
+    },
+    {
+      "id": "GS-10",
+      "category": "Projects and independent building",
+      "question": "I want to build a student task manager with authentication, PostgreSQL, and reminders. Break it into small milestones I can complete independently.",
+      "expected_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-11",
+      "category": "Projects and independent building",
+      "question": "I can follow coding tutorials but freeze when starting from a blank editor. Give me a repeatable process for turning an idea into working code without copying a tutorial.",
+      "expected_chunk_ids": [
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "pydantic_models_chunk_1",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-12",
+      "category": "Projects and independent building",
+      "question": "I keep abandoning projects because I add too many features. Help me define an MVP for a campus event platform and separate essential features from future improvements.",
+      "expected_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_compose_best_practices_chunk_1",
+        "docker_compose_best_practices_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-13",
+      "category": "Projects and independent building",
+      "question": "Every beginner builds a weather app or to-do list. How can I turn a common project into something distinctive that demonstrates real engineering ability?",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "docker_production_guide_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3
+      }
+    },
+    {
+      "id": "GS-14",
+      "category": "Projects and independent building",
+      "question": "I repeatedly start tutorials and quit halfway. Give me a seven-day micro-project plan with daily deliverables, a time limit, and a definition of done.",
+      "expected_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "pydantic_validation_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-15",
+      "category": "Projects and independent building",
+      "question": "I get stuck for hours whenever my project throws an unfamiliar error. Teach me a systematic debugging workflow, including what to inspect before asking AI for help.",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2
+      }
+    },
+    {
+      "id": "GS-16",
+      "category": "Projects and independent building",
+      "question": "I have five half-finished GitHub repositories and no completed projects. Help me choose one to finish, cut unnecessary features, and ship it within one week.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_1",
+        "pydantic_models_chunk_30"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-17",
+      "category": "Debugging and developer tooling",
+      "question": "My Docker container throws `ModuleNotFoundError: No module named 'psycopg2'`. How do I diagnose whether the problem is my requirements file, image build, virtual environment, or Docker cache?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-18",
+      "category": "Debugging and developer tooling",
+      "question": "I can run my Python application locally but Docker confuses me. Explain how to write a Dockerfile, build an image, run a container, and debug common errors.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "docker_compose_best_practices_chunk_0",
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-19",
+      "category": "Debugging and developer tooling",
+      "question": "My project works on my laptop but fails on another machine because of package versions. How should I use virtual environments, dependency pinning, and lockfiles?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "docker_compose_best_practices_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_compose_best_practices_chunk_0",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-20",
+      "category": "Debugging and developer tooling",
+      "question": "I accidentally committed a `.env` file containing an API key to GitHub. What should I do immediately, how do I remove the secret safely, and how do I prevent this happening again?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_3",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_production_guide_chunk_1",
+        "fastapi_background_tasks_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-21",
+      "category": "Debugging and developer tooling",
+      "question": "I'm working with two classmates on a full-stack app. Explain a practical branch strategy, pull requests, merge conflicts, and code review for a beginner team.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_cors_chunk_2",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-22",
+      "category": "Debugging and developer tooling",
+      "question": "My frontend receives a 500 response from my backend, but the browser only shows a generic error. How do I trace the request from the UI to the database and identify the root cause?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_cors_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-23",
+      "category": "Debugging and developer tooling",
+      "question": "My React frontend on one port cannot call my FastAPI backend on another port because of CORS. Explain the cause and show how to configure it correctly for development and production.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-24",
+      "category": "Debugging and developer tooling",
+      "question": "My API works locally but fails after deployment because environment variables are missing. Explain how to configure secrets locally, in Docker, and on a hosting platform without exposing them.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_2",
+        "docker_production_guide_chunk_1",
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_0",
+        "docker_compose_best_practices_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-25",
+      "category": "AI and machine learning engineering",
+      "question": "I've learned basic Python, NumPy, pandas, and introductory machine learning. What should I build to move from notebooks to an end-to-end ML application?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-26",
+      "category": "AI and machine learning engineering",
+      "question": "I'm confused about data science, machine learning engineering, deep learning, and AI engineering. What does each role actually do, and which starter project would help me explore them?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_models_chunk_12",
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-27",
+      "category": "AI and machine learning engineering",
+      "question": "I want to build an AI-powered app but only know basic Python. Suggest a small LLM project that teaches API integration, prompt design, error handling, and deployment.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-28",
+      "category": "AI and machine learning engineering",
+      "question": "I want to build a chatbot that answers questions from my college notes and PDFs. Explain how to build a basic retrieval-augmented generation pipeline and evaluate whether its answers are grounded in the documents.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-29",
+      "category": "AI and machine learning engineering",
+      "question": "My AI chatbot gives impressive answers in some cases and incorrect ones in others. How do I create an evaluation dataset, define quality metrics, and compare changes systematically?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_models_chunk_17",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-30",
+      "category": "AI and machine learning engineering",
+      "question": "My LLM application is slow and API calls are expensive. Explain how to measure latency and token usage, add timeouts and retries, and control cost without breaking the app.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_background_tasks_chunk_0",
+        "docker_production_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-31",
+      "category": "AI and machine learning engineering",
+      "question": "As a student building an AI portfolio, when should I use an existing model API, a locally hosted open-weight model, or train a model myself? Give examples based on cost and complexity.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "pydantic_models_chunk_32"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-32",
+      "category": "AI and machine learning engineering",
+      "question": "What does it take to turn a machine learning notebook into a maintainable service? Cover data validation, model serialization, API serving, tests, monitoring, and reproducible experiments.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_2",
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-33",
+      "category": "GitHub portfolio, resumes, and internships",
+      "question": "How should I structure a GitHub repository for a machine learning project so an interviewer can understand the purpose, setup, results, and architecture in 30 seconds?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-34",
+      "category": "GitHub portfolio, resumes, and internships",
+      "question": "Write a checklist for a strong project README with a demo, screenshots, installation instructions, environment configuration, architecture, and known limitations.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-35",
+      "category": "GitHub portfolio, resumes, and internships",
+      "question": "I have three months before internship applications. Should I build three small projects or one polished full-stack project? Help me decide based on my current skills and available time.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_1",
+        "fastapi_background_tasks_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-36",
+      "category": "GitHub portfolio, resumes, and internships",
+      "question": "I used AI assistance while building my project. How can I verify that I understand the code, document my decisions, and prepare to explain my implementation honestly in an interview?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3",
+        "pydantic_models_chunk_22",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-37",
+      "category": "GitHub portfolio, resumes, and internships",
+      "question": "My GitHub contains several projects that only run locally. Which project should I deploy first, and what evidence should I include to demonstrate that it works reliably?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-38",
+      "category": "GitHub portfolio, resumes, and internships",
+      "question": "I built a full-stack expense tracker with authentication and PostgreSQL. Help me turn its actual features and measured results into concise, truthful resume bullets without inventing impact metrics.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-39",
+      "category": "GitHub portfolio, resumes, and internships",
+      "question": "I'm a second-year CS student without professional experience. What should I prioritize over the next eight weeks to become a credible candidate for software or AI engineering internships?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_models_chunk_33"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-40",
+      "category": "GitHub portfolio, resumes, and internships",
+      "question": "Review my GitHub project as a hiring manager. Identify the five biggest weaknesses in its code quality, documentation, testing, architecture, or deployment, and rank fixes by impact.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-41",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "I've watched hours of tutorials but struggle to write code independently. Give me a two-week recovery plan that forces active problem-solving while still allowing documentation and targeted help.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_background_tasks_chunk_0",
+        "pydantic_models_chunk_1",
+        "pydantic_validation_chunk_4"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-42",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "I study programming intensely for three days and then stop for a week. Design a sustainable daily routine for a college student that balances classes, coding practice, and project work.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-43",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "Every developer recommends a different roadmap, and I keep switching technologies. Help me choose one stack and define clear conditions under which I should\u2014and should not\u2014change direction.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_models_chunk_30",
+        "docker_compose_best_practices_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-44",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "AI tools can generate most of my application, but I'm worried I won't learn anything. Give me rules for using AI as a coding tutor without outsourcing my understanding.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "pydantic_models_chunk_15",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_models_chunk_33"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-45",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "I'm preparing for internships and don't know how to divide time between data structures and algorithms, full-stack projects, CS fundamentals, and interview preparation. Propose a weekly allocation.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-46",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "I want to document my coding journey on GitHub or LinkedIn but feel my projects are too basic. What should I share, how often, and how can I communicate progress without exaggerating my skills?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "pydantic_models_chunk_33",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_background_tasks_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-47",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "I'm interested in frontend, backend, cloud, and AI, and I can't decide what to specialize in. Give me a four-week experiment with small tasks that helps me choose based on actual experience.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_background_tasks_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-48",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "I can build simple applications but don't understand HTTP, DNS, processes, threads, memory, or SQL indexing well. Which fundamentals should I learn first, and how can I practice them through a project?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-49",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "My college team project is falling behind because tasks are unclear and teammates work on conflicting code. Help us establish task ownership, milestones, Git practices, and a lightweight weekly review.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "pydantic_models_chunk_15"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-50",
+      "category": "Study habits, career decisions, and computer science fundamentals",
+      "question": "I know Python and basic web development but have never shipped a production-style app. Assess my readiness for a junior developer internship using a practical skills checklist and a prioritized 30-day improvement plan.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-51",
+      "category": "Data structures and algorithms",
+      "question": "I'm a second-year CS student who knows basic Python but has never studied DSA seriously. Give me a structured 60-day roadmap with topics, practice problems, and weekly milestones.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_1",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-52",
+      "category": "Data structures and algorithms",
+      "question": "Should I learn DSA in Python, C++, or Java for internships and coding interviews? I already know Python. Explain the trade-offs and whether switching languages is worth it.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_cors_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-53",
+      "category": "Data structures and algorithms",
+      "question": "I can write working solutions but struggle to calculate time and space complexity. Teach me Big-O notation using five progressively harder code examples and explain how to analyze loops and recursion.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_models_chunk_8",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-54",
+      "category": "Data structures and algorithms",
+      "question": "I've solved a few easy array problems but get stuck on medium questions. Teach me how to recognize two pointers, sliding windows, prefix sums, and hashing, with practice problems for each.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_models_chunk_15"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-55",
+      "category": "Data structures and algorithms",
+      "question": "Recursion makes no sense to me, especially the call stack and base cases. Explain it visually with factorial, binary search, and a backtracking example, then give me exercises.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_8",
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_2",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-56",
+      "category": "Data structures and algorithms",
+      "question": "I understand arrays and linked lists but find trees and graphs confusing. What prerequisites should I learn, and how should I practice BFS, DFS, tree traversals, and shortest paths?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "pydantic_models_chunk_5",
+        "docker_compose_best_practices_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-57",
+      "category": "Data structures and algorithms",
+      "question": "I can solve basic recursion problems but cannot figure out dynamic programming. Explain how to identify overlapping subproblems, define states, write transitions, and move from memoization to tabulation.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_models_chunk_8",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_background_tasks_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-58",
+      "category": "Data structures and algorithms",
+      "question": "When I read a DSA problem, I don't know which algorithm or data structure to use. Give me a decision-making framework for identifying common patterns without simply memorizing solutions.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "pydantic_models_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-59",
+      "category": "Data structures and algorithms",
+      "question": "I solve a problem after reading the editorial but cannot solve a similar one independently later. Design a revision system using spaced repetition, hints, and timed reattempts.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "pydantic_models_chunk_0",
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-60",
+      "category": "Data structures and algorithms",
+      "question": "I've spent 45 minutes on a LeetCode medium problem without progress. Walk me through a hint-based approach that helps me discover the solution without revealing the entire answer immediately.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_models_chunk_15",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_validation_chunk_9",
+        "pydantic_validation_chunk_11"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-61",
+      "category": "Competitive programming and problem-solving",
+      "question": "I want to start competitive programming but have never participated in a contest. Explain how to begin with Codeforces or AtCoder, choose an initial difficulty, and review my mistakes after each contest.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_2",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-62",
+      "category": "Competitive programming and problem-solving",
+      "question": "My solution passes sample tests but gets Wrong Answer on hidden tests. How do I find edge cases, test invariants, use brute-force comparisons, and identify logical errors?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_validation_chunk_9",
+        "pydantic_models_chunk_22",
+        "pydantic_validation_chunk_5",
+        "docker_compose_best_practices_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-63",
+      "category": "Competitive programming and problem-solving",
+      "question": "My algorithm passes small tests but receives Time Limit Exceeded on larger inputs. Teach me how to inspect constraints, estimate complexity, and optimize the bottleneck without guessing.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_22",
+        "pydantic_models_chunk_24",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_background_tasks_chunk_2",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-64",
+      "category": "Competitive programming and problem-solving",
+      "question": "I can solve practice problems at home but freeze during timed contests. Give me a practical contest strategy for choosing problems, managing time, and learning from unsolved questions.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-65",
+      "category": "Competitive programming and problem-solving",
+      "question": "I'm stuck at beginner-level competitive programming problems. Build a four-week training plan that balances topic practice, virtual contests, upsolving, and reviewing failed submissions.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_2",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-66",
+      "category": "Core computer science fundamentals",
+      "question": "I know basic Python but don't understand processes, threads, concurrency, and parallelism. Explain the differences with practical examples and small experiments I can run on my laptop.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_chunk_2",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_background_tasks_chunk_0",
+        "fastapi_background_tasks_chunk_1",
+        "pydantic_models_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-67",
+      "category": "Core computer science fundamentals",
+      "question": "I know basic SQL but struggle with joins, normalization, indexes, and transactions. Create a practical learning plan using a small e-commerce database and progressively harder queries.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-68",
+      "category": "Core computer science fundamentals",
+      "question": "Explain HTTP, TCP, DNS, TLS, and REST APIs by tracing what happens when I type a website URL into a browser. Include a simple way to inspect the process myself.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_2",
+        "fastapi_cors_chunk_2",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-69",
+      "category": "Core computer science fundamentals",
+      "question": "I understand classes and objects but don't know when to use inheritance, composition, interfaces, or dependency injection. Teach these concepts through a realistic application design.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_15",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_background_tasks_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_compose_best_practices_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-70",
+      "category": "Core computer science fundamentals",
+      "question": "I keep confusing stack memory, heap memory, references, and pointers. Explain how they differ across Python and C++ and why those differences matter when debugging.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_8",
+        "pydantic_models_chunk_10",
+        "pydantic_models_chunk_7",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-71",
+      "category": "Core computer science fundamentals",
+      "question": "I can code independently but don't understand unit tests, integration tests, code reviews, continuous integration, or refactoring. Teach me how these practices fit into a real development workflow.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_1",
+        "docker_compose_best_practices_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-72",
+      "category": "Core computer science fundamentals",
+      "question": "I have an upcoming software engineering interview and need to revise OS, DBMS, networking, and OOP. Build a 14-day revision plan with questions, practical exercises, and spaced review.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_3",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-73",
+      "category": "Coding interviews and assessment preparation",
+      "question": "I'm applying for software engineering internships in three months. How should I balance DSA, CS fundamentals, project work, aptitude tests, and mock interviews each week?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "pydantic_validation_chunk_11"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-74",
+      "category": "Coding interviews and assessment preparation",
+      "question": "I can solve coding questions but struggle to explain my reasoning out loud. Show me a repeatable interview framework for clarifying requirements, proposing an approach, analyzing complexity, coding, and testing.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_models_chunk_15"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-75",
+      "category": "Coding interviews and assessment preparation",
+      "question": "During interviews, I usually jump straight into coding the first idea I get. Teach me how to establish a brute-force baseline, identify bottlenecks, and systematically derive a more efficient solution.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_models_chunk_29",
+        "docker_production_guide_chunk_1",
+        "pydantic_validation_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-76",
+      "category": "Coding interviews and assessment preparation",
+      "question": "I have a 90-minute coding assessment with three questions. How should I allocate time, prioritize questions, handle partial solutions, and test code before submission?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_validation_chunk_8",
+        "fastapi_background_tasks_chunk_1",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-77",
+      "category": "Coding interviews and assessment preparation",
+      "question": "I failed a coding interview because I couldn't solve a graph problem. How do I conduct a useful post-interview review, identify the actual knowledge gap, and create a targeted recovery plan?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_production_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "pydantic_models_chunk_12"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-78",
+      "category": "Coding interviews and assessment preparation",
+      "question": "Act as an interviewer for a beginner software engineering internship. Give me one DSA problem at a time, ask clarifying questions, provide hints only when needed, and evaluate my reasoning after the interview.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_validation_chunk_4"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-79",
+      "category": "Coding interviews and assessment preparation",
+      "question": "I have solved 150 coding problems, but my resume still looks weak. How should I present my problem-solving ability alongside projects without treating problem counts as proof of engineering skill?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_models_chunk_33"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-80",
+      "category": "Coding interviews and assessment preparation",
+      "question": "Assess whether I'm ready for a software engineering internship. Test my DSA, complexity analysis, debugging, SQL, OS, networking, and project knowledge, then create a prioritized 30-day improvement plan.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null
+      }
+    },
+    {
+      "id": "GS-81",
+      "category": "Hardened Retrieval: Exact-Keyword Trap (CORS Credentials)",
+      "question": "In FastAPI CORSMiddleware, why is it forbidden to set allow_origins=['*'] when allow_credentials=True, and what exact error or behavior occurs in browsers?",
+      "expected_chunk_ids": [
+        "fastapi_cors_chunk_2",
+        "fastapi_cors_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_2",
+        "fastapi_cors_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_cors_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-82",
+      "category": "Hardened Retrieval: Exact-Keyword Trap (Docker C-Extensions)",
+      "question": "When building a minimal Docker image with python:3.12-slim, why does pip install psycopg2 fail with 'fatal error: libpq-fe.h: No such file or directory', and how do libpq-dev and gcc resolve it in a multi-stage build?",
+      "expected_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "cs_engineering_roadmap_chunk_1",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-83",
+      "category": "Hardened Retrieval: Exact-Keyword Trap (Pydantic Field Validator)",
+      "question": "In Pydantic v2, how do I configure a custom validator using @field_validator with mode='before' and classmethod to cast raw inputs before type validation?",
+      "expected_chunk_ids": [
+        "pydantic_validation_chunk_14",
+        "pydantic_validation_chunk_4"
+      ],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_2",
+        "pydantic_validation_chunk_3",
+        "pydantic_validation_chunk_4",
+        "pydantic_validation_chunk_14",
+        "pydantic_validation_chunk_8"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3
+      }
+    },
+    {
+      "id": "GS-84",
+      "category": "Hardened Retrieval: Exact-Keyword Trap (Validator Exceptions)",
+      "question": "Inside a Pydantic custom validator, which exception types can be raised to trigger a ValidationError rather than crashing the application?",
+      "expected_chunk_ids": [
+        "pydantic_validation_chunk_9"
+      ],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_9",
+        "pydantic_models_chunk_14",
+        "pydantic_validation_chunk_1",
+        "pydantic_validation_chunk_10",
+        "pydantic_validation_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-85",
+      "category": "Hardened Retrieval: Multi-Hop Synthesis (Docker Compose & C-Extensions)",
+      "question": "How can an engineering team combine Docker Compose isolated testing environments with multi-stage Docker builds to prevent PostgreSQL C-extension build failures in CI?",
+      "expected_chunk_ids": [
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "docker_compose_best_practices_chunk_0",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-86",
+      "category": "Hardened Retrieval: Multi-Hop Synthesis (FastAPI Background Tasks & Architecture)",
+      "question": "How do you integrate FastAPI BackgroundTasks into a relational CRUD route using dependency injection, and when should you upgrade from BackgroundTasks to a Redis task queue?",
+      "expected_chunk_ids": [
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_2",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_2",
+        "fastapi_background_tasks_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1
+      }
+    },
+    {
+      "id": "GS-87",
+      "category": "Hardened Retrieval: Multi-Hop Synthesis (Fullstack CORS & Credentials)",
+      "question": "How do you configure cross-origin cookie authentication between a React dev server on port 3000 and a FastAPI backend on port 8000 without hitting the wildcard origin restriction?",
+      "expected_chunk_ids": [
+        "fastapi_cors_chunk_2",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_0",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_cors_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2
+      }
+    },
+    {
+      "id": "GS-88",
+      "category": "Hardened Retrieval: Multi-Hop Synthesis (Pydantic Sanitization in FastAPI)",
+      "question": "How do you sanitize and validate incoming request payloads in FastAPI by combining Pydantic before-validators with API route dependency schemas?",
+      "expected_chunk_ids": [
+        "pydantic_validation_chunk_14",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_10",
+        "pydantic_validation_chunk_7",
+        "pydantic_validation_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_validation_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null
+      }
+    }
+  ]
+}

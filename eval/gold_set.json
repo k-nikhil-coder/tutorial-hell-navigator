@@ -11,6 +11,10 @@
     "negative_constraints": [
       "Generic advice like 'build projects' without milestones",
       "Recommending 10 frameworks at once"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_fullstack_guide_chunk_0",
+      "fastapi_fullstack_guide_chunk_1"
     ]
   },
   {
@@ -24,6 +28,11 @@
     ],
     "negative_constraints": [
       "Indecisive answer saying 'both are good' without a concrete choice framework"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_fullstack_guide_chunk_0",
+      "fastapi_fullstack_guide_chunk_1",
+      "fastapi_fullstack_guide_chunk_2"
     ]
   },
   {
@@ -37,6 +46,10 @@
     ],
     "negative_constraints": [
       "Theoretical explanation without runnable frontend/backend code snippets"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_fullstack_guide_chunk_2",
+      "fastapi_fullstack_guide_chunk_3"
     ]
   },
   {
@@ -51,6 +64,10 @@
     "negative_constraints": [
       "Concatenating user inputs into raw SQL strings (security hazard)",
       "Omitting DB connection string details"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_fullstack_guide_chunk_1",
+      "docker_production_guide_chunk_0"
     ]
   },
   {
@@ -65,6 +82,10 @@
     "negative_constraints": [
       "Unrealistic scope (e.g. building an e-commerce clone or social network)",
       "Missing folder layout"
+    ],
+    "expected_chunk_ids": [
+      "cs_engineering_roadmap_chunk_0",
+      "fastapi_fullstack_guide_chunk_0"
     ]
   },
   {
@@ -79,6 +100,10 @@
     "negative_constraints": [
       "Storing plain-text passwords",
       "Recommending complex OAuth2 before standard password hashing"
+    ],
+    "expected_chunk_ids": [
+      "docker_production_guide_chunk_0",
+      "docker_production_guide_chunk_1"
     ]
   },
   {
@@ -93,6 +118,11 @@
     "negative_constraints": [
       "Suggesting deploying DB inside a local container on an unmanaged single VM without backups",
       "Vague instructions without platform names"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_cors_chunk_0",
+      "fastapi_cors_chunk_1",
+      "fastapi_cors_chunk_2"
     ]
   },
   {
@@ -106,6 +136,10 @@
     ],
     "negative_constraints": [
       "Encouraging learning all listed technologies simultaneously"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_fullstack_guide_chunk_1",
+      "fastapi_fullstack_guide_chunk_2"
     ]
   },
   {
@@ -120,6 +154,10 @@
     "negative_constraints": [
       "Suggesting building a full-scale microservice swarm",
       "Omitting container port binding"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_fullstack_guide_chunk_0",
+      "fastapi_fullstack_guide_chunk_1"
     ]
   },
   {
@@ -133,6 +171,10 @@
     ],
     "negative_constraints": [
       "Monolithic single-step breakdown without verification gates"
+    ],
+    "expected_chunk_ids": [
+      "cs_engineering_roadmap_chunk_0",
+      "fastapi_fullstack_guide_chunk_0"
     ]
   },
   {
@@ -146,6 +188,10 @@
     ],
     "negative_constraints": [
       "Saying 'just start coding' or 'practice more' without a mechanical framework"
+    ],
+    "expected_chunk_ids": [
+      "docker_compose_best_practices_chunk_0",
+      "docker_production_guide_chunk_1"
     ]
   },
   {
@@ -159,6 +205,9 @@
     ],
     "negative_constraints": [
       "Validating bloated feature requests"
+    ],
+    "expected_chunk_ids": [
+      "cs_engineering_roadmap_chunk_1"
     ]
   },
   {
@@ -172,6 +221,9 @@
     ],
     "negative_constraints": [
       "Suggesting purely cosmetic CSS improvements instead of engineering depth"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_fullstack_guide_chunk_0"
     ]
   },
   {
@@ -185,6 +237,10 @@
     ],
     "negative_constraints": [
       "Vague daily goals like 'study backend'"
+    ],
+    "expected_chunk_ids": [
+      "docker_production_guide_chunk_0",
+      "docker_production_guide_chunk_1"
     ]
   },
   {
@@ -198,6 +254,9 @@
     ],
     "negative_constraints": [
       "Recommending blindly copying the error into ChatGPT without reading logs"
+    ],
+    "expected_chunk_ids": [
+      "fastapi_fullstack_guide_chunk_1"
     ]
   },
   {
@@ -1076,6 +1135,150 @@
     "negative_constraints": [
       "Sugarcoating readiness or giving vague motivational advice",
       "Failing to provide a diagnostic scoring mechanism"
+    ]
+  },
+  {
+    "id": "GS-81",
+    "category": "Hardened Retrieval: Exact-Keyword Trap (CORS Credentials)",
+    "question": "In FastAPI CORSMiddleware, why is it forbidden to set allow_origins=['*'] when allow_credentials=True, and what exact error or behavior occurs in browsers?",
+    "expected_chunk_ids": [
+      "fastapi_cors_chunk_2",
+      "fastapi_cors_chunk_1"
+    ],
+    "expected_rubric": [
+      "Explicitly state that wildcard '*' is rejected by browsers when credentialed requests (cookies/authorization headers) are allowed",
+      "Must explicitly specify exact origins such as http://localhost:3000",
+      "Refer to the W3C CORS specification on credentialed requests"
+    ],
+    "negative_constraints": [
+      "Suggesting wildcard '*' works with cookies",
+      "Omitting the exact origin list solution"
+    ]
+  },
+  {
+    "id": "GS-82",
+    "category": "Hardened Retrieval: Exact-Keyword Trap (Docker C-Extensions)",
+    "question": "When building a minimal Docker image with python:3.12-slim, why does pip install psycopg2 fail with 'fatal error: libpq-fe.h: No such file or directory', and how do libpq-dev and gcc resolve it in a multi-stage build?",
+    "expected_chunk_ids": [
+      "docker_production_guide_chunk_0",
+      "docker_production_guide_chunk_1"
+    ],
+    "expected_rubric": [
+      "Explain that psycopg2 is a C extension requiring PostgreSQL native C client headers libpq-dev and compiler gcc",
+      "Provide multi-stage Dockerfile pattern installing libpq-dev and gcc in builder stage",
+      "Install only libpq5 runtime in final slim stage"
+    ],
+    "negative_constraints": [
+      "Suggesting pip install without installing native OS build packages",
+      "Leaving gcc in the final production container"
+    ]
+  },
+  {
+    "id": "GS-83",
+    "category": "Hardened Retrieval: Exact-Keyword Trap (Pydantic Field Validator)",
+    "question": "In Pydantic v2, how do I configure a custom validator using @field_validator with mode='before' and classmethod to cast raw inputs before type validation?",
+    "expected_chunk_ids": [
+      "pydantic_validation_chunk_14",
+      "pydantic_validation_chunk_4"
+    ],
+    "expected_rubric": [
+      "Use the exact decorator @field_validator('value', mode='before')",
+      "Define the validator with @classmethod and cls parameter",
+      "Explain that mode='before' receives the raw input value before Pydantic internal coercion"
+    ],
+    "negative_constraints": [
+      "Using obsolete Pydantic v1 @validator syntax",
+      "Omitting the mode='before' parameter"
+    ]
+  },
+  {
+    "id": "GS-84",
+    "category": "Hardened Retrieval: Exact-Keyword Trap (Validator Exceptions)",
+    "question": "Inside a Pydantic custom validator, which exception types can be raised to trigger a ValidationError rather than crashing the application?",
+    "expected_chunk_ids": [
+      "pydantic_validation_chunk_9"
+    ],
+    "expected_rubric": [
+      "Explicitly identify ValueError and AssertionError as the supported exceptions inside validators",
+      "Explain that Pydantic catches these exceptions and aggregates them into a structured ValidationError",
+      "Provide an example raising ValueError with a descriptive message"
+    ],
+    "negative_constraints": [
+      "Suggesting raising generic Exception or RuntimeError to trigger ValidationError",
+      "Failing to mention ValueError"
+    ]
+  },
+  {
+    "id": "GS-85",
+    "category": "Hardened Retrieval: Multi-Hop Synthesis (Docker Compose & C-Extensions)",
+    "question": "How can an engineering team combine Docker Compose isolated testing environments with multi-stage Docker builds to prevent PostgreSQL C-extension build failures in CI?",
+    "expected_chunk_ids": [
+      "docker_compose_best_practices_chunk_1",
+      "docker_production_guide_chunk_1"
+    ],
+    "expected_rubric": [
+      "Synthesize Docker Compose automated test environment with multi-stage Dockerfile build",
+      "Builder stage installs libpq-dev and gcc for psycopg2 compilation",
+      "Docker compose creates and destroys isolated test environments including PostgreSQL database service"
+    ],
+    "negative_constraints": [
+      "Explaining Compose without mentioning PostgreSQL build dependencies",
+      "Failing to connect container build with test isolation"
+    ]
+  },
+  {
+    "id": "GS-86",
+    "category": "Hardened Retrieval: Multi-Hop Synthesis (FastAPI Background Tasks & Architecture)",
+    "question": "How do you integrate FastAPI BackgroundTasks into a relational CRUD route using dependency injection, and when should you upgrade from BackgroundTasks to a Redis task queue?",
+    "expected_chunk_ids": [
+      "fastapi_background_tasks_chunk_1",
+      "fastapi_background_tasks_chunk_2",
+      "fastapi_fullstack_guide_chunk_1"
+    ],
+    "expected_rubric": [
+      "Declare BackgroundTasks parameter in route or dependency injection function",
+      "Use background_tasks.add_task(func, *args)",
+      "Explain trade-off: BackgroundTasks runs in-process for light tasks; upgrade to Celery/Redis for multi-process or multi-server distributed workloads"
+    ],
+    "negative_constraints": [
+      "Recommending Celery for a simple 1-second in-process email task without mentioning BackgroundTasks",
+      "Omitting dependency injection syntax"
+    ]
+  },
+  {
+    "id": "GS-87",
+    "category": "Hardened Retrieval: Multi-Hop Synthesis (Fullstack CORS & Credentials)",
+    "question": "How do you configure cross-origin cookie authentication between a React dev server on port 3000 and a FastAPI backend on port 8000 without hitting the wildcard origin restriction?",
+    "expected_chunk_ids": [
+      "fastapi_cors_chunk_2",
+      "fastapi_fullstack_guide_chunk_2"
+    ],
+    "expected_rubric": [
+      "Mount CORSMiddleware with explicit allow_origins=['http://localhost:3000'] and allow_credentials=True",
+      "Explain why allow_origins=['*'] fails with credentials",
+      "Show React fetch configuration with credentials: 'include'"
+    ],
+    "negative_constraints": [
+      "Suggesting allow_origins=['*'] with allow_credentials=True",
+      "Omitting the frontend credentials setting"
+    ]
+  },
+  {
+    "id": "GS-88",
+    "category": "Hardened Retrieval: Multi-Hop Synthesis (Pydantic Sanitization in FastAPI)",
+    "question": "How do you sanitize and validate incoming request payloads in FastAPI by combining Pydantic before-validators with API route dependency schemas?",
+    "expected_chunk_ids": [
+      "pydantic_validation_chunk_14",
+      "fastapi_fullstack_guide_chunk_0"
+    ],
+    "expected_rubric": [
+      "Define Pydantic model with @field_validator(mode='before') to sanitize raw inputs",
+      "Declare the model in the FastAPI route parameter signature",
+      "Verify automatic OpenAPI/Swagger documentation generation at /docs"
+    ],
+    "negative_constraints": [
+      "Using manual request.json() parsing instead of Pydantic model dependency",
+      "Omitting before-validator logic"
     ]
   }
 ]
