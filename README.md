@@ -9,7 +9,7 @@
 [![Pydantic v2](https://img.shields.io/badge/Pydantic-v2.6+-E92063.svg?style=flat-square&logo=pydantic)](https://docs.pydantic.dev/)
 [![Qdrant](https://img.shields.io/badge/Qdrant-Vector%20DB-red.svg?style=flat-square&logo=qdrant)](https://qdrant.tech/)
 [![Tests](https://img.shields.io/badge/Tests-35%20Passing-success.svg?style=flat-square&logo=pytest)](tests/)
-[![Hybrid RAG](https://img.shields.io/badge/Day%2036%20Hybrid%20RAG-%2B8.7%25%20Recall%403%20Lift-brightgreen.svg?style=flat-square)](eval/hybrid_retrieval_report.json)
+[![Hybrid RAG](https://img.shields.io/badge/Day%2036%20Hybrid%20RAG-%2B8.7%20pts%20Recall%403-brightgreen.svg?style=flat-square)](eval/hybrid_retrieval_report.json)
 [![Gold Set](https://img.shields.io/badge/Gold%20Set-88%20Hardened%20Questions-orange.svg?style=flat-square)](eval/gold_set.json)
 [![Corpus](https://img.shields.io/badge/Qdrant%20Chunks-67%20Grounded-purple.svg?style=flat-square)](corpus/processed/chunks_512.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
@@ -41,7 +41,7 @@ Generic AI assistants often exacerbate this paralysis by dumping monolithic bloc
 | **Pitfall Protection** | Ignores subtle bugs and vulnerabilities | **Mandatory anti-patterns to avoid** in every action plan |
 | **Error Diagnosis** | Hallucinates plausible-sounding fixes | **Deterministic tool calling** into a verified error resolution catalog |
 | **Reliability** | Cascading `429` / `503` failures under load | **Tenacity backoff + model fallback chain + Semaphore concurrency cap** |
-| **Evaluation** | Subjective vibes | **Deterministic 80-question gold benchmark** with strict pass/fail rubrics |
+| **Evaluation** | Subjective vibes | **Deterministic 88-question gold benchmark** with strict pass/fail rubrics |
 
 ---
 
@@ -199,8 +199,10 @@ Allows the model to intelligently route student queries to verified deterministi
 - Injects structured context headers (`[CHUNK_ID: ...]`) directly into the generation prompt.
 
 ### 7. Strict Inline Citations & Out-of-Bounds Refusal
-- Mandates exact `chunk_id` references attached to every claim in `ActionableStep.citations` and aggregated in `NavigatorResponse.cited_chunk_ids`.
-- Prevents ungrounded hallucination: triggers `is_refusal=True` and a clear `refusal_reason` whenever similarity drops below the out-of-corpus threshold (0.40) or no verified technical documentation exists.
+- **Makes Technical Claims Checkable:** Mandates exact `chunk_id` references attached to every claim in `ActionableStep.citations` and aggregated in `NavigatorResponse.cited_chunk_ids`.
+- **Two-Tier Refusal Architecture:**
+  1. *Vector Gate in Code (`app/client.py`):* If top Qdrant cosine similarity drops below `0.40`, unrelated context is stripped and replaced with an out-of-bounds marker.
+  2. *Prompt-Enforced Refusal:* If verified context lacks the solution, the model outputs `is_refusal: true`, cites no chunks, and provides an advisory documentation link rather than hallucinating commands.
 
 ### 8. Query Trajectory Telemetry (`app/telemetry.py`)
 - Logs every request, retrieved chunk scores, inline citations, latency (ms), and refusal triggers to `logs/query_trajectories.jsonl`.
@@ -209,7 +211,7 @@ Allows the model to intelligently route student queries to verified deterministi
 ### 9. Hybrid Retrieval Engine: BM25 + Dense + Reciprocal Rank Fusion (`app/rag.py`)
 - **Dual Vector Space:** Stores both 3072-dimensional dense embeddings (`gemini-embedding-001`) and sparse BM25 token vectors within Qdrant collection `tutorial_navigator_chunks`.
 - **Exact Syntax Grounding:** Defeats dense embedding smoothing traps (e.g. `@field_validator('value', mode='before')`, `allow_credentials=True`, `libpq-dev`) through BM25 inverse document frequency (IDF) scoring.
-- **Reciprocal Rank Fusion (RRF):** Blends dense and sparse rankings with standard constant $k=60$ ($RRF(d) = \sum \frac{1}{60 + r}$), delivering a **+8.7% lift in Recall@3** over pure dense search.
+- **Reciprocal Rank Fusion (RRF):** Blends dense and sparse rankings with standard constant $k=60$ ($RRF(d) = \sum \frac{1}{60 + r}$), delivering a **+8.7 percentage point lift in Recall@3** (+14.3% relative lift) on the ground-truth benchmark.
 - **Smart Refusal Decoupling:** Separates cosine distance from sparse score checks, preventing false refusals on valid technical queries while rejecting out-of-corpus domain drift.
 
 ---
@@ -456,7 +458,7 @@ python app/ingestion.py
 ```
 
 ### Scientific Chunking Evaluation (`benchmarks/chunk_eval.py`)
-To determine the optimal chunk size for the 80-question gold set, lexical hit-rate was evaluated across **256**, **512**, and **1024** token strategies:
+To determine the optimal chunk size for the gold set, lexical hit-rate was evaluated across **256**, **512**, and **1024** token strategies on a sample from `eval/gold_set.json`:
 
 ```bash
 python benchmarks/chunk_eval.py
@@ -540,7 +542,7 @@ python app/rag.py
 
 ### 2. Foundational Baseline Accuracy Score (Control Metric)
 
-The deterministic 80-question gold benchmark (`eval/gold_set.json`) was evaluated against the Naive RAG architecture. This score serves as the **control metric** against which future hybrid search (BM25 + Dense) and reranking ablations will be measured.
+The initial 80-question gold benchmark (`eval/gold_set.json`, baseline state prior to Day 36 hardening) was evaluated against the Naive RAG architecture. This score served as the foundational control metric before introducing hybrid search or harder retrieval traps.
 
 ```bash
 python eval/run_eval.py -n 15 -d 1.2
@@ -549,7 +551,7 @@ python eval/run_eval.py -n 15 -d 1.2
 ```
 ======================================================================
 📊 GOLD SET EVALUATION SUMMARY (Day 35 Baseline)
-  • Benchmark:          80-Question Deterministic Gold Set
+  • Benchmark:          Initial 80-Question Gold Set (Prior to Day 36 Hardening)
   • Architecture:       FastAPI + Qdrant Naive Dense RAG (Cosine)
   • Questions Tested:   15 (Full-stack, Projects, Architecture)
   • Pass Rate:          15/15 (100.0%)
@@ -689,23 +691,33 @@ Qdrant Dense Cosine Search                  Qdrant Sparse Search (using="bm25")
 
 ### Phase 3: The True Baseline Showdown (Ablation Table)
 
-Both retrieval architectures were evaluated against the hardened 88-question gold set. The ablation proves that **BM25 + RRF significantly lifts Recall@3 by +8.7% and surfaces exact syntax targets to Rank 1**.
+Both retrieval architectures were evaluated against the hardened 88-question gold set.
 
-| Retrieval Architecture | Recall@3 | Recall@5 | MRR (Mean Reciprocal Rank) | Hard Trap Pass Rate (LLM) | Full Benchmark Report |
+> [!NOTE]
+> **Sample Size & Ground Truth Coverage:** Retrieval metrics are evaluated across the **23 questions** in the gold set with verified ground-truth chunk mappings in the corpus. The +8.70 percentage point shift reflects a 2-question recovery (from 14/23 to 16/23 hits in top-3). As technical corpus documentation expands in subsequent milestones, more queries will receive ground-truth mappings.
+
+| Retrieval Architecture | Recall@3 | Recall@5 | MRR (Mean Reciprocal Rank) | Hard Trap Pass Rate (LLM)* | Full Benchmark Report |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **Dense-Only Baseline** (`gemini-embedding-001`) | 60.87% (14/23) | 78.26% (18/23) | 0.5681 | — | [`eval/dense_retrieval_report.json`](eval/dense_retrieval_report.json) |
 | **Hybrid Pipeline** (Dense + BM25 + RRF) | **69.57% (16/23)** | **78.26% (18/23)** | **0.5725** | **100.0% (8/8)** | [`eval/hybrid_retrieval_report.json`](eval/hybrid_retrieval_report.json) |
-| **Net Improvement (Ablation Delta)** | **+8.70%** 🚀 | **Maintained (100%)** | **+0.0044** 📈 | **Zero Regressions** | — |
+| **Net Improvement (Ablation Delta)** | **+8.70 pts** (+14.3% rel) | **No change (78.26%)** | **+0.0044** *(flat)* | *End-to-End Test*\* | — |
 
-#### Specific Keyword Trap Recoveries
+*\*Note on Hard Trap Pass Rate: Evaluated on the 8 keyword/multi-hop traps (`GS-81`–`GS-88`) with live Gemini generation using hybrid context to verify structured schema adherence and citation grounding. This confirms end-to-end pipeline health rather than a comparative generation ablation.*
+
+#### Specific Keyword Trap Recoveries & Ranking Analysis
 
 | Question ID | Target Domain / Keyword Trap | Dense Rank | Hybrid Rank | Outcome & Impact |
 | :--- | :--- | :---: | :---: | :--- |
-| **GS-83** | Pydantic `@field_validator('value', mode='before')` | Rank 4 *(Missed top-3)* | **Rank 3 (Hit)** | **Recovered!** Surfaced exact syntax into LLM context window. |
-| **GS-14** | Docker `psycopg2` compilation & `libpq-dev` | Rank 5 ($RR=0.20$) | **Rank 1 ($RR=1.00$)** | **+0.80 Reciprocal Rank!** Surfaced the exact Dockerfile fix at #1. |
-| **GS-15** | FastAPI relational CRUD & BackgroundTasks | Rank 4 ($RR=0.25$) | **Rank 2 ($RR=0.50$)** | **+0.25 Reciprocal Rank!** Elevated architectural chunk into top-3. |
-| **GS-85** | Docker Compose CI caching (`--cache-from`) | Rank 3 ($RR=0.33$) | **Rank 1 ($RR=1.00$)** | **+0.67 Reciprocal Rank!** Placed exact CI flags at top rank. |
-| **GS-81** | FastAPI CORS wildcard credentials prohibition | Rank 1 ($RR=1.00$) | **Rank 1 ($RR=1.00$)** | Maintained #1 ranking with perfect grounding. |
+| **GS-83** | Pydantic `@field_validator('value', mode='before')` | Rank 4 *(Missed top-3)* | **Rank 3 (Hit)** | **Recovered into top-3.** Surfaced exact syntax into LLM context window. |
+| **GS-14** | Docker `psycopg2` compilation & `libpq-dev` | Rank 5 ($RR=0.20$) | **Rank 1 ($RR=1.00$)** | **+0.80 Reciprocal Rank.** Surfaced the exact Dockerfile fix at #1. |
+| **GS-15** | FastAPI relational CRUD & BackgroundTasks | Rank 4 ($RR=0.25$) | **Rank 2 ($RR=0.50$)** | **+0.25 Reciprocal Rank.** Elevated architectural chunk into top-3. |
+| **GS-85** | Docker Compose CI caching (`--cache-from`) | Rank 3 ($RR=0.33$) | **Rank 1 ($RR=1.00$)** | **+0.67 Reciprocal Rank.** Placed exact CI flags at top rank. |
+| **GS-81** | FastAPI CORS wildcard credentials prohibition | Rank 1 ($RR=1.00$) | **Rank 1 ($RR=1.00$)** | Maintained #1 ranking with grounded context. |
+
+#### Empirical Takeaways on Hybrid Search:
+- **Recall@3 Lift (+8.70 pts):** BM25 sparse matching successfully elevated 2 keyword-dense questions (`GS-15` and `GS-83`) into the top-3 context window where dense vector search missed them at Rank 4 or 5.
+- **MRR is Flat (+0.0044):** The aggregate MRR change was essentially statistical noise across the 23 queries. While BM25 boosted keyword queries like `GS-14` to Rank 1, other queries saw slight rank swaps between top-ranked chunks, resulting in an essentially neutral overall MRR.
+- **Empirical Decision: KEEP.** The +8.7 percentage point lift in Recall@3 directly rescues technical syntax queries that would otherwise fail prompt context injection, with sub-millisecond BM25 sparse encoding overhead.
 
 #### End-to-End LLM Generation on Hardened Traps
 On the end-to-end evaluation runner with live Gemini generation ([`eval/eval_report.json`](eval/eval_report.json)), the Hybrid Engine achieved:
@@ -723,7 +735,7 @@ On the end-to-end evaluation runner with live Gemini generation ([`eval/eval_rep
 - [x] **Day 33:** Ingestion Pipeline (`app/ingestion.py`), PDF Text Extraction (PyMuPDF), and Token-Aware Chunking Benchmarks (256 vs 512 vs 1024).
 - [x] **Day 34:** Naive RAG Baseline: Qdrant Vector DB, Cosine Embeddings (`gemini-embedding-001`), Grounded Context Injection, Strict Inline Chunk Citations, Out-of-Bounds Refusal, and Trajectory Telemetry.
 - [x] **Day 35:** Public Cloud Deployment Configuration (`render.yaml`, multi-cloud Docker), Framework Corpus Expansion (`scripts/fetch_docs.py`), and Baseline Evaluation Score Recording (**100% Pass Rate Control Metric**).
-- [x] **Day 36:** Hardened Evaluation Yardstick (88 Questions, Recall@K, MRR), Sparse BM25 Lexical Matching, Reciprocal Rank Fusion (RRF) Hybrid Search Engine, and Baseline vs. Hybrid Ablation Showdown (+8.7% Recall@3 Lift).
+- [x] **Day 36:** Hardened Evaluation Yardstick (88 Questions, Recall@K, MRR), Sparse BM25 Lexical Matching, Reciprocal Rank Fusion (RRF) Hybrid Search Engine, and Baseline vs. Hybrid Ablation Showdown (+8.7 pts Recall@3).
 - [ ] **Day 37-38:** Cross-Encoder Reranking & Retrieval Latency/Cost Ablation Table.
 - [ ] **Day 39-40:** Automated LLM-as-a-Judge Calibration & CI/CD Eval Gate enforcement.
 - [ ] **Day 41-45:** Live Web UI deployment to 10+ real students with query trajectory telemetry & failure taxonomy analysis.
