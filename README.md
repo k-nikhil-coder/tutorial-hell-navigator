@@ -21,7 +21,9 @@
 [API Reference](#-api-reference) •
 [Load Testing](#-concurrency-benchmarking) •
 [Gold Set Eval](#-deterministic-88-question-benchmark) •
-[Hybrid Showdown](#-day-36-hardened-evaluation-yardstick--hybrid-search-engine-dense--bm25--rrf) •
+[Day 34 Refusal](#-naive-rag-baseline--citations-day-34) •
+[Day 35 Baseline](#-day-35-public-deployment--baseline-accuracy-score) •
+[Day 36 Hybrid Showdown](#-day-36-hardened-evaluation-yardstick--hybrid-search-engine-dense--bm25--rrf) •
 [Roadmap](#-phase-2-flagship-roadmap)
 
 </div>
@@ -499,17 +501,102 @@ python app/rag.py
 - Formats chunks into unambiguous blocks (`--- [CHUNK_ID: ...] (Source: ...) ---`) and prepends to the system prompt.
 
 ### 3. Inline Citations & Out-of-Bounds Refusal
-- Enforces that all action steps cite the exact `chunk_id` they reference (`ActionableStep.citations`).
-- Hardcoded refusal trigger: If top cosine similarity falls below `0.40` (out-of-corpus query like cooking, pop culture, or ungrounded technologies), the model outputs:
-  ```json
-  {
-    "is_refusal": true,
-    "refusal_reason": "Out-of-corpus query",
-    "summary": "This query falls outside the verified engineering corpus..."
-  }
-  ```
+- **Makes Technical Claims Checkable:** Forces the model to attach exact source `chunk_id` references to every technical step in `ActionableStep.citations` and aggregate them in `NavigatorResponse.cited_chunk_ids`.
+- **Two-Tier Refusal Architecture:**
+  1. *Vector Gate in Code (`app/client.py`):* If the top Qdrant cosine similarity score drops below `0.40`, unrelated context is stripped and replaced with `[NO VERIFIED CORPUS FOUND FOR THIS TOPIC - OUT OF BOUNDS]`.
+  2. *Prompt-Enforced Refusal:* The system prompt strictly instructs the LLM that if verified context lacks the solution, it must set `is_refusal: true`, provide a `refusal_reason`, and offer an advisory documentation reference rather than hallucinating commands.
 
-### 4. Query Trajectory Telemetry (`logs/query_trajectories.jsonl`)
+#### Example 1: In-Corpus Grounded Response (With Inline Citations)
+Query: `"How do I fix a CORS error in FastAPI when calling from React?"`
+```json
+{
+  "summary": "Fix CORS in FastAPI by mounting CORSMiddleware with explicit allowed origins.",
+  "is_refusal": false,
+  "cited_chunk_ids": [
+    "fastapi_fullstack_guide_chunk_2"
+  ],
+  "action_plan": [
+    {
+      "step_number": 1,
+      "title": "Mount CORSMiddleware",
+      "command": "app.add_middleware(CORSMiddleware, allow_origins=['http://localhost:3000'], allow_credentials=True, allow_methods=['*'], allow_headers=['*'])",
+      "explanation": "Injects required Access-Control-Allow-Origin preflight headers.",
+      "verification": "curl -I -X OPTIONS http://localhost:8000/ -H 'Origin: http://localhost:3000'",
+      "citations": [
+        "fastapi_fullstack_guide_chunk_2"
+      ]
+    }
+  ],
+  "anti_patterns_to_avoid": [
+    "Using allow_origins=['*'] when allow_credentials=True in production."
+  ]
+}
+```
+
+#### Example 2: Near-Miss Out-of-Corpus Refusal Response
+Query: `"How do I fix a Django migration dependency conflict with django-admin showmigrations?"`
+```json
+{
+  "summary": "This question regarding Django migration internals falls outside the verified engineering corpus (which focuses on FastAPI, Docker, and core architecture).",
+  "is_refusal": true,
+  "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+  "cited_chunk_ids": [],
+  "action_plan": [
+    {
+      "step_number": 1,
+      "title": "Consult Official Django Migration Documentation",
+      "command": null,
+      "explanation": "Tutorial Hell Navigator only grounds solutions backed by verified technical documentation in its corpus.",
+      "verification": "python manage.py showmigrations --list",
+      "citations": []
+    }
+  ],
+  "anti_patterns_to_avoid": [
+    "Attempting to guess framework-specific commands without verified documentation context."
+  ]
+}
+```
+
+### 4. Empirical RAG Benchmark (`benchmarks/rag_eval.py`)
+
+Run the automated evaluation benchmark testing 5 in-corpus technical queries against 5 near-miss technical queries (Django, Kubernetes, Spring Boot, Kafka, Android):
+
+```bash
+python benchmarks/rag_eval.py -n 5
+```
+
+```
+========================================================================
+>> TUTORIAL HELL NAVIGATOR - RAG GROUNDING & REFUSAL BENCHMARK
+ In-Corpus Test Set:     5 queries (FastAPI, Docker, Architecture)
+ Near-Miss Test Set:     5 queries (Django, Kubernetes, Spring, Kafka, Android)
+========================================================================
+
+[1/2] Testing In-Corpus Grounding & Inline Citations...
+  [1/5] Citations: fastapi_fullstack_guide_chunk_2        | CORS preflight error in FastAPI
+  [2/5] Citations: docker_production_guide_chunk_0, chunk_1 | psycopg2 fail to compile in Docker
+  [3/5] Citations: fastapi_fullstack_guide_chunk_2, chunk_3 | Mount CORSMiddleware in FastAPI
+  [4/5] Citations: docker_production_guide_chunk_0        | Multi-stage Dockerfile pattern
+  [5/5] Citations: None (No false citations)              | SQLite database locked operational error
+
+[2/2] Testing Near-Miss Technical Refusal Path...
+  [1/5] [REFUSED]    | Django migration dependency conflict with showmigrations
+  [2/5] [REFUSED]    | Deploy microservice to Kubernetes cluster with Helm
+  [3/5] [REFUSED]    | Configure Spring Boot security filters with OAuth2
+  [4/5] [REFUSED]    | Set up Apache Kafka consumer group partitions in Rust
+  [5/5] [REFUSED]    | Debug NullPointerException in Android Jetpack Compose
+
+========================================================================
+>> BENCHMARK VERIFICATION RESULTS
+------------------------------------------------------------------------
+ Near-Miss Refusal Rate:      5/5
+ In-Corpus Grounding/Citation: 4/5
+========================================================================
+Audit log written to eval/rag_benchmark_report.json
+```
+*Note on 4/5 Citation Rate:* The 5th in-corpus query (SQLite write contention) is addressed via the tool registry but is not discussed in the raw markdown manuals. The model accurately omitted chunk citations rather than fabricating false ones.
+
+### 5. Query Trajectory Telemetry (`logs/query_trajectories.jsonl`)
 - Every query, retrieved chunk IDs, cosine scores, LLM output, refusal status, and latency is logged for the Day 47 failure taxonomy.
 - Query logged trajectories via API:
 ```bash
