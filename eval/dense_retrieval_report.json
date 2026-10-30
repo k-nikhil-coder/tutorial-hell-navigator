@@ -2,7 +2,7 @@
   "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
   "search_mode": "dense",
   "retrieval_only": true,
-  "timestamp": "2026-10-29T12:07:47.627653+00:00",
+  "timestamp": "2026-10-30T13:27:56.913706+00:00",
   "total_evaluated": 88,
   "ground_truth_count": 23,
   "retrieval_metrics": {
@@ -11,6 +11,14 @@
     "mrr": 0.5681,
     "recall_3_hits": 14,
     "recall_5_hits": 18
+  },
+  "latency_metrics": {
+    "mean_latency_ms": 1219.32,
+    "p50_latency_ms": 1108.87,
+    "p90_latency_ms": 1598.3,
+    "p95_latency_ms": 1719.22,
+    "min_latency_ms": 904.93,
+    "max_latency_ms": 2015.53
   },
   "llm_metrics": null,
   "items": [
@@ -34,7 +42,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 1031.51
       }
     },
     {
@@ -58,7 +67,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 904.93
       }
     },
     {
@@ -81,7 +91,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 994.42
       }
     },
     {
@@ -104,7 +115,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 0.2,
-        "first_hit_rank": 5
+        "first_hit_rank": 5,
+        "latency_ms": 1234.31
       }
     },
     {
@@ -127,7 +139,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 982.25
       }
     },
     {
@@ -150,7 +163,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 0.0,
         "reciprocal_rank": 0.0,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 958.72
       }
     },
     {
@@ -174,7 +188,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 0.0,
         "reciprocal_rank": 0.0,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1180.99
       }
     },
     {
@@ -197,7 +212,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 0.3333,
-        "first_hit_rank": 3
+        "first_hit_rank": 3,
+        "latency_ms": 976.4
       }
     },
     {
@@ -220,7 +236,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 1456.4
       }
     },
     {
@@ -243,7 +260,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 1056.28
       }
     },
     {
@@ -266,7 +284,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 0.0,
         "reciprocal_rank": 0.0,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1143.33
       }
     },
     {
@@ -288,7 +307,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 0.0,
         "reciprocal_rank": 0.0,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1067.27
       }
     },
     {
@@ -310,7 +330,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 0.3333,
-        "first_hit_rank": 3
+        "first_hit_rank": 3,
+        "latency_ms": 1164.67
       }
     },
     {
@@ -333,7 +354,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 0.2,
-        "first_hit_rank": 5
+        "first_hit_rank": 5,
+        "latency_ms": 1081.34
       }
     },
     {
@@ -355,7 +377,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 0.25,
-        "first_hit_rank": 4
+        "first_hit_rank": 4,
+        "latency_ms": 1109.74
       }
     },
     {
@@ -375,7 +398,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 922.08
       }
     },
     {
@@ -395,7 +419,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1721.76
       }
     },
     {
@@ -415,7 +440,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1096.52
       }
     },
     {
@@ -435,7 +461,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 2015.53
       }
     },
     {
@@ -455,7 +482,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1148.38
       }
     },
     {
@@ -475,7 +503,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1714.5
       }
     },
     {
@@ -495,7 +524,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1087.7
       }
     },
     {
@@ -515,7 +545,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 961.15
       }
     },
     {
@@ -535,7 +566,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1099.71
       }
     },
     {
@@ -555,7 +587,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1040.06
       }
     },
     {
@@ -575,7 +608,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1890.0
       }
     },
     {
@@ -595,7 +629,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 947.7
       }
     },
     {
@@ -615,7 +650,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1034.52
       }
     },
     {
@@ -635,7 +671,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 946.98
       }
     },
     {
@@ -655,7 +692,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 945.6
       }
     },
     {
@@ -675,7 +713,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1277.07
       }
     },
     {
@@ -695,7 +734,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1390.15
       }
     },
     {
@@ -715,7 +755,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1569.73
       }
     },
     {
@@ -735,7 +776,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1041.29
       }
     },
     {
@@ -755,7 +797,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1029.38
       }
     },
     {
@@ -775,7 +818,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1001.2
       }
     },
     {
@@ -795,7 +839,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1163.13
       }
     },
     {
@@ -815,7 +860,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1901.45
       }
     },
     {
@@ -835,7 +881,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1340.03
       }
     },
     {
@@ -855,7 +902,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1026.79
       }
     },
     {
@@ -875,7 +923,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1640.11
       }
     },
     {
@@ -895,7 +944,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1011.81
       }
     },
     {
@@ -915,7 +965,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1878.1
       }
     },
     {
@@ -935,7 +986,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 939.47
       }
     },
     {
@@ -955,7 +1007,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1150.48
       }
     },
     {
@@ -975,7 +1028,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1127.67
       }
     },
     {
@@ -995,7 +1049,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1028.35
       }
     },
     {
@@ -1015,7 +1070,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1497.64
       }
     },
     {
@@ -1035,7 +1091,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 988.58
       }
     },
     {
@@ -1055,7 +1112,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1373.94
       }
     },
     {
@@ -1075,7 +1133,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1050.62
       }
     },
     {
@@ -1095,7 +1154,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1173.07
       }
     },
     {
@@ -1115,7 +1175,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1702.08
       }
     },
     {
@@ -1135,7 +1196,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1152.89
       }
     },
     {
@@ -1155,7 +1217,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1166.01
       }
     },
     {
@@ -1175,7 +1238,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1376.0
       }
     },
     {
@@ -1195,7 +1259,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1442.11
       }
     },
     {
@@ -1215,7 +1280,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1065.37
       }
     },
     {
@@ -1235,7 +1301,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1025.77
       }
     },
     {
@@ -1255,7 +1322,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1161.17
       }
     },
     {
@@ -1275,7 +1343,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1454.81
       }
     },
     {
@@ -1295,7 +1364,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1107.99
       }
     },
     {
@@ -1315,7 +1385,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1291.71
       }
     },
     {
@@ -1335,7 +1406,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1059.48
       }
     },
     {
@@ -1355,7 +1427,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1038.53
       }
     },
     {
@@ -1375,7 +1448,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1444.34
       }
     },
     {
@@ -1395,7 +1469,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1592.93
       }
     },
     {
@@ -1415,7 +1490,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1558.25
       }
     },
     {
@@ -1435,7 +1511,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1396.39
       }
     },
     {
@@ -1455,7 +1532,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1038.31
       }
     },
     {
@@ -1475,7 +1553,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1094.24
       }
     },
     {
@@ -1495,7 +1574,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1415.57
       }
     },
     {
@@ -1515,7 +1595,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1084.69
       }
     },
     {
@@ -1535,7 +1616,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1610.82
       }
     },
     {
@@ -1555,7 +1637,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1267.64
       }
     },
     {
@@ -1575,7 +1658,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 999.77
       }
     },
     {
@@ -1595,7 +1679,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1507.09
       }
     },
     {
@@ -1615,7 +1700,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1132.98
       }
     },
     {
@@ -1635,7 +1721,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1509.26
       }
     },
     {
@@ -1655,7 +1742,8 @@
         "recall_at_3": null,
         "recall_at_5": null,
         "reciprocal_rank": null,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1003.7
       }
     },
     {
@@ -1678,7 +1766,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 1474.27
       }
     },
     {
@@ -1701,7 +1790,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 994.42
       }
     },
     {
@@ -1724,7 +1814,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 0.25,
-        "first_hit_rank": 4
+        "first_hit_rank": 4,
+        "latency_ms": 1078.35
       }
     },
     {
@@ -1746,7 +1837,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 1066.46
       }
     },
     {
@@ -1769,7 +1861,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 1062.73
       }
     },
     {
@@ -1793,7 +1886,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 1031.18
       }
     },
     {
@@ -1816,7 +1910,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 0.5,
-        "first_hit_rank": 2
+        "first_hit_rank": 2,
+        "latency_ms": 1041.88
       }
     },
     {
@@ -1839,7 +1934,8 @@
         "recall_at_3": 0.0,
         "recall_at_5": 0.0,
         "reciprocal_rank": 0.0,
-        "first_hit_rank": null
+        "first_hit_rank": null,
+        "latency_ms": 1335.72
       }
     }
   ]

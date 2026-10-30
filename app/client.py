@@ -144,8 +144,12 @@ async def generate_structured_response_async(
             method = top_chunk.get("retrieval_method", "dense")
             if method == "dense":
                 is_grounded = top_chunk.get("score", 0.0) >= 0.40
-            elif method == "hybrid_rrf":
-                is_grounded = bool(top_chunk.get("dense_score", 0.0) >= 0.40 or top_chunk.get("sparse_score", 0.0) > 0.0)
+            elif method in ("hybrid_rrf", "hybrid_rerank"):
+                is_grounded = bool(
+                    top_chunk.get("dense_score", 0.0) >= 0.40
+                    or top_chunk.get("sparse_score", 0.0) > 0.0
+                    or top_chunk.get("rerank_score", -99.0) > -2.0
+                )
             else:
                 is_grounded = top_chunk.get("is_grounded", True)
 
@@ -224,8 +228,12 @@ async def stream_response_sse(
             method = top_chunk.get("retrieval_method", "dense")
             if method == "dense":
                 is_grounded = top_chunk.get("score", 0.0) >= 0.40
-            elif method == "hybrid_rrf":
-                is_grounded = bool(top_chunk.get("dense_score", 0.0) >= 0.40 or top_chunk.get("sparse_score", 0.0) > 0.0)
+            elif method in ("hybrid_rrf", "hybrid_rerank"):
+                is_grounded = bool(
+                    top_chunk.get("dense_score", 0.0) >= 0.40
+                    or top_chunk.get("sparse_score", 0.0) > 0.0
+                    or top_chunk.get("rerank_score", -99.0) > -2.0
+                )
             else:
                 is_grounded = top_chunk.get("is_grounded", True)
 

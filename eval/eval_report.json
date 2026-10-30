@@ -1,23 +1,31 @@
 {
   "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
-  "search_mode": "hybrid",
+  "search_mode": "hybrid-rerank",
   "retrieval_only": false,
-  "timestamp": "2026-10-29T12:11:07.711935+00:00",
+  "timestamp": "2026-10-30T13:30:41.983875+00:00",
   "total_evaluated": 8,
   "ground_truth_count": 8,
   "retrieval_metrics": {
     "recall_at_3": 87.5,
-    "recall_at_5": 87.5,
-    "mrr": 0.7292,
+    "recall_at_5": 100.0,
+    "mrr": 0.7188,
     "recall_3_hits": 7,
-    "recall_5_hits": 7
+    "recall_5_hits": 8
+  },
+  "latency_metrics": {
+    "mean_latency_ms": 461.36,
+    "p50_latency_ms": 447.42,
+    "p90_latency_ms": 497.8,
+    "p95_latency_ms": 509.82,
+    "min_latency_ms": 426.0,
+    "max_latency_ms": 521.85
   },
   "llm_metrics": {
     "passed": 8,
     "pass_rate": 100.0,
-    "avg_steps_per_plan": 1.62,
-    "avg_commands_per_plan": 1.62,
-    "avg_citations_per_plan": 2.5,
+    "avg_steps_per_plan": 1.75,
+    "avg_commands_per_plan": 1.75,
+    "avg_citations_per_plan": 3.0,
     "refusals_handled": 1
   },
   "items": [
@@ -32,8 +40,8 @@
       "retrieved_chunk_ids": [
         "fastapi_cors_chunk_2",
         "fastapi_cors_chunk_1",
-        "fastapi_fullstack_guide_chunk_2",
         "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_2",
         "fastapi_cors_chunk_0"
       ],
       "retrieval_metrics": {
@@ -41,7 +49,8 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 521.85
       },
       "score": {
         "passed": true,
@@ -51,36 +60,36 @@
         "citation_count": 2,
         "cited_chunks": [
           "fastapi_cors_chunk_2",
-          "fastapi_fullstack_guide_chunk_2"
+          "fastapi_fullstack_guide_chunk_3"
         ],
         "is_refusal": false
       },
       "response": {
-        "summary": "Explaining why FastAPI/Starlette CORSMiddleware disallows setting allow_origins=['*'] when allow_credentials=True due to security constraints, and how browsers block credentialed requests with wildcard origins.",
+        "summary": "When allow_credentials is True in FastAPI's CORSMiddleware, wildcard settings like ['*'] for allow_origins are forbidden by the CORS specification and will cause browser requests with credentials to be blocked.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Configure Explicit Origins with Credentials",
-            "command": "python -c 'from fastapi import FastAPI; from fastapi.middleware.cors import CORSMiddleware; app = FastAPI(); app.add_middleware(CORSMiddleware, allow_origins=[\"http://localhost:3000\"], allow_credentials=True, allow_methods=[\"*\"], allow_headers=[\"*\"])'",
-            "explanation": "When allow_credentials is True, you must explicitly declare allowed origins instead of using the wildcard ['*'] to prevent unauthorized sites from stealing authenticated session data.",
-            "verification": "uvicorn main:app --reload",
+            "title": "Configure explicit origins with credentials",
+            "command": "app.add_middleware(CORSMiddleware, allow_origins=[\"http://localhost:3000\"], allow_credentials=True, allow_methods=[\"*\"], allow_headers=[\"*\"])",
+            "explanation": "To allow cookies and authorization headers, you must explicitly list your frontend domains in allow_origins instead of using the wildcard ['*'].",
+            "verification": "python -c \"from fastapi import FastAPI; from fastapi.middleware.cors import CORSMiddleware; app = FastAPI(); app.add_middleware(CORSMiddleware, allow_origins=['http://localhost:3000'], allow_credentials=True); print('Config valid')\"",
             "citations": [
               "fastapi_cors_chunk_2",
-              "fastapi_fullstack_guide_chunk_2"
+              "fastapi_fullstack_guide_chunk_3"
             ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Setting allow_origins=['*'] alongside allow_credentials=True in production or development",
-          "Ignoring browser CORS console errors regarding credentials and wildcards"
+          "Setting allow_origins=['*'] while setting allow_credentials=True, which violates the CORS security specification and causes browser failures.",
+          "Relying on wildcards in production environments when dealing with authenticated sessions or cookies."
         ],
         "architecture_contract": null,
-        "key_takeaway": "Browsers reject credentialed cross-origin requests (such as cookies or Authorization headers) if the server responds with a wildcard origin ('*').",
+        "key_takeaway": "Credentialed requests require explicit origin declarations because browsers block wildcard origins with credentials to prevent malicious cross-site scripting and request forgery exploits.",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
           "fastapi_cors_chunk_2",
-          "fastapi_fullstack_guide_chunk_2"
+          "fastapi_fullstack_guide_chunk_3"
         ]
       }
     },
@@ -97,21 +106,22 @@
         "docker_production_guide_chunk_1",
         "cs_engineering_roadmap_chunk_0",
         "cs_engineering_roadmap_chunk_1",
-        "docker_production_guide_chunk_2"
+        "docker_compose_best_practices_chunk_0"
       ],
       "retrieval_metrics": {
         "has_ground_truth": true,
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 487.49
       },
       "score": {
         "passed": true,
         "issues": [],
-        "step_count": 2,
-        "command_count": 2,
-        "citation_count": 3,
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
         "cited_chunks": [
           "docker_production_guide_chunk_0",
           "docker_production_guide_chunk_1"
@@ -119,36 +129,26 @@
         "is_refusal": false
       },
       "response": {
-        "summary": "When building a Python service with psycopg2 on a minimal python:3.12-slim image, the build fails because psycopg2 requires native C bindings and header files (libpq-fe.h) along with a C compiler (gcc) to compile against PostgreSQL. Using a multi-stage Dockerfile that installs libpq-dev and gcc in the builder stage allows compilation of wheels without bloating the final runtime image.",
+        "summary": "Explains why psycopg2 fails to install in minimal Python Docker images due to missing C headers and compilers, and demonstrates how a multi-stage Docker build utilizing libpq-dev and gcc resolves the issue.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Implement Multi-Stage Dockerfile with Builder Dependencies",
-            "command": "FROM python:3.12-slim AS builder\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    gcc \\\n    libpq-dev \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY requirements.txt .\nRUN pip install --no-cache-dir --user -r requirements.txt",
-            "explanation": "Installs gcc and libpq-dev (which provides libpq-fe.h) in the builder stage so psycopg2 can successfully compile its C extensions.",
-            "verification": "docker build -t test-build .",
+            "title": "Implement Multi-Stage Dockerfile with Native Build Tools",
+            "command": "FROM python:3.12-slim AS builder\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    gcc \\\n    libpq-dev \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY requirements.txt .\nRUN pip install --no-cache-dir --user -r requirements.txt\n\nFROM python:3.12-slim AS runner\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    curl \\\n    libpq5 \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\nCOPY . .\nEXPOSE 8000\nCMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
+            "explanation": "psycopg2 contains C extensions that require the libpq-fe.h header file (provided by libpq-dev) and the C compiler (gcc) to compile from source. The builder stage isolates these heavy tools, while the runner stage only keeps the minimal runtime library (libpq5) and built wheels.",
+            "verification": "docker build -t my-app .",
             "citations": [
               "docker_production_guide_chunk_0",
               "docker_production_guide_chunk_1"
             ]
-          },
-          {
-            "step_number": 2,
-            "title": "Copy Compiled Wheels to Minimal Runner Stage",
-            "command": "FROM python:3.12-slim AS runner\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    curl \\\n    libpq5 \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\nCOPY . .\nCMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
-            "explanation": "Copies only the compiled user wheels and runtime libraries (libpq5) into the final runner image, leaving heavy compilers behind.",
-            "verification": "docker run --rm -p 8000:8000 test-build",
-            "citations": [
-              "docker_production_guide_chunk_0"
-            ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Installing compilers like gcc and development headers like libpq-dev directly in single-stage production Docker images, which unnecessarily inflates image size.",
-          "Ignoring container healthchecks or relying solely on container process uptime rather than verifying HTTP endpoints."
+          "Installing compilers like gcc and header packages like libpq-dev directly in the final production image, which bloats image size and increases security attack surface.",
+          "Relying on single-stage builds for production Python applications containing native C extensions."
         ],
-        "architecture_contract": "Multi-stage Dockerfile dividing dependencies into a 'builder' stage with compilation tools and a 'runner' stage containing only runtime libraries.",
-        "key_takeaway": "Minimal base images lack C compilers and PostgreSQL header files required by packages like psycopg2; multi-stage builds isolate compilation tools to the build phase while keeping production images lightweight.",
+        "architecture_contract": null,
+        "key_takeaway": "Minimal base images lack C compilers and development headers required by packages with native extensions like psycopg2; multi-stage builds allow compiling in a heavy stage while keeping the final runtime image lean and secure.",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
@@ -166,54 +166,58 @@
         "pydantic_validation_chunk_4"
       ],
       "retrieved_chunk_ids": [
-        "pydantic_validation_chunk_2",
-        "pydantic_validation_chunk_3",
-        "pydantic_validation_chunk_4",
+        "pydantic_validation_chunk_0",
         "pydantic_validation_chunk_14",
-        "pydantic_validation_chunk_8"
+        "pydantic_validation_chunk_7",
+        "pydantic_validation_chunk_4",
+        "pydantic_validation_chunk_2"
       ],
       "retrieval_metrics": {
         "has_ground_truth": true,
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
-        "reciprocal_rank": 0.3333,
-        "first_hit_rank": 3
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2,
+        "latency_ms": 446.11
       },
       "score": {
         "passed": true,
         "issues": [],
         "step_count": 1,
         "command_count": 1,
-        "citation_count": 1,
+        "citation_count": 2,
         "cited_chunks": [
-          "pydantic_validation_chunk_3"
+          "pydantic_validation_chunk_0",
+          "pydantic_validation_chunk_14"
         ],
         "is_refusal": false
       },
       "response": {
-        "summary": "To configure a custom field validator in Pydantic v2 using the decorator pattern with mode='before', you define a classmethod decorated with @field_validator('field_name', mode='before') that takes any raw input, processes or casts it, and returns the modified value for subsequent internal validation.",
+        "summary": "To configure a custom field validator with mode='before' and classmethod in Pydantic v2, use the @field_validator decorator on a classmethod, specifying mode='before' to intercept and transform raw input data prior to internal validation.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Create a Pydantic model with a before field validator",
-            "command": "cat << 'EOF' > model.py\nfrom typing import Any\nfrom pydantic import BaseModel, ValidationError, field_validator\n\nclass Model(BaseModel):\n    numbers: list[int]\n\n    @field_validator('numbers', mode='before')\n    @classmethod\n    def ensure_list(cls, value: Any) -> Any:\n        if not isinstance(value, list):\n            return [value]\n        else:\n            return value\n\nprint(Model(numbers=2))\nEOF\npython3 model.py",
-            "explanation": "We define a model where the 'numbers' field expects a list of integers. By using @field_validator with mode='before' and @classmethod, we intercept raw inputs (like an integer scalar) and wrap them into a list before Pydantic validates the list elements.",
-            "verification": "Running the python script should output 'numbers=[2]'.",
+            "title": "Define the BaseModel and field validator with mode='before'",
+            "command": "from typing import Any\nfrom pydantic import BaseModel, field_validator\n\nclass Model(BaseModel):\n    value: str\n\n    @field_validator('value', mode='before')\n    @classmethod\n    def cast_ints(cls, value: Any) -> Any:\n        if isinstance(value, int):\n            return str(value)\n        else:\n            return value",
+            "explanation": "Using @field_validator with mode='before' along with @classmethod allows you to inspect and modify raw input values before Pydantic performs its standard type validation and parsing.",
+            "verification": "print(Model(value=1)) # Should successfully coerce int 1 to string '1'",
             "citations": [
-              "pydantic_validation_chunk_3"
+              "pydantic_validation_chunk_0",
+              "pydantic_validation_chunk_14"
             ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Forgetting to use @classmethod beneath @field_validator, which causes a TypeError when Pydantic attempts to bind the validator method.",
-          "Assuming plain validators perform internal type checking\u2014remember that plain validators terminate validation immediately, whereas before validators still allow Pydantic to validate the returned value against the type annotation."
+          "Forgetting to decorate the validator function with @classmethod when using the @field_validator decorator.",
+          "Mutating raw input data directly when using before validators if subsequent union handling or error raising depends on untouched raw inputs."
         ],
         "architecture_contract": null,
-        "key_takeaway": "Using @field_validator with mode='before' allows you to handle raw, unparsed inputs and preprocess or cast them before Pydantic runs its standard type validation against your annotations.",
+        "key_takeaway": "Pydantic v2 field validators with mode='before' execute prior to core type coercion, allowing you to intercept and reshape raw inputs by combining the @field_validator and @classmethod decorators.",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
-          "pydantic_validation_chunk_3"
+          "pydantic_validation_chunk_0",
+          "pydantic_validation_chunk_14"
         ]
       }
     },
@@ -227,8 +231,8 @@
       "retrieved_chunk_ids": [
         "pydantic_validation_chunk_9",
         "pydantic_models_chunk_14",
-        "pydantic_validation_chunk_1",
-        "pydantic_validation_chunk_10",
+        "pydantic_validation_chunk_13",
+        "pydantic_validation_chunk_0",
         "pydantic_validation_chunk_2"
       ],
       "retrieval_metrics": {
@@ -236,57 +240,54 @@
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 426.0
       },
       "score": {
         "passed": true,
         "issues": [],
         "step_count": 2,
         "command_count": 2,
-        "citation_count": 3,
+        "citation_count": 2,
         "cited_chunks": [
-          "pydantic_validation_chunk_9",
-          "pydantic_validation_chunk_1"
+          "pydantic_validation_chunk_9"
         ],
         "is_refusal": false
       },
       "response": {
-        "summary": "Inside a Pydantic custom validator, you can raise standard exceptions like ValueError and AssertionError, or Pydantic's specialized PydanticCustomError to cleanly trigger a ValidationError without crashing the application.",
+        "summary": "Inside a Pydantic custom validator, you can raise specific exception types like `ValueError`, `AssertionError`, or `PydanticCustomError` to trigger a controlled `ValidationError` without crashing the application.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Use ValueError or AssertionError in Field Validators",
-            "command": "python3 -c \"from pydantic import BaseModel, field_routers, field_validator, ValidationError\nclass Model(BaseModel):\n    number: int\n    @field_validator('number')\n    @classmethod\n    def check_even(cls, v: int) -> int:\n        if v % 2 != 0:\n            raise ValueError('Must be even')\n        return v\ntry:\n    Model(number=3)\nexcept ValidationError as e:\n    print('Caught expected validation error:', e)\"",
-            "explanation": "Raising a standard ValueError inside a field validator is the most common and recommended way to trigger a Pydantic ValidationError safely.",
-            "verification": "python3 -c \"...\"",
+            "title": "Use standard ValueError or AssertionError in validators",
+            "command": "python3 -c \"from pydantic import BaseModel, field_validator; class Model(BaseModel): x: int;\n    @field_validator('x')\n    @classmethod\n    def check_x(cls, v: int) -> int:\n        if v < 0:\n            raise ValueError('Must be positive')\n        return v\nprint(Model(x=-1))\"",
+            "explanation": "Raising a standard ValueError or AssertionError inside a field validator is caught by Pydantic and converted into a ValidationError.",
+            "verification": "python3 script.py",
             "citations": [
-              "pydantic_validation_chunk_9",
-              "pydantic_validation_chunk_1"
+              "pydantic_validation_chunk_9"
             ]
           },
           {
             "step_number": 2,
-            "title": "Use PydanticCustomError for Rich Error Metadata",
-            "command": "python3 -c \"from pydantic_core import PydanticCustomError\nfrom pydantic import BaseModel, ValidationError, field_validator\nclass Model(BaseModel):\n    x: int\n    @field_validator('x')\n    @classmethod\n    def validate_x(cls, v: int) -> int:\n        if v == 42:\n            raise PydanticCustomError('custom_error_code', '{val} is forbidden', {'val': v})\n        return v\ntry:\n    Model(x=42)\nexcept ValidationError as e:\n    print(e)\"",
-            "explanation": "PydanticCustomError provides extra flexibility by allowing custom error codes and template variables within the validation error structure.",
-            "verification": "python3 -c \"...\"",
+            "title": "Use PydanticCustomError for advanced custom error types and templates",
+            "command": "python3 -c \"from pydantic_core import PydanticCustomError; from pydantic import BaseModel, field_validator; class Model(BaseModel): x: int;\n    @field_validator('x')\n    @classmethod\n    def check_x(cls, v: int) -> int:\n        if v % 42 == 0:\n            raise PydanticCustomError('the_answer_error', '{number} is the answer!', {'number': v})\n        return v\ntry:\n    Model(x=84)\nexcept Exception as e:\n    print(type(e).__name__)\"",
+            "explanation": "PydanticCustomError provides extra flexibility by allowing custom error types and template string formatting with context variables.",
+            "verification": "python3 custom_error.py",
             "citations": [
               "pydantic_validation_chunk_9"
             ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Defining a custom __init__() method which breaks validation parameters and context.",
-          "Forgetting to return the validated value from an 'after' validator function.",
-          "Relying solely on AssertionError when running Python with optimization flags (-O), which skips assert statements."
+          "Defining a custom `__init__()` method which bypasses built-in validation parameters and context handling.",
+          "Relying solely on `AssertionError` for production validation, as assert statements are ignored when Python runs with optimization flags (`-O`)."
         ],
         "architecture_contract": null,
-        "key_takeaway": "Pydantic converts ValueError, AssertionError, and PydanticCustomError raised inside validators into a clean ValidationError instance rather than crashing the application.",
+        "key_takeaway": "Pydantic converts ValueError, AssertionError, and PydanticCustomError raised inside validators into a structured ValidationError exception.",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
-          "pydantic_validation_chunk_9",
-          "pydantic_validation_chunk_1"
+          "pydantic_validation_chunk_9"
         ]
       }
     },
@@ -299,80 +300,80 @@
         "docker_production_guide_chunk_1"
       ],
       "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_0",
         "docker_compose_best_practices_chunk_1",
         "docker_production_guide_chunk_0",
         "docker_production_guide_chunk_1",
-        "docker_compose_best_practices_chunk_0",
         "cs_engineering_roadmap_chunk_0"
       ],
       "retrieval_metrics": {
         "has_ground_truth": true,
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
-        "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2,
+        "latency_ms": 443.49
       },
       "score": {
         "passed": true,
         "issues": [],
         "step_count": 3,
         "command_count": 3,
-        "citation_count": 5,
+        "citation_count": 4,
         "cited_chunks": [
           "docker_production_guide_chunk_0",
-          "docker_production_guide_chunk_1",
+          "docker_compose_best_practices_chunk_0",
           "docker_compose_best_practices_chunk_1"
         ],
         "is_refusal": false
       },
       "response": {
-        "summary": "Engineering teams can combine multi-stage Docker builds with Docker Compose to prevent psycopg2 C-extension build failures by leveraging a builder stage containing gcc and libpq-dev, while keeping production and testing runtime images minimal.",
+        "summary": "To combine Docker Compose isolated testing environments with multi-stage Docker builds and prevent C-extension build failures like psycopg2, use a multi-stage Dockerfile that includes libpq-dev and gcc exclusively in the builder stage while installing only runtime libraries (libpq5) in the final runner stage, then orchestrate the service using docker compose up.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Implement Multi-Stage Dockerfile with Builder and Runner Stages",
-            "command": "FROM python:3.12-slim AS builder\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && rm -rf /var/lib/apt/lists/*\nCOPY requirements.txt .\nRUN pip install --no-cache-dir --user -r requirements.txt\n\nFROM python:3.12-slim AS runner\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends curl libpq5 && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\nEXPOSE 8000\nCMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
-            "explanation": "Separating the build stage containing compilation tools (gcc, libpq-dev) from the minimal runner stage prevents psycopg2 build failures while ensuring the final image remains clean and lightweight.",
+            "title": "Create a Multi-Stage Production Dockerfile",
+            "command": "cat << 'EOF' > Dockerfile\nFROM python:3.12-slim AS builder\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && rm -rf /var/lib/apt/lists/*\nCOPY requirements.txt .\nRUN pip install --no-cache-dir --user -r requirements.txt\n\nFROM python:3.12-slim AS runner\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends curl libpq5 && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\nENV PYTHONUNBUFFERED=1\nENV PYTHONDONTWRITEBYTECODE=1\nCOPY . .\nEXPOSE 8000\nCMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]\nEOF",
+            "explanation": "Separating the build stage containing compilation tools (gcc and libpq-dev) from the final minimal runtime image avoids missing pg_config errors and keeps the production footprint small.",
             "verification": "docker build -t my-app .",
             "citations": [
-              "docker_production_guide_chunk_0",
-              "docker_production_guide_chunk_1"
-            ]
-          },
-          {
-            "step_number": 2,
-            "title": "Orchestrate Services with Docker Compose and Healthchecks",
-            "command": "docker compose up -d",
-            "explanation": "Docker Compose allows spinning up both the database and the multi-stage backend container in an isolated environment, using healthchecks to ensure the database is ready before the application starts.",
-            "verification": "docker compose ps",
-            "citations": [
-              "docker_compose_best_practices_chunk_1",
               "docker_production_guide_chunk_0"
             ]
           },
           {
+            "step_number": 2,
+            "title": "Define the Multi-Container Testing Environment with Docker Compose",
+            "command": "cat << 'EOF' > docker-compose.yml\nversion: '3.8'\nservices:\n  db:\n    image: postgres:15-alpine\n    environment:\n      POSTGRES_USER: user\n      POSTGRES_PASSWORD: password\n      POSTGRES_DB: testdb\n    ports:\n      - \"5432:5432\"\n  web:\n    build: .\n    ports:\n      - \"8000:8000\"\n    depends_on:\n      - db\nEOF",
+            "explanation": "Docker Compose allows you to define application service dependencies like PostgreSQL and your FastAPI web service in a single machine-readable YAML file.",
+            "verification": "docker compose config",
+            "citations": [
+              "docker_compose_best_practices_chunk_0",
+              "docker_compose_best_practices_chunk_1"
+            ]
+          },
+          {
             "step_number": 3,
-            "title": "Run Test Suite and Clean Up Isolated Environment",
-            "command": "./run_tests && docker compose down",
-            "explanation": "Execute automated end-to-end tests inside the orchestrated environment and cleanly destroy the containers once the test run completes.",
-            "verification": "docker compose logs",
+            "title": "Spin Up and Test the Isolated Environment",
+            "command": "docker compose up -d && docker compose down",
+            "explanation": "Run your containers in detached mode for testing or CI execution, and tear down the isolated environment cleanly using Docker Compose commands.",
+            "verification": "docker compose ps",
             "citations": [
               "docker_compose_best_practices_chunk_1"
             ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Using single-stage builds that leave heavy compilers and libpq-dev headers in production runtime images",
-          "Relying on local machine states instead of isolated Docker Compose environments for automated testing",
-          "Ignoring database healthchecks and allowing backend services to crash due to premature connection attempts"
+          "Using single-stage python:slim or alpine images for psycopg2 without installing libpq-dev and gcc first.",
+          "Inflating production image sizes by leaving native compilers and header files in the runtime container.",
+          "Manually managing individual container startup scripts instead of utilizing docker compose up for dependencies."
         ],
-        "architecture_contract": "version: '3.8'\nservices:\n  database:\n    image: postgres:16-alpine\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U navigator_user -d navigator_db\"]\n  backend:\n    build: .\n    depends_on:\n      database:\n        condition: service_healthy",
-        "key_takeaway": "Multi-stage builds separate native compilation dependencies from the runtime image, while Docker Compose orchestrates reproducible, isolated testing environments.",
+        "architecture_contract": "app/\n\u251c\u2500\u2500 Dockerfile\n\u251c\u2500\u2500 docker-compose.yml\n\u251c\u2500\u2500 requirements.txt\n\u2514\u2500\u2500 app/\n    \u2514\u2500\u2500 main.py",
+        "key_takeaway": "Multi-stage Docker builds segregate build-time dependencies (like compilers and C headers needed for psycopg2) from runtime images, while Docker Compose automates multi-container dependency orchestration for testing environments.",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
           "docker_production_guide_chunk_0",
-          "docker_production_guide_chunk_1",
+          "docker_compose_best_practices_chunk_0",
           "docker_compose_best_practices_chunk_1"
         ]
       }
@@ -391,21 +392,22 @@
         "fastapi_background_tasks_chunk_2",
         "fastapi_background_tasks_chunk_0",
         "fastapi_fullstack_guide_chunk_0",
-        "cs_engineering_roadmap_chunk_0"
+        "fastapi_fullstack_guide_chunk_1"
       ],
       "retrieval_metrics": {
         "has_ground_truth": true,
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 1.0,
-        "first_hit_rank": 1
+        "first_hit_rank": 1,
+        "latency_ms": 440.24
       },
       "score": {
         "passed": true,
         "issues": [],
-        "step_count": 2,
-        "command_count": 2,
-        "citation_count": 4,
+        "step_count": 3,
+        "command_count": 3,
+        "citation_count": 5,
         "cited_chunks": [
           "fastapi_background_tasks_chunk_0",
           "fastapi_background_tasks_chunk_1",
@@ -414,25 +416,35 @@
         "is_refusal": false
       },
       "response": {
-        "summary": "FastAPI BackgroundTasks can be seamlessly integrated into CRUD routes using dependency injection by declaring a parameter of type BackgroundTasks in your path operation function or dependencies. For heavy, distributed, or multi-server workloads, you should upgrade from BackgroundTasks to a robust task queue like Celery backed by Redis.",
+        "summary": "FastAPI BackgroundTasks can be seamlessly integrated into CRUD routes and dependencies using FastAPI's dependency injection system. You should upgrade to a distributed task queue like Celery with Redis when tasks require multi-process/multi-server scaling or persistence beyond the current server's process memory.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Define and Inject BackgroundTasks in CRUD Route",
-            "command": "cat << 'EOF' > main.py\nfrom fastapi import BackgroundTasks, FastAPI, Depends\n\napp = FastAPI()\n\ndef write_notification(email: str, message: str = \"\"):\n    with open(\"log.txt\", mode=\"w\") as email_file:\n        email_file.write(f\"Notification sent to {email}: {message}\\n\")\n\n@app.post(\"/items/\")\nasync def create_item(email: str, background_tasks: BackgroundTasks):\n    background_tasks.add_task(write_notification, email, message=\"Item created successfully\")\n    return {\"message\": \"Item received and processing in background\"}\nEOF\npython3 -m uvicorn main:app --reload\n",
-            "explanation": "You can declare a parameter of type BackgroundTasks in your path operation function or through the dependency injection system. FastAPI automatically handles creating and merging these background tasks so they execute after the response is sent to the client.",
-            "verification": "curl -X POST \"http://127.0.0.1:8000/items/?email=test%40example.com\"",
+            "title": "Define the Background Task Function",
+            "command": "def write_notification(email: str, message: str = \"some notification\"):\n    with open(\"log.txt\", mode=\"w\") as email_file:\n        email_file.write(f\"Notification to {email}: {message}\\n\")",
+            "explanation": "Create a standard def or async def function that performs the post-response operation, such as writing to a file or sending an email.",
+            "verification": "Ensure the function accepts the required positional and keyword arguments.",
             "citations": [
-              "fastapi_background_tasks_chunk_0",
-              "fastapi_background_tasks_chunk_1"
+              "fastapi_background_tasks_chunk_0"
             ]
           },
           {
             "step_number": 2,
-            "title": "Evaluate When to Upgrade to Celery and Redis",
-            "command": "echo \"Reviewing requirements for Celery/Redis upgrade\"",
-            "explanation": "If your application needs to execute heavy background computations across multiple processes or multiple servers without sharing memory, or if task persistence across server restarts is critical, you must upgrade from built-in BackgroundTasks to a distributed task runner like Celery with Redis or RabbitMQ.",
-            "verification": "Verify that your workload exceeds simple single-process tasks like sending small email notifications.",
+            "title": "Inject BackgroundTasks into Dependencies or CRUD Routes",
+            "command": "from fastapi import BackgroundTasks, FastAPI, Depends\n\napp = FastAPI()\n\ndef get_background_logger(background_tasks: BackgroundTasks):\n    return background_tasks\n\n@app.post(\"/items/\")\nasync def create_item(email: str, background_tasks: BackgroundTasks = Depends(get_background_logger)):\n    background_tasks.add_task(write_notification, email, message=\"Item created successfully\")\n    return {\"message\": \"Item received and processing in background\"}",
+            "explanation": "Declare a parameter of type BackgroundTasks at the path operation function level or within a dependency. FastAPI automatically merges tasks from multiple dependency levels and runs them after the response is sent.",
+            "verification": "Run the application and verify via logs or test output that the task executes after the HTTP 200/202 response returns.",
+            "citations": [
+              "fastapi_background_tasks_chunk_1",
+              "fastapi_background_tasks_chunk_2"
+            ]
+          },
+          {
+            "step_number": 3,
+            "title": "Evaluate Upgrade Threshold to Celery/Redis",
+            "command": "# If heavy computation or multi-server scaling is required, introduce Celery with Redis:\n# pip install celery redis",
+            "explanation": "If you need heavy background computation, multi-process or multi-server scaling, and cannot rely on sharing memory/variables within a single FastAPI process, upgrade to Celery with Redis.",
+            "verification": "Check architectural requirements against single-process memory limitations.",
             "citations": [
               "fastapi_background_tasks_chunk_1",
               "fastapi_background_tasks_chunk_2"
@@ -440,12 +452,12 @@
           }
         ],
         "anti_patterns_to_avoid": [
-          "Using BackgroundTasks for heavy CPU-bound computations or long-running jobs that require a distributed worker pool across multiple servers.",
-          "Importing `BackgroundTask` (without the 's') from `starlette.background` inside FastAPI path operations instead of using FastAPI's `BackgroundTasks`.",
-          "Expecting background tasks to persist if the single FastAPI process crashes or restarts, as they run in-memory within the same process."
+          "Importing `BackgroundTask` (without the 's') from `starlette.background` instead of `BackgroundTasks` from `fastapi`, which prevents FastAPI from automatically handling dependency injection.",
+          "Using FastAPI `BackgroundTasks` for heavy, long-running computational workloads that require persistence or multi-server distribution.",
+          "Performing blocking synchronous I/O directly inside path operations instead of offloading small tasks to `BackgroundTasks` or async workers."
         ],
-        "architecture_contract": "app/\n\u251c\u2500\u2500 main.py\n\u2514\u2500\u2500 log.txt",
-        "key_takeaway": "FastAPI's BackgroundTasks integrates smoothly via dependency injection for lightweight post-response actions (like emails or logging) within a single process, but requires distributed tools like Celery and Redis when scaling to multiple servers or heavy workloads.",
+        "architecture_contract": "main.py\napp/\n  __init__.py\n  api/\n    endpoints/\n      items.py\n  core/\n    background.py",
+        "key_takeaway": "FastAPI's BackgroundTasks integrates natively with dependency injection across multiple dependency levels, running tasks post-response. Upgrade to Celery and Redis only when you outgrow single-process memory and require multi-server scaling.",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
@@ -464,57 +476,72 @@
         "fastapi_fullstack_guide_chunk_2"
       ],
       "retrieved_chunk_ids": [
-        "fastapi_cors_chunk_0",
+        "fastapi_cors_chunk_1",
         "fastapi_fullstack_guide_chunk_2",
+        "fastapi_cors_chunk_0",
         "fastapi_fullstack_guide_chunk_3",
-        "fastapi_fullstack_guide_chunk_1",
-        "fastapi_cors_chunk_1"
+        "fastapi_fullstack_guide_chunk_1"
       ],
       "retrieval_metrics": {
         "has_ground_truth": true,
         "recall_at_3": 1.0,
         "recall_at_5": 1.0,
         "reciprocal_rank": 0.5,
-        "first_hit_rank": 2
+        "first_hit_rank": 2,
+        "latency_ms": 476.97
       },
       "score": {
         "passed": true,
         "issues": [],
-        "step_count": 1,
-        "command_count": 1,
-        "citation_count": 2,
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 5,
         "cited_chunks": [
-          "fastapi_cors_chunk_0",
-          "fastapi_fullstack_guide_chunk_2"
+          "fastapi_cors_chunk_1",
+          "fastapi_fullstack_guide_chunk_2",
+          "fastapi_cors_chunk_0"
         ],
         "is_refusal": false
       },
       "response": {
-        "summary": "To configure cross-origin cookie or credentialed authentication between a React dev server on port 3000 and a FastAPI backend on port 8000 without hitting wildcard origin restrictions, you must explicitly add the frontend origin (\"http://localhost:3000\") to CORSMiddleware and set allow_credentials=True.",
+        "summary": "To configure cookie authentication between a React app on port 3000 and FastAPI on port 8000 without hitting wildcard restrictions, you must explicitly add CORSMiddleware with allow_origins configured to your exact frontend origin and allow_credentials set to True.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Configure CORSMiddleware in FastAPI with explicit origin and credentials",
+            "title": "Configure CORSMiddleware in FastAPI",
             "command": "from fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\n\napp = FastAPI()\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"http://localhost:3000\"],\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)",
-            "explanation": "Browsers block responses when frontends and backends run on different origins (ports 3000 vs 8000). Wildcards (\"*\") cannot be used alongside credentials like cookies or Authorization headers. Explicitly setting allow_origins to your exact React dev server origin while enabling allow_credentials satisfies browser security requirements.",
-            "verification": "Start your FastAPI server with uvicorn and check that OPTIONS preflight requests return the 'Access-Control-Allow-Origin: http://localhost:3000' and 'Access-Control-Allow-Credentials: true' headers.",
+            "explanation": "Browsers block cross-origin requests involving credentials (like cookies or Authorization headers) if you use the wildcard origin ['*']. You must explicitly list 'http://localhost:3000' in allow_origins and set allow_credentials=True.",
+            "verification": "Start your FastAPI server and check that OPTIONS preflight requests return the 'Access-Control-Allow-Credentials: true' and 'Access-Control-Allow-Origin: http://localhost:3000' headers.",
             "citations": [
-              "fastapi_cors_chunk_0",
-              "fastapi_fullstack_guide_chunk_2"
+              "fastapi_cors_chunk_1",
+              "fastapi_fullstack_guide_chunk_2",
+              "fastapi_cors_chunk_0"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Configure Fetch Request with Credentials",
+            "command": "const response = await fetch(\"http://localhost:8000/api/tasks\", {\n  method: \"GET\",\n  credentials: \"include\"\n});\nconst data = await response.json();",
+            "explanation": "When making cross-origin requests with fetch in your React app, you must explicitly include 'credentials: \"include\"' so that the browser attaches cookies to the request and accepts cookies from the response.",
+            "verification": "Inspect the Network tab in your browser developer tools to ensure the Cookie header is sent with the request and Set-Cookie is handled.",
+            "citations": [
+              "fastapi_fullstack_guide_chunk_2",
+              "fastapi_cors_chunk_1"
             ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Using allow_origins=[\"*\"] when attempting to send cookies or Authorization bearer tokens, which will fail browser CORS policy restrictions.",
-          "Forgetting to specify the protocol or port in the origin string (e.g. using localhost instead of http://localhost:3000)."
+          "Using allow_origins=['*'] when trying to transmit cookies or Authorization headers, which causes browsers to reject the response due to security policy.",
+          "Omitting credentials: 'include' in frontend fetch requests while expecting session cookies to persist across ports."
         ],
-        "architecture_contract": "main.py -> FastAPI app instance with CORSMiddleware mounted before any routers are registered.",
-        "key_takeaway": "Credentialed cross-origin requests require an explicit list of allowed origins paired with allow_credentials=True; wildcards are strictly incompatible with cookies and bearer tokens.",
+        "architecture_contract": null,
+        "key_takeaway": "Cross-origin cookie and credential sharing requires explicit origin matching combined with allow_credentials=True and frontend fetch configuration set to credentials: 'include'.",
         "is_refusal": false,
         "refusal_reason": null,
         "cited_chunk_ids": [
-          "fastapi_cors_chunk_0",
-          "fastapi_fullstack_guide_chunk_2"
+          "fastapi_cors_chunk_1",
+          "fastapi_fullstack_guide_chunk_2",
+          "fastapi_cors_chunk_0"
         ]
       }
     },
@@ -527,49 +554,59 @@
         "fastapi_fullstack_guide_chunk_0"
       ],
       "retrieved_chunk_ids": [
-        "pydantic_models_chunk_10",
-        "pydantic_validation_chunk_7",
         "pydantic_validation_chunk_0",
-        "cs_engineering_roadmap_chunk_0",
-        "pydantic_validation_chunk_2"
+        "pydantic_validation_chunk_4",
+        "pydantic_models_chunk_10",
+        "fastapi_fullstack_guide_chunk_0",
+        "pydantic_validation_chunk_7"
       ],
       "retrieval_metrics": {
         "has_ground_truth": true,
         "recall_at_3": 0.0,
-        "recall_at_5": 0.0,
-        "reciprocal_rank": 0.0,
-        "first_hit_rank": null
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "first_hit_rank": 4,
+        "latency_ms": 448.73
       },
       "score": {
         "passed": true,
         "issues": [],
         "step_count": 1,
         "command_count": 1,
-        "citation_count": 0,
-        "cited_chunks": [],
+        "citation_count": 2,
+        "cited_chunks": [
+          "pydantic_validation_chunk_0",
+          "pydantic_validation_chunk_4"
+        ],
         "is_refusal": true
       },
       "response": {
-        "summary": "The student asked about sanitizing and validating incoming request payloads in FastAPI using Pydantic before-validators combined with API route dependency schemas. However, the provided corpus only contains documentation for Pydantic V2 models, data validation methods, and field/model validators (including before and after validators), but lacks FastAPI specific dependency integration. Therefore, this request is out-of-corpus.",
+        "summary": "The provided verified context contains documentation on Pydantic validation (including field validators like before, after, plain, and wrap validators) and model validation methods, but does not cover FastAPI route dependencies or integrating them with Pydantic before-validators. Therefore, this request is partially out-of-corpus regarding the FastAPI route dependency integration aspect.",
         "action_plan": [
           {
             "step_number": 1,
-            "title": "Consult Official FastAPI and Pydantic Documentation",
-            "command": "python -m pip install fastapi pydantic",
-            "explanation": "Since the specific integration between FastAPI route dependencies and Pydantic model-level before-validators is outside the verified corpus, please refer to the official FastAPI dependency injection and Pydantic custom validators documentation.",
-            "verification": "python -c \"import fastapi, pydantic; print(fastapi.__version__, pydantic.__version__)\"",
-            "citations": []
+            "title": "Review Pydantic Field Validators Documentation",
+            "command": "python -c \"import pydantic; print(pydantic.__version__)\"",
+            "explanation": "Consult standard Pydantic documentation regarding before and plain field validators to understand how raw inputs are manipulated before internal validation.",
+            "verification": "Verify that your Pydantic version is v2.x where functional validators and the Annotated pattern are supported.",
+            "citations": [
+              "pydantic_validation_chunk_0",
+              "pydantic_validation_chunk_4"
+            ]
           }
         ],
         "anti_patterns_to_avoid": [
-          "Guessing FastAPI dependency injection patterns without verifying against official documentation.",
-          "Mutating raw input dictionaries directly inside Pydantic before-validators when raising validation errors."
+          "Assuming FastAPI request dependency details can be inferred without explicit framework documentation.",
+          "Bypassing Pydantic internal type validation entirely when strict type safety is required."
         ],
         "architecture_contract": null,
-        "key_takeaway": "Always verify framework-level integrations against official documentation when the local technical corpus is constrained.",
+        "key_takeaway": "Always rely on verified project documentation when implementing custom data validation and sanitization pipelines.",
         "is_refusal": true,
         "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
-        "cited_chunk_ids": []
+        "cited_chunk_ids": [
+          "pydantic_validation_chunk_0",
+          "pydantic_validation_chunk_4"
+        ]
       }
     }
   ]

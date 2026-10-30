@@ -38,8 +38,29 @@ VECTOR_DIMENSION = 3072
 
 BM25_VOCAB_FILE = DATA_DIR / "bm25_vocab.json"
 EMBEDDINGS_CACHE_FILE = DATA_DIR / "embeddings_cache.json"
+QUERY_CACHE_FILE = DATA_DIR / "query_embeddings_cache.json"
 
 _qdrant_client: Optional[QdrantClient] = None
+_query_cache: Dict[str, List[float]] = {}
+
+
+def _load_query_cache():
+    global _query_cache
+    if not _query_cache and QUERY_CACHE_FILE.exists():
+        try:
+            with open(QUERY_CACHE_FILE, "r", encoding="utf-8") as f:
+                _query_cache = json.load(f)
+        except Exception:
+            _query_cache = {}
+
+
+def _save_query_cache():
+    try:
+        QUERY_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(QUERY_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(_query_cache, f)
+    except Exception:
+        pass
 
 
 class BM25Encoder:
@@ -219,17 +240,31 @@ def ensure_collection(
 
 
 def embed_text(text: str) -> List[float]:
-    """Generate vector embedding for a single text string."""
+    """Generate vector embedding for a single text string, with caching."""
+    _load_query_cache()
+    if text in _query_cache:
+        return _query_cache[text]
+
     client = get_genai_client()
     response = client.models.embed_content(model=EMBEDDING_MODEL, contents=text)
-    return response.embeddings[0].values
+    vec = response.embeddings[0].values
+    _query_cache[text] = vec
+    _save_query_cache()
+    return vec
 
 
 async def embed_text_async(text: str) -> List[float]:
-    """Asynchronously generate vector embedding for a query string."""
+    """Asynchronously generate vector embedding for a query string, with caching."""
+    _load_query_cache()
+    if text in _query_cache:
+        return _query_cache[text]
+
     client = get_genai_client()
     response = await client.aio.models.embed_content(model=EMBEDDING_MODEL, contents=[text])
-    return response.embeddings[0].values
+    vec = response.embeddings[0].values
+    _query_cache[text] = vec
+    _save_query_cache()
+    return vec
 
 
 def embed_batch(texts: List[str]) -> List[List[float]]:
@@ -467,19 +502,57 @@ def retrieve_hybrid_chunks(
     return reciprocal_rank_fusion(dense_results, sparse_results, k=60, top_k=top_k)
 
 
-def retrieve_relevant_chunks(
+def retrieve_hybrid_rerank_chunks(
     query: str,
     top_k: int = 3,
-    search_mode: str = "hybrid",
+    candidate_n: int = 10,
     collection_name: str = COLLECTION_NAME,
     qdrant_client: Optional[QdrantClient] = None,
 ) -> List[Dict[str, Any]]:
-    """Retrieve top-K most relevant chunks using the specified search mode ('hybrid', 'dense', or 'sparse')."""
-    if search_mode == "dense":
+    """
+    Retrieve top candidate_n chunks via Hybrid Search (Dense + BM25 + RRF),
+    then apply Cross-Encoder transformer reranking to precision-rank the top-K.
+    """
+    # 1. Broad candidate retrieval (N=10 or 15)
+    candidates = retrieve_hybrid_chunks(
+        query=query,
+        top_k=candidate_n,
+        collection_name=collection_name,
+        qdrant_client=qdrant_client,
+        candidate_k=candidate_n,
+    )
+    if not candidates:
+        return []
+
+    # 2. Precision cross-encoder reranking
+    from app.reranker import rerank_chunks
+    return rerank_chunks(query=query, candidate_chunks=candidates, top_k=top_k)
+
+
+def retrieve_relevant_chunks(
+    query: str,
+    top_k: int = 3,
+    search_mode: str = "hybrid-rerank",
+    collection_name: str = COLLECTION_NAME,
+    qdrant_client: Optional[QdrantClient] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Retrieve top-K most relevant chunks using specified mode:
+    - 'hybrid-rerank' / 'rerank': Hybrid (Dense + BM25 + RRF) + Cross-Encoder Reranker
+    - 'hybrid': Dense + BM25 merged with Reciprocal Rank Fusion
+    - 'dense': Dense vector cosine similarity
+    - 'sparse': BM25 lexical sparse vector match
+    """
+    mode = search_mode.lower().replace("_", "-")
+    if mode in ("hybrid-rerank", "rerank"):
+        return retrieve_hybrid_rerank_chunks(
+            query=query, top_k=top_k, collection_name=collection_name, qdrant_client=qdrant_client
+        )
+    elif mode == "dense":
         return retrieve_dense_chunks(
             query=query, top_k=top_k, collection_name=collection_name, qdrant_client=qdrant_client
         )
-    elif search_mode == "sparse":
+    elif mode == "sparse":
         return retrieve_sparse_bm25_chunks(
             query=query, top_k=top_k, collection_name=collection_name, qdrant_client=qdrant_client
         )

@@ -263,3 +263,35 @@ def test_gold_set_contains_hardened_retrieval_traps():
     for q in hard_questions:
         assert "expected_chunk_ids" in q
         assert len(q["expected_chunk_ids"]) >= 1
+
+
+def test_cross_encoder_rerank_chunks():
+    from app.reranker import rerank_chunks
+    candidates = [
+        {"chunk_id": "docker_compose", "text": "Docker Compose orchestrates multi-container applications with volumes."},
+        {"chunk_id": "fastapi_cors", "text": "FastAPI CORSMiddleware manages Access-Control-Allow-Origin headers."},
+        {"chunk_id": "pydantic_val", "text": "Pydantic validator functions with @field_validator decorate model fields."},
+    ]
+    # Query specifically about CORS
+    reranked = rerank_chunks(query="how to fix cors in fastapi", candidate_chunks=candidates, top_k=2)
+    assert len(reranked) == 2
+    # The most relevant CORS chunk should be ranked #1
+    assert reranked[0]["chunk_id"] == "fastapi_cors"
+    assert "rerank_score" in reranked[0]
+    assert reranked[0]["rerank_score"] > reranked[1]["rerank_score"]
+    assert reranked[0]["retrieval_method"] == "hybrid_rerank"
+
+
+def test_hybrid_rerank_retrieval_report_metrics():
+    report_path = Path(__file__).resolve().parent.parent / "eval" / "hybrid_rerank_retrieval_report.json"
+    assert report_path.exists()
+    import json
+    with open(report_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert data["total_evaluated"] >= 88
+    assert "retrieval_metrics" in data
+    assert data["retrieval_metrics"]["recall_at_5"] >= 80.0
+    assert "latency_metrics" in data
+    assert "p50_latency_ms" in data["latency_metrics"]
+    assert "mean_latency_ms" in data["latency_metrics"]
+

@@ -1,5 +1,7 @@
 import sys
 import json
+import time
+import math
 import argparse
 import asyncio
 from pathlib import Path
@@ -22,6 +24,21 @@ VAGUE_PHRASES = [
     "don't worry about understanding",
     "here is the complete code for everything",
 ]
+
+
+def calculate_percentile(values: List[float], percentile: float) -> float:
+    """Calculate percentile from a list of float measurements."""
+    if not values:
+        return 0.0
+    sorted_v = sorted(values)
+    k = (len(sorted_v) - 1) * (percentile / 100.0)
+    f = math.floor(k)
+    c = math.ceil(k)
+    if f == c:
+        return round(sorted_v[int(k)], 2)
+    d0 = sorted_v[int(f)] * (c - k)
+    d1 = sorted_v[int(c)] * (k - f)
+    return round(d0 + d1, 2)
 
 
 def calculate_retrieval_metrics(
@@ -164,6 +181,16 @@ async def evaluate_benchmark(
     recall_3_hits = 0
     recall_5_hits = 0
     rr_sum = 0.0
+    retrieval_latencies: List[float] = []
+
+    # Warm up reranker if requested so cold-start initialization doesn't distort latency metrics
+    if "rerank" in search_mode.lower():
+        try:
+            from app.reranker import get_cross_encoder
+            print("Warming up Cross-Encoder model...")
+            get_cross_encoder()
+        except Exception:
+            pass
 
     for idx, item in enumerate(batch, 1):
         qid = item.get("id", f"Q{idx}")
@@ -173,11 +200,16 @@ async def evaluate_benchmark(
         negatives = item.get("negative_constraints", [])
         expected_chunk_ids = item.get("expected_chunk_ids", [])
 
-        # 1. Fetch retrieval candidates (top-5 for Recall@3 and Recall@5 calculation)
+        # 1. Fetch retrieval candidates (top-5 for Recall@3 and Recall@5 calculation) with latency instrumentation
+        t_ret_start = time.perf_counter()
         retrieved_raw = retrieve_relevant_chunks(prompt, top_k=5, search_mode=search_mode)
-        retrieved_chunk_ids = [c["chunk_id"] for c in retrieved_raw]
+        t_ret_end = time.perf_counter()
+        ret_latency_ms = round((t_ret_end - t_ret_start) * 1000, 2)
+        retrieval_latencies.append(ret_latency_ms)
 
+        retrieved_chunk_ids = [c["chunk_id"] for c in retrieved_raw]
         retrieval_metrics = calculate_retrieval_metrics(retrieved_chunk_ids, expected_chunk_ids)
+        retrieval_metrics["latency_ms"] = ret_latency_ms
 
         if retrieval_metrics["has_ground_truth"]:
             queries_with_gt += 1
@@ -196,9 +228,9 @@ async def evaluate_benchmark(
                 r3 = retrieval_metrics["recall_at_3"]
                 rr = retrieval_metrics["reciprocal_rank"]
                 status = f"HIT (Rank #{hit_rank}, RR={rr:.2f})" if hit_rank else "MISS (Not in top 5)"
-                print(f"R@3={r3:.0f} | {status} | Top: {retrieved_chunk_ids[:3]}")
+                print(f"R@3={r3:.0f} | {status} | Latency: {ret_latency_ms:.1f}ms | Top: {retrieved_chunk_ids[:3]}")
             else:
-                print(f"Top: {retrieved_chunk_ids[:3]}")
+                print(f"Latency: {ret_latency_ms:.1f}ms | Top: {retrieved_chunk_ids[:3]}")
 
             results.append({
                 "id": qid,
@@ -274,6 +306,12 @@ async def evaluate_benchmark(
     mean_recall_5 = round((recall_5_hits / queries_with_gt) * 100, 2) if queries_with_gt else 0.0
     mrr = round(rr_sum / queries_with_gt, 4) if queries_with_gt else 0.0
 
+    # Latency aggregates
+    mean_lat = round(sum(retrieval_latencies) / (len(retrieval_latencies) or 1), 2)
+    p50_lat = calculate_percentile(retrieval_latencies, 50.0)
+    p90_lat = calculate_percentile(retrieval_latencies, 90.0)
+    p95_lat = calculate_percentile(retrieval_latencies, 95.0)
+
     print("=" * 75)
     print(f"📊 BENCHMARK SUMMARY ({mode_label} PIPELINE)")
     print(f"  • Evaluated Questions:       {len(batch)}")
@@ -281,6 +319,7 @@ async def evaluate_benchmark(
     print(f"  • Recall@3:                  {recall_3_hits}/{queries_with_gt} ({mean_recall_3:.1f}%)")
     print(f"  • Recall@5:                  {recall_5_hits}/{queries_with_gt} ({mean_recall_5:.1f}%)")
     print(f"  • Mean Reciprocal Rank (MRR):{mrr:.4f}")
+    print(f"  • Mean Retrieval Latency:    {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
     if not retrieval_only:
         print(f"  • LLM Pass Rate:             {passed}/{len(batch)} ({pass_rate:.1f}%)")
         print(f"  • Avg Commands / Plan:       {avg_commands}")
@@ -300,6 +339,14 @@ async def evaluate_benchmark(
             "mrr": mrr,
             "recall_3_hits": recall_3_hits,
             "recall_5_hits": recall_5_hits,
+        },
+        "latency_metrics": {
+            "mean_latency_ms": mean_lat,
+            "p50_latency_ms": p50_lat,
+            "p90_latency_ms": p90_lat,
+            "p95_latency_ms": p95_lat,
+            "min_latency_ms": min(retrieval_latencies) if retrieval_latencies else 0.0,
+            "max_latency_ms": max(retrieval_latencies) if retrieval_latencies else 0.0,
         },
         "llm_metrics": {
             "passed": passed,
@@ -322,7 +369,13 @@ def main():
     parser.add_argument("--gold-set", default="eval/gold_set.json", help="Path to gold set json")
     parser.add_argument("-n", "--limit", type=int, default=None, help="Number of questions to test")
     parser.add_argument("-c", "--category", default=None, help="Filter by category substring")
-    parser.add_argument("-m", "--mode", choices=["hybrid", "dense", "sparse"], default="hybrid", help="Search engine mode")
+    parser.add_argument(
+        "-m",
+        "--mode",
+        choices=["hybrid-rerank", "hybrid_rerank", "rerank", "hybrid", "dense", "sparse"],
+        default="hybrid-rerank",
+        help="Search engine mode",
+    )
     parser.add_argument("--retrieval-only", action="store_true", help="Run retrieval evaluation only (no LLM generation)")
     parser.add_argument("-o", "--output", default="eval/eval_report.json", help="Report output json path")
     parser.add_argument("-d", "--delay", type=float, default=1.2, help="Delay in seconds between questions")
