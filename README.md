@@ -220,7 +220,7 @@ Allows the model to intelligently route student queries to verified deterministi
 ### 10. Cross-Encoder Precision Reranker (`app/reranker.py`)
 - **Broad-to-Narrow Candidate Filtering ($N \to K$):** Retrieves top $N=10$ broad candidates via Hybrid Search, then evaluates (query, document) pairs jointly through full transformer cross-attention.
 - **Precision Ranking:** Powered by `cross-encoder/ms-marco-MiniLM-L-6-v2` (with ultra-lightweight ONNX `FlashRank` CPU fallback), lifting **Recall@5 to 82.61%** and **MRR to 0.5775**.
-- **Sub-50ms Inference:** Singleton model caching ensures rapid per-query reranking latency (~6-50ms) on CPU, preventing event-loop bottlenecks.
+- **Low-Latency Singleton Architecture:** Singleton model caching avoids per-request reinitialization overhead, maintaining ~500ms CPU cross-attention latency across 10 candidates.
 
 ---
 
@@ -774,7 +774,9 @@ All three retrieval architectures were systematically evaluated against the hard
 | **1. Dense-Only Baseline** (`gemini-embedding-001`) | 60.87% (14/23) | 78.26% (18/23) | 0.5681 | 1219.32 ms | 1108.9 ms | 1719.2 ms | [`eval/dense_retrieval_report.json`](eval/dense_retrieval_report.json) |
 | **2. Hybrid Engine** (Dense + BM25 + RRF) | **69.57% (16/23)** | 78.26% (18/23) | 0.5725 | 4.43 ms | 3.4 ms | 4.2 ms | [`eval/hybrid_retrieval_report.json`](eval/hybrid_retrieval_report.json) |
 | **3. Hybrid + Cross-Encoder Reranker** | 65.22% (15/23) | **82.61% (19/23)** 🚀 | **0.5775** 📈 | 527.01 ms | 510.7 ms | 670.9 ms | [`eval/hybrid_rerank_retrieval_report.json`](eval/hybrid_rerank_retrieval_report.json) |
-| **Net Lift (Reranker vs. Baseline)** | **+4.35%** | **+4.35% (+1 rescued)** | **+0.0094** | **-692 ms vs. un-cached** | **Interactive** | **Stable** | **Peak Recall & Precision** |
+| **Net Lift (Reranker vs. Hybrid)** | **-4.35 pts** | **+4.35 pts (+1 net)** | **+0.0050** | **+522.58 ms (CPU compute)** | **+507.3 ms** | **+666.7 ms** | **Peak Recall@5 & MRR** |
+
+*Note on Latency & Rescues: Hybrid's 4.43 ms latency uses pre-cached query embeddings, while Dense's 1219 ms includes cold-start remote API roundtrips. The cross-encoder adds ~522 ms of local CPU transformer cross-attention over 10 candidate pairs (measured on an Intel Core i7-13620H). While GS-07 and GS-88 entered top 5 (+2), GS-04 dropped out (-1), resulting in a net +1 gain at Recall@5.*
 
 #### Key Reranker Trap & Multi-Hop Rescues
 
