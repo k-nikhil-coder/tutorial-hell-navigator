@@ -33,6 +33,8 @@ DATA_DIR = PROJECT_ROOT / "data"
 DEFAULT_QDRANT_PATH = DATA_DIR / "qdrant_db"
 PROCESSED_CHUNKS_FILE = PROJECT_ROOT / "corpus" / "processed" / "chunks_512.json"
 COLLECTION_NAME = "tutorial_navigator_chunks"
+SWEEP_COLLECTION_NAME = "tutorial_navigator_chunks_sweep"
+SWEEP_CHUNKS_FILE = PROJECT_ROOT / "corpus" / "processed" / "chunks_384.json"
 EMBEDDING_MODEL = "gemini-embedding-001"
 VECTOR_DIMENSION = 3072
 
@@ -172,21 +174,24 @@ class BM25Encoder:
         )
 
 
-_bm25_encoder: Optional[BM25Encoder] = None
+_bm25_encoders: Dict[str, BM25Encoder] = {}
 
 
-def get_bm25_encoder() -> BM25Encoder:
-    """Retrieve or initialize the BM25 encoder."""
-    global _bm25_encoder
-    if _bm25_encoder is None:
-        _bm25_encoder = BM25Encoder()
-        if not _bm25_encoder.load():
-            if PROCESSED_CHUNKS_FILE.exists():
-                with open(PROCESSED_CHUNKS_FILE, "r", encoding="utf-8") as f:
+def get_bm25_encoder(collection_name: str = COLLECTION_NAME) -> BM25Encoder:
+    """Retrieve or initialize the BM25 encoder for the target collection."""
+    global _bm25_encoders
+    if collection_name not in _bm25_encoders:
+        encoder = BM25Encoder()
+        vocab_file = BM25_VOCAB_FILE if collection_name == COLLECTION_NAME else DATA_DIR / f"bm25_vocab_{collection_name}.json"
+        if not encoder.load(vocab_file):
+            chunks_path = SWEEP_CHUNKS_FILE if ("sweep" in collection_name or "384" in collection_name) else PROCESSED_CHUNKS_FILE
+            if chunks_path.exists():
+                with open(chunks_path, "r", encoding="utf-8") as f:
                     chunks = json.load(f)
-                _bm25_encoder.fit([c["text"] for c in chunks])
-                _bm25_encoder.save()
-    return _bm25_encoder
+                encoder.fit([c["text"] for c in chunks])
+                encoder.save(vocab_file)
+        _bm25_encoders[collection_name] = encoder
+    return _bm25_encoders[collection_name]
 
 
 def get_genai_client() -> genai.Client:
@@ -305,8 +310,9 @@ def index_corpus(
     collection_name: str = COLLECTION_NAME,
     qdrant_client: Optional[QdrantClient] = None,
     recreate: bool = False,
+    cache_path: Optional[Path] = None,
 ) -> int:
-    """Index processed 512-token chunks into Qdrant with dual dense and BM25 sparse vectors."""
+    """Index processed chunks into Qdrant with dual dense and BM25 sparse vectors."""
     if not chunks_path.exists():
         logger.warning("Processed chunks file not found at %s", chunks_path)
         return 0
@@ -324,20 +330,27 @@ def index_corpus(
     ensure_collection(client, collection_name=collection_name)
 
     # 1. Fit & save BM25 encoder
-    bm25 = get_bm25_encoder()
+    bm25 = get_bm25_encoder(collection_name=collection_name)
     texts = [c["text"] for c in chunks]
     bm25.fit(texts)
-    bm25.save()
+    vocab_file = BM25_VOCAB_FILE if collection_name == COLLECTION_NAME else DATA_DIR / f"bm25_vocab_{collection_name}.json"
+    bm25.save(vocab_file)
 
     # 2. Dense embeddings: reuse cache if available, else batch-embed
+    if cache_path is None:
+        if collection_name == COLLECTION_NAME and chunks_path == PROCESSED_CHUNKS_FILE:
+            cache_path = EMBEDDINGS_CACHE_FILE
+        else:
+            cache_path = DATA_DIR / f"embeddings_cache_{chunks_path.stem}.json"
+
     embeddings = []
-    if EMBEDDINGS_CACHE_FILE.exists():
+    if cache_path.exists():
         try:
-            with open(EMBEDDINGS_CACHE_FILE, "r", encoding="utf-8") as f:
+            with open(cache_path, "r", encoding="utf-8") as f:
                 cached = json.load(f)
             if len(cached) == len(chunks):
                 embeddings = [cached[str(i)] for i in range(len(chunks))]
-                print(f"Loaded {len(embeddings)} pre-computed embeddings from cache.")
+                print(f"Loaded {len(embeddings)} pre-computed embeddings from {cache_path.name}.")
         except Exception as e:
             logger.info("Cache read failed, re-embedding: %s", e)
 
@@ -345,7 +358,7 @@ def index_corpus(
         print(f"Generating embeddings for {len(chunks)} chunks using {EMBEDDING_MODEL}...")
         embeddings = embed_batch(texts)
         try:
-            with open(EMBEDDINGS_CACHE_FILE, "w", encoding="utf-8") as f:
+            with open(cache_path, "w", encoding="utf-8") as f:
                 json.dump({str(i): emb for i, emb in enumerate(embeddings)}, f)
         except Exception:
             pass
@@ -366,6 +379,7 @@ def index_corpus(
                 "chunk_index": chunk.get("chunk_index", idx),
                 "text": chunk.get("text", ""),
                 "char_count": chunk.get("char_count", len(chunk.get("text", ""))),
+                "mapped_512_chunk_ids": chunk.get("mapped_512_chunk_ids", []),
             },
         )
         points.append(point)
@@ -398,6 +412,7 @@ def retrieve_dense_chunks(
             "source_file": pt.payload.get("source_file", ""),
             "score": float(pt.score),
             "text": pt.payload.get("text", ""),
+            "mapped_512_chunk_ids": pt.payload.get("mapped_512_chunk_ids", []),
             "retrieval_method": "dense",
         }
         for pt in results.points
@@ -414,7 +429,7 @@ def retrieve_sparse_bm25_chunks(
     client = qdrant_client or get_qdrant_client()
     ensure_collection(client, collection_name=collection_name)
 
-    bm25 = get_bm25_encoder()
+    bm25 = get_bm25_encoder(collection_name=collection_name)
     sparse_query = bm25.encode_query(query)
     if not sparse_query.indices:
         return []
@@ -432,6 +447,7 @@ def retrieve_sparse_bm25_chunks(
             "source_file": pt.payload.get("source_file", ""),
             "score": float(pt.score),
             "text": pt.payload.get("text", ""),
+            "mapped_512_chunk_ids": pt.payload.get("mapped_512_chunk_ids", []),
             "retrieval_method": "bm25",
         }
         for pt in results.points

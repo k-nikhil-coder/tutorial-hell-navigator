@@ -295,3 +295,39 @@ def test_hybrid_rerank_retrieval_report_metrics():
     assert "p50_latency_ms" in data["latency_metrics"]
     assert "mean_latency_ms" in data["latency_metrics"]
 
+
+def test_calculate_retrieval_metrics_with_mapped_chunk_ids():
+    from eval.run_eval import calculate_retrieval_metrics
+    retrieved = [
+        {
+            "chunk_id": "fastapi_guide_sweep384_chunk_0",
+            "mapped_512_chunk_ids": ["fastapi_fullstack_guide_chunk_0"],
+        },
+        {
+            "chunk_id": "docker_sweep384_chunk_1",
+            "mapped_512_chunk_ids": ["docker_production_guide_chunk_1"],
+        },
+        {
+            "chunk_id": "unrelated_chunk_2",
+            "mapped_512_chunk_ids": [],
+        },
+    ]
+    expected = ["fastapi_fullstack_guide_chunk_0"]
+    metrics = calculate_retrieval_metrics(retrieved, expected)
+    assert metrics["has_ground_truth"] is True
+    assert metrics["recall_at_3"] == 1.0
+    assert metrics["recall_at_5"] == 1.0
+    assert metrics["reciprocal_rank"] == 1.0
+    assert metrics["first_hit_rank"] == 1
+
+
+def test_sweep_chunks_dataset():
+    import json
+    sweep_path = Path(__file__).resolve().parent.parent / "corpus" / "processed" / "chunks_384.json"
+    assert sweep_path.exists(), "chunks_384.json must exist"
+    with open(sweep_path, "r", encoding="utf-8") as f:
+        chunks = json.load(f)
+    assert len(chunks) == 92
+    assert "mapped_512_chunk_ids" in chunks[0]
+    assert len(chunks[0]["mapped_512_chunk_ids"]) > 0
+

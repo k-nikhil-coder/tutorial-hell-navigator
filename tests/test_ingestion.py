@@ -86,3 +86,18 @@ def test_evaluate_chunk_hit_rate():
     assert 256 in results
     assert 512 in results
     assert results[512]["hit_rate_pct"] >= 0.0
+
+
+def test_map_chunks_to_baseline():
+    from app.ingestion import map_chunks_to_baseline
+    sweep_sample = [
+        {
+            "chunk_id": "test_sweep_chunk_0",
+            "source_file": "fastapi_fullstack_guide.md",
+            "text": "FastAPI is a modern, fast web framework for building APIs with Python 3.8+ based on standard Python type hints.",
+        }
+    ]
+    mapped = map_chunks_to_baseline(sweep_sample)
+    assert len(mapped) == 1
+    assert "mapped_512_chunk_ids" in mapped[0]
+

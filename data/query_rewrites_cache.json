@@ -1,0 +1,6 @@
+{
+  "How to build small docker image?": {
+    "rewritten": "Docker multi-stage build python slim gcc",
+    "latency_ms": 0.02
+  }
+}

@@ -92,6 +92,98 @@ def process_documents(
     return all_chunks
 
 
+def map_chunks_to_baseline(
+    sweep_chunks: List[Dict[str, Any]],
+    baseline_chunks_path: Path = PROCESSED_DIR / "chunks_512.json",
+    min_word_overlap: int = 15,
+    min_overlap_ratio: float = 0.20,
+) -> List[Dict[str, Any]]:
+    """
+    Map chunks from an alternative chunking sweep to baseline 512-token chunks
+    based on source file and textual overlap. This allows fair evaluation against gold set
+    ground-truth expected_chunk_ids.
+    """
+    if not baseline_chunks_path.exists():
+        return sweep_chunks
+
+    with open(baseline_chunks_path, "r", encoding="utf-8") as f:
+        baseline_chunks = json.load(f)
+
+    from collections import defaultdict
+    b_by_source = defaultdict(list)
+    for b in baseline_chunks:
+        b_by_source[b["source_file"]].append(b)
+
+    for chunk in sweep_chunks:
+        src = chunk.get("source_file", "")
+        candidates = b_by_source.get(src, [])
+        chunk_words = set(chunk["text"].lower().split())
+        if not chunk_words:
+            chunk["mapped_512_chunk_ids"] = []
+            continue
+
+        matched = []
+        for b in candidates:
+            b_words = set(b["text"].lower().split())
+            intersection = len(chunk_words & b_words)
+            if intersection >= min_word_overlap:
+                ratio = intersection / len(chunk_words)
+                if ratio >= min_overlap_ratio:
+                    matched.append((b["chunk_id"], ratio))
+
+        matched.sort(key=lambda x: x[1], reverse=True)
+        chunk["mapped_512_chunk_ids"] = [cid for cid, _ in matched]
+
+    return sweep_chunks
+
+
+def process_chunk_sweep(
+    chunk_size: int = 384,
+    chunk_overlap: int = 60,
+    raw_dir: Path = CORPUS_DIR,
+    output_dir: Path = PROCESSED_DIR,
+    output_filename: str = "chunks_384.json",
+) -> List[Dict[str, Any]]:
+    """
+    Generate an alternative chunk sweep dataset with mapped 512-token chunk references.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        encoding_name="cl100k_base",
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        separators=["\n\n", "\n", ". ", " ", ""],
+    )
+
+    all_chunks = []
+    raw_files = sorted(raw_dir.glob("*.*"))
+
+    for file_path in raw_files:
+        content = extract_text_from_file(file_path)
+        if not content:
+            continue
+
+        chunks = splitter.split_text(content)
+        for i, chunk_text in enumerate(chunks):
+            chunk_record = {
+                "chunk_id": f"{file_path.stem}_sweep384_chunk_{i}",
+                "source_file": file_path.name,
+                "chunk_index": i,
+                "text": chunk_text,
+                "char_count": len(chunk_text),
+            }
+            all_chunks.append(chunk_record)
+
+    all_chunks = map_chunks_to_baseline(all_chunks)
+
+    output_file = output_dir / output_filename
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(all_chunks, f, indent=2)
+
+    print(f"Processed sweep dataset: {len(all_chunks)} chunks for size {chunk_size} -> {output_file.name}")
+    return all_chunks
+
+
 def run_ingestion_pipeline():
     """Run ingestion across benchmark chunk sizes."""
     print("=" * 60)

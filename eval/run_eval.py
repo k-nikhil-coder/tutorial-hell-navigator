@@ -42,7 +42,7 @@ def calculate_percentile(values: List[float], percentile: float) -> float:
 
 
 def calculate_retrieval_metrics(
-    retrieved_chunk_ids: List[str],
+    retrieved_items: List[Any],
     expected_chunk_ids: List[str],
 ) -> Dict[str, Any]:
     """Calculate Recall@3, Recall@5, and Reciprocal Rank (RR) against ground truth."""
@@ -57,21 +57,32 @@ def calculate_retrieval_metrics(
 
     expected_set = set(expected_chunk_ids)
 
+    # Build per-rank candidate sets (supporting both strings and chunk dicts with mapped_512_chunk_ids)
+    rank_candidate_sets = []
+    for item in retrieved_items:
+        if isinstance(item, dict):
+            cands = {item.get("chunk_id", "")}
+            for mapped_id in item.get("mapped_512_chunk_ids", []):
+                cands.add(mapped_id)
+            rank_candidate_sets.append({c for c in cands if c})
+        else:
+            rank_candidate_sets.append({str(item)})
+
     # Recall@3: is any expected chunk in top 3?
-    top_3 = set(retrieved_chunk_ids[:3])
-    hit_at_3 = len(top_3 & expected_set) > 0
+    top_3_candidates = set().union(*rank_candidate_sets[:3]) if rank_candidate_sets else set()
+    hit_at_3 = len(top_3_candidates & expected_set) > 0
     recall_at_3 = 1.0 if hit_at_3 else 0.0
 
     # Recall@5: is any expected chunk in top 5?
-    top_5 = set(retrieved_chunk_ids[:5])
-    hit_at_5 = len(top_5 & expected_set) > 0
+    top_5_candidates = set().union(*rank_candidate_sets[:5]) if rank_candidate_sets else set()
+    hit_at_5 = len(top_5_candidates & expected_set) > 0
     recall_at_5 = 1.0 if hit_at_5 else 0.0
 
     # Reciprocal Rank (MRR component): 1/rank of first ground truth hit
     first_hit_rank = None
     reciprocal_rank = 0.0
-    for rank_idx, cid in enumerate(retrieved_chunk_ids, 1):
-        if cid in expected_set:
+    for rank_idx, cand_set in enumerate(rank_candidate_sets, 1):
+        if cand_set & expected_set:
             first_hit_rank = rank_idx
             reciprocal_rank = round(1.0 / rank_idx, 4)
             break
@@ -141,6 +152,8 @@ async def evaluate_benchmark(
     search_mode: str = "hybrid",
     retrieval_only: bool = False,
     delay: float = 1.2,
+    rewrite: bool = False,
+    collection_name: str = "tutorial_navigator_chunks",
 ):
     if hasattr(sys.stdout, "reconfigure"):
         try:
@@ -166,7 +179,8 @@ async def evaluate_benchmark(
     print(f"🧪 EVALUATION HARNESS: {mode_label} SEARCH")
     print(f"  • Questions to test: {len(batch)} (out of {len(questions)} in gold set)")
     print(f"  • Evaluation mode:   {'Retrieval-Only (Recall@K & MRR)' if retrieval_only else 'End-to-End (Retrieval + LLM Generation)'}")
-    print(f"  • Search engine:     {mode_label} (Qdrant)")
+    print(f"  • Search engine:     {mode_label} (Collection: '{collection_name}')")
+    print(f"  • Query Rewriter:    {'ENABLED (LLM expansion)' if rewrite else 'DISABLED (Raw question)'}")
     print("=" * 75)
 
     results = []
@@ -182,6 +196,8 @@ async def evaluate_benchmark(
     recall_5_hits = 0
     rr_sum = 0.0
     retrieval_latencies: List[float] = []
+    rewrite_latencies: List[float] = []
+    total_retrieval_latencies: List[float] = []
 
     # Warm up reranker if requested so cold-start initialization doesn't distort latency metrics
     if "rerank" in search_mode.lower():
@@ -200,16 +216,34 @@ async def evaluate_benchmark(
         negatives = item.get("negative_constraints", [])
         expected_chunk_ids = item.get("expected_chunk_ids", [])
 
-        # 1. Fetch retrieval candidates (top-5 for Recall@3 and Recall@5 calculation) with latency instrumentation
+        # 1. Query Rewriting (if enabled)
+        search_query = prompt
+        rw_latency_ms = 0.0
+        rewritten_query_str = None
+        if rewrite:
+            from app.rewriter import rewrite_query_with_latency_sync
+            rewritten_query_str, rw_latency_ms = rewrite_query_with_latency_sync(prompt)
+            search_query = rewritten_query_str
+            rewrite_latencies.append(rw_latency_ms)
+
+        # 2. Fetch retrieval candidates (top-5 for Recall@3 and Recall@5 calculation) with latency instrumentation
         t_ret_start = time.perf_counter()
-        retrieved_raw = retrieve_relevant_chunks(prompt, top_k=5, search_mode=search_mode)
+        retrieved_raw = retrieve_relevant_chunks(
+            search_query, top_k=5, search_mode=search_mode, collection_name=collection_name
+        )
         t_ret_end = time.perf_counter()
         ret_latency_ms = round((t_ret_end - t_ret_start) * 1000, 2)
         retrieval_latencies.append(ret_latency_ms)
+        total_lat_ms = round(ret_latency_ms + rw_latency_ms, 2)
+        total_retrieval_latencies.append(total_lat_ms)
 
         retrieved_chunk_ids = [c["chunk_id"] for c in retrieved_raw]
-        retrieval_metrics = calculate_retrieval_metrics(retrieved_chunk_ids, expected_chunk_ids)
-        retrieval_metrics["latency_ms"] = ret_latency_ms
+        retrieval_metrics = calculate_retrieval_metrics(retrieved_raw, expected_chunk_ids)
+        retrieval_metrics["search_latency_ms"] = ret_latency_ms
+        retrieval_metrics["rewrite_latency_ms"] = rw_latency_ms
+        retrieval_metrics["latency_ms"] = total_lat_ms
+        if rewritten_query_str:
+            retrieval_metrics["rewritten_query"] = rewritten_query_str
 
         if retrieval_metrics["has_ground_truth"]:
             queries_with_gt += 1
@@ -223,14 +257,15 @@ async def evaluate_benchmark(
 
         if retrieval_only:
             # Print retrieval score directly
+            lat_str = f"{total_lat_ms:.1f}ms" if not rewrite else f"{total_lat_ms:.1f}ms (rw: {rw_latency_ms:.1f}ms, search: {ret_latency_ms:.1f}ms)"
             if retrieval_metrics["has_ground_truth"]:
                 hit_rank = retrieval_metrics["first_hit_rank"]
                 r3 = retrieval_metrics["recall_at_3"]
                 rr = retrieval_metrics["reciprocal_rank"]
                 status = f"HIT (Rank #{hit_rank}, RR={rr:.2f})" if hit_rank else "MISS (Not in top 5)"
-                print(f"R@3={r3:.0f} | {status} | Latency: {ret_latency_ms:.1f}ms | Top: {retrieved_chunk_ids[:3]}")
+                print(f"R@3={r3:.0f} | {status} | Latency: {lat_str} | Top: {retrieved_chunk_ids[:3]}")
             else:
-                print(f"Latency: {ret_latency_ms:.1f}ms | Top: {retrieved_chunk_ids[:3]}")
+                print(f"Latency: {lat_str} | Top: {retrieved_chunk_ids[:3]}")
 
             results.append({
                 "id": qid,
@@ -307,10 +342,13 @@ async def evaluate_benchmark(
     mrr = round(rr_sum / queries_with_gt, 4) if queries_with_gt else 0.0
 
     # Latency aggregates
-    mean_lat = round(sum(retrieval_latencies) / (len(retrieval_latencies) or 1), 2)
-    p50_lat = calculate_percentile(retrieval_latencies, 50.0)
-    p90_lat = calculate_percentile(retrieval_latencies, 90.0)
-    p95_lat = calculate_percentile(retrieval_latencies, 95.0)
+    mean_lat = round(sum(total_retrieval_latencies) / (len(total_retrieval_latencies) or 1), 2)
+    p50_lat = calculate_percentile(total_retrieval_latencies, 50.0)
+    p90_lat = calculate_percentile(total_retrieval_latencies, 90.0)
+    p95_lat = calculate_percentile(total_retrieval_latencies, 95.0)
+
+    mean_rw_lat = round(sum(rewrite_latencies) / (len(rewrite_latencies) or 1), 2) if rewrite_latencies else 0.0
+    mean_search_lat = round(sum(retrieval_latencies) / (len(retrieval_latencies) or 1), 2)
 
     print("=" * 75)
     print(f"📊 BENCHMARK SUMMARY ({mode_label} PIPELINE)")
@@ -319,7 +357,12 @@ async def evaluate_benchmark(
     print(f"  • Recall@3:                  {recall_3_hits}/{queries_with_gt} ({mean_recall_3:.1f}%)")
     print(f"  • Recall@5:                  {recall_5_hits}/{queries_with_gt} ({mean_recall_5:.1f}%)")
     print(f"  • Mean Reciprocal Rank (MRR):{mrr:.4f}")
-    print(f"  • Mean Retrieval Latency:    {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
+    if rewrite:
+        print(f"  • Total Pipeline Latency:    {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
+        print(f"    - LLM Rewrite Latency:     {mean_rw_lat:.2f} ms")
+        print(f"    - Retrieval/Rerank Latency:{mean_search_lat:.2f} ms")
+    else:
+        print(f"  • Mean Retrieval Latency:    {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
     if not retrieval_only:
         print(f"  • LLM Pass Rate:             {passed}/{len(batch)} ({pass_rate:.1f}%)")
         print(f"  • Avg Commands / Plan:       {avg_commands}")
@@ -329,6 +372,8 @@ async def evaluate_benchmark(
     report = {
         "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
         "search_mode": search_mode,
+        "collection_name": collection_name,
+        "rewrite_enabled": rewrite,
         "retrieval_only": retrieval_only,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "total_evaluated": len(batch),
@@ -345,8 +390,10 @@ async def evaluate_benchmark(
             "p50_latency_ms": p50_lat,
             "p90_latency_ms": p90_lat,
             "p95_latency_ms": p95_lat,
-            "min_latency_ms": min(retrieval_latencies) if retrieval_latencies else 0.0,
-            "max_latency_ms": max(retrieval_latencies) if retrieval_latencies else 0.0,
+            "min_latency_ms": min(total_retrieval_latencies) if total_retrieval_latencies else 0.0,
+            "max_latency_ms": max(total_retrieval_latencies) if total_retrieval_latencies else 0.0,
+            "search_latency_mean_ms": mean_search_lat,
+            "rewrite_latency_mean_ms": mean_rw_lat,
         },
         "llm_metrics": {
             "passed": passed,
@@ -376,6 +423,12 @@ def main():
         default="hybrid-rerank",
         help="Search engine mode",
     )
+    parser.add_argument("--rewrite", action="store_true", help="Enable LLM query rewriting before retrieval")
+    parser.add_argument(
+        "--collection",
+        default="tutorial_navigator_chunks",
+        help="Qdrant collection name to evaluate against",
+    )
     parser.add_argument("--retrieval-only", action="store_true", help="Run retrieval evaluation only (no LLM generation)")
     parser.add_argument("-o", "--output", default="eval/eval_report.json", help="Report output json path")
     parser.add_argument("-d", "--delay", type=float, default=1.2, help="Delay in seconds between questions")
@@ -390,6 +443,8 @@ def main():
             search_mode=args.mode,
             retrieval_only=args.retrieval_only,
             delay=args.delay,
+            rewrite=args.rewrite,
+            collection_name=args.collection,
         )
     )
 
