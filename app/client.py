@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import asyncio
+import concurrent.futures
 from typing import AsyncGenerator, Optional, Any, Dict, List, Tuple
 from dotenv import load_dotenv
 import httpx
@@ -31,6 +32,7 @@ FALLBACK_MODELS = list(dict.fromkeys([
 MAX_CONCURRENT_REQUESTS = int(os.getenv("MAX_CONCURRENT_REQUESTS", "5"))
 DEFAULT_CONCURRENCY_LIMIT = MAX_CONCURRENT_REQUESTS
 GLOBAL_SEMAPHORE = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+_SYNC_WORKER_POOL = concurrent.futures.ThreadPoolExecutor(max_workers=4, thread_name_prefix="sync_bridge")
 
 SYSTEM_PROMPT = (
     "You are Tutorial Hell Navigator, an eval-first technical mentor for computer science students. "
@@ -45,6 +47,17 @@ SYSTEM_PROMPT = (
     "   - Provide 1 advisory step pointing to standard documentation resources rather than inventing commands.\n"
     "3. ACTIONABLE CLI COMMANDS: For all in-corpus technical guidance, you MUST provide explicit, runnable terminal CLI commands or code snippets in the 'command' field of your action steps (e.g., project initialization, dependency installs, running dev servers, or verification scripts). Never leave commands null when guiding a student through a stack or solution.\n"
     "4. ANTI-PATTERNS: Provide mandatory, concrete anti-patterns and pitfalls to avoid."
+)
+
+SYSTEM_PROMPT_VANILLA = (
+    "You are Tutorial Hell Navigator, an eval-first technical mentor for computer science students. "
+    "Your mission is to transition students from passive tutorial copying to independent software engineering. "
+    "Answer the student question using your internal pre-trained software engineering knowledge. "
+    "You do not have access to an external retrieval database. "
+    "\n\nACTION RULES:\n"
+    "1. ACTIONABLE CLI COMMANDS: Provide explicit, runnable terminal CLI commands or code snippets in the 'command' field of your action steps. Never leave commands null when guiding a student through a stack or solution.\n"
+    "2. ANTI-PATTERNS: Provide mandatory, concrete anti-patterns and pitfalls to avoid in your action plan.\n"
+    "3. CITATIONS: Since you do not have an external corpus, leave the citations list empty."
 )
 
 
@@ -80,16 +93,18 @@ async def _execute_chat_with_fallback(
     response_schema: Optional[Any] = None,
     response_mime_type: Optional[str] = None,
     temperature: float = 0.2,
+    system_instruction: Optional[str] = None,
 ) -> str:
     client = get_genai_client()
     last_err: Optional[Exception] = None
+    active_sys_instruction = system_instruction or SYSTEM_PROMPT
 
     for model_name in FALLBACK_MODELS:
         try:
             config_params: Dict[str, Any] = {
                 "tools": AVAILABLE_TOOLS,
                 "temperature": temperature,
-                "system_instruction": SYSTEM_PROMPT,
+                "system_instruction": active_sys_instruction,
             }
             if response_schema:
                 config_params["response_schema"] = response_schema
@@ -125,8 +140,18 @@ async def generate_structured_response_async(
     semaphore: Optional[asyncio.Semaphore] = None,
     enable_rag: bool = True,
     search_mode: str = "hybrid",
+    system_instruction: Optional[str] = None,
 ) -> NavigatorResponse:
     sem = semaphore or GLOBAL_SEMAPHORE
+    mode_norm = search_mode.lower().replace("_", "-")
+
+    if mode_norm in ("none", "vanilla"):
+        enable_rag = False
+
+    active_instruction = system_instruction
+    if active_instruction is None:
+        active_instruction = SYSTEM_PROMPT_VANILLA if mode_norm == "vanilla" else SYSTEM_PROMPT
+
     async with sem:
         retrieved_chunks: List[Dict[str, Any]] = []
 
@@ -139,25 +164,27 @@ async def generate_structured_response_async(
                 logger.warning("RAG retrieval failed (falling back to tools): %s", e)
 
         if retrieved_chunks:
-            top_chunk = retrieved_chunks[0]
-            # Grounding check: works with dense cosine scores and hybrid RRF composite scores
-            method = top_chunk.get("retrieval_method", "dense")
-            if method == "dense":
-                is_grounded = top_chunk.get("score", 0.0) >= 0.40
-            elif method in ("hybrid_rrf", "hybrid_rerank"):
-                is_grounded = bool(
-                    top_chunk.get("dense_score", 0.0) >= 0.40
-                    or top_chunk.get("sparse_score", 0.0) > 0.0
-                    or top_chunk.get("rerank_score", -99.0) > -2.0
-                )
-            else:
-                is_grounded = top_chunk.get("is_grounded", True)
-
-            if not is_grounded:
-                context_str = "[NO VERIFIED CORPUS FOUND FOR THIS TOPIC - OUT OF BOUNDS]"
-            else:
+            if mode_norm == "full-context":
                 context_str = format_retrieved_context(retrieved_chunks)
-            prompt = f"VERIFIED CONTEXT:\n{context_str}\n\nSTUDENT QUESTION:\n{user_query}"
+                prompt = f"VERIFIED CONTEXT:\n{context_str}\n\nSTUDENT QUESTION:\n{user_query}"
+            else:
+                top_chunk = retrieved_chunks[0]
+                # Grounding check: works with dense cosine scores and hybrid RRF composite scores
+                method = top_chunk.get("retrieval_method", "dense")
+                if method == "dense":
+                    is_grounded = top_chunk.get("score", 0.0) >= 0.40
+                elif method in ("hybrid_rrf", "hybrid_rerank"):
+                    dense_score = float(top_chunk.get("dense_score", 0.0))
+                    rerank_score = float(top_chunk.get("rerank_score", -99.0))
+                    is_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
+                else:
+                    is_grounded = top_chunk.get("is_grounded", True)
+
+                if not is_grounded:
+                    context_str = "[NO VERIFIED CORPUS FOUND FOR THIS TOPIC - OUT OF BOUNDS]"
+                else:
+                    context_str = format_retrieved_context(retrieved_chunks)
+                prompt = f"VERIFIED CONTEXT:\n{context_str}\n\nSTUDENT QUESTION:\n{user_query}"
         else:
             prompt = user_query
 
@@ -166,6 +193,7 @@ async def generate_structured_response_async(
             response_schema=NavigatorResponse,
             response_mime_type="application/json",
             temperature=0.1,
+            system_instruction=active_instruction,
         )
         cleaned = clean_json_text(raw_output)
         resp_model = NavigatorResponse.model_validate_json(cleaned)
@@ -184,19 +212,17 @@ async def generate_structured_response_async(
 
 
 def generate_structured_response(user_query: str) -> str:
-    """Sync wrapper for legacy callers and sync benchmarks."""
+    """Sync wrapper for legacy callers and sync benchmarks using persistent worker pool."""
     try:
         loop = asyncio.get_running_loop()
     except RuntimeError:
         loop = None
 
     if loop and loop.is_running():
-        import concurrent.futures
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
-            result = pool.submit(
-                lambda: asyncio.run(generate_structured_response_async(user_query))
-            ).result()
-            return result.model_dump_json()
+        future = _SYNC_WORKER_POOL.submit(
+            lambda: asyncio.run(generate_structured_response_async(user_query))
+        )
+        return future.result().model_dump_json()
     else:
         result = asyncio.run(generate_structured_response_async(user_query))
         return result.model_dump_json()
@@ -229,11 +255,9 @@ async def stream_response_sse(
             if method == "dense":
                 is_grounded = top_chunk.get("score", 0.0) >= 0.40
             elif method in ("hybrid_rrf", "hybrid_rerank"):
-                is_grounded = bool(
-                    top_chunk.get("dense_score", 0.0) >= 0.40
-                    or top_chunk.get("sparse_score", 0.0) > 0.0
-                    or top_chunk.get("rerank_score", -99.0) > -2.0
-                )
+                dense_score = float(top_chunk.get("dense_score", 0.0))
+                rerank_score = float(top_chunk.get("rerank_score", -99.0))
+                is_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
             else:
                 is_grounded = top_chunk.get("is_grounded", True)
 
@@ -244,6 +268,7 @@ async def stream_response_sse(
             prompt = user_query
 
         last_err: Optional[Exception] = None
+        has_yielded = False
         for model_name in FALLBACK_MODELS:
             try:
                 chat = client.aio.chats.create(
@@ -257,12 +282,17 @@ async def stream_response_sse(
                 stream = await chat.send_message_stream(prompt)
                 async for chunk in stream:
                     if chunk.text:
+                        has_yielded = True
                         yield f"data: {json.dumps({'text': chunk.text})}\n\n"
                 yield "data: [DONE]\n\n"
                 return
             except Exception as e:
                 last_err = e
                 logger.warning("Streaming failed on %s: %s", model_name, e)
+                if has_yielded:
+                    yield f"data: {json.dumps({'error': 'Stream interrupted mid-generation.'})}\n\n"
+                    yield "data: [DONE]\n\n"
+                    return
                 if not is_transient_error(e) and "404" not in str(e):
                     break
 

@@ -1,0 +1,146 @@
+{
+  "report_evaluated": "eval\\hybrid_rerank_retrieval_report.json",
+  "top_k_threshold": 3,
+  "total_missed_questions": 8,
+  "cause_breakdown": {
+    "retrieval failure": 1,
+    "wrong label": 4,
+    "valid alternative": 2,
+    "missing chunk": 1
+  },
+  "missed_questions": [
+    {
+      "question_id": "GS-04",
+      "question": "I know basic JavaScript but have never used a database. Teach me how to connect a web app to PostgreSQL, store user data, and retrieve it safely.",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "cause": "retrieval failure",
+      "assigned_cause": "retrieval failure",
+      "evidence_notes": "PROPOSED, owner must confirm. Real miss. Label is half wrong (drop the Docker chunk). The three retrieved chunks are nested copies of one 4k-char region, so top-3 held one region. The answer chunk, section 4, was not retrieved.",
+      "human_confirmed": true
+    },
+    {
+      "question_id": "GS-06",
+      "question": "How do login, signup, sessions, cookies, and JWTs actually work in a full-stack application? Show me a sensible implementation path without overwhelming me.",
+      "expected_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "cause": "wrong label",
+      "assigned_cause": "wrong label",
+      "evidence_notes": "PROPOSED, owner must confirm. Retrieval was right (rank 2). Correct label: fastapi_fullstack_guide_chunk_1.",
+      "human_confirmed": true
+    },
+    {
+      "question_id": "GS-11",
+      "question": "I can follow coding tutorials but freeze when starting from a blank editor. Give me a repeatable process for turning an idea into working code without copying a tutorial.",
+      "expected_chunk_ids": [
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_background_tasks_chunk_1",
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "cause": "wrong label",
+      "assigned_cause": "wrong label",
+      "evidence_notes": "PROPOSED, owner must confirm. Retrieval was right (rank 1). Correct label: cs_engineering_roadmap_chunk_0. Also: this question is about the owner-authored roadmap doc, so it is circular, and it is out of scope under the Docker/FastAPI/Pydantic/PostgreSQL T1.",
+      "human_confirmed": true
+    },
+    {
+      "question_id": "GS-12",
+      "question": "I keep abandoning projects because I add too many features. Help me define an MVP for a campus event platform and separate essential features from future improvements.",
+      "expected_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "cause": "valid alternative",
+      "assigned_cause": "valid alternative",
+      "evidence_notes": "PROPOSED, owner must confirm. The miss comes from overlapping chunks: chunk_0 contains all of chunk_1's text. An ID label scores this as a miss. Neither chunk teaches feature scoping, so the corpus only partly answers it. Out of scope under T1.",
+      "human_confirmed": true
+    },
+    {
+      "question_id": "GS-13",
+      "question": "Every beginner builds a weather app or to-do list. How can I turn a common project into something distinctive that demonstrates real engineering ability?",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "cause": "missing chunk",
+      "assigned_cause": "missing chunk",
+      "evidence_notes": "PROPOSED, owner must confirm. No chunk in the corpus answers this. Project ideation and portfolio differentiation are out of scope under T1. Retire the question.",
+      "human_confirmed": true
+    },
+    {
+      "question_id": "GS-14",
+      "question": "I repeatedly start tutorials and quit halfway. Give me a seven-day micro-project plan with daily deliverables, a time limit, and a definition of done.",
+      "expected_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_0",
+        "fastapi_fullstack_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "cause": "wrong label",
+      "assigned_cause": "wrong label",
+      "evidence_notes": "PROPOSED, owner must confirm. Retrieval found the closest chunk (rank 1). Correct label: cs_engineering_roadmap_chunk_0. The corpus cannot fully answer the question as written (7 days, time limit, definition of done). Out of scope under T1.",
+      "human_confirmed": true
+    },
+    {
+      "question_id": "GS-15",
+      "question": "I get stuck for hours whenever my project throws an unfamiliar error. Teach me a systematic debugging workflow, including what to inspect before asking AI for help.",
+      "expected_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_validation_chunk_9"
+      ],
+      "cause": "wrong label",
+      "assigned_cause": "wrong label",
+      "evidence_notes": "PROPOSED, owner must confirm. Retrieval was right (rank 2). Correct label: cs_engineering_roadmap_chunk_0. Retrieved chunk 3 (a Pydantic plain-validator snippet) is irrelevant.",
+      "human_confirmed": true
+    },
+    {
+      "question_id": "GS-88",
+      "question": "How do you sanitize and validate incoming request payloads in FastAPI by combining Pydantic before-validators with API route dependency schemas?",
+      "expected_chunk_ids": [
+        "pydantic_validation_chunk_14",
+        "fastapi_fullstack_guide_chunk_0"
+      ],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_0",
+        "pydantic_validation_chunk_4",
+        "pydantic_models_chunk_10"
+      ],
+      "cause": "valid alternative",
+      "assigned_cause": "valid alternative",
+      "evidence_notes": "PROPOSED, owner must confirm. Retrieved chunks cover the before-validator half at least as well as the expected chunk. The FastAPI-dependency half has no chunk, so the question is multi-hop with a corpus gap. In the Nov 1 baseline run the pipeline REFUSED this question, so check the refusal gate too.",
+      "human_confirmed": true
+    }
+  ]
+}

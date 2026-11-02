@@ -79,5 +79,7 @@
       "is_refusal": true,
       "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation."
     }
-  ]
+  ],
+  "status": "LEGACY: corpus v1",
+  "corpus_version": "LEGACY: corpus v1"
 }

@@ -42,27 +42,35 @@ BM25_VOCAB_FILE = DATA_DIR / "bm25_vocab.json"
 EMBEDDINGS_CACHE_FILE = DATA_DIR / "embeddings_cache.json"
 QUERY_CACHE_FILE = DATA_DIR / "query_embeddings_cache.json"
 
+import tempfile
+from threading import Lock
+
 _qdrant_client: Optional[QdrantClient] = None
 _query_cache: Dict[str, List[float]] = {}
+_cache_lock = Lock()
 
 
 def _load_query_cache():
     global _query_cache
-    if not _query_cache and QUERY_CACHE_FILE.exists():
-        try:
-            with open(QUERY_CACHE_FILE, "r", encoding="utf-8") as f:
-                _query_cache = json.load(f)
-        except Exception:
-            _query_cache = {}
+    with _cache_lock:
+        if not _query_cache and QUERY_CACHE_FILE.exists():
+            try:
+                with open(QUERY_CACHE_FILE, "r", encoding="utf-8") as f:
+                    _query_cache = json.load(f)
+            except Exception:
+                _query_cache = {}
 
 
 def _save_query_cache():
-    try:
-        QUERY_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(QUERY_CACHE_FILE, "w", encoding="utf-8") as f:
-            json.dump(_query_cache, f)
-    except Exception:
-        pass
+    with _cache_lock:
+        try:
+            QUERY_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+            with tempfile.NamedTemporaryFile("w", dir=QUERY_CACHE_FILE.parent, delete=False, encoding="utf-8") as tf:
+                json.dump(_query_cache, tf)
+                temp_name = tf.name
+            os.replace(temp_name, QUERY_CACHE_FILE)
+        except Exception as e:
+            logger.warning("Failed to persist query cache: %s", e)
 
 
 class BM25Encoder:
@@ -206,6 +214,10 @@ def get_qdrant_client(path: Optional[Path] = None, in_memory: bool = False) -> Q
     global _qdrant_client
     if in_memory:
         return QdrantClient(":memory:")
+
+    qdrant_url = os.getenv("QDRANT_URL")
+    if qdrant_url:
+        return QdrantClient(url=qdrant_url, api_key=os.getenv("QDRANT_API_KEY"))
 
     if _qdrant_client is None:
         db_path = path or DEFAULT_QDRANT_PATH
@@ -545,6 +557,34 @@ def retrieve_hybrid_rerank_chunks(
     return rerank_chunks(query=query, candidate_chunks=candidates, top_k=top_k)
 
 
+_full_corpus_cache: Dict[str, List[Dict[str, Any]]] = {}
+
+
+def load_full_corpus_chunks(chunks_path: Optional[Path] = None) -> List[Dict[str, Any]]:
+    """Load and cache the complete corpus chunks from disk for full-context retrieval mode."""
+    target_path = chunks_path or PROCESSED_CHUNKS_FILE
+    cache_key = str(target_path)
+    if cache_key not in _full_corpus_cache:
+        if target_path.exists():
+            with open(target_path, "r", encoding="utf-8") as f:
+                _full_corpus_cache[cache_key] = json.load(f)
+        else:
+            _full_corpus_cache[cache_key] = []
+    return _full_corpus_cache[cache_key]
+
+
+def get_chunk_by_id(chunk_id: str) -> Optional[Dict[str, Any]]:
+    """Look up a specific chunk's verbatim text and metadata by its chunk_id."""
+    clean_id = chunk_id.strip()
+    # Check default processed chunks first, then sweep if not found
+    for path in (PROCESSED_CHUNKS_FILE, SWEEP_CHUNKS_FILE):
+        if path.exists():
+            for chunk in load_full_corpus_chunks(path):
+                if chunk.get("chunk_id") == clean_id:
+                    return chunk
+    return None
+
+
 def retrieve_relevant_chunks(
     query: str,
     top_k: int = 3,
@@ -554,13 +594,21 @@ def retrieve_relevant_chunks(
 ) -> List[Dict[str, Any]]:
     """
     Retrieve top-K most relevant chunks using specified mode:
+    - 'none': Returns empty list (sends no context to the model)
+    - 'vanilla': Returns empty list (plain LLM with no retrieval)
+    - 'full-context': Returns entire corpus chunks for prompt injection
     - 'hybrid-rerank' / 'rerank': Hybrid (Dense + BM25 + RRF) + Cross-Encoder Reranker
     - 'hybrid': Dense + BM25 merged with Reciprocal Rank Fusion
     - 'dense': Dense vector cosine similarity
     - 'sparse': BM25 lexical sparse vector match
     """
     mode = search_mode.lower().replace("_", "-")
-    if mode in ("hybrid-rerank", "rerank"):
+    if mode in ("none", "vanilla"):
+        return []
+    elif mode == "full-context":
+        path = SWEEP_CHUNKS_FILE if ("sweep" in collection_name or "384" in collection_name) else PROCESSED_CHUNKS_FILE
+        return load_full_corpus_chunks(path)
+    elif mode in ("hybrid-rerank", "rerank"):
         return retrieve_hybrid_rerank_chunks(
             query=query, top_k=top_k, collection_name=collection_name, qdrant_client=qdrant_client
         )

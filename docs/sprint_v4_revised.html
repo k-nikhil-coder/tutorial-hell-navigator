@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikhil — 100-Day AI Engineer Sprint (v4 Revised)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #080a0f;
+            --bg2: #0d1018;
+            --surface: #111520;
+            --surface2: #171c2a;
+            --surface3: #1e2436;
+            --border: rgba(255, 255, 255, 0.07);
+            --border2: rgba(255, 255, 255, 0.14);
+            --gold: #f0b429;
+            --gold2: #ffd166;
+            --gold-dim: rgba(240, 180, 41, 0.12);
+            --green: #06d6a0;
+            --green-dim: rgba(6, 214, 160, 0.1);
+            --red: #ef4565;
+            --red-dim: rgba(239, 69, 101, 0.1);
+            --blue: #3a86ff;
+            --blue-dim: rgba(58, 134, 255, 0.1);
+            --purple: #c77dff;
+            --purple-dim: rgba(199, 125, 255, 0.1);
+            --cyan: #00f5d4;
+            --cyan-dim: rgba(0, 245, 212, 0.1);
+            --text: #dde1f0;
+            --text2: #8892b0;
+            --text3: #4a5568;
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14.5px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface3);
+            border-radius: 3px
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold)
+        }
+
+        a {
+            color: inherit
+        }
+
+        /* ── NAV ── */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background: rgba(8, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 0 20px
+        }
+
+        .nav::-webkit-scrollbar {
+            display: none
+        }
+
+        .nav-a {
+            padding: 13px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text2);
+            text-decoration: none;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: all .15s;
+            cursor: pointer;
+            background: none;
+            border-left: none;
+            border-right: none;
+            border-top: none
+        }
+
+        .nav-a:hover {
+            color: var(--gold);
+            border-color: var(--gold)
+        }
+
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+            padding-left: 12px;
+        }
+
+        .action-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border2);
+            background: var(--surface2);
+            color: var(--text);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .15s;
+        }
+
+        .action-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 64px 24px 48px;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .hero-grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 56px 56px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 20%, black 30%, transparent 100%);
+            opacity: .5
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto
+        }
+
+        .hero-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 20px
+        }
+
+        .blink {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: blink 1.4s ease-in-out infinite
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1 }
+            50% { opacity: .2 }
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(64px, 14vw, 132px);
+            line-height: .9;
+            letter-spacing: 1px;
+            color: #fff
+        }
+
+        .hero h1 span {
+            -webkit-text-stroke: 2px var(--gold);
+            color: transparent
+        }
+
+        .hero-sub {
+            font-size: 15.5px;
+            color: var(--text2);
+            max-width: 680px;
+            margin: 20px 0 8px;
+            font-weight: 300
+        }
+
+        .hero-dates {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--gold);
+            letter-spacing: .5px;
+            margin-bottom: 24px
+        }
+
+        /* KPI metrics bar */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+            max-width: 720px;
+            margin-bottom: 28px;
+        }
+
+        .kpi-box {
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .kpi-lbl {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text2);
+        }
+
+        .kpi-val {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            color: #fff;
+            line-height: 1.1;
+            margin-top: 4px;
+        }
+
+        .kpi-val span {
+            color: var(--gold);
+        }
+
+        /* heatmap */
+        .heatmap-wrap {
+            margin-top: 8px
+        }
+
+        .heatmap-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text2);
+            margin-bottom: 10px;
+            max-width: 720px;
+        }
+
+        .heatmap-label b {
+            color: var(--gold);
+            font-size: 13px
+        }
+
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            gap: 4px;
+            max-width: 720px
+        }
+
+        .hm-cell {
+            aspect-ratio: 1;
+            border-radius: 3px;
+            border: 1px solid var(--border2);
+            cursor: pointer;
+            position: relative;
+            transition: transform .1s;
+            background: var(--surface2)
+        }
+
+        .hm-cell:hover {
+            transform: scale(1.25);
+            z-index: 5
+        }
+
+        .hm-cell.today {
+            box-shadow: 0 0 0 2px var(--gold)
+        }
+
+        .hm-cell.done {
+            border-color: transparent
+        }
+
+        .hm-cell.p1.done {
+            background: var(--gold)
+        }
+
+        .hm-cell.p2.done {
+            background: var(--green)
+        }
+
+        .hm-cell.p3.done {
+            background: var(--blue)
+        }
+
+        .hm-cell.p4.done {
+            background: var(--purple)
+        }
+
+        .hm-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 14px;
+            flex-wrap: wrap
+        }
+
+        .hm-leg-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 1px
+        }
+
+        .hm-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 2px
+        }
+
+        .dot-p1 { background: var(--gold) }
+        .dot-p2 { background: var(--green) }
+        .dot-p3 { background: var(--blue) }
+        .dot-p4 { background: var(--purple) }
+
+        .hero-progress {
+            margin-top: 28px;
+            max-width: 720px
+        }
+
+        .hp-track {
+            height: 6px;
+            background: var(--surface3);
+            border-radius: 3px;
+            overflow: hidden
+        }
+
+        .hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--green), var(--blue), var(--purple));
+            border-radius: 3px;
+            transition: width .5s
+        }
+
+        .hp-stats {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            color: var(--text2);
+            margin-top: 8px
+        }
+
+        .hp-stats b {
+            color: #fff
+        }
+
+        /* ── FILTER & SEARCH BAR ── */
+        .filter-bar {
+            max-width: 1000px;
+            margin: 24px auto 0;
+            padding: 0 24px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-input {
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            min-width: 240px;
+            flex: 1;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .filter-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 7px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border2);
+            background: var(--surface);
+            color: var(--text2);
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .filter-chip.active, .filter-chip:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--gold-dim);
+        }
+
+        /* ── SECTIONS ── */
+        .sec {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 56px 24px
+        }
+
+        .sec-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px
+        }
+
+        .sec-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 38px;
+            letter-spacing: .5px;
+            color: #fff;
+            margin-bottom: 10px
+        }
+
+        .sec-sub {
+            color: var(--text2);
+            font-size: 13.5px;
+            max-width: 680px;
+            margin-bottom: 32px;
+            font-weight: 300
+        }
+
+        /* skills grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px
+        }
+
+        .skill-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            transition: border-color .15s;
+        }
+
+        .skill-card:hover {
+            border-color: var(--border2);
+        }
+
+        .skill-card .sk-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px
+        }
+
+        .skill-card h4 {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 600
+        }
+
+        .new-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5px;
+            letter-spacing: 1px;
+            color: var(--gold);
+            background: var(--gold-dim);
+            border: 1px solid rgba(240, 180, 41, .3);
+            padding: 2px 7px;
+            border-radius: 20px;
+            white-space: nowrap
+        }
+
+        .v3-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5px;
+            letter-spacing: 1px;
+            color: var(--cyan);
+            background: var(--cyan-dim);
+            border: 1px solid rgba(0, 245, 212, .3);
+            padding: 2px 7px;
+            border-radius: 20px;
+            white-space: nowrap
+        }
+
+        .skill-card p {
+            font-size: 12.5px;
+            color: var(--text2);
+            line-height: 1.6
+        }
+
+        /* capstone cards */
+        .capstone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 16px;
+            margin-top: 16px
+        }
+
+        .cap-card {
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+            padding: 22px 24px;
+            position: relative
+        }
+
+        .cap-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px
+        }
+
+        .cap-day {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--gold);
+            font-weight: 600
+        }
+
+        .cap-tier {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: var(--surface3);
+            color: var(--text2)
+        }
+
+        .cap-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px
+        }
+
+        .cap-brief {
+            font-size: 13px;
+            color: var(--text2);
+            margin-bottom: 14px
+        }
+
+        .cap-list {
+            list-style: none;
+            margin-bottom: 16px
+        }
+
+        .cap-list li {
+            font-size: 12.5px;
+            color: var(--text);
+            position: relative;
+            padding-left: 16px;
+            margin-bottom: 6px
+        }
+
+        .cap-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--gold)
+        }
+
+        .cap-stack {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .stack-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            color: var(--text2);
+            background: var(--surface2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border)
+        }
+
+        /* phase blocks */
+        .phase-block {
+            margin-bottom: 8px
+        }
+
+        .phase-head {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            padding: 20px 0 12px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 18px;
+            flex-wrap: wrap
+        }
+
+        .phase-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 44px;
+            line-height: 1;
+            color: var(--phase-color)
+        }
+
+        .phase-name {
+            font-size: 19px;
+            font-weight: 600;
+            color: #fff
+        }
+
+        .phase-range {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            color: var(--text2);
+            letter-spacing: 1px;
+            text-transform: uppercase
+        }
+
+        .phase-pct {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--phase-color)
+        }
+
+        .week-head {
+            background: var(--surface2);
+            border-left: 3px solid var(--phase-color);
+            padding: 10px 14px;
+            border-radius: 0 6px 6px 0;
+            margin: 22px 0 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .week-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #fff;
+            font-weight: 600
+        }
+
+        .week-proj {
+            font-size: 12px;
+            color: var(--gold2);
+            font-style: italic
+        }
+
+        .day-card {
+            display: flex;
+            gap: 14px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            margin-bottom: 10px;
+            background: var(--surface);
+            transition: border-color .15s, background .15s
+        }
+
+        .day-card:hover {
+            border-color: var(--border2)
+        }
+
+        .day-card.done {
+            background: var(--surface2);
+            opacity: .85
+        }
+
+        .day-card.hidden {
+            display: none;
+        }
+
+        .day-checkbox {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 1.5px solid var(--border2);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            margin-top: 2px;
+            cursor: pointer;
+            transition: all .15s
+        }
+
+        .day-card.done .day-checkbox {
+            background: var(--phase-color);
+            border-color: transparent;
+            color: #08090c
+        }
+
+        .day-body {
+            flex: 1;
+            min-width: 0
+        }
+
+        .day-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 6px
+        }
+
+        .day-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            color: var(--phase-color);
+            font-weight: 600
+        }
+
+        .day-slug {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--cyan);
+            background: rgba(0, 245, 212, 0.07);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .day-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text3)
+        }
+
+        .day-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px
+        }
+
+        .day-card.done .day-title {
+            text-decoration: line-through;
+            text-decoration-color: var(--text3)
+        }
+
+        .tag-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 20px;
+            border: 1px solid
+        }
+
+        .tag-learn { color: var(--blue); background: var(--blue-dim); border-color: rgba(58, 134, 255, .25) }
+        .tag-build { color: var(--gold); background: var(--gold-dim); border-color: rgba(240, 180, 41, .25) }
+        .tag-deploy { color: var(--green); background: var(--green-dim); border-color: rgba(6, 214, 160, .25) }
+        .tag-freelance { color: #fff; background: rgba(255, 255, 255, .06); border-color: var(--border2) }
+        .tag-interview { color: var(--purple); background: var(--purple-dim); border-color: rgba(199, 125, 255, .25) }
+        .tag-review { color: var(--red); background: var(--red-dim); border-color: rgba(239, 69, 101, .25) }
+        .tag-setup { color: var(--text2); background: rgba(255, 255, 255, .04); border-color: var(--border2) }
+
+        .dsa-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            color: var(--gold2);
+            border: 1px solid rgba(255, 209, 102, .3);
+            padding: 2px 7px;
+            border-radius: 20px
+        }
+
+        /* checklist tasks */
+        .day-checklist {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 12.5px;
+            color: var(--text)
+        }
+
+        .task-bullet {
+            color: var(--phase-color);
+            font-size: 10px;
+            margin-top: 2px
+        }
+
+        .task-res {
+            font-size: 11px;
+            color: var(--text3);
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            text-align: right;
+            max-width: 280px
+        }
+
+        .day-money {
+            margin-top: 8px;
+            font-size: 11.5px;
+            color: var(--gold2);
+            font-style: italic;
+            background: var(--gold-dim);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block
+        }
+
+        /* footer */
+        .footer {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 48px 24px 70px;
+            border-top: 1px solid var(--border);
+            text-align: center
+        }
+
+        .footer-big {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            color: #fff;
+            letter-spacing: .5px;
+            margin-bottom: 10px
+        }
+
+        .footer p {
+            color: var(--text2);
+            font-size: 12.5px;
+            max-width: 600px;
+            margin: 0 auto 6px
+        }
+
+        .reset-btn {
+            margin-top: 22px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text3);
+            background: none;
+            border: 1px solid var(--border2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer
+        }
+
+        .reset-btn:hover {
+            color: var(--red);
+            border-color: var(--red)
+        }
+
+        @media(max-width:640px) {
+            .heatmap { grid-template-columns: repeat(10, 1fr) }
+            .sec { padding: 40px 16px }
+            .capstone-grid { grid-template-columns: 1fr }
+            .task-res { display: block; margin-left: 0; text-align: left; max-width: none }
+            .task-item { flex-direction: column; gap: 2px }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav">
+        <a class="nav-a" href="#top">Overview</a>
+        <a class="nav-a" href="#skills">v3 Upgrades</a>
+        <a class="nav-a" href="#capstones">Capstones</a>
+        <a class="nav-a" href="#phase1">Phase 1</a>
+        <a class="nav-a" href="#phase2">Phase 2</a>
+        <a class="nav-a" href="#phase3">Phase 3</a>
+        <a class="nav-a" href="#phase4">Phase 4</a>
+        <div class="nav-right">
+            <button class="action-btn" onclick="syncUpToDay29()">✓ Sync Days 1–29</button>
+            <button class="action-btn" onclick="exportProgress()">Export JSON</button>
+        </div>
+    </nav>
+
+    <section class="hero" id="top">
+        <div class="hero-grid-bg"></div>
+        <div class="hero-inner">
+            <div class="hero-status"><span class="blink"></span> V4 · REVISED AFTER PRINCIPAL-ENGINEER REVIEW</div>
+            <h1>100 <span>DAYS</span></h1>
+            <p class="hero-sub">Nikhil's AI Engineering Sprint, revised for depth over breadth: one flagship with real users, eval-first development, honest metrics, and two parallel tracks (job and customer pilots). Days 1-29 are unchanged.</p>
+            <div class="hero-dates">Repository: <strong>k-nikhil-coder/100-day-ai-engineer</strong> &nbsp;·&nbsp; CURRENT MILESTONE: DAY <span id="today-num">29</span> OF 100</div>
+
+            <div class="kpi-row">
+                <div class="kpi-box">
+                    <div class="kpi-lbl">Days Shipped</div>
+                    <div class="kpi-val"><span id="kpi-days">0</span> / 100</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-lbl">DSA Problems</div>
+                    <div class="kpi-val"><span id="kpi-dsa">0</span> / 70</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-lbl">Capstones Live</div>
+                    <div class="kpi-val"><span id="kpi-caps">0</span> / 4</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-lbl">Current Phase</div>
+                    <div class="kpi-val" id="kpi-phase">PHASE 2</div>
+                </div>
+            </div>
+
+            <div class="heatmap-wrap">
+                <div class="heatmap-label"><span>100-Day Interactive Grid — click any cell to jump to that day</span><b id="overall-pct">0%</b></div>
+                <div class="heatmap" id="heatmap"></div>
+                <div class="hm-legend">
+                    <div class="hm-leg-item"><span class="hm-dot dot-p1"></span>Phase 1 — Tabular MLOps &amp; Vector DBs</div>
+                    <div class="hm-leg-item"><span class="hm-dot dot-p2"></span>Phase 2 — Eval-First RAG &amp; Real Users</div>
+                    <div class="hm-leg-item"><span class="hm-dot dot-p3"></span>Phase 3 — Agents, Cost/Security &amp; Flagship v2</div>
+                    <div class="hm-leg-item"><span class="hm-dot dot-p4"></span>Phase 4 — Interviews &amp; Customer Pilots</div>
+                </div>
+            </div>
+
+            <div class="hero-progress">
+                <div class="hp-track">
+                    <div class="hp-fill" id="hero-bar" style="width:0%"></div>
+                </div>
+                <div class="hp-stats"><span><b id="done-count">0</b> / 100 days done</span><span id="pace-note">Ready to build</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="skills">
+        <div class="sec-eyebrow">What Changed in v4</div>
+        <div class="sec-title">Findings from the Plan Review</div>
+        <div class="sec-sub">Days 30-100 were rebuilt to fit about 250-400 hours: fewer topics, more depth, real users, honest metrics.</div>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="sk-top">
+                    <h4>Eval-first from Day 30</h4><span class="v3-badge">ADDED</span>
+                </div>
+                <p>Write the gold set before the pipeline, calibrate your judge against hand labels, and gate CI on scores (Days 30, 43-46).</p>
+            </div>
+            <div class="skill-card">
+                <div class="sk-top">
+                    <h4>Real users & failure taxonomy</h4><span class="v3-badge">ADDED</span>
+                </div>
+                <p>10+ real users, read every log, categorize failures and publish what broke (Days 40, 47-48).</p>
+            </div>
+            <div class="skill-card">
+                <div class="sk-top">
+                    <h4>Async Python & Postgres/pgvector</h4><span class="v3-badge">ADDED</span>
+                </div>
+                <p>Concurrency for LLM backends and the relational database most companies already run (Days 32, 41).</p>
+            </div>
+            <div class="skill-card">
+                <div class="sk-top">
+                    <h4>Text-to-SQL & structured extraction</h4><span class="v3-badge">ADDED</span>
+                </div>
+                <p>A very common business use case, with its own eval set (Day 53).</p>
+            </div>
+            <div class="skill-card">
+                <div class="sk-top">
+                    <h4>Two tracks: job + customer pilots</h4><span class="v3-badge">ADDED</span>
+                </div>
+                <p>From Day 55, targeted applications and customer conversations; decide on Day 70 using real signals.</p>
+            </div>
+            <div class="skill-card">
+                <div class="sk-top">
+                    <h4>GraphRAG / Neo4j</h4><span class="new-badge">CUT</span>
+                </div>
+                <p>Removed: rarely needed at junior level and hard to evaluate. Add RAG tricks only if the eval shows lift.</p>
+            </div>
+            <div class="skill-card">
+                <div class="sk-top">
+                    <h4>Framework stacking & multi-agent</h4><span class="new-badge">CUT</span>
+                </div>
+                <p>One orchestration choice, single agent by default. Google ADK and the Whisper/VLM day are dropped unless your project needs them.</p>
+            </div>
+            <div class="skill-card">
+                <div class="sk-top">
+                    <h4>Fine-tuning, semantic caching, cloud ceremony, application counts</h4><span class="new-badge">SHRUNK</span>
+                </div>
+                <p>Fine-tuning is a 2-day experiment; semantic caching is knowledge only; cloud deploy takes about 1.5 days; track replies, not 100 applications.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="capstones">
+        <div class="sec-eyebrow">Major Milestones</div>
+        <div class="sec-title">The 4 Milestones</div>
+        <div class="sec-sub">Four milestones that prove you can ship, measure and explain an AI system.</div>
+        <div class="capstone-grid" id="capstone-container"></div>
+    </section>
+
+    <div class="filter-bar">
+        <input type="text" id="search-box" class="search-input" placeholder="Search days by topic or tool (e.g. Qdrant, MCP, evals, pgvector)..." oninput="applyFilters()">
+        <button class="filter-chip active" onclick="setFilter('all', this)">All (100)</button>
+        <button class="filter-chip" onclick="setFilter('v3', this)">⚡ Revised in v4</button>
+        <button class="filter-chip" onclick="setFilter('dsa', this)">💻 +DSA Days</button>
+        <button class="filter-chip" onclick="setFilter('build', this)">🔨 Build / Deploy</button>
+        <button class="filter-chip" onclick="setFilter('todo', this)">⏳ Remaining</button>
+    </div>
+
+    <div id="phase-sections"></div>
+
+    <footer class="footer">
+        <div class="footer-big">100 DAYS ISN'T A DEADLINE. IT'S A PACE.</div>
+        <p>Built for <strong>Kumbham Nikhil</strong> · Revised v4 Curriculum · GitHub: <code>k-nikhil-coder/100-day-ai-engineer</code></p>
+        <button class="reset-btn" onclick="resetAll()">Reset all progress</button>
+    </footer>
+
+    <script>
+        const RAW_DATA = [
+            { "day": 1, "phase": 1, "slug": "Day-01-command-center-setup", "title": "Command Center & Dev Environment Setup", "tag": "setup", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Configure Python 3.11+, VS Code, Git, and Linux/WSL2 terminal workflow", "python.org · VS Code docs"], ["Initialize k-nikhil-coder/100-day-ai-engineer repository with clean structure", "GitHub"], ["Set daily sprint rules and milestone naming conventions", "README.md"]] },
+            { "day": 2, "phase": 1, "slug": "Day-02-python-for-ml", "title": "Production Python: Type Hints, Generators & OOP", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Type annotations (typing, dataclasses) and clean modular functions", "Real Python"], ["List/dict comprehensions, generators, and memory-efficient iterators", "Python docs"], ["Push documented utility module to GitHub", "GitHub"]] },
+            { "day": 3, "phase": 1, "slug": "Day-03-numpy-pandas-vectorization", "title": "NumPy Vectorization & Pandas Data Pipelines", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["NumPy array broadcasting, matrix slicing, and vectorized math", "NumPy Quickstart"], ["Pandas DataFrames: complex aggregations, joins, and memory optimization", "Kaggle Learn"], ["Run exploratory data profiling on a real tabular dataset", "Colab"]] },
+            { "day": 4, "phase": 1, "slug": "Day-04-sql-feature-engineering", "title": "SQL for Feature Extraction & Analytics", "tag": "learn", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Complex JOINs, CTEs, and GROUP BY aggregations", "Mode SQL / SQLZoo"], ["Window functions (ROW_NUMBER, RANK, LAG/LEAD, rolling averages) for time-series features", "PostgreSQL / SQLite"], ["Build an automated SQL-to-Pandas feature extraction pipeline", "GitHub"]] },
+            { "day": 5, "phase": 1, "slug": "Day-05-statistics-hypothesis-testing", "title": "Statistical Foundations & Distribution Testing", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Probability distributions, variance, skewness, and Central Limit Theorem", "StatQuest"], ["Hypothesis testing, p-values, confidence intervals, and A/B test math", "scipy.stats"], ["Implement statistical validation checks in Python", "Colab"]] },
+            { "day": 6, "phase": 1, "slug": "Day-06-linear-algebra-embeddings-math", "title": "Linear Algebra for ML: Projections, Dot Products & Norms", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Vectors, L1/L2 norms, dot products, and cosine similarity geometry", "3Blue1Brown"], ["Matrix multiplication, eigenvalues, and dimensionality reduction intuition", "NumPy"], ["Implement cosine similarity and L2 normalization from scratch in NumPy", "Colab"]] },
+            { "day": 7, "phase": 1, "slug": "Day-07-eda-visual-storytelling", "title": "End-to-End Exploratory Data Analysis & Visual Report", "tag": "review", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Full correlation analysis, outlier detection, and missing-value profiling", "Matplotlib & Seaborn"], ["Document 3 actionable engineering insights for feature selection", "Jupyter Notebook"], ["Publish Week 1 progress on GitHub & LinkedIn", "LinkedIn"]] },
+            { "day": 8, "phase": 1, "slug": "Day-08-dsa-arrays-hashing", "title": "DSA Kickoff: Asymptotic Complexity, Arrays & Hashing", "tag": "learn", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Big-O time & space complexity analysis for data structures", "NeetCode 150"], ["Hash maps, frequency counters, and prefix sum patterns in C++/Python", "LeetCode"], ["Solve 2 Arrays & Hashing problems", "LeetCode"]] },
+            { "day": 9, "phase": 1, "slug": "Day-09-linear-ridge-lasso-regression", "title": "Regression Modeling & Regularization (L1/L2)", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Linear, Polynomial, Ridge (L2), and Lasso (L1) regression mechanics", "scikit-learn docs"], ["K-Fold cross-validation and bias-variance tradeoff diagnostics", "scikit-learn"], ["Evaluate models with MAE, RMSE, and R² on California Housing", "Colab"]] },
+            { "day": 10, "phase": 1, "slug": "Day-10-classification-metrics-roc", "title": "Classification Algorithms & Imbalanced Metrics", "tag": "learn", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Logistic Regression, Decision Trees, and Random Forests", "scikit-learn"], ["Precision-Recall curves, F1-score, ROC-AUC, and threshold tuning for fraud/imbalanced data", "scikit-learn"], ["Solve 2 Hashing / Two-Pointer DSA problems", "NeetCode 150"]] },
+            { "day": 11, "phase": 1, "slug": "Day-11-sklearn-production-pipelines", "title": "Leak-Free Feature Engineering & ColumnTransformer Pipelines", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Target encoding, One-Hot encoding, RobustScaler, and imputation strategies", "scikit-learn"], ["Construct leak-free scikit-learn Pipeline and ColumnTransformer objects", "scikit-learn docs"], ["Serialize complete preprocessing + model artifact with joblib", "GitHub"]] },
+            { "day": 12, "phase": 1, "slug": "Day-12-kaggle-benchmark-pipeline", "title": "End-to-End Tabular Benchmark & Cross-Validation Harness", "tag": "build", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Build a reproducible stratified K-Fold training script", "Python / sklearn"], ["Log out-of-fold predictions and feature importance rankings", "Colab"], ["Solve 2 Two-Pointers DSA problems", "NeetCode 150"]] },
+            { "day": 13, "phase": 1, "slug": "Day-13-interactive-ml-gradio-spaces", "title": "Interactive ML Web App Deployment on Hugging Face Spaces", "tag": "deploy", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Build an interactive Gradio inference UI with real-time sliders", "Gradio docs"], ["Deploy live application to Hugging Face Spaces", "HF Spaces"], ["Document public live demo URL in repository README", "GitHub"]] },
+            { "day": 14, "phase": 1, "slug": "Day-14-week2-review-portfolio-setup", "title": "Week 2 Architecture Review & Freelance Profile Setup", "tag": "freelance", "dsa": 0, "new": false, "money": "Profile positioning & initial outreach.", "capstone": null, "checklist": [["Structure freelance/consulting profile highlighting ML pipelines & FastAPI", "Upwork / LinkedIn"], ["Review Week 2 code quality and modularize helper scripts", "GitHub"]] },
+            { "day": 15, "phase": 1, "slug": "Day-15-xgboost-hyperparameter-tuning", "title": "Gradient Boosted Trees (XGBoost) & Optuna Tuning", "tag": "learn", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["XGBoost mathematical objective, shrinkage, depth, and column subsampling", "XGBoost docs"], ["Automated hyperparameter optimization with Optuna / RandomizedSearchCV", "Colab"], ["Solve 2 Sliding Window DSA problems", "NeetCode 150"]] },
+            { "day": 16, "phase": 1, "slug": "Day-16-shap-model-interpretability", "title": "Explainable AI (XAI): Global & Local Attribution with SHAP", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Game-theoretic Shapley values and TreeExplainer on California Housing", "SHAP docs"], ["Generate global summary beeswarm plots and local waterfall explanations", "Colab"], ["Export interpretability artifacts for auditability", "GitHub"]] },
+            { "day": 17, "phase": 1, "slug": "Day-17-docker-containerization", "title": "Dockerizing ML Services: Multi-Stage Builds & Layer Caching", "tag": "learn", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Write optimized python:3.11-slim Dockerfile with PYTHONDONTWRITEBYTECODE", "Docker docs"], ["Optimize layer caching for requirements.txt and run non-root containers", "Docker CLI"], ["Solve 2 Sliding Window DSA problems", "NeetCode 150"]] },
+            { "day": 18, "phase": 1, "slug": "Day-18-fastapi-lifespan-microservice", "title": "FastAPI Model Microservice with Lifespan & Pydantic v2", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Implement @asynccontextmanager lifespan handler to load models once at boot", "FastAPI docs"], ["Enforce strict Pydantic v2 request/response validation & custom Swagger examples", "Pydantic docs"], ["Add /health and /predict endpoints with latency telemetry", "GitHub"]] },
+            { "day": 19, "phase": 1, "slug": "Day-19-statistical-drift-ks-monitoring", "title": "Statistical Drift Monitoring (Kolmogorov-Smirnov Testing)", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Detect covariate shift in production traffic using two-sample KS tests (scipy.stats.ks_2samp)", "SciPy docs"], ["Build automated drift alert thresholds (p-value < 0.05) per feature", "Python"], ["Expose drift reporting endpoint in FastAPI microservice", "GitHub"]] },
+            { "day": 20, "phase": 1, "slug": "Day-20-github-actions-cicd-pipeline", "title": "Automated CI/CD Pipelines with GitHub Actions & Pytest", "tag": "build", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Write unit & integration tests for FastAPI endpoints using TestClient and pytest", "Pytest docs"], ["Configure .github/workflows/ci.yml to lint, test, and verify Docker builds on push", "GitHub Actions"], ["Solve 2 Stack / Monotonic Stack DSA problems", "NeetCode 150"]] },
+            { "day": 21, "phase": 1, "slug": "Day-21-redis-distributed-inference-cache", "title": "Distributed Inference Caching with Redis & SHA-256 Hashing", "tag": "build", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Orchestrate FastAPI + redis:7-alpine via Docker Compose", "Docker Compose / Redis"], ["Implement deterministic SHA-256 feature payload hashing for O(1) cache lookups", "Python hashlib"], ["Benchmark latency drop (e.g., 31.31 ms down to 1.43 ms on cache hits)", "GitHub"], ["Solve 2 Monotonic Stack DSA problems", "NeetCode 150"]] },
+            { "day": 22, "phase": 1, "slug": "Day-22-neural-networks-backprop-math", "title": "Deep Learning Foundations: Perceptrons, Activations & Backprop", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Forward pass, ReLU/GELU/Sigmoid activations, and Cross-Entropy/MSE loss", "3Blue1Brown"], ["Chain rule calculus and matrix gradients in backpropagation", "Notes"], ["Implement a 2-layer neural network forward/backward pass in raw NumPy", "Colab"]] },
+            { "day": 23, "phase": 1, "slug": "Day-23-pytorch-tensors-autograd", "title": "PyTorch Architecture: Dynamic Computation Graphs & Autograd", "tag": "learn", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["GPU tensor operations, broadcasting, and gradient tracking (requires_grad)", "PyTorch docs"], ["Build custom nn.Module classes, DataLoaders, and AdamW training loops", "Colab"], ["Solve 2 Binary Search DSA problems", "NeetCode 150"]] },
+            { "day": 24, "phase": 1, "slug": "Day-24-karpathy-micrograd-engine", "title": "Building an Autograd Engine from Scratch (Micrograd)", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Implement Value objects with topological sort and backward gradient propagation", "Karpathy Micrograd"], ["Train a custom MLP from scratch using only your autograd engine", "GitHub"]] },
+            { "day": 25, "phase": 1, "slug": "Day-25-capstone1-production-mlops-api", "title": "CAPSTONE 1 — Production MLOps Microservice (FastAPI + Redis + Drift + CI/CD)", "tag": "deploy", "dsa": 0, "new": false, "money": null, "capstone": "cap1", "checklist": [["Consolidate XGBoost model, SHAP explainability, Redis cache, and KS drift monitor", "Docker Compose"], ["Verify automated pytest suite and GitHub Actions CI workflow", "GitHub Actions"], ["Deploy publicly and publish comprehensive architecture README", "GitHub / HF Spaces"]] },
+            { "day": 26, "phase": 1, "slug": "Day-26-transformer-self-attention", "title": "Transformer Architecture: Scaled Dot-Product & Multi-Head Attention", "tag": "learn", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Query, Key, Value ($Q, K, V$) matrices and $\text{Attention}(Q,K,V) = \text{softmax}(QK^T/\sqrt{d_k})V$", "Illustrated Transformer"], ["Positional encodings, LayerNorm, residual connections, and causal masking", "PyTorch"], ["Solve 2 Binary Search on Answer Space DSA problems", "NeetCode 150"]] },
+            { "day": 27, "phase": 1, "slug": "Day-27-semantic-search-faiss", "title": "Dense Retrieval & In-Memory Vector Search Microservice (FAISS)", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Encode documents into 384-dim dense vectors using sentence-transformers (all-MiniLM-L6-v2)", "Hugging Face"], ["Apply L2 normalization and index vectors into FAISS IndexFlatIP for exact cosine similarity", "FAISS"], ["Containerize FastAPI search microservice with automated pytest verification", "GitHub"]] },
+            { "day": 28, "phase": 1, "slug": "Day-28-qdrant-vector-db-filters", "title": "Production Vector Database & Dynamic Metadata Filtering (Qdrant)", "tag": "deploy", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Orchestrate multi-container FastAPI + Qdrant vector database with Docker Compose", "Qdrant / Docker"], ["Implement dynamic payload metadata filtering (FieldCondition, MatchValue) for category/difficulty", "qdrant-client"], ["Customize Pydantic json_schema_extra for one-click interactive Swagger UI testing", "GitHub"]] },
+            { "day": 29, "phase": 2, "slug": "Day-29-llm-mechanics-tokenization", "title": "How LLMs Actually Work: BPE Tokenization, Logits & Context Limits", "tag": "learn", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Byte-Pair Encoding (BPE) subword merges, whitespace sensitivity, and token fragmentation", "tiktoken / Colab"], ["Autoregressive next-token prediction, Softmax temperature scaling ($T$), Top-K & Top-P sampling", "PyTorch"], ["Context window mechanics and 'Lost in the Middle' attention degradation", "Day_29_LLM_Mechanics.ipynb"]] },
+            { "day": 30, "phase": 2, "slug": "Day-30-choose-your-flagship-write-the-gold-set-", "title": "Choose Your Flagship & Write the Gold Set (40-50 Questions)", "tag": "learn", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Score 3 candidate projects on reachable real users, a corpus others can't copy, a painful problem, and measurable success", "Notes"], ["Collect 40-50 real questions from 3+ people (classmates, business owners) and define how answers are scored", "Google Sheets"], ["Solve 2 pattern-based DSA problems (arrays & hashing)", "NeetCode 150"]] },
+            { "day": 31, "phase": 2, "slug": "Day-31-llm-apis-in-production-structured-output", "title": "LLM APIs in Production: Structured Outputs, Tool Calling & Streaming", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Enforce Pydantic JSON schemas and handle multi-turn tool calls with a provider SDK", "Provider SDKs"], ["Add SSE streaming, timeouts and exponential-backoff retries", "FastAPI"]] },
+            { "day": 32, "phase": 2, "slug": "Day-32-async-python-for-llm-backends-asyncio-ht", "title": "Async Python for LLM Backends: asyncio, httpx & Concurrency", "tag": "learn", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Run 50 concurrent LLM calls with asyncio.gather, semaphores and timeouts", "Python docs"], ["Load-test your endpoint and note where latency spikes", "Locust / k6"]] },
+            { "day": 33, "phase": 2, "slug": "Day-33-ingest-the-corpus-messy-pdfs-ocr-chunkin", "title": "Ingest the Corpus: Messy PDFs, OCR & Chunking Benchmark", "tag": "build", "dsa": 1, "new": false, "money": null, "capstone": null, "checklist": [["Parse real documents (tables, scans) into clean text with metadata", "PyMuPDF / OCR"], ["Compare 2-3 chunk sizes on retrieval hit-rate over your gold set", "Colab"], ["Solve 1 pattern-based DSA problem (two pointers)", "NeetCode 150"]] },
+            { "day": 34, "phase": 2, "slug": "Day-34-naive-rag-baseline-with-source-citations", "title": "Naive RAG Baseline with Source Citations", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Chunk, embed, retrieve (Qdrant) and answer with inline citations", "Qdrant"], ["Add a refusal path for out-of-corpus questions and log every query", "FastAPI"]] },
+            { "day": 35, "phase": 2, "slug": "Day-35-deploy-the-baseline-record-your-baseline", "title": "Deploy the Baseline & Record Your Baseline Score", "tag": "deploy", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Deploy publicly (HF Spaces / Render / Cloud Run)", "Hosting"], ["Run the gold set and put the baseline score in the README", "GitHub"], ["Solve 2 pattern-based DSA problems (sliding window)", "NeetCode 150"]] },
+            { "day": 36, "phase": 2, "slug": "Day-36-hybrid-search-dense-bm25-rrf-measure-vs-", "title": "Hybrid Search (Dense + BM25 + RRF): Measure vs Baseline", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Add BM25 and reciprocal rank fusion", "Qdrant"], ["Re-run the gold set, log the score change, keep or drop", "Eval sheet"]] },
+            { "day": 37, "phase": 2, "slug": "Day-37-cross-encoder-reranker-measure-lift-late", "title": "Cross-Encoder Reranker: Measure Lift & Latency Cost", "tag": "build", "dsa": 1, "new": true, "money": null, "capstone": null, "checklist": [["Add a reranker (BGE / Cohere) over top-k results", "Sentence-Transformers"], ["Record accuracy gain vs added latency and cost per query", "Eval sheet"], ["Solve 1 pattern-based DSA problem (stack)", "NeetCode 150"]] },
+            { "day": 38, "phase": 2, "slug": "Day-38-query-rewriting-chunk-sweep-keep-only-wh", "title": "Query Rewriting & Chunk Sweep: Keep Only What the Eval Rewards", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Test query rewriting and one more chunking change, one at a time", "Colab"], ["Drop any technique that does not move the score", "Eval sheet"]] },
+            { "day": 39, "phase": 2, "slug": "Day-39-ablation-table-failure-review", "title": "Ablation Table & Failure Review", "tag": "build", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Publish a table: baseline, +hybrid, +rerank, +rewriting with score, latency, cost", "README"], ["Read 20 wrong answers and tag why each failed", "Sheet"], ["Solve 2 pattern-based DSA problems (binary search)", "NeetCode 150"]] },
+            { "day": 40, "phase": 2, "slug": "Day-40-real-ui-first-10-users", "title": "Real UI & First 10 Users", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Ship a simple chat UI with feedback buttons and query logging", "Streamlit / Next.js"], ["Get 10 real users and watch at least 2 of them use it live", "Users"]] },
+            { "day": 41, "phase": 2, "slug": "Day-41-postgres-pgvector-the-database-most-comp", "title": "Postgres + pgvector: The Database Most Companies Already Run", "tag": "learn", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Store chunks and embeddings in pgvector and compare with Qdrant on your gold set", "pgvector"], ["Write SQL metadata filters combined with vector search", "PostgreSQL"], ["Solve 2 pattern-based DSA problems (linked list)", "NeetCode 150"]] },
+            { "day": 42, "phase": 2, "slug": "Day-42-week-review-what-actually-moved-the-scor", "title": "Week Review: What Actually Moved the Score?", "tag": "review", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Summarize each change's measured effect in 5 lines", "README"], ["Plan next week's cuts and priorities", "Notes"]] },
+            { "day": 43, "phase": 2, "slug": "Day-43-evaluation-done-right-gold-sets-judges-h", "title": "Evaluation Done Right: Gold Sets, Judges & Human Agreement", "tag": "learn", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Learn faithfulness, context precision/recall, and why self-written test sets run optimistic", "Ragas / DeepEval"], ["Grow the gold set to 60+ questions with 3+ authors", "Sheet"]] },
+            { "day": 44, "phase": 2, "slug": "Day-44-calibrate-your-llm-judge-against-50-hand", "title": "Calibrate Your LLM Judge Against 50 Hand Labels", "tag": "build", "dsa": 1, "new": true, "money": null, "capstone": null, "checklist": [["Label 50 answers yourself", "Sheet"], ["Measure judge-human agreement and fix the judge prompt until it holds", "Python"], ["Solve 1 pattern-based DSA problem (trees)", "NeetCode 150"]] },
+            { "day": 45, "phase": 2, "slug": "Day-45-tracing-cost-per-query-with-langfuse", "title": "Tracing & Cost per Query with Langfuse", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Trace retrieval, rerank and LLM spans with latency and tokens", "Langfuse"], ["Dashboard P50/P95 latency and cost per query", "Langfuse"]] },
+            { "day": 46, "phase": 2, "slug": "Day-46-ci-eval-gate-fail-the-build-when-scores-", "title": "CI Eval Gate: Fail the Build When Scores Drop", "tag": "build", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Run the gold set in GitHub Actions on every PR", "GitHub Actions"], ["Set a score threshold that blocks merges", "CI"], ["Solve 2 pattern-based DSA problems (graphs & heaps)", "NeetCode 150"]] },
+            { "day": 47, "phase": 2, "slug": "Day-47-error-analysis-on-real-user-logs-failure", "title": "Error Analysis on Real User Logs: Failure Taxonomy", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Categorize failures: retrieval miss, wrong source, hallucination, ambiguous, out of scope", "Sheet"], ["Fix the top category and show the before/after score", "GitHub"]] },
+            { "day": 48, "phase": 2, "slug": "Day-48-public-launch-post-what-broke-what-fixed", "title": "Public Launch Post: What Broke & What Fixed It", "tag": "deploy", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Publish a write-up with the ablation table and failure categories", "LinkedIn / Blog"], ["Pick 2 open-source issues in RAG or eval tools to contribute to", "GitHub"], ["Solve 2 pattern-based DSA problems (intro DP)", "NeetCode 150"]] },
+            { "day": 49, "phase": 2, "slug": "Day-49-capstone-2-eval-first-rag-with-real-user", "title": "CAPSTONE 2 - Eval-First RAG with Real Users", "tag": "deploy", "dsa": 0, "new": true, "money": null, "capstone": "cap2", "checklist": [["Live app with 10+ real users and published scores", "Live URL"], ["README: result first, ablation table, failure taxonomy, limitations", "README"]] },
+            { "day": 50, "phase": 3, "slug": "Day-50-react-loop-in-raw-python", "title": "ReAct Loop in Raw Python", "tag": "build", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Build think-act-observe with iteration limits and tool-error handling", "Python"], ["Log every step as a replayable trace", "Langfuse"], ["Solve 2 pattern-based DSA problems (mixed patterns)", "NeetCode 150"]] },
+            { "day": 51, "phase": 3, "slug": "Day-51-tools-for-your-flagship-corpus-search-sq", "title": "Tools for Your Flagship: Corpus Search, SQL & One External API", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Define 3 tools with strict schemas and clear descriptions", "Pydantic"], ["Add the agent to your app behind a flag", "GitHub"]] },
+            { "day": 52, "phase": 3, "slug": "Day-52-custom-mcp-server-fastmcp-for-your-tools", "title": "Custom MCP Server (FastMCP) for Your Tools", "tag": "build", "dsa": 1, "new": false, "money": null, "capstone": null, "checklist": [["Expose your search and SQL tools over MCP", "FastMCP"], ["Connect an MCP client and test failure cases", "MCP docs"], ["Solve 1 pattern-based DSA problem (arrays & hashing)", "NeetCode 150"]] },
+            { "day": 53, "phase": 3, "slug": "Day-53-text-to-sql-structured-extraction-with-e", "title": "Text-to-SQL & Structured Extraction with Evals", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Build a read-only text-to-SQL path with schema hints", "SQLite / Postgres"], ["Write 20 test questions with expected results and score them", "Sheet"]] },
+            { "day": 54, "phase": 3, "slug": "Day-54-trajectory-evals-right-tool-right-args-r", "title": "Trajectory Evals: Right Tool, Right Args, Reasonable Steps", "tag": "build", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Score tool choice, arguments and step count on 20 tasks", "Python"], ["Choose one orchestration approach (single agent by default) and record why", "Decision doc"], ["Solve 2 pattern-based DSA problems (two pointers)", "NeetCode 150"]] },
+            { "day": 55, "phase": 3, "slug": "Day-55-start-both-tracks-targeted-applications-", "title": "Start Both Tracks: Targeted Applications & Conversations", "tag": "interview", "dsa": 0, "new": true, "money": "Aim for replies and conversations, not application counts.", "capstone": null, "checklist": [["Send 5-8 tailored internship/junior applications with a project link", "Job boards"], ["Hold 5-10 conversations with engineers or business owners, each opened with one specific observation", "LinkedIn"]] },
+            { "day": 56, "phase": 3, "slug": "Day-56-week-review-cut-anything-that-isn-t-movi", "title": "Week Review: Cut Anything That Isn't Moving a Metric", "tag": "review", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Review scores, users and conversations this week", "Notes"], ["Cut or defer one item from next week", "Plan"]] },
+            { "day": 57, "phase": 3, "slug": "Day-57-cost-latency-prompt-caching-model-routin", "title": "Cost & Latency: Prompt Caching & Model Routing", "tag": "build", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Add provider prompt caching and measure the cost drop", "Provider docs"], ["Route simple queries to a smaller model and re-run evals", "LiteLLM / SDK"], ["Solve 2 pattern-based DSA problems (sliding window)", "NeetCode 150"]] },
+            { "day": 58, "phase": 3, "slug": "Day-58-reliability-fallbacks-auth-rate-limiting", "title": "Reliability: Fallbacks, Auth & Rate Limiting", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Add provider fallback and API-key auth", "FastAPI"], ["Add token-bucket rate limiting and timeouts", "Redis"]] },
+            { "day": 59, "phase": 3, "slug": "Day-59-unit-economics-cost-per-1-000-queries", "title": "Unit Economics: Cost per 1,000 Queries", "tag": "learn", "dsa": 1, "new": true, "money": null, "capstone": null, "checklist": [["Build a one-page cost sheet at different context sizes", "Sheet"], ["Know semantic caching and its near-miss risk, but do not build it", "Notes"], ["Solve 1 pattern-based DSA problem (stack)", "NeetCode 150"]] },
+            { "day": 60, "phase": 3, "slug": "Day-60-red-team-your-own-system-prompt-injectio", "title": "Red-Team Your Own System: Prompt Injection, PII & Tool Safety", "tag": "learn", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Attack your app with 10 injection attempts and log results", "OWASP LLM Top 10"], ["Write fixes for the top 3 issues", "GitHub"]] },
+            { "day": 61, "phase": 3, "slug": "Day-61-guardrails-input-output-checks-pii-redac", "title": "Guardrails: Input/Output Checks & PII Redaction", "tag": "build", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Add input/output validation and PII masking", "Guardrails / Presidio"], ["Re-run red-team and evals to confirm no regressions", "CI"], ["Solve 2 pattern-based DSA problems (binary search)", "NeetCode 150"]] },
+            { "day": 62, "phase": 3, "slug": "Day-62-deploy-properly-secrets-continuous-deplo", "title": "Deploy Properly: Secrets & Continuous Deployment", "tag": "deploy", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Deploy to Cloud Run / Render with secrets in a manager", "Cloud Run"], ["Auto-deploy on merge behind the eval gate", "GitHub Actions"]] },
+            { "day": 63, "phase": 3, "slug": "Day-63-capstone-3-deployed-tool-using-agent", "title": "CAPSTONE 3 - Deployed Tool-Using Agent", "tag": "deploy", "dsa": 0, "new": true, "money": null, "capstone": "cap3", "checklist": [["Agent + MCP tools + cost controls + guardrails, live", "Live URL"], ["Publish cost per query, P95 latency and the red-team report", "README"]] },
+            { "day": 64, "phase": 3, "slug": "Day-64-pick-the-second-project-define-its-eval-", "title": "Pick the Second Project & Define Its Eval First", "tag": "learn", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Choose one: narrow QLoRA fine-tune, domain/language eval benchmark, or text-to-SQL agent", "Notes"], ["Write the eval and the baseline before building", "Sheet"], ["Solve 2 pattern-based DSA problems (linked list)", "NeetCode 150"]] },
+            { "day": 65, "phase": 3, "slug": "Day-65-second-project-build-day-1", "title": "Second Project: Build Day 1", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Build the core pipeline", "GitHub"], ["Run the first eval and list top failures", "Colab"]] },
+            { "day": 66, "phase": 3, "slug": "Day-66-second-project-build-day-2", "title": "Second Project: Build Day 2", "tag": "build", "dsa": 1, "new": false, "money": null, "capstone": null, "checklist": [["Iterate on the top failures", "GitHub"], ["If fine-tuning, cap training at 2 days total", "Colab"], ["Solve 1 pattern-based DSA problem (trees)", "NeetCode 150"]] },
+            { "day": 67, "phase": 3, "slug": "Day-67-second-project-rigorous-results", "title": "Second Project: Rigorous Results", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Compare before vs after on your eval and include failures", "Notebook"], ["Make one chart or table that tells the story", "README"]] },
+            { "day": 68, "phase": 3, "slug": "Day-68-second-project-write-up", "title": "Second Project Write-Up", "tag": "deploy", "dsa": 2, "new": true, "money": null, "capstone": null, "checklist": [["Result-first README: finding, method, one limitation", "README"], ["Share it publicly", "LinkedIn"], ["Solve 2 pattern-based DSA problems (graphs & heaps)", "NeetCode 150"]] },
+            { "day": 69, "phase": 3, "slug": "Day-69-first-open-source-pr", "title": "First Open-Source PR", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Open a PR for an issue you picked in Week 7", "GitHub"], ["Respond to maintainer review within a day", "GitHub"]] },
+            { "day": 70, "phase": 3, "slug": "Day-70-decision-point-job-vs-customer-track-sig", "title": "Decision Point: Job vs Customer Track Signals", "tag": "freelance", "dsa": 0, "new": true, "money": "Cap pilots at a few until you know you want services work.", "capstone": null, "checklist": [["Compare signals: interview replies and referrals vs customer interest and pilot offers", "Notes"], ["Shift time to the stronger track and scope one small paid pilot", "Proposal"]] },
+            { "day": 71, "phase": 3, "slug": "Day-71-flagship-v2-fix-top-failures-from-user-f", "title": "Flagship v2: Fix Top Failures from User Feedback", "tag": "build", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Fix the top 2 failure categories from real logs", "GitHub"], ["Show before/after eval scores", "README"], ["Solve 2 pattern-based DSA problems (intro DP)", "NeetCode 150"]] },
+            { "day": 72, "phase": 3, "slug": "Day-72-load-test-find-what-breaks-first", "title": "Load Test: Find What Breaks First", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Load-test the deployed app and find the first bottleneck", "Locust / k6"], ["Write the bottleneck and the proposed fix", "Notes"]] },
+            { "day": 73, "phase": 3, "slug": "Day-73-cd-with-the-eval-gate-in-the-pipeline", "title": "CD with the Eval Gate in the Pipeline", "tag": "build", "dsa": 1, "new": false, "money": null, "capstone": null, "checklist": [["Make the deploy pipeline block on eval and tests", "GitHub Actions"], ["Add rollback notes", "README"], ["Solve 1 pattern-based DSA problem (mixed patterns)", "NeetCode 150"]] },
+            { "day": 74, "phase": 3, "slug": "Day-74-architecture-doc-decisions-tradeoffs", "title": "Architecture Doc: Decisions & Tradeoffs", "tag": "build", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Write the doc after building: why X over Y, with measurements", "Docs"], ["Add a diagram and cost/latency numbers", "README"]] },
+            { "day": 75, "phase": 3, "slug": "Day-75-customer-pilot-proposal-pricing-delivery", "title": "Customer Pilot: Proposal, Pricing & Delivery", "tag": "freelance", "dsa": 2, "new": true, "money": "Never overpromise accuracy; show eval numbers and limits upfront.", "capstone": null, "checklist": [["Write a one-page proposal: scope, price, payment terms, limits", "Docs"], ["Include eval numbers and known limits upfront", "Proposal"], ["Solve 2 pattern-based DSA problems (arrays & hashing)", "NeetCode 150"]] },
+            { "day": 76, "phase": 3, "slug": "Day-76-demo-video-benchmarks-report", "title": "Demo Video & Benchmarks Report", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Record a 2-minute walkthrough", "Loom"], ["Publish latency, cost and eval scorecards", "README"]] },
+            { "day": 77, "phase": 3, "slug": "Day-77-capstone-4-flagship-v2-release", "title": "CAPSTONE 4 - Flagship v2 Release", "tag": "deploy", "dsa": 0, "new": true, "money": null, "capstone": "cap4", "checklist": [["Hardened v2 live with CD, eval gate and load-test results", "Live URL"], ["Architecture doc, red-team report and scorecards in the repo", "GitHub"]] },
+            { "day": 78, "phase": 4, "slug": "Day-78-github-polish-result-first-readmes-demos", "title": "GitHub Polish: Result-First READMEs, Demos & Diagrams", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Rewrite READMEs with the result in the first screen", "GitHub"], ["Pin your best 3 repos", "GitHub"]] },
+            { "day": 79, "phase": 4, "slug": "Day-79-one-page-resume-with-honest-metrics", "title": "One-Page Resume with Honest Metrics", "tag": "build", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Write bullets with measured numbers you can defend (eval score, users, cost)", "Docs"], ["Get one engineer to review it", "Referral"], ["Solve 2 pattern-based DSA problems (two pointers)", "NeetCode 150"]] },
+            { "day": 80, "phase": 4, "slug": "Day-80-ai-system-design-practice-1-design-a-rag", "title": "AI System Design Practice #1: Design a RAG System (Timed)", "tag": "interview", "dsa": 0, "new": true, "money": null, "capstone": null, "checklist": [["Design a RAG system in 45 minutes and state tradeoffs", "Whiteboard"], ["Get feedback from a peer or mock", "Mock"]] },
+            { "day": 81, "phase": 4, "slug": "Day-81-ai-system-design-practice-2-agent-platfo", "title": "AI System Design Practice #2: Agent Platform", "tag": "learn", "dsa": 1, "new": false, "money": null, "capstone": null, "checklist": [["Design a tool-using agent platform including cost and failure handling", "Whiteboard"], ["Review gaps and redo weak parts", "Notes"], ["Solve 1 pattern-based DSA problem (sliding window)", "NeetCode 150"]] },
+            { "day": 82, "phase": 4, "slug": "Day-82-mock-interview-1-live-coding-project-que", "title": "Mock Interview #1: Live Coding + Project Questions", "tag": "interview", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Run a full mock with a real person", "Mock"], ["Write down 3 weak spots", "Notes"]] },
+            { "day": 83, "phase": 4, "slug": "Day-83-timed-dsa-set", "title": "Timed DSA Set", "tag": "learn", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Solve a timed mixed set under interview conditions", "LeetCode"], ["Review mistakes and patterns", "NeetCode 150"], ["Solve 2 pattern-based DSA problems (stack)", "NeetCode 150"]] },
+            { "day": 84, "phase": 4, "slug": "Day-84-applications-batch-10-follow-ups", "title": "Applications Batch (~10) & Follow-Ups", "tag": "interview", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Send about 10 tailored applications and follow up on earlier ones", "Job boards"], ["Keep sending customer outreach if on that track", "LinkedIn"]] },
+            { "day": 85, "phase": 4, "slug": "Day-85-fundamentals-review-1-attention-kv-cache", "title": "Fundamentals Review 1: Attention, KV Cache, Embeddings, HNSW", "tag": "learn", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Explain each aloud in 2 minutes", "Notes"], ["Answer 10 rapid-fire questions", "Quiz"], ["Solve 2 pattern-based DSA problems (binary search)", "NeetCode 150"]] },
+            { "day": 86, "phase": 4, "slug": "Day-86-fundamentals-review-2-lora-retrieval-met", "title": "Fundamentals Review 2: LoRA, Retrieval Metrics, Evaluation", "tag": "learn", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Explain LoRA, recall@k, MRR, faithfulness and judge bias aloud", "Notes"], ["Answer 10 rapid-fire questions", "Quiz"]] },
+            { "day": 87, "phase": 4, "slug": "Day-87-four-star-stories-from-real-incidents", "title": "Four STAR Stories from Real Incidents", "tag": "interview", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Write 4 stories: a bug, an eval failure, a tradeoff, a user complaint", "Docs"], ["Rehearse each under 2 minutes", "Mock"], ["Solve 2 pattern-based DSA problems (linked list)", "NeetCode 150"]] },
+            { "day": 88, "phase": 4, "slug": "Day-88-mock-interview-2-5-minute-project-defens", "title": "Mock Interview #2: 5-Minute Project Defense", "tag": "interview", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Defend your flagship architecture and numbers", "Mock"], ["Fix unclear explanations", "Notes"]] },
+            { "day": 89, "phase": 4, "slug": "Day-89-online-assessment-simulation-90-minutes", "title": "Online Assessment Simulation (90 Minutes)", "tag": "learn", "dsa": 3, "new": false, "money": null, "capstone": null, "checklist": [["Complete a full timed online assessment", "LeetCode"], ["Review every miss", "NeetCode 150"], ["Solve 3 pattern-based DSA problems (trees)", "NeetCode 150"]] },
+            { "day": 90, "phase": 4, "slug": "Day-90-applications-batch-2-10-follow-ups", "title": "Applications Batch 2 (~10) & Follow-Ups", "tag": "interview", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Send about 10 more tailored applications", "Job boards"], ["Follow up with warm contacts", "LinkedIn"]] },
+            { "day": 91, "phase": 4, "slug": "Day-91-funnel-review-what-s-working", "title": "Funnel Review: What's Working?", "tag": "review", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Count replies, interviews and customer signals", "Notes"], ["Adjust targets and message", "Plan"]] },
+            { "day": 92, "phase": 4, "slug": "Day-92-catch-up-day", "title": "Catch-Up Day", "tag": "build", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Finish anything that slipped", "GitHub"], ["Fix broken links and docs", "README"]] },
+            { "day": 93, "phase": 4, "slug": "Day-93-second-open-source-pr-or-community-contr", "title": "Second Open-Source PR or Community Contribution", "tag": "build", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Submit another PR or a substantive issue/docs fix", "GitHub"], ["Write a short post about what you learned", "Blog"], ["Solve 2 pattern-based DSA problems (graphs & heaps)", "NeetCode 150"]] },
+            { "day": 94, "phase": 4, "slug": "Day-94-keep-conversations-going-engineers-custo", "title": "Keep Conversations Going: Engineers & Customers", "tag": "interview", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Follow up on every open conversation", "LinkedIn"], ["Ask one specific question per person", "Email"]] },
+            { "day": 95, "phase": 4, "slug": "Day-95-mock-system-design-3", "title": "Mock System Design #3", "tag": "interview", "dsa": 1, "new": false, "money": null, "capstone": null, "checklist": [["Design an end-to-end agent + RAG system under time", "Whiteboard"], ["Get final feedback", "Mock"], ["Solve 1 pattern-based DSA problem (intro DP)", "NeetCode 150"]] },
+            { "day": 96, "phase": 4, "slug": "Day-96-final-polish-every-demo-link-works", "title": "Final Polish: Every Demo Link Works", "tag": "review", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Open every demo, repo and README as a stranger would", "Checklist"], ["Fix anything broken", "GitHub"]] },
+            { "day": 97, "phase": 4, "slug": "Day-97-applications-batch-3-follow-ups", "title": "Applications Batch 3 & Follow-Ups", "tag": "interview", "dsa": 2, "new": false, "money": null, "capstone": null, "checklist": [["Send a final targeted batch and follow up", "Job boards"], ["Update tracker", "Sheet"], ["Solve 2 pattern-based DSA problems (mixed patterns)", "NeetCode 150"]] },
+            { "day": 98, "phase": 4, "slug": "Day-98-debrief-gap-closure", "title": "Debrief & Gap Closure", "tag": "review", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["List remaining gaps and pick 2 to close", "Notes"], ["Plan the next 30 days", "Plan"]] },
+            { "day": 99, "phase": 4, "slug": "Day-99-warm-lead-consolidation", "title": "Warm Lead Consolidation", "tag": "interview", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["List every warm lead and next action", "Sheet"], ["Send thank-you notes", "Email"]] },
+            { "day": 100, "phase": 4, "slug": "Day-100-day-100-retrospective-master-post", "title": "Day 100: Retrospective & Master Post", "tag": "deploy", "dsa": 0, "new": false, "money": null, "capstone": null, "checklist": [["Write what worked, what didn't, what you'd change", "LinkedIn"], ["Publish the master post with your real numbers", "LinkedIn"]] }
+        ];
+
+        const WEEKLY_PROJECTS = {
+            1: { title: "SQL + Tabular EDA Pipeline", brief: "Automated SQL feature extraction and exploratory statistical profiling notebook." },
+            2: { title: "Leak-Free Sklearn Pipeline & Gradio App", brief: "End-to-end ColumnTransformer pipeline deployed interactively on Hugging Face Spaces." },
+            3: { title: "Cached, Monitored FastAPI ML Microservice", brief: "XGBoost + SHAP + FastAPI lifespan + Redis SHA-256 cache + KS drift test + GitHub Actions CI." },
+            4: { title: "Vector Search Engines (FAISS & Qdrant)", brief: "Containerized semantic search microservices with L2 normalization and dynamic metadata payload filtering." },
+            5: { title: "Gold Set + Deployed Baseline RAG", brief: "Real question set from several people, async LLM backend, and a public baseline with a recorded score." },
+            6: { title: "Ablation Table + First 10 Users", brief: "Hybrid, reranker and rewriting each measured against the baseline; pgvector comparison; a real UI with users." },
+            7: { title: "Evals, Tracing & Public Launch", brief: "Calibrated LLM judge, CI eval gate, Langfuse tracing, failure taxonomy and a 'what broke' post." },
+            8: { title: "Tool-Using Agent + Both Tracks Start", brief: "Raw ReAct loop, custom MCP server, text-to-SQL, trajectory evals, first applications and conversations." },
+            9: { title: "Cost, Reliability & Security", brief: "Prompt caching, routing, auth, red-team report, guardrails and continuous deployment." },
+            10: { title: "Second Project + First OSS PR", brief: "One rigorous before/after project and a track decision based on real signals." },
+            11: { title: "Flagship v2 + Customer Pilot", brief: "Failures fixed, load-tested, architecture doc, demo video and a scoped pilot proposal." },
+            12: { title: "Portfolio & Interview Practice 1", brief: "Result-first READMEs, honest resume, system design and mock interviews." },
+            13: { title: "Interview Practice 2", brief: "Fundamentals review, STAR stories, project defense and a 90-minute assessment simulation." },
+            14: { title: "Buffer, Contributions & Polish", brief: "Catch-up, second contribution, final polish and continued conversations." },
+            15: { title: "Retrospective", brief: "Warm leads consolidated and a master post with real numbers." }
+        };
+
+        const CAPSTONES = {
+            "cap1": {
+                        "day": 25,
+                        "tier": "Phase 1 Anchor",
+                        "title": "Production Tabular MLOps & Vector Microservices",
+                        "brief": "A production-grade inference architecture combining tabular ML serving, caching, statistical drift monitoring, and containerized vector search.",
+                        "reqs": [
+                                    "FastAPI microservice with lifespan model loading & Pydantic v2 schemas",
+                                    "Redis SHA-256 inference cache (report the real hit rate, not just hit vs miss latency)",
+                                    "Kolmogorov-Smirnov covariate drift detection endpoint",
+                                    "FAISS & Qdrant Docker Compose vector search with metadata filtering",
+                                    "Automated pytest suite & GitHub Actions CI"
+                        ],
+                        "stack": [
+                                    "Python",
+                                    "XGBoost",
+                                    "SHAP",
+                                    "FastAPI",
+                                    "Redis",
+                                    "Qdrant",
+                                    "FAISS",
+                                    "Docker Compose",
+                                    "GitHub Actions"
+                        ]
+            },
+            "cap2": {
+                        "day": 49,
+                        "tier": "Phase 2 Anchor",
+                        "title": "Eval-First RAG with Real Users & a Failure Taxonomy",
+                        "brief": "Your flagship v1: a deployed RAG system measured on a gold set written by several people, used by real users, with an honest ablation table.",
+                        "reqs": [
+                                    "Gold set of 60+ questions from 3+ authors, with a judge calibrated against 50 hand labels",
+                                    "Ablation table: baseline, hybrid, reranker, rewriting (score, latency, cost)",
+                                    "10+ real users with query logs and a categorized failure taxonomy",
+                                    "CI eval gate and Langfuse tracing",
+                                    "Public write-up: what broke and what fixed it"
+                        ],
+                        "stack": [
+                                    "Qdrant / pgvector",
+                                    "Sentence-Transformers",
+                                    "Ragas / DeepEval",
+                                    "Langfuse",
+                                    "FastAPI",
+                                    "GitHub Actions"
+                        ]
+            },
+            "cap3": {
+                        "day": 63,
+                        "tier": "Phase 3 Anchor",
+                        "title": "Deployed Tool-Using Agent with MCP, Cost Controls & Red-Team Report",
+                        "brief": "A single agent with a few excellent tools, measured on trajectories, cost per query and security, running live.",
+                        "reqs": [
+                                    "Raw ReAct loop plus one orchestration choice, single agent by default",
+                                    "Custom FastMCP server exposing corpus search and SQL",
+                                    "Trajectory evals and cost per query / P95 latency published",
+                                    "Red-team report with input/output guardrails and PII redaction",
+                                    "Continuous deployment behind the eval gate"
+                        ],
+                        "stack": [
+                                    "Python",
+                                    "FastMCP",
+                                    "Prompt caching",
+                                    "Guardrails",
+                                    "Cloud Run / Render",
+                                    "GitHub Actions"
+                        ]
+            },
+            "cap4": {
+                        "day": 77,
+                        "tier": "Phase 3 Flagship",
+                        "title": "Flagship v2: Load-Tested, Documented & Customer-Ready",
+                        "brief": "The hardened flagship: top failures fixed from real feedback, load-tested, documented, and ready for a paid pilot or interview defense.",
+                        "reqs": [
+                                    "Top failure categories fixed with before/after scores",
+                                    "Load-test results and the first bottleneck documented",
+                                    "Architecture doc with decisions, tradeoffs and measured numbers",
+                                    "2-minute demo video and a one-page pilot proposal"
+                        ],
+                        "stack": [
+                                    "Load testing",
+                                    "CI/CD",
+                                    "Architecture docs",
+                                    "Evals"
+                        ]
+            }
+};
+
+        const START_DATE = new Date("2026-09-25T00:00:00");
+
+        const DAYS = RAW_DATA.map(d => {
+            const dt = new Date(START_DATE);
+            dt.setDate(dt.getDate() + d.day - 1);
+            const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const week = Math.floor((d.day - 1) / 7) + 1;
+            return { ...d, date: dateStr, week: week };
+        });
+
+        const PHASE_META = {
+            1: { name: "Tabular MLOps, Microservices & Vector DBs", color: "var(--gold)", cls: "p1" },
+            2: { name: "Eval-First RAG, Real Users & Observability", color: "var(--green)", cls: "p2" },
+            3: { name: "Agents, Cost & Security, Second Project & Flagship v2", color: "var(--blue)", cls: "p3" },
+            4: { name: "Portfolio, Interviews & Customer Pilots", color: "var(--purple)", cls: "p4" },
+        };
+
+        let activeFilter = 'all';
+
+        function getState() {
+            try {
+                const saved = localStorage.getItem('nikhil_100day_v3');
+                if (saved) return JSON.parse(saved);
+                // Migrate from v2 if present, or default Days 1-29 completed!
+                const old = localStorage.getItem('nikhil_100day_v2');
+                if (old) return JSON.parse(old);
+                const initial = {};
+                for (let i = 1; i <= 29; i++) initial[i] = true;
+                localStorage.setItem('nikhil_100day_v3', JSON.stringify(initial));
+                return initial;
+            } catch { return {} }
+        }
+
+        function saveState(s) {
+            try { localStorage.setItem('nikhil_100day_v3', JSON.stringify(s)) } catch { }
+        }
+
+        function syncUpToDay29() {
+            const state = getState();
+            for (let i = 1; i <= 29; i++) state[i] = true;
+            saveState(state);
+            renderAll();
+        }
+
+        function exportProgress() {
+            const state = getState();
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "nikhil_100day_progress.json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function tagLabel(t) {
+            const map = { setup: "Setup", learn: "Learn", build: "Build", deploy: "Deploy", freelance: "Outreach", interview: "Interview", review: "Review" };
+            return map[t] || t;
+        }
+
+        function renderCapstones() {
+            const wrap = document.getElementById('capstone-container');
+            let html = '';
+            for (let key in CAPSTONES) {
+                const c = CAPSTONES[key];
+                const reqs = c.reqs.map(r => `<li>${r}</li>`).join('');
+                const stack = c.stack.map(s => `<span class="stack-chip">${s}</span>`).join('');
+                html += `
+      <div class="cap-card">
+        <div class="cap-top">
+          <span class="cap-day">DAY ${c.day}</span>
+          <span class="cap-tier">${c.tier}</span>
+        </div>
+        <div class="cap-title">${c.title}</div>
+        <div class="cap-brief">${c.brief}</div>
+        <ul class="cap-list">${reqs}</ul>
+        <div class="cap-stack">${stack}</div>
+      </div>
+    `;
+            }
+            wrap.innerHTML = html;
+        }
+
+        function renderHeatmap() {
+            const state = getState();
+            const wrap = document.getElementById('heatmap');
+            let firstTodo = 100;
+            for (let i = 1; i <= 100; i++) {
+                if (!state[i]) { firstTodo = i; break; }
+            }
+            let html = '';
+            DAYS.forEach(d => {
+                const done = state[d.day];
+                const cls = `hm-cell p${d.phase} ${done ? 'done' : ''} ${d.day === firstTodo ? 'today' : ''}`;
+                html += `<div class="${cls}" title="Day ${d.day}: ${d.title} (${d.slug})" onclick="jumpToDay(${d.day})"></div>`;
+            });
+            wrap.innerHTML = html;
+        }
+
+        function jumpToDay(day) {
+            const el = document.getElementById('day-' + day);
+            if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        }
+
+        function renderPhases() {
+            const container = document.getElementById('phase-sections');
+            let html = '';
+            for (let p = 1; p <= 4; p++) {
+                const meta = PHASE_META[p];
+                const pdays = DAYS.filter(d => d.phase === p);
+                const range = `Days ${pdays[0].day}–${pdays[pdays.length - 1].day}`;
+                html += `<section class="sec phase-block" id="phase${p}" style="--phase-color:${meta.color}">
+      <div class="phase-head">
+        <div class="phase-num">${String(p).padStart(2, '0')}</div>
+        <div><div class="phase-name">${meta.name}</div><div class="phase-range">${range}</div></div>
+        <div class="phase-pct" id="phase${p}-pct">0%</div>
+      </div>`;
+
+                let lastWeek = null;
+                pdays.forEach(d => {
+                    if (d.week !== lastWeek) {
+                        lastWeek = d.week;
+                        const wProj = WEEKLY_PROJECTS[d.week];
+                        const projText = wProj ? `<span class="week-proj">Deliverable: ${wProj.title} — ${wProj.brief}</span>` : '';
+                        html += `
+          <div class="week-head">
+            <span class="week-label">Week ${d.week}</span>
+            ${projText}
+          </div>
+        `;
+                    }
+                    const dsaBadge = d.dsa > 0 ? `<span class="dsa-chip">+${d.dsa} DSA</span>` : '';
+                    const newBadge = d.new ? `<span class="v3-badge">⚡ 2026 CORE</span>` : '';
+                    const moneyLine = d.money ? `<div class="day-money">${d.money}</div>` : '';
+
+                    let checklistHtml = '';
+                    if (d.checklist && d.checklist.length > 0) {
+                        checklistHtml = `<div class="day-checklist">`;
+                        d.checklist.forEach(item => {
+                            checklistHtml += `
+            <div class="task-item">
+              <span class="task-bullet">▹</span>
+              <span>${item[0]}</span>
+              <span class="task-res">${item[1]}</span>
+            </div>
+          `;
+                        });
+                        checklistHtml += `</div>`;
+                    }
+
+                    html += `<div class="day-card" id="day-${d.day}" data-day="${d.day}" data-tag="${d.tag}" data-dsa="${d.dsa}" data-new="${d.new}" style="--phase-color:${meta.color}">
+        <div class="day-checkbox" id="cb-${d.day}" onclick="toggleDay(${d.day})"></div>
+        <div class="day-body">
+          <div class="day-top">
+            <span class="day-num">DAY ${d.day}</span>
+            <span class="day-slug">${d.slug}</span>
+            <span class="day-date">${d.date}</span>
+            <span class="tag-chip tag-${d.tag}">${tagLabel(d.tag)}</span>
+            ${dsaBadge}${newBadge}
+          </div>
+          <div class="day-title">${d.title}</div>
+          ${checklistHtml}
+          ${moneyLine}
+        </div>
+      </div>`;
+                });
+                html += `</section>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function setFilter(filterType, btnEl) {
+            activeFilter = filterType;
+            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const query = (document.getElementById('search-box').value || '').toLowerCase();
+            const state = getState();
+
+            DAYS.forEach(d => {
+                const card = document.getElementById('day-' + d.day);
+                if (!card) return;
+                const textContent = (d.title + ' ' + d.slug + ' ' + JSON.stringify(d.checklist)).toLowerCase();
+                const matchesQuery = !query || textContent.includes(query);
+
+                let matchesChip = true;
+                if (activeFilter === 'v3') matchesChip = d.new === true;
+                else if (activeFilter === 'dsa') matchesChip = d.dsa > 0;
+                else if (activeFilter === 'build') matchesChip = (d.tag === 'build' || d.tag === 'deploy');
+                else if (activeFilter === 'todo') matchesChip = !state[d.day];
+
+                if (matchesQuery && matchesChip) card.classList.remove('hidden');
+                else card.classList.add('hidden');
+            });
+        }
+
+        function toggleDay(day) {
+            const state = getState();
+            state[day] = !state[day];
+            saveState(state);
+            renderAll();
+            applyFilters();
+        }
+
+        function renderAll() {
+            const state = getState();
+            renderHeatmap();
+
+            let totalDone = 0;
+            let dsaDone = 0;
+            let capsDone = 0;
+
+            DAYS.forEach(d => {
+                const card = document.getElementById('day-' + d.day);
+                const cb = document.getElementById('cb-' + d.day);
+                if (card) {
+                    if (state[d.day]) {
+                        card.classList.add('done');
+                        cb.textContent = '✓';
+                        totalDone++;
+                        dsaDone += (d.dsa || 0);
+                        if (d.capstone) capsDone++;
+                    } else {
+                        card.classList.remove('done');
+                        cb.textContent = '';
+                    }
+                }
+            });
+
+            for (let p = 1; p <= 4; p++) {
+                const pdays = DAYS.filter(d => d.phase === p);
+                const done = pdays.filter(d => state[d.day]).length;
+                const pct = Math.round(done / pdays.length * 100);
+                const el = document.getElementById(`phase${p}-pct`);
+                if (el) el.textContent = pct + '%';
+            }
+
+            const overall = Math.round(totalDone / 100 * 100);
+            document.getElementById('overall-pct').textContent = overall + '%';
+            document.getElementById('hero-bar').style.width = overall + '%';
+            document.getElementById('done-count').textContent = totalDone;
+            document.getElementById('kpi-days').textContent = totalDone;
+            document.getElementById('kpi-dsa').textContent = dsaDone;
+            document.getElementById('kpi-caps').textContent = capsDone;
+
+            let nextDay = 100;
+            for (let i = 1; i <= 100; i++) {
+                if (!state[i]) { nextDay = i; break; }
+            }
+            document.getElementById('today-num').textContent = nextDay;
+            const currentPhase = DAYS.find(d => d.day === nextDay)?.phase || 4;
+            document.getElementById('kpi-phase').textContent = `PHASE ${currentPhase}`;
+            document.getElementById('pace-note').textContent = `Up next: Day ${nextDay}`;
+        }
+
+        function resetAll() {
+            if (confirm('Reset all 100 days of progress? This cannot be undone.')) {
+                try { localStorage.setItem('nikhil_100day_v3', '{}') } catch { }
+                renderAll();
+            }
+        }
+
+        renderCapstones();
+        renderPhases();
+        renderAll();
+    </script>
+</body>
+
+</html>

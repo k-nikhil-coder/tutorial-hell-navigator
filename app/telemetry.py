@@ -8,6 +8,7 @@ from typing import List, Dict, Any, Optional
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 LOGS_DIR = PROJECT_ROOT / "logs"
 TRAJECTORY_LOG_FILE = LOGS_DIR / "query_trajectories.jsonl"
+FEEDBACK_LOG_FILE = LOGS_DIR / "feedback.jsonl"
 
 
 def init_telemetry():
@@ -55,20 +56,121 @@ def log_query_trajectory(
     return record
 
 
+from collections import deque
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 def get_recent_trajectories(limit: int = 20) -> List[Dict[str, Any]]:
-    """Retrieve the most recent logged trajectories."""
+    """Retrieve the most recent logged trajectories using a bounded memory buffer."""
     if not TRAJECTORY_LOG_FILE.exists():
         return []
 
-    trajectories = []
+    recent_lines = deque(maxlen=limit)
     try:
         with open(TRAJECTORY_LOG_FILE, "r", encoding="utf-8") as f:
             for line in f:
-                line = line.strip()
-                if line:
-                    trajectories.append(json.loads(line))
+                if line.strip():
+                    recent_lines.append(line)
+        return [json.loads(l) for l in recent_lines]
     except Exception as e:
-        print(f"Warning: Failed to read telemetry trajectories: {e}")
+        logger.warning("Failed to read telemetry trajectories: %s", e)
         return []
 
-    return trajectories[-limit:]
+
+def log_user_feedback(
+    query: str,
+    rating: Optional[str] = None,
+    unstuck: Optional[bool] = None,
+    comment: Optional[str] = None,
+    cited_chunk_ids: Optional[List[str]] = None,
+    session_id: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Record user thumbs-up/down, unstick metric, and comments for real-user testing telemetry."""
+    init_telemetry()
+
+    record = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "query": query,
+        "rating": rating.lower().strip() if rating else None,
+        "unstuck": unstuck,
+        "comment": comment.strip() if comment else None,
+        "cited_chunk_ids": cited_chunk_ids or [],
+        "session_id": session_id,
+    }
+
+    try:
+        with open(FEEDBACK_LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(json.dumps(record) + "\n")
+    except Exception as e:
+        logger.warning("Failed to write feedback log: %s", e)
+
+    return record
+
+
+def get_recent_feedback(limit: int = 20) -> List[Dict[str, Any]]:
+    """Retrieve the most recent logged user feedback."""
+    if not FEEDBACK_LOG_FILE.exists():
+        return []
+
+    recent_lines = deque(maxlen=limit)
+    try:
+        with open(FEEDBACK_LOG_FILE, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    recent_lines.append(line)
+        return [json.loads(l) for l in recent_lines]
+    except Exception as e:
+        logger.warning("Failed to read feedback log: %s", e)
+        return []
+
+
+def get_feedback_summary() -> Dict[str, Any]:
+    """Aggregate feedback telemetry: total count, unstick rate, and rating distribution."""
+    if not FEEDBACK_LOG_FILE.exists():
+        return {
+            "total_records": 0,
+            "unstuck_count": 0,
+            "stuck_count": 0,
+            "unstick_rate_percent": 0.0,
+            "positive_ratings": 0,
+            "negative_ratings": 0,
+        }
+
+    total = 0
+    unstuck_count = 0
+    stuck_count = 0
+    positive = 0
+    negative = 0
+
+    try:
+        with open(FEEDBACK_LOG_FILE, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    r = json.loads(line)
+                    total += 1
+                    if r.get("unstuck") is True:
+                        unstuck_count += 1
+                    elif r.get("unstuck") is False:
+                        stuck_count += 1
+
+                    if r.get("rating") == "positive":
+                        positive += 1
+                    elif r.get("rating") == "negative":
+                        negative += 1
+
+        rated_unstick = unstuck_count + stuck_count
+        rate = round((unstuck_count / rated_unstick) * 100, 1) if rated_unstick > 0 else 0.0
+
+        return {
+            "total_records": total,
+            "unstuck_count": unstuck_count,
+            "stuck_count": stuck_count,
+            "unstick_rate_percent": rate,
+            "positive_ratings": positive,
+            "negative_ratings": negative,
+        }
+    except Exception as e:
+        logger.warning("Failed to compute feedback summary: %s", e)
+        return {"error": str(e)}

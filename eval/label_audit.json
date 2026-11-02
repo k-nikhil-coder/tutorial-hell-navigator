@@ -1,0 +1,299 @@
+{
+  "gold_set_file": "C:\\Users\\kunbh\\tutorial-hell-navigator-main\\eval\\gold_set.json",
+  "total_questions": 392,
+  "chunks_expected_for_3_or_more_questions": {
+    "fastapi_fullstack_guide_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-01",
+        "GS-02",
+        "GS-05",
+        "GS-09",
+        "GS-10",
+        "GS-13",
+        "GS-88"
+      ]
+    },
+    "fastapi_fullstack_guide_chunk_1": {
+      "count": 7,
+      "question_ids": [
+        "GS-01",
+        "GS-02",
+        "GS-04",
+        "GS-08",
+        "GS-09",
+        "GS-15",
+        "GS-86"
+      ]
+    },
+    "docker_production_guide_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-04",
+        "GS-06",
+        "GS-14",
+        "GS-17",
+        "GS-18",
+        "GS-19",
+        "GS-82"
+      ]
+    },
+    "dsa_patterns_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-K1-01",
+        "GS-K1-02",
+        "GS-K1-03",
+        "GS-K1-04",
+        "GS-K1-05",
+        "GS-K1-06",
+        "GS-K1-07"
+      ]
+    },
+    "complexity_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-K2-01",
+        "GS-K2-02",
+        "GS-K2-03",
+        "GS-K2-04",
+        "GS-K2-05",
+        "GS-K2-06",
+        "GS-K2-07"
+      ]
+    },
+    "os_concepts_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-K3-01",
+        "GS-K3-02",
+        "GS-K3-03",
+        "GS-K3-04",
+        "GS-K3-05",
+        "GS-K3-06",
+        "GS-K3-07"
+      ]
+    },
+    "database_theory_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-K4-01",
+        "GS-K4-02",
+        "GS-K4-03",
+        "GS-K4-04",
+        "GS-K4-05",
+        "GS-K4-06",
+        "GS-K4-07"
+      ]
+    },
+    "networking_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-K5-01",
+        "GS-K5-02",
+        "GS-K5-03",
+        "GS-K5-04",
+        "GS-K5-05",
+        "GS-K5-06",
+        "GS-K5-07"
+      ]
+    },
+    "system_design_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-K6-01",
+        "GS-K6-02",
+        "GS-K6-03",
+        "GS-K6-04",
+        "GS-K6-05",
+        "GS-K6-06",
+        "GS-K6-07"
+      ]
+    },
+    "concurrency_chunk_0": {
+      "count": 7,
+      "question_ids": [
+        "GS-K7-01",
+        "GS-K7-02",
+        "GS-K7-03",
+        "GS-K7-04",
+        "GS-K7-05",
+        "GS-K7-06",
+        "GS-K7-07"
+      ]
+    },
+    "docker_production_guide_chunk_1": {
+      "count": 6,
+      "question_ids": [
+        "GS-06",
+        "GS-11",
+        "GS-14",
+        "GS-17",
+        "GS-82",
+        "GS-85"
+      ]
+    },
+    "fastapi_fullstack_guide_chunk_2": {
+      "count": 5,
+      "question_ids": [
+        "GS-02",
+        "GS-03",
+        "GS-08",
+        "GS-23",
+        "GS-87"
+      ]
+    },
+    "fastapi_cors_chunk_1": {
+      "count": 3,
+      "question_ids": [
+        "GS-07",
+        "GS-23",
+        "GS-81"
+      ]
+    },
+    "fastapi_cors_chunk_2": {
+      "count": 3,
+      "question_ids": [
+        "GS-07",
+        "GS-81",
+        "GS-87"
+      ]
+    },
+    "docker_compose_best_practices_chunk_0": {
+      "count": 3,
+      "question_ids": [
+        "GS-11",
+        "GS-18",
+        "GS-19"
+      ]
+    }
+  },
+  "document_mismatches_with_top_retrieved": {
+    "total_mismatches": 7,
+    "mismatches": [
+      {
+        "id": "GS-06",
+        "question": "How do login, signup, sessions, cookies, and JWTs actually work in a full-stack application? Show me a sensible implementation path without overwhelming me.",
+        "expected_chunk_ids": [
+          "docker_production_guide_chunk_0",
+          "docker_production_guide_chunk_1"
+        ],
+        "expected_documents": [
+          "docker_production_guide"
+        ],
+        "top_retrieved_chunk_id": "fastapi_fullstack_guide_chunk_3",
+        "top_retrieved_document": "fastapi_fullstack_guide"
+      },
+      {
+        "id": "GS-07",
+        "question": "My app works locally, but I don't know how to deploy the frontend, backend, and database. Give me a beginner-friendly production deployment checklist.",
+        "expected_chunk_ids": [
+          "fastapi_cors_chunk_0",
+          "fastapi_cors_chunk_1",
+          "fastapi_cors_chunk_2"
+        ],
+        "expected_documents": [
+          "fastapi_cors"
+        ],
+        "top_retrieved_chunk_id": "docker_production_guide_chunk_1",
+        "top_retrieved_document": "docker_production_guide"
+      },
+      {
+        "id": "GS-08",
+        "question": "I'm overwhelmed by React, TypeScript, APIs, SQL, Git, Docker, and cloud platforms. What should I learn first, and what can I safely postpone?",
+        "expected_chunk_ids": [
+          "fastapi_fullstack_guide_chunk_1",
+          "fastapi_fullstack_guide_chunk_2"
+        ],
+        "expected_documents": [
+          "fastapi_fullstack_guide"
+        ],
+        "top_retrieved_chunk_id": "cs_engineering_roadmap_chunk_0",
+        "top_retrieved_document": "cs_engineering_roadmap"
+      },
+      {
+        "id": "GS-11",
+        "question": "I can follow coding tutorials but freeze when starting from a blank editor. Give me a repeatable process for turning an idea into working code without copying a tutorial.",
+        "expected_chunk_ids": [
+          "docker_compose_best_practices_chunk_0",
+          "docker_production_guide_chunk_1"
+        ],
+        "expected_documents": [
+          "docker_compose_best_practices",
+          "docker_production_guide"
+        ],
+        "top_retrieved_chunk_id": "cs_engineering_roadmap_chunk_0",
+        "top_retrieved_document": "cs_engineering_roadmap"
+      },
+      {
+        "id": "GS-14",
+        "question": "I repeatedly start tutorials and quit halfway. Give me a seven-day micro-project plan with daily deliverables, a time limit, and a definition of done.",
+        "expected_chunk_ids": [
+          "docker_production_guide_chunk_0",
+          "docker_production_guide_chunk_1"
+        ],
+        "expected_documents": [
+          "docker_production_guide"
+        ],
+        "top_retrieved_chunk_id": "cs_engineering_roadmap_chunk_0",
+        "top_retrieved_document": "cs_engineering_roadmap"
+      },
+      {
+        "id": "GS-15",
+        "question": "I get stuck for hours whenever my project throws an unfamiliar error. Teach me a systematic debugging workflow, including what to inspect before asking AI for help.",
+        "expected_chunk_ids": [
+          "fastapi_fullstack_guide_chunk_1"
+        ],
+        "expected_documents": [
+          "fastapi_fullstack_guide"
+        ],
+        "top_retrieved_chunk_id": "cs_engineering_roadmap_chunk_1",
+        "top_retrieved_document": "cs_engineering_roadmap"
+      },
+      {
+        "id": "GS-22",
+        "question": "My frontend receives a 500 response from my backend, but the browser only shows a generic error. How do I trace the request from the UI to the database and identify the root cause?",
+        "expected_chunk_ids": [
+          "cs_engineering_roadmap_chunk_1"
+        ],
+        "expected_documents": [
+          "cs_engineering_roadmap"
+        ],
+        "top_retrieved_chunk_id": "fastapi_fullstack_guide_chunk_2",
+        "top_retrieved_document": "fastapi_fullstack_guide"
+      }
+    ]
+  },
+  "label_generation_provenance": {
+    "sources_of_labels": [
+      {
+        "file": "scratch/update_gold_set.py",
+        "description": "Hardcoded ground truth dictionary GROUND_TRUTH_MAPPINGS manually mapped GS-01 through GS-15 to chunks.",
+        "details": "Questions GS-01 through GS-15 were mapped to hardcoded chunks in fastapi_fullstack_guide, docker_production_guide, cs_engineering_roadmap, etc. GS-81 through GS-88 were hardcoded via HARD_QUERIES."
+      },
+      {
+        "file": "commit 8cf03d1 (Ingestion of 304 candidate questions)",
+        "description": "Batch script generated 49 questions (GS-K1-01 to GS-K7-07) with synthetic fallback chunk IDs.",
+        "default_fallback_values": {
+          "GS-K1 (DSA)": "dsa_patterns_chunk_0 (repeated for all 7 questions, file does not exist in corpus)",
+          "GS-K2 (Complexity)": "complexity_chunk_0 (repeated for all 7 questions, file does not exist in corpus)",
+          "GS-K3 (OS)": "os_concepts_chunk_0 (repeated for all 7 questions, file does not exist in corpus)",
+          "GS-K4 (Database Theory)": "database_theory_chunk_0 (repeated for all 7 questions, file does not exist in corpus)",
+          "GS-K5 (Networking)": "networking_chunk_0 (repeated for all 7 questions, file does not exist in corpus)",
+          "GS-K6 (System Design)": "system_design_chunk_0 (repeated for all 7 questions, file does not exist in corpus)",
+          "GS-K7 (Concurrency)": "concurrency_chunk_0 (repeated for all 7 questions, file does not exist in corpus)"
+        }
+      },
+      {
+        "file": "eval/migrate_v1_to_v2.py",
+        "description": "Migration script that assigned default answerability and topic flags.",
+        "default_fallback_values": {
+          "answerability_without_chunks": "not_answerable (assigned to 58 questions without labels)",
+          "topic": "UNSET",
+          "type": "UNSET",
+          "span_status": "UNVERIFIED"
+        }
+      }
+    ]
+  }
+}

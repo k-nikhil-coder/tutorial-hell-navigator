@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class ActionableStep(BaseModel):
@@ -13,13 +13,22 @@ class ActionableStep(BaseModel):
 
 class NavigatorResponse(BaseModel):
     summary: str = Field(..., description="Overview of the diagnosis and solution")
-    action_plan: List[ActionableStep] = Field(..., min_length=1, description="Ordered list of steps to resolve the issue")
-    anti_patterns_to_avoid: List[str] = Field(..., min_length=1, description="Pitfalls and bad habits to avoid")
+    action_plan: List[ActionableStep] = Field(default_factory=list, description="Ordered list of steps to resolve the issue")
+    anti_patterns_to_avoid: List[str] = Field(default_factory=list, description="Pitfalls and bad habits to avoid")
     architecture_contract: Optional[str] = Field(None, description="File tree or component architecture if relevant")
     key_takeaway: Optional[str] = Field(None, description="Core concept to take away")
     is_refusal: bool = Field(False, description="True if query is out-of-corpus and cannot be verified")
     refusal_reason: Optional[str] = Field(None, description="Explanation if refusal path was triggered")
     cited_chunk_ids: List[str] = Field(default_factory=list, description="All chunk_ids cited across the response")
+
+    @model_validator(mode="after")
+    def validate_plan_requirements(self) -> "NavigatorResponse":
+        if not self.is_refusal:
+            if len(self.action_plan) < 1:
+                raise ValueError("In-corpus responses must provide at least 1 actionable step.")
+            if len(self.anti_patterns_to_avoid) < 1:
+                raise ValueError("In-corpus responses must provide at least 1 anti-pattern.")
+        return self
 
 
 class QueryRequest(BaseModel):
@@ -51,3 +60,17 @@ class QueryTrajectory(BaseModel):
     cited_chunk_ids: List[str]
     latency_ms: float
     response_summary: str
+
+
+class FeedbackRequest(BaseModel):
+    query: str = Field(..., min_length=1, description="Original user query")
+    rating: Optional[str] = Field(None, description="User rating: 'positive' or 'negative'")
+    unstuck: Optional[bool] = Field(None, description="Phase 0 metric: did this answer unstick the student?")
+    comment: Optional[str] = Field(None, max_length=1000, description="Optional qualitative feedback")
+    cited_chunk_ids: List[str] = Field(default_factory=list, description="Chunks cited in the response")
+    session_id: Optional[str] = Field(None, description="Anonymous session identifier")
+
+
+class FeedbackResponse(BaseModel):
+    status: str = "ok"
+    message: str = "Feedback recorded"

@@ -2118,5 +2118,8 @@
         "latency_ms": 568.3
       }
     }
-  ]
+  ],
+  "status": "LEGACY: corpus v1",
+  "corpus_version": "LEGACY: corpus v1",
+  "legacy_note": "LEGACY: corpus v1"
 }

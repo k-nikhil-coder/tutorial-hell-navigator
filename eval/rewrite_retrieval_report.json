@@ -2206,5 +2206,8 @@
         "rewritten_query": "FastAPI pydantic @field_validator mode='before' Depends request payload validation sanitization"
       }
     }
-  ]
+  ],
+  "status": "LEGACY: corpus v1",
+  "corpus_version": "LEGACY: corpus v1",
+  "legacy_note": "LEGACY: corpus v1"
 }

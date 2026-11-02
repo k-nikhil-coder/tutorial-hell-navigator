@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial Hell Navigator</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Markdown & Syntax Highlighting -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+  <style>
+    :root {
+      /* Apple & Claude Inspired Palette */
+      --bg: #0e0e11;
+      --surface-header: rgba(14, 14, 17, 0.82);
+      --surface-base: #141418;
+      --surface-card: #18181d;
+      --surface-card-hover: #1f1f25;
+      --surface-code: #0b0b0e;
+      --surface-code-header: #121216;
+      --surface-elevated: #22222a;
+      
+      --border: rgba(255, 255, 255, 0.08);
+      --border-subtle: rgba(255, 255, 255, 0.05);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --border-accent: rgba(217, 119, 70, 0.45);
+      
+      --text: #f4f4f6;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --text-dim: #52525b;
+      
+      --accent: #d97746;
+      --accent-hover: #c46436;
+      --accent-subtle: rgba(217, 119, 70, 0.12);
+      
+      --green: #34d399;
+      --green-bg: rgba(52, 211, 153, 0.06);
+      --green-border: rgba(52, 211, 153, 0.22);
+      
+      --red: #f87171;
+      --red-bg: rgba(248, 113, 113, 0.07);
+      --red-border: rgba(248, 113, 113, 0.22);
+
+      --amber: #fbbf24;
+      --amber-bg: rgba(251, 191, 36, 0.08);
+      
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Universal Slim Scrollbars (Eradicates Windows classic grey bars and arrows) */
+    *, *::before, *::after {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-button {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Minimalist Apple-style Header */
+    header {
+      background: var(--surface-header);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 13px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: #fff;
+    }
+
+    .scope-pill {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.4px;
+      padding: 2.5px 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-tertiary);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-header {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-header:hover {
+      background: var(--surface-card);
+      border-color: var(--border-hover);
+      color: #fff;
+    }
+
+    /* Centered 700px Content Column */
+    main {
+      flex: 1;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 20px 150px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Consent Banner */
+    .consent-banner {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .consent-banner b {
+      color: #fff;
+    }
+
+    .btn-consent {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .btn-consent:hover {
+      background: var(--surface-elevated);
+      border-color: var(--border-hover);
+    }
+
+    /* Empty State (Warm, Inviting Claude Style) */
+    .empty-state {
+      margin: auto 0;
+      padding: 36px 0 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 18px;
+    }
+
+    .empty-badge {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      border: 1px solid rgba(217, 119, 70, 0.28);
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .empty-title {
+      font-size: 27px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: #fff;
+    }
+
+    .empty-desc {
+      font-size: 14.5px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      line-height: 1.65;
+    }
+
+    .prompts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .prompt-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .prompt-card:hover {
+      background: var(--surface-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .prompt-card-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .prompt-card-text {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* Chat Conversation Flow */
+    .chat-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .msg-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* User Message Bubble */
+    .msg-user-wrap {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .msg-user {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px 18px;
+      max-width: 85%;
+      font-size: 14.5px;
+      color: #fff;
+      line-height: 1.55;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Assistant Editorial Layout (Open & Elegant like Claude) */
+    .msg-assistant-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .assistant-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .assistant-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    /* Diagnosis / Summary Lead */
+    .diagnosis-lead {
+      font-size: 15px;
+      color: #e4e4e7;
+      line-height: 1.7;
+      letter-spacing: -0.005em;
+    }
+
+    .diagnosis-lead p {
+      margin-bottom: 12px;
+    }
+
+    .diagnosis-lead p:last-child {
+      margin-bottom: 0;
+    }
+
+    .diagnosis-lead strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Inline Code Formatting */
+    code:not([class*="language-"]) {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fed7aa;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+
+    /* Steps Section */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 6px;
+    }
+
+    .steps-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* Modern Apple/Claude Step Card */
+    .step-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      transition: border-color 0.15s ease;
+    }
+
+    .step-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-num-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--accent-subtle);
+      border: 1px solid rgba(217, 119, 70, 0.25);
+      color: var(--accent);
+      padding: 2.5px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .step-title {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    .step-explanation {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.68;
+    }
+
+    .step-explanation p {
+      margin-bottom: 8px;
+    }
+
+    .step-explanation p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Apple Xcode / Claude Code Block */
+    .code-card {
+      background: var(--surface-code);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 4px 0;
+    }
+
+    .code-topbar {
+      background: var(--surface-code-header);
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .code-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* macOS Window Dots */
+    .window-dots {
+      display: flex;
+      gap: 5.5px;
+      align-items: center;
+    }
+
+    .window-dots .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .window-dots .dot.red { background: #ff5f56; }
+    .window-dots .dot.yellow { background: #ffbd2e; }
+    .window-dots .dot.green { background: #27c93f; }
+
+    .code-meta-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #8e8e93;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .code-filename {
+      color: #d1d1d6;
+      font-weight: 500;
+    }
+
+    .btn-copy-code {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-copy-code:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-hover);
+      color: #fff;
+    }
+
+    .btn-copy-code.copied {
+      border-color: var(--green-border);
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .code-card pre {
+      padding: 16px 18px;
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: #f4f4f5;
+      overflow-x: auto;
+      line-height: 1.6;
+      background: transparent !important;
+    }
+
+    .code-card code {
+      font-family: var(--font-mono) !important;
+      font-size: 12.5px !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+    }
+
+    /* Prism.js Syntax Coloring (Dark Graphite Theme) */
+    .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6b7280; font-style: italic; }
+    .token.punctuation { color: #9ca3af; }
+    .token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol { color: #60a5fa; }
+    .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin { color: #34d399; }
+    .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f472b6; }
+    .token.atrule, .token.attr-value, .token.keyword { color: #c084fc; font-weight: 500; }
+    .token.function, .token.class-name { color: #fbbf24; }
+    .token.regex, .token.important, .token.variable { color: #f87171; }
+
+    /* Verification Callout (Subtle, Clean Apple Callout) */
+    .verify-callout {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .verify-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .verify-body {
+      font-size: 13px;
+      color: #e4e4e7;
+      line-height: 1.55;
+    }
+
+    .verify-body code {
+      background: rgba(0, 0, 0, 0.35);
+      border-color: rgba(52, 211, 153, 0.2);
+      color: #a7f3d0;
+    }
+
+    /* Citations Footnotes */
+    .citations-drawer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    .citations-prefix {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .citation-chip {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .citation-chip:hover {
+      background: var(--surface-card-hover);
+      border-color: var(--border-hover);
+      color: #fff;
+    }
+
+    /* Collapsible Anti-Patterns (Apple HIG Disclosure Style) */
+    .anti-patterns-disclosure {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 4px;
+      transition: border-color 0.15s;
+    }
+
+    .anti-patterns-disclosure:hover {
+      border-color: var(--border-hover);
+    }
+
+    .anti-patterns-summary {
+      padding: 13px 18px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      list-style: none;
+    }
+
+    .anti-patterns-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .anti-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fca5a5;
+    }
+
+    .chevron-icon {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      color: var(--text-tertiary);
+    }
+
+    .anti-patterns-disclosure[open] .chevron-icon {
+      transform: rotate(90deg);
+    }
+
+    .anti-patterns-content {
+      padding: 12px 18px 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .anti-pattern-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      line-height: 1.55;
+    }
+
+    /* Key Concept Callout */
+    .takeaway-card {
+      background: rgba(217, 119, 70, 0.05);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+      color: #fed7aa;
+      line-height: 1.55;
+    }
+
+    /* Refusal / Scope Alert */
+    .refusal-alert {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .refusal-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .refusal-reason {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: #fca5a5;
+    }
+
+    /* "Did this unstick you?" Success Metric Card */
+    .unstick-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .unstick-question-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .unstick-icon {
+      font-size: 18px;
+    }
+
+    .unstick-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .unstick-subtitle {
+      font-size: 11.5px;
+      color: var(--text-tertiary);
+    }
+
+    .unstick-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-unstick {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-unstick:hover {
+      background: var(--surface-card-hover);
+      border-color: var(--border-hover);
+      color: #fff;
+    }
+
+    .btn-unstick.active-yes {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .btn-unstick.active-no {
+      background: var(--red-bg);
+      border-color: var(--red-border);
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    /* Message Actions Toolbar */
+    .msg-footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 2px;
+    }
+
+    .msg-actions-left, .msg-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-msg-ghost {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-tertiary);
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-msg-ghost:hover {
+      background: var(--surface-card);
+      color: var(--text);
+      border-color: var(--border-subtle);
+    }
+
+    .btn-msg-ghost.icon-only {
+      padding: 5px 8px;
+    }
+
+    /* Generating Pulse State */
+    .generating-state {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+
+    .pulse-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.3; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1.15); }
+    }
+
+    /* Error Alert */
+    .error-card {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .error-msg {
+      font-size: 13px;
+      color: #fca5a5;
+    }
+
+    .btn-retry {
+      background: var(--surface-card);
+      border: 1px solid var(--red-border);
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-retry:hover {
+      background: var(--red-bg);
+    }
+
+    /* Floating Jump to Latest Button (Safe Dock Position) */
+    .btn-jump-latest {
+      position: fixed;
+      bottom: 104px;
+      right: max(24px, calc((100vw - 720px) / 2 + 10px));
+      background: rgba(26, 26, 31, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-hover);
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+      z-index: 150;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-jump-latest:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* Composer Dock (Pinned Bottom with Apple Blur) */
+    .composer-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(14, 14, 17, 0.94) 28%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 24px 20px 20px;
+      z-index: 90;
+    }
+
+    .composer-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .composer-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .composer-card:focus-within {
+      border-color: var(--border-accent);
+      box-shadow: 0 0 0 3px rgba(217, 119, 70, 0.15), 0 8px 32px rgba(0, 0, 0, 0.55);
+    }
+
+    textarea#user-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 14.5px;
+      line-height: 1.5;
+      resize: none;
+      min-height: 44px;
+      max-height: 180px;
+      padding: 6px 0;
+    }
+
+    textarea#user-input:focus {
+      outline: none;
+    }
+
+    textarea#user-input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .composer-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-send-main {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: #fff;
+      color: #0e0e11;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-send-main:hover {
+      background: #e4e4e7;
+      transform: scale(1.03);
+    }
+
+    .btn-send-main:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-dim);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-stop-main {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-stop-main:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .composer-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-dim);
+      padding: 0 4px;
+    }
+
+    /* Source Chunk Inspection Modal */
+    .chunk-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .chunk-modal {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hover);
+      border-radius: 14px;
+      max-width: 640px;
+      width: 100%;
+      max-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    }
+
+    .chunk-modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chunk-modal-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .chunk-modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #0b0b0e;
+    }
+
+    .btn-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .btn-modal-close:hover {
+      color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      .prompts-grid { grid-template-columns: 1fr; }
+      .header-inner { padding: 0; }
+      .scope-pill { display: none; }
+      .msg-user { max-width: 95%; }
+      .unstick-card { flex-direction: column; align-items: flex-start; }
+      .btn-jump-latest { right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal Header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">🧭</div>
+        <div class="brand-title">Tutorial Hell Navigator</div>
+        <span class="scope-pill">Tier 1: FastAPI · Docker · Pydantic · Postgres</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="openTelemetryModal()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Telemetry</span>
+        </button>
+        <a href="/docs" target="_blank" style="text-decoration:none;"><button class="btn-header">API Docs ↗</button></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 700px Centered Column -->
+  <main id="main-column">
+    
+    <!-- Consent Notice -->
+    <div class="consent-banner" id="consent-banner">
+      <div>
+        <b>Anonymous Evaluation Notice:</b> Navigator logs query benchmarks and unstick ratings to measure AI mentoring effectiveness. No personal data or IP addresses are stored.
+      </div>
+      <button class="btn-consent" onclick="acceptConsent()">I Understand</button>
+    </div>
+
+    <!-- Empty State Greeting -->
+    <div class="empty-state" id="empty-state">
+      <span class="empty-badge">Eval-First Technical Mentor</span>
+      <h1 class="empty-title">What are you building or debugging?</h1>
+      <p class="empty-desc">
+        FastAPI, Docker Compose, Pydantic v2, and PostgreSQL engineering roadmaps grounded directly in official documentation.
+      </p>
+
+      <div class="prompts-grid">
+        <div class="prompt-card" onclick="handlePromptSelect('When should I use FastAPI BackgroundTasks versus Celery for sending welcome emails?')">
+          <span class="prompt-card-tag">FastAPI · Architecture</span>
+          <div class="prompt-card-text">When should I use FastAPI BackgroundTasks vs Celery for welcome emails?</div>
+        </div>
+        <div class="prompt-card" onclick="handlePromptSelect('Why does FastAPI reject CORS wildcard allow_origins when allow_credentials=True?')">
+          <span class="prompt-card-tag">FastAPI · CORS</span>
+          <div class="prompt-card-text">Why does FastAPI reject CORS wildcard allow_origins with credentials?</div>
+        </div>
+        <div class="prompt-card" onclick="handlePromptSelect('Why does psycopg2 fail to build inside an Alpine Python Dockerfile, and how do I fix it?')">
+          <span class="prompt-card-tag">Docker · psycopg2</span>
+          <div class="prompt-card-text">Why does psycopg2 fail to build inside an Alpine Python Dockerfile?</div>
+        </div>
+        <div class="prompt-card" onclick="handlePromptSelect('In Pydantic v2, how do I write a model validator that verifies start_date is before end_date?')">
+          <span class="prompt-card-tag">Pydantic v2 · Validation</span>
+          <div class="prompt-card-text">How do I validate cross-field date ranges using Pydantic v2?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversation Stream -->
+    <div class="chat-flow" id="chat-flow"></div>
+
+  </main>
+
+  <!-- Floating Jump to Latest Button -->
+  <button class="btn-jump-latest" id="btn-jump-latest" onclick="scrollToBottom(true)">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+    <span>Jump to latest</span>
+  </button>
+
+  <!-- Composer Dock (Fixed Bottom) -->
+  <div class="composer-dock">
+    <div class="composer-inner">
+      <div class="composer-card">
+        <textarea id="user-input" placeholder="Paste an error message, dependency roadblock, or architecture question..." rows="1" onkeydown="handleKeyDown(event)" oninput="handleInputGrow(this)"></textarea>
+        
+        <div class="composer-actions">
+          <button class="btn-send-main" id="btn-send" onclick="submitMessage()" title="Send (Enter)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
+          <button class="btn-stop-main" id="btn-stop" onclick="abortGeneration()" title="Stop Generating">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="composer-footer">
+        <span>Press <kbd style="font-family:var(--font-mono);background:rgba(255,255,255,0.06);padding:1px 4px;border-radius:3px;">Enter</kbd> to send, <kbd style="font-family:var(--font-mono);background:rgba(255,255,255,0.06);padding:1px 4px;border-radius:3px;">Shift+Enter</kbd> for newline</span>
+        <span>Grounded against Tier 1 Corpus</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Source Chunk Inspection Modal -->
+  <div class="chunk-modal-backdrop" id="chunk-modal" onclick="closeChunkModal(event)">
+    <div class="chunk-modal" onclick="event.stopPropagation()">
+      <div class="chunk-modal-header">
+        <div>
+          <span style="font-size:10px;text-transform:uppercase;color:var(--text-tertiary);font-family:var(--font-mono);">Verified Corpus Source:</span>
+          <div class="chunk-modal-title" id="chunk-modal-title">chunk_id</div>
+        </div>
+        <button class="btn-modal-close" onclick="closeChunkModal()">&times;</button>
+      </div>
+      <div class="chunk-modal-body" id="chunk-modal-body">Loading verbatim chunk text...</div>
+    </div>
+  </div>
+
+  <script>
+    // Marked configuration
+    if (window.marked) {
+      marked.setOptions({
+        breaks: true,
+        gfm: true
+      });
+    }
+
+    // State
+    let currentAbortController = null;
+    let isAutoScrollActive = true;
+    
+    // Elements
+    const chatFlow = document.getElementById('chat-flow');
+    const emptyState = document.getElementById('empty-state');
+    const userInput = document.getElementById('user-input');
+    const btnSend = document.getElementById('btn-send');
+    const btnStop = document.getElementById('btn-stop');
+    const btnJumpLatest = document.getElementById('btn-jump-latest');
+    const consentBanner = document.getElementById('consent-banner');
+    const chunkModal = document.getElementById('chunk-modal');
+
+    // Consent
+    if (localStorage.getItem('thn_consent_accepted') === 'true') {
+      consentBanner.style.display = 'none';
+    }
+
+    function acceptConsent() {
+      localStorage.setItem('thn_consent_accepted', 'true');
+      consentBanner.style.display = 'none';
+    }
+
+    function getSessionId() {
+      let sid = localStorage.getItem('thn_session_id');
+      if (!sid) {
+        sid = 'anon_' + Math.random().toString(36).substring(2, 10);
+        localStorage.setItem('thn_session_id', sid);
+      }
+      return sid;
+    }
+
+    function handleInputGrow(element) {
+      element.style.height = '44px';
+      element.style.height = Math.min(element.scrollHeight, 180) + 'px';
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        submitMessage();
+      }
+    }
+
+    function handlePromptSelect(text) {
+      userInput.value = text;
+      handleInputGrow(userInput);
+      userInput.focus();
+      submitMessage();
+    }
+
+    // Scroll tracking
+    window.addEventListener('scroll', () => {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const threshold = document.documentElement.scrollHeight - 120;
+      isAutoScrollActive = scrollPosition >= threshold;
+
+      if (!isAutoScrollActive && chatFlow.children.length > 0) {
+        btnJumpLatest.style.display = 'inline-flex';
+      } else {
+        btnJumpLatest.style.display = 'none';
+      }
+    });
+
+    function scrollToBottom(smooth = false) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
+      btnJumpLatest.style.display = 'none';
+      isAutoScrollActive = true;
+    }
+
+    function escapeHtml(string) {
+      return String(string || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function renderMarkdown(text) {
+      if (!text) return '';
+      if (window.marked && typeof window.marked.parse === 'function') {
+        return marked.parse(text);
+      }
+      return escapeHtml(text)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+    }
+
+    // DOM-safe copy function (reads innerText directly from the code element, 0% chance of attribute escaping corruption)
+    function copyCodeFromBlock(btn) {
+      const codeCard = btn.closest('.code-card');
+      const codeEl = codeCard.querySelector('code');
+      const text = codeEl.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const textSpan = btn.querySelector('.copy-text');
+        const origText = textSpan ? textSpan.textContent : 'Copy';
+        btn.classList.add('copied');
+        if (textSpan) textSpan.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          if (textSpan) textSpan.textContent = origText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Clipboard copy failed:', err);
+      });
+    }
+
+    // Detect code metadata (filename, language)
+    function parseCodeMeta(code) {
+      const trimmed = code.trim();
+      let lang = 'bash';
+      let filename = 'terminal';
+
+      // 1. Detect bash script creating a specific file: cat << 'EOF' > filename
+      const catMatch = trimmed.match(/cat\s*<<\s*['"]?EOF['"]?\s*>\s*([\w\.\/\-_]+)/i);
+      if (catMatch && catMatch[1]) {
+        filename = catMatch[1].split('/').pop();
+        if (filename.endsWith('.py')) lang = 'python';
+        else if (filename.endsWith('.yml') || filename.endsWith('.yaml')) lang = 'yaml';
+        else if (filename.endsWith('.sql')) lang = 'sql';
+        else if (filename.toLowerCase().includes('dockerfile')) lang = 'dockerfile';
+        return { lang, filename };
+      }
+
+      // 2. Detect redirect to file: > filename
+      const redirectMatch = trimmed.match(/>\s*([\w\.\/\-_]+\.(py|yml|yaml|sql|json|env|txt|conf))/i);
+      if (redirectMatch && redirectMatch[1]) {
+        filename = redirectMatch[1].split('/').pop();
+        if (filename.endsWith('.py')) lang = 'python';
+        else if (filename.endsWith('.yml') || filename.endsWith('.yaml')) lang = 'yaml';
+        return { lang, filename };
+      }
+
+      // 3. Content heuristics
+      if (trimmed.includes('from fastapi') || trimmed.includes('import ') || trimmed.includes('def ') || trimmed.includes('@app') || trimmed.includes('class ')) {
+        lang = 'python';
+        filename = 'main.py';
+      } else if (trimmed.includes('version:') || (trimmed.includes('services:') && trimmed.includes('image:'))) {
+        lang = 'yaml';
+        filename = 'docker-compose.yml';
+      } else if (trimmed.startsWith('FROM ') || trimmed.includes('RUN ') || trimmed.includes('WORKDIR ')) {
+        lang = 'dockerfile';
+        filename = 'Dockerfile';
+      } else if (trimmed.includes('SELECT ') || trimmed.includes('CREATE TABLE ') || trimmed.includes('INSERT INTO ')) {
+        lang = 'sql';
+        filename = 'query.sql';
+      } else if (trimmed.startsWith('cat ') || trimmed.startsWith('docker ') || trimmed.startsWith('pip ') || trimmed.startsWith('curl ') || trimmed.startsWith('python ') || trimmed.startsWith('uvicorn ') || trimmed.startsWith('$')) {
+        lang = 'bash';
+        filename = 'terminal';
+      }
+
+      return { lang, filename };
+    }
+
+    function formatChunkName(chunkId) {
+      if (!chunkId) return 'source';
+      return chunkId.replace('_chunk_', ' · #') + ' ↗';
+    }
+
+    // Open Source Chunk Modal
+    async function openChunkInspection(chunkId) {
+      chunkModal.style.display = 'flex';
+      document.getElementById('chunk-modal-title').textContent = chunkId;
+      const body = document.getElementById('chunk-modal-body');
+      body.textContent = 'Fetching verbatim source text from verified corpus...';
+
+      try {
+        const res = await fetch(`/api/chunks/${encodeURIComponent(chunkId)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        body.innerHTML = `
+<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Document: <strong style="color:#fff;">${escapeHtml(data.source_file)}</strong> | Length: ${data.char_count} chars</div>${escapeHtml(data.text)}
+        `;
+      } catch (err) {
+        body.textContent = `Unable to load chunk details: ${err.message}`;
+      }
+    }
+
+    function closeChunkModal() {
+      chunkModal.style.display = 'none';
+    }
+
+    // Message Submission
+    async function submitMessage() {
+      const query = userInput.value.trim();
+      if (!query || btnSend.disabled) return;
+
+      emptyState.style.display = 'none';
+      userInput.value = '';
+      userInput.style.height = '44px';
+      
+      // Toggle Send -> Stop
+      btnSend.style.display = 'none';
+      btnStop.style.display = 'flex';
+
+      // 1. Render User Message Pill
+      const userGroup = document.createElement('div');
+      userGroup.className = 'msg-group';
+      userGroup.innerHTML = `
+        <div class="msg-user-wrap">
+          <div class="msg-user">${escapeHtml(query)}</div>
+        </div>
+      `;
+      chatFlow.appendChild(userGroup);
+
+      // 2. Render Assistant Placeholder with Pulse
+      const assistantGroup = document.createElement('div');
+      assistantGroup.className = 'msg-group';
+      assistantGroup.innerHTML = `
+        <div class="msg-assistant-wrap">
+          <div class="assistant-meta">
+            <span class="assistant-name">🧭 Navigator</span>
+            <span>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+          </div>
+          <div class="generating-state" id="gen-state">
+            <span class="pulse-indicator"></span>
+            <span>Grounding query against Tier 1 technical corpus...</span>
+          </div>
+        </div>
+      `;
+      chatFlow.appendChild(assistantGroup);
+      scrollToBottom();
+
+      currentAbortController = new AbortController();
+
+      try {
+        const res = await fetch('/navigate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: query }),
+          signal: currentAbortController.signal,
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.detail || `Server returned ${res.status}`);
+        }
+
+        const data = await res.json();
+        renderCompleteResponse(assistantGroup.querySelector('.msg-assistant-wrap'), query, data);
+
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          const genState = assistantGroup.querySelector('#gen-state');
+          if (genState) genState.remove();
+          assistantGroup.querySelector('.msg-assistant-wrap').innerHTML += `
+            <div style="font-size:12.5px;color:var(--text-tertiary);font-style:italic;padding:8px 0;">Generation stopped by user.</div>
+          `;
+        } else {
+          renderErrorState(assistantGroup.querySelector('.msg-assistant-wrap'), query, err.message);
+        }
+      } finally {
+        currentAbortController = null;
+        btnSend.style.display = 'flex';
+        btnStop.style.display = 'none';
+        userInput.focus();
+        if (isAutoScrollActive) scrollToBottom();
+      }
+    }
+
+    function abortGeneration() {
+      if (currentAbortController) {
+        currentAbortController.abort();
+      }
+    }
+
+    // Render Completed Structured Response (Apple / Claude Editorial Flow)
+    function renderCompleteResponse(container, query, data) {
+      const genState = container.querySelector('#gen-state');
+      if (genState) genState.remove();
+
+      let html = '';
+
+      // 1. Refusal Banner OR Editorial Diagnosis Summary
+      if (data.is_refusal) {
+        html += `
+          <div class="refusal-alert">
+            <div class="refusal-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+              <span>Scope Notice: Out-of-Corpus Query</span>
+            </div>
+            <div style="font-size:14px;color:var(--text);line-height:1.6;">${renderMarkdown(data.summary)}</div>
+            ${data.refusal_reason ? `<div class="refusal-reason">Reason: ${escapeHtml(data.refusal_reason)}</div>` : ''}
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="diagnosis-lead">${renderMarkdown(data.summary)}</div>
+        `;
+      }
+
+      // 2. Actionable Step Cards
+      if (data.action_plan && data.action_plan.length > 0) {
+        html += `
+          <div class="steps-container">
+            <div class="steps-label">Actionable Execution Steps</div>
+        `;
+
+        data.action_plan.forEach((step, idx) => {
+          const num = step.step_number || (idx + 1);
+          const title = step.title || `Action ${num}`;
+          const explanation = step.explanation || step.description || '';
+          const cmd = step.command || step.terminal_command || '';
+          const verification = step.verification || '';
+          const citations = step.citations || [];
+
+          const meta = parseCodeMeta(cmd);
+
+          html += `
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num-pill">STEP ${String(num).padStart(2, '0')}</span>
+                <h3 class="step-title">${escapeHtml(title)}</h3>
+              </div>
+              
+              ${explanation ? `<div class="step-explanation">${renderMarkdown(explanation)}</div>` : ''}
+              
+              ${cmd ? `
+                <div class="code-card">
+                  <div class="code-topbar">
+                    <div class="code-topbar-left">
+                      <div class="window-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                      </div>
+                      <div class="code-meta-badge">
+                        <span class="code-filename">${escapeHtml(meta.filename)}</span>
+                        <span>·</span>
+                        <span>${escapeHtml(meta.lang)}</span>
+                      </div>
+                    </div>
+                    <button class="btn-copy-code" onclick="copyCodeFromBlock(this)">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      <span class="copy-text">Copy</span>
+                    </button>
+                  </div>
+                  <pre><code class="language-${escapeHtml(meta.lang)}">${escapeHtml(cmd)}</code></pre>
+                </div>
+              ` : ''}
+
+              ${verification ? `
+                <div class="verify-callout">
+                  <div class="verify-tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Verification Check</span>
+                  </div>
+                  <div class="verify-body">${renderMarkdown(verification)}</div>
+                </div>
+              ` : ''}
+
+              ${citations.length > 0 ? `
+                <div class="citations-drawer">
+                  <span class="citations-prefix">Sources:</span>
+                  ${citations.map(c => `<button class="citation-chip" onclick="openChunkInspection('${escapeHtml(c)}')"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg><span>${escapeHtml(formatChunkName(c))}</span></button>`).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+      }
+
+      // 3. Collapsible Anti-Patterns Disclosure
+      if (data.anti_patterns_to_avoid && data.anti_patterns_to_avoid.length > 0) {
+        html += `
+          <details class="anti-patterns-disclosure">
+            <summary class="anti-patterns-summary">
+              <div class="anti-summary-left">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span>Common Pitfalls to Avoid (${data.anti_patterns_to_avoid.length})</span>
+              </div>
+              <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </summary>
+            <div class="anti-patterns-content">
+              ${data.anti_patterns_to_avoid.map(ap => `
+                <div class="anti-pattern-item">
+                  <span style="color:var(--red);font-weight:700;">•</span>
+                  <div>${renderMarkdown(ap)}</div>
+                </div>
+              `).join('')}
+            </div>
+          </details>
+        `;
+      }
+
+      // 4. Key Concept Takeaway
+      if (data.key_takeaway) {
+        html += `
+          <div class="takeaway-card">
+            <span style="font-size:16px;">💡</span>
+            <div><strong>Key Concept:</strong> ${renderMarkdown(data.key_takeaway)}</div>
+          </div>
+        `;
+      }
+
+      // 5. Success Metric: "Did this unstick you?" Prompt
+      html += `
+        <div class="unstick-card">
+          <div class="unstick-question-wrap">
+            <div class="unstick-icon">🧭</div>
+            <div>
+              <div class="unstick-title">Did this explanation unstick you?</div>
+              <div class="unstick-subtitle">Your rating evaluates Tier 1 mentorship accuracy</div>
+            </div>
+          </div>
+          <div class="unstick-actions">
+            <button class="btn-unstick" onclick="recordUnstick(this, ${JSON.stringify(query)}, true, ${JSON.stringify(data.cited_chunk_ids || [])})">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Yes, unstuck</span>
+            </button>
+            <button class="btn-unstick" onclick="recordUnstick(this, ${JSON.stringify(query)}, false, ${JSON.stringify(data.cited_chunk_ids || [])})">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              <span>Still stuck</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      // 6. Per-Message Actions Toolbar
+      html += `
+        <div class="msg-footer-bar">
+          <div class="msg-actions-left">
+            <button class="btn-msg-ghost" onclick="copyFullAnswer(this, ${JSON.stringify(data.summary)})" title="Copy summary">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy Summary</span>
+            </button>
+            <button class="btn-msg-ghost" onclick="handlePromptSelect(${JSON.stringify(query)})" title="Regenerate">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+              <span>Retry</span>
+            </button>
+          </div>
+          <div class="msg-actions-right">
+            <button class="btn-msg-ghost icon-only" onclick="recordRating(this, ${JSON.stringify(query)}, 'positive')" title="Good response">👍</button>
+            <button class="btn-msg-ghost icon-only" onclick="recordRating(this, ${JSON.stringify(query)}, 'negative')" title="Bad response">👎</button>
+          </div>
+        </div>
+      `;
+
+      const responseNode = document.createElement('div');
+      responseNode.innerHTML = html;
+      container.appendChild(responseNode);
+
+      // Syntax highlight via Prism
+      if (window.Prism) {
+        responseNode.querySelectorAll('pre code').forEach(el => {
+          Prism.highlightElement(el);
+        });
+      }
+    }
+
+    function renderErrorState(container, query, errorMsg) {
+      const genState = container.querySelector('#gen-state');
+      if (genState) genState.remove();
+
+      const errNode = document.createElement('div');
+      errNode.className = 'error-card';
+      errNode.innerHTML = `
+        <div class="error-msg">⚠️ <strong>Error:</strong> ${escapeHtml(errorMsg || 'Unable to generate response. Please check server logs.')}</div>
+        <button class="btn-retry" onclick="handlePromptSelect(${JSON.stringify(query)})">Retry</button>
+      `;
+      container.appendChild(errNode);
+    }
+
+    function copyFullAnswer(button, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = button.innerHTML;
+        button.innerHTML = `<span>✓ Copied</span>`;
+        setTimeout(() => { button.innerHTML = orig; }, 2000);
+      });
+    }
+
+    async function recordUnstick(btn, query, unstuckVal, citedChunkIds) {
+      const parent = btn.closest('.unstick-actions');
+      parent.querySelectorAll('.btn-unstick').forEach(b => b.classList.remove('active-yes', 'active-no'));
+      btn.classList.add(unstuckVal ? 'active-yes' : 'active-no');
+
+      try {
+        await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: query,
+            unstuck: unstuckVal,
+            cited_chunk_ids: citedChunkIds,
+            session_id: getSessionId(),
+          })
+        });
+      } catch (e) {
+        console.warn('Telemetry send failed', e);
+      }
+    }
+
+    async function recordRating(btn, query, ratingVal) {
+      btn.style.color = ratingVal === 'positive' ? 'var(--green)' : 'var(--red)';
+      try {
+        await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: query,
+            rating: ratingVal,
+            session_id: getSessionId(),
+          })
+        });
+      } catch (e) {
+        console.warn('Rating send failed', e);
+      }
+    }
+
+    async function openTelemetryModal() {
+      chunkModal.style.display = 'flex';
+      document.getElementById('chunk-modal-title').textContent = 'Phase 0 Evaluation & Unstick Telemetry';
+      const body = document.getElementById('chunk-modal-body');
+      body.innerHTML = 'Fetching aggregated unstick metrics...';
+
+      try {
+        const [sumRes, fbRes] = await Promise.all([
+          fetch('/api/feedback/summary'),
+          fetch('/api/feedback?limit=10')
+        ]);
+        const summary = await sumRes.json();
+        const fbData = await fbRes.json();
+
+        let html = `
+<div style="background:var(--surface-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;">
+  <div style="font-size:10.5px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px;">Phase 0 Primary Success Metric:</div>
+  <div style="font-size:26px;color:var(--accent);font-weight:700;margin:4px 0;">${summary.unstick_rate_percent}% Unstick Rate</div>
+  <div style="font-size:12px;color:var(--text-secondary);">${summary.unstuck_count} Unstuck / ${summary.unstuck_count + summary.stuck_count} Rated Sessions (${summary.total_records} Total Queries)</div>
+</div>
+<div style="font-size:11.5px;color:var(--text-secondary);margin-bottom:8px;font-weight:600;">Recent Telemetry Trajectories:</div>
+        `;
+
+        if (fbData.feedback && fbData.feedback.length > 0) {
+          fbData.feedback.forEach(f => {
+            const unstickLabel = f.unstuck === true ? '<span style="color:var(--green)">[UNSTUCK: YES]</span>' : (f.unstuck === false ? '<span style="color:var(--red)">[UNSTUCK: NO]</span>' : '');
+            const ratingLabel = f.rating ? `[${f.rating.toUpperCase()}]` : '';
+            html += `
+<div style="border-bottom:1px solid var(--border-subtle);padding:8px 0;font-size:11px;">
+  <div>${unstickLabel} ${ratingLabel} <span style="color:var(--text-dim);">${f.timestamp ? f.timestamp.substring(11, 19) : ''}</span></div>
+  <div style="color:var(--text);margin-top:2px;">"${escapeHtml(f.query)}"</div>
+</div>
+            `;
+          });
+        } else {
+          html += '<div style="color:var(--text-dim);font-size:11px;">No sessions logged yet. Try answering the "Did this unstick you?" prompt!</div>';
+        }
+
+        body.innerHTML = html;
+      } catch (err) {
+        body.textContent = 'Failed to load telemetry summary: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

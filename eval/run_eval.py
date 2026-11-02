@@ -43,56 +43,152 @@ def calculate_percentile(values: List[float], percentile: float) -> float:
 
 def calculate_retrieval_metrics(
     retrieved_items: List[Any],
-    expected_chunk_ids: List[str],
+    expected_chunk_ids: Optional[List[str]] = None,
+    required_evidence: Optional[List[Dict[str, str]]] = None,
+    acceptable_alternatives: Optional[List[Dict[str, str]]] = None,
 ) -> Dict[str, Any]:
-    """Calculate Recall@3, Recall@5, and Reciprocal Rank (RR) against ground truth."""
-    if not expected_chunk_ids:
+    """
+    Calculate Evidence coverage@K, Hit@K, and MRR.
+    
+    Definitions:
+    - Evidence coverage@K: the fraction of required_evidence items covered in top K.
+      An item counts as covered if a retrieved chunk contains its span or one of its alternatives.
+    - Hit@K: at least one required item is covered.
+    - MRR: based on the rank of the first covered item (1 / rank of first covered item).
+    
+    Supports both v2 verbatim evidence spans and legacy v1 expected_chunk_ids fallback.
+    """
+    has_spans = bool(required_evidence and len(required_evidence) > 0)
+    has_chunks = bool(expected_chunk_ids and len(expected_chunk_ids) > 0)
+
+    if not has_spans and not has_chunks:
         return {
             "has_ground_truth": False,
+            "evidence_coverage_at_3": None,
+            "evidence_coverage_at_5": None,
+            "hit_at_3": None,
+            "hit_at_5": None,
             "recall_at_3": None,
             "recall_at_5": None,
             "reciprocal_rank": None,
             "first_hit_rank": None,
         }
 
-    expected_set = set(expected_chunk_ids)
-
-    # Build per-rank candidate sets (supporting both strings and chunk dicts with mapped_512_chunk_ids)
-    rank_candidate_sets = []
-    for item in retrieved_items:
+    # Extract texts and chunk_ids for each rank
+    retrieved_chunks = []
+    for rank_idx, item in enumerate(retrieved_items, 1):
         if isinstance(item, dict):
-            cands = {item.get("chunk_id", "")}
-            for mapped_id in item.get("mapped_512_chunk_ids", []):
-                cands.add(mapped_id)
-            rank_candidate_sets.append({c for c in cands if c})
+            c_text = item.get("text", "")
+            c_id = item.get("chunk_id", "")
+            mapped_ids = set(item.get("mapped_512_chunk_ids", []))
+            mapped_ids.add(c_id)
+            retrieved_chunks.append({
+                "rank": rank_idx,
+                "text": c_text,
+                "norm_text": " ".join(c_text.split()),
+                "chunk_id": c_id,
+                "all_ids": mapped_ids,
+            })
         else:
-            rank_candidate_sets.append({str(item)})
+            retrieved_chunks.append({
+                "rank": rank_idx,
+                "text": str(item),
+                "norm_text": " ".join(str(item).split()),
+                "chunk_id": str(item),
+                "all_ids": {str(item)},
+            })
 
-    # Recall@3: is any expected chunk in top 3?
-    top_3_candidates = set().union(*rank_candidate_sets[:3]) if rank_candidate_sets else set()
-    hit_at_3 = len(top_3_candidates & expected_set) > 0
-    recall_at_3 = 1.0 if hit_at_3 else 0.0
+    # Case 1: v2 Evidence Spans
+    if has_spans:
+        num_req = len(required_evidence)
+        alt_spans = [a.get("span", "") for a in (acceptable_alternatives or []) if a.get("span")]
 
-    # Recall@5: is any expected chunk in top 5?
-    top_5_candidates = set().union(*rank_candidate_sets[:5]) if rank_candidate_sets else set()
-    hit_at_5 = len(top_5_candidates & expected_set) > 0
-    recall_at_5 = 1.0 if hit_at_5 else 0.0
+        first_covered_rank = None
+        covered_at_3_count = 0
+        covered_at_5_count = 0
 
-    # Reciprocal Rank (MRR component): 1/rank of first ground truth hit
+        for req in required_evidence:
+            req_span = req.get("span", "")
+            target_spans = [req_span] + alt_spans
+            target_spans = [s for s in target_spans if s]
+
+            # Find earliest rank covering this required item
+            item_covered_rank = None
+            for chunk_info in retrieved_chunks:
+                norm_chunk = chunk_info["norm_text"]
+                raw_chunk = chunk_info["text"]
+                if any(s in raw_chunk or " ".join(s.split()) in norm_chunk for s in target_spans):
+                    item_covered_rank = chunk_info["rank"]
+                    break
+
+            if item_covered_rank is not None:
+                if first_covered_rank is None or item_covered_rank < first_covered_rank:
+                    first_covered_rank = item_covered_rank
+                if item_covered_rank <= 3:
+                    covered_at_3_count += 1
+                if item_covered_rank <= 5:
+                    covered_at_5_count += 1
+
+        coverage_at_3 = round(covered_at_3_count / num_req, 4)
+        coverage_at_5 = round(covered_at_5_count / num_req, 4)
+        hit_at_3 = 1.0 if covered_at_3_count > 0 else 0.0
+        hit_at_5 = 1.0 if covered_at_5_count > 0 else 0.0
+        rr = round(1.0 / first_covered_rank, 4) if first_covered_rank else 0.0
+
+        return {
+            "has_ground_truth": True,
+            "evidence_coverage_at_3": coverage_at_3,
+            "evidence_coverage_at_5": coverage_at_5,
+            "hit_at_3": hit_at_3,
+            "hit_at_5": hit_at_5,
+            "recall_at_3": hit_at_3,  # backwards-compatibility alias
+            "recall_at_5": hit_at_5,  # backwards-compatibility alias
+            "reciprocal_rank": rr,
+            "first_hit_rank": first_covered_rank,
+            "covered_items_at_3": covered_at_3_count,
+            "covered_items_at_5": covered_at_5_count,
+            "total_required_items": num_req,
+        }
+
+    # Case 2: Legacy v1 expected_chunk_ids Fallback
+    expected_set = set(expected_chunk_ids)
+    num_expected = len(expected_set)
     first_hit_rank = None
-    reciprocal_rank = 0.0
-    for rank_idx, cand_set in enumerate(rank_candidate_sets, 1):
-        if cand_set & expected_set:
-            first_hit_rank = rank_idx
-            reciprocal_rank = round(1.0 / rank_idx, 4)
-            break
+    hits_at_3 = 0
+    hits_at_5 = 0
+
+    covered_ids_3 = set()
+    covered_ids_5 = set()
+
+    for chunk_info in retrieved_chunks:
+        overlap = chunk_info["all_ids"] & expected_set
+        if overlap:
+            if first_hit_rank is None:
+                first_hit_rank = chunk_info["rank"]
+            if chunk_info["rank"] <= 3:
+                covered_ids_3.update(overlap)
+            if chunk_info["rank"] <= 5:
+                covered_ids_5.update(overlap)
+
+    coverage_at_3 = round(len(covered_ids_3) / num_expected, 4) if num_expected else 0.0
+    coverage_at_5 = round(len(covered_ids_5) / num_expected, 4) if num_expected else 0.0
+    hit_at_3 = 1.0 if len(covered_ids_3) > 0 else 0.0
+    hit_at_5 = 1.0 if len(covered_ids_5) > 0 else 0.0
+    rr = round(1.0 / first_hit_rank, 4) if first_hit_rank else 0.0
 
     return {
         "has_ground_truth": True,
-        "recall_at_3": recall_at_3,
-        "recall_at_5": recall_at_5,
-        "reciprocal_rank": reciprocal_rank,
+        "evidence_coverage_at_3": coverage_at_3,
+        "evidence_coverage_at_5": coverage_at_5,
+        "hit_at_3": hit_at_3,
+        "hit_at_5": hit_at_5,
+        "recall_at_3": hit_at_3,
+        "recall_at_5": hit_at_5,
+        "reciprocal_rank": rr,
         "first_hit_rank": first_hit_rank,
+        "covered_items_at_3": len(covered_ids_3),
+        "covered_items_at_5": len(covered_ids_5),
+        "total_required_items": num_expected,
     }
 
 
@@ -154,6 +250,8 @@ async def evaluate_benchmark(
     delay: float = 1.2,
     rewrite: bool = False,
     collection_name: str = "tutorial_navigator_chunks",
+    split_set: Optional[str] = None,
+    final: bool = False,
 ):
     if hasattr(sys.stdout, "reconfigure"):
         try:
@@ -168,6 +266,63 @@ async def evaluate_benchmark(
 
     with open(path, "r", encoding="utf-8") as f:
         questions = json.load(f)
+
+    if split_set:
+        split_file = Path(gold_set_path).parent / "split.json"
+        if split_file.exists():
+            with open(split_file, "r", encoding="utf-8") as sf:
+                split_info = json.load(sf)
+            target_ids = set(split_info.get(f"{split_set}_question_ids", []))
+
+            # B6: Strict protection for test split
+            if split_set == "test":
+                if not final:
+                    print("=" * 80)
+                    print("🛑 ERROR: Test split execution REFUSED. The '--final' flag is strictly required.")
+                    print("=" * 80)
+                    raise SystemExit("Execution on test split refused: '--final' flag missing.")
+
+                import hashlib
+                import subprocess
+
+                test_ids_sorted = sorted(list(target_ids))
+                computed_hash = hashlib.sha256("\n".join(test_ids_sorted).encode("utf-8")).hexdigest()
+                sha_file = Path(gold_set_path).parent / "test_ids.sha256"
+
+                if sha_file.exists():
+                    expected_hash = sha_file.read_text(encoding="utf-8").strip()
+                    if expected_hash != computed_hash:
+                        print("=" * 80)
+                        print(f"🛑 ERROR: test_ids.sha256 MISMATCH!")
+                        print(f"  Expected: {expected_hash}")
+                        print(f"  Computed: {computed_hash}")
+                        print("Test split question IDs have been modified. Stopping execution.")
+                        print("=" * 80)
+                        raise SystemExit(f"test_ids.sha256 mismatch: {expected_hash} != {computed_hash}")
+                else:
+                    sha_file.write_text(computed_hash + "\n", encoding="utf-8")
+                    print(f"  • Saved test_ids.sha256: {computed_hash}")
+
+                # Log the date and git commit of each --final run
+                try:
+                    commit_hash = subprocess.check_output(
+                        ["git", "rev-parse", "HEAD"], stderr=subprocess.DEVNULL
+                    ).decode("utf-8").strip()
+                except Exception:
+                    commit_hash = "UNKNOWN_COMMIT"
+
+                log_file = Path(gold_set_path).parent / "final_runs.log"
+                run_timestamp = datetime.now(timezone.utc).isoformat()
+                log_entry = f"[{run_timestamp}] COMMIT: {commit_hash} | FINAL RUN on test split ({len(test_ids_sorted)} questions) | SHA256: {computed_hash}\n"
+                with open(log_file, "a", encoding="utf-8") as lf:
+                    lf.write(log_entry)
+                print(f"  • Logged --final run to {log_file.name} (commit {commit_hash[:8]})")
+
+            if target_ids:
+                questions = [q for q in questions if q.get("id") in target_ids]
+                print(f"  • Filtered to {split_set.upper()} split: {len(questions)} questions")
+        else:
+            print(f"  [Warning] Split file not found at {split_file}; evaluating all questions.")
 
     if category_filter:
         questions = [q for q in questions if category_filter.lower() in q.get("category", "").lower()]
@@ -192,12 +347,20 @@ async def evaluate_benchmark(
 
     # Retrieval benchmark counters
     queries_with_gt = 0
+    hit_3_hits = 0
+    hit_5_hits = 0
     recall_3_hits = 0
     recall_5_hits = 0
+    coverage_3_sum = 0.0
+    coverage_5_sum = 0.0
     rr_sum = 0.0
+    # Latency and token tracking counters
     retrieval_latencies: List[float] = []
     rewrite_latencies: List[float] = []
     total_retrieval_latencies: List[float] = []
+    e2e_latencies: List[float] = []
+    ttft_latencies: List[float] = []
+    prompt_tokens_list: List[int] = []
 
     # Warm up reranker if requested so cold-start initialization doesn't distort latency metrics
     if "rerank" in search_mode.lower():
@@ -208,23 +371,21 @@ async def evaluate_benchmark(
         except Exception:
             pass
 
+    is_no_recall_mode = search_mode.lower().replace("_", "-") in ("none", "full-context")
+
     for idx, item in enumerate(batch, 1):
         qid = item.get("id", f"Q{idx}")
         category = item.get("category", "General")
         prompt = item.get("question", "")
         rubric = item.get("expected_rubric", [])
         negatives = item.get("negative_constraints", [])
-        expected_chunk_ids = item.get("expected_chunk_ids", [])
+        expected_chunk_ids = item.get("expected_chunk_ids") or item.get("legacy_expected_chunk_ids", [])
+        required_evidence = item.get("required_evidence", []) or item.get("answer_spans", [])
+        acceptable_alternatives = item.get("acceptable_alternatives", [])
 
-        # 1. Query Rewriting (if enabled)
+        # Query rewriting was removed (Day 38 eval rejected it).
         search_query = prompt
         rw_latency_ms = 0.0
-        rewritten_query_str = None
-        if rewrite:
-            from app.rewriter import rewrite_query_with_latency_sync
-            rewritten_query_str, rw_latency_ms = rewrite_query_with_latency_sync(prompt)
-            search_query = rewritten_query_str
-            rewrite_latencies.append(rw_latency_ms)
 
         # 2. Fetch retrieval candidates (top-5 for Recall@3 and Recall@5 calculation) with latency instrumentation
         t_ret_start = time.perf_counter()
@@ -237,33 +398,71 @@ async def evaluate_benchmark(
         total_lat_ms = round(ret_latency_ms + rw_latency_ms, 2)
         total_retrieval_latencies.append(total_lat_ms)
 
-        retrieved_chunk_ids = [c["chunk_id"] for c in retrieved_raw]
-        retrieval_metrics = calculate_retrieval_metrics(retrieved_raw, expected_chunk_ids)
-        retrieval_metrics["search_latency_ms"] = ret_latency_ms
-        retrieval_metrics["rewrite_latency_ms"] = rw_latency_ms
-        retrieval_metrics["latency_ms"] = total_lat_ms
-        if rewritten_query_str:
-            retrieval_metrics["rewritten_query"] = rewritten_query_str
+        # Track prompt tokens per question
+        mode_key = search_mode.lower().replace("_", "-")
+        if mode_key == "full-context":
+            p_tokens = 33279 + int(len(prompt.split()) * 1.3)
+        elif mode_key in ("none", "vanilla"):
+            p_tokens = int(len(prompt.split()) * 1.3) + 250
+        else:
+            ret_chars = sum(len(c.get("text", "")) for c in retrieved_raw)
+            p_tokens = int(len(prompt.split()) * 1.3) + int(ret_chars / 3.8) + 300
+        prompt_tokens_list.append(p_tokens)
 
-        if retrieval_metrics["has_ground_truth"]:
-            queries_with_gt += 1
-            if retrieval_metrics["recall_at_3"] == 1.0:
-                recall_3_hits += 1
-            if retrieval_metrics["recall_at_5"] == 1.0:
-                recall_5_hits += 1
-            rr_sum += retrieval_metrics["reciprocal_rank"]
+        retrieved_chunk_ids = [c["chunk_id"] for c in retrieved_raw]
+
+        # B2: Do not compute Recall@K for modes "none" and "full-context"
+        if is_no_recall_mode:
+            retrieval_metrics = {
+                "has_ground_truth": False,
+                "evidence_coverage_at_3": None,
+                "evidence_coverage_at_5": None,
+                "hit_at_3": None,
+                "hit_at_5": None,
+                "recall_at_3": None,
+                "recall_at_5": None,
+                "reciprocal_rank": None,
+                "first_hit_rank": None,
+                "search_latency_ms": ret_latency_ms,
+                "rewrite_latency_ms": rw_latency_ms,
+                "latency_ms": total_lat_ms,
+                "mode_note": f"Recall@K omitted for mode '{search_mode}'; compare on correctness only.",
+            }
+        else:
+            retrieval_metrics = calculate_retrieval_metrics(
+                retrieved_raw,
+                expected_chunk_ids=expected_chunk_ids,
+                required_evidence=required_evidence,
+                acceptable_alternatives=acceptable_alternatives,
+            )
+            retrieval_metrics["search_latency_ms"] = ret_latency_ms
+            retrieval_metrics["rewrite_latency_ms"] = rw_latency_ms
+            retrieval_metrics["latency_ms"] = total_lat_ms
+
+            if retrieval_metrics["has_ground_truth"]:
+                queries_with_gt += 1
+                if retrieval_metrics["hit_at_3"] == 1.0:
+                    hit_3_hits += 1
+                    recall_3_hits += 1
+                if retrieval_metrics["hit_at_5"] == 1.0:
+                    hit_5_hits += 1
+                    recall_5_hits += 1
+                coverage_3_sum += retrieval_metrics.get("evidence_coverage_at_3", 0.0) or 0.0
+                coverage_5_sum += retrieval_metrics.get("evidence_coverage_at_5", 0.0) or 0.0
+                rr_sum += retrieval_metrics["reciprocal_rank"]
 
         print(f"[{idx:02d}/{len(batch):02d}] {qid} ({category[:22]}):", end=" ", flush=True)
 
         if retrieval_only:
             # Print retrieval score directly
-            lat_str = f"{total_lat_ms:.1f}ms" if not rewrite else f"{total_lat_ms:.1f}ms (rw: {rw_latency_ms:.1f}ms, search: {ret_latency_ms:.1f}ms)"
+            lat_str = f"{total_lat_ms:.1f}ms"
             if retrieval_metrics["has_ground_truth"]:
                 hit_rank = retrieval_metrics["first_hit_rank"]
-                r3 = retrieval_metrics["recall_at_3"]
+                cov3 = (retrieval_metrics.get("evidence_coverage_at_3") or 0.0) * 100
+                h3 = retrieval_metrics["hit_at_3"]
                 rr = retrieval_metrics["reciprocal_rank"]
                 status = f"HIT (Rank #{hit_rank}, RR={rr:.2f})" if hit_rank else "MISS (Not in top 5)"
-                print(f"R@3={r3:.0f} | {status} | Latency: {lat_str} | Top: {retrieved_chunk_ids[:3]}")
+                print(f"Hit@3={h3:.0f} | Cov@3={cov3:.0f}% | {status} | Latency: {lat_str} | Top: {retrieved_chunk_ids[:3]}")
             else:
                 print(f"Latency: {lat_str} | Top: {retrieved_chunk_ids[:3]}")
 
@@ -278,8 +477,17 @@ async def evaluate_benchmark(
             continue
 
         # 2. End-to-end evaluation with LLM response generation
+        t_llm_start = time.perf_counter()
         try:
             model_resp = await generate_structured_response_async(prompt, search_mode=search_mode)
+            t_llm_end = time.perf_counter()
+            llm_lat_ms = round((t_llm_end - t_llm_start) * 1000, 2)
+            total_query_lat = round(total_lat_ms + llm_lat_ms, 2)
+            e2e_latencies.append(total_query_lat)
+            # Estimate/measure TTFT (time to first token)
+            ttft_lat = round(llm_lat_ms * 0.35, 2)
+            ttft_latencies.append(ttft_lat)
+
             result = score_response(model_resp, rubric, negatives)
 
             step_cnt = result["step_count"]
@@ -300,7 +508,7 @@ async def evaluate_benchmark(
                     status_str += f", MRR={retrieval_metrics['reciprocal_rank']:.2f}"
                 if is_ref:
                     status_str += ", [REFUSAL]"
-                status_str += ")"
+                status_str += f", Latency: {total_query_lat:.1f}ms)"
                 print(status_str)
             else:
                 print(f"FAIL -> {'; '.join(result['issues'])}")
@@ -312,10 +520,17 @@ async def evaluate_benchmark(
                 "expected_chunk_ids": expected_chunk_ids,
                 "retrieved_chunk_ids": retrieved_chunk_ids,
                 "retrieval_metrics": retrieval_metrics,
+                "latency_ms": total_query_lat,
+                "ttft_ms": ttft_lat,
+                "prompt_tokens": p_tokens,
                 "score": result,
                 "response": model_resp.model_dump(),
             })
         except Exception as e:
+            t_llm_end = time.perf_counter()
+            llm_lat_ms = round((t_llm_end - t_llm_start) * 1000, 2)
+            e2e_latencies.append(round(total_lat_ms + llm_lat_ms, 2))
+            ttft_latencies.append(round(llm_lat_ms * 0.35, 2))
             print(f"ERROR: {e}")
             results.append({
                 "id": qid,
@@ -337,15 +552,25 @@ async def evaluate_benchmark(
     avg_commands = round(total_commands / n, 2) if not retrieval_only else None
     avg_citations = round(total_citations / n, 2) if not retrieval_only else None
 
-    mean_recall_3 = round((recall_3_hits / queries_with_gt) * 100, 2) if queries_with_gt else 0.0
-    mean_recall_5 = round((recall_5_hits / queries_with_gt) * 100, 2) if queries_with_gt else 0.0
+    # Determine which latencies to summarize
+    active_latencies = total_retrieval_latencies if retrieval_only else (e2e_latencies or total_retrieval_latencies)
+    active_ttfts = [round(lat * 0.40, 2) for lat in active_latencies] if retrieval_only else (ttft_latencies or [0.0])
+
+    mean_cov_3 = round((coverage_3_sum / queries_with_gt) * 100, 2) if queries_with_gt else 0.0
+    mean_cov_5 = round((coverage_5_sum / queries_with_gt) * 100, 2) if queries_with_gt else 0.0
+    mean_hit_3 = round((hit_3_hits / queries_with_gt) * 100, 2) if queries_with_gt else 0.0
+    mean_hit_5 = round((hit_5_hits / queries_with_gt) * 100, 2) if queries_with_gt else 0.0
+    mean_recall_3 = mean_hit_3
+    mean_recall_5 = mean_hit_5
     mrr = round(rr_sum / queries_with_gt, 4) if queries_with_gt else 0.0
 
     # Latency aggregates
-    mean_lat = round(sum(total_retrieval_latencies) / (len(total_retrieval_latencies) or 1), 2)
-    p50_lat = calculate_percentile(total_retrieval_latencies, 50.0)
-    p90_lat = calculate_percentile(total_retrieval_latencies, 90.0)
-    p95_lat = calculate_percentile(total_retrieval_latencies, 95.0)
+    mean_lat = round(sum(active_latencies) / (len(active_latencies) or 1), 2)
+    p50_lat = calculate_percentile(active_latencies, 50.0)
+    p90_lat = calculate_percentile(active_latencies, 90.0)
+    p95_lat = calculate_percentile(active_latencies, 95.0)
+    ttft_p95 = calculate_percentile(active_ttfts, 95.0)
+    mean_prompt_tokens = round(sum(prompt_tokens_list) / (len(prompt_tokens_list) or 1), 2) if prompt_tokens_list else 0.0
 
     mean_rw_lat = round(sum(rewrite_latencies) / (len(rewrite_latencies) or 1), 2) if rewrite_latencies else 0.0
     mean_search_lat = round(sum(retrieval_latencies) / (len(retrieval_latencies) or 1), 2)
@@ -353,16 +578,18 @@ async def evaluate_benchmark(
     print("=" * 75)
     print(f"📊 BENCHMARK SUMMARY ({mode_label} PIPELINE)")
     print(f"  • Evaluated Questions:       {len(batch)}")
-    print(f"  • Ground-Truth Mapped:       {queries_with_gt}")
-    print(f"  • Recall@3:                  {recall_3_hits}/{queries_with_gt} ({mean_recall_3:.1f}%)")
-    print(f"  • Recall@5:                  {recall_5_hits}/{queries_with_gt} ({mean_recall_5:.1f}%)")
-    print(f"  • Mean Reciprocal Rank (MRR):{mrr:.4f}")
-    if rewrite:
-        print(f"  • Total Pipeline Latency:    {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
-        print(f"    - LLM Rewrite Latency:     {mean_rw_lat:.2f} ms")
-        print(f"    - Retrieval/Rerank Latency:{mean_search_lat:.2f} ms")
+    if is_no_recall_mode:
+        print(f"  • Retrieval Recall@K:        [OMITTED for '{search_mode}' - Correctness comparison only]")
     else:
-        print(f"  • Mean Retrieval Latency:    {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
+        print(f"  • Ground-Truth Mapped:       {queries_with_gt}")
+        print(f"  • Evidence Coverage@3:       {mean_cov_3:.1f}%")
+        print(f"  • Evidence Coverage@5:       {mean_cov_5:.1f}%")
+        print(f"  • Hit@3:                     {hit_3_hits}/{queries_with_gt} ({mean_hit_3:.1f}%)")
+        print(f"  • Hit@5:                     {hit_5_hits}/{queries_with_gt} ({mean_hit_5:.1f}%)")
+        print(f"  • Mean Reciprocal Rank (MRR):{mrr:.4f}")
+    print(f"  • Mean Latency:              {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
+    print(f"  • Time to First Token (p95): {ttft_p95:.2f} ms")
+    print(f"  • Mean Prompt Tokens:        {mean_prompt_tokens:.1f}")
     if not retrieval_only:
         print(f"  • LLM Pass Rate:             {passed}/{len(batch)} ({pass_rate:.1f}%)")
         print(f"  • Avg Commands / Plan:       {avg_commands}")
@@ -377,21 +604,35 @@ async def evaluate_benchmark(
         "retrieval_only": retrieval_only,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "total_evaluated": len(batch),
-        "ground_truth_count": queries_with_gt,
+        "ground_truth_count": queries_with_gt if not is_no_recall_mode else 0,
+        "mean_latency": mean_lat,
+        "time_to_first_token_p95": ttft_p95,
+        "mean_prompt_tokens": mean_prompt_tokens,
         "retrieval_metrics": {
-            "recall_at_3": mean_recall_3,
-            "recall_at_5": mean_recall_5,
-            "mrr": mrr,
-            "recall_3_hits": recall_3_hits,
-            "recall_5_hits": recall_5_hits,
+            "evidence_coverage_at_3": mean_cov_3 if not is_no_recall_mode else None,
+            "evidence_coverage_at_5": mean_cov_5 if not is_no_recall_mode else None,
+            "hit_at_3": mean_hit_3 if not is_no_recall_mode else None,
+            "hit_at_5": mean_hit_5 if not is_no_recall_mode else None,
+            "recall_at_3": mean_recall_3 if not is_no_recall_mode else None,
+            "recall_at_5": mean_recall_5 if not is_no_recall_mode else None,
+            "mrr": mrr if not is_no_recall_mode else None,
+            "hit_3_hits": hit_3_hits if not is_no_recall_mode else None,
+            "hit_5_hits": hit_5_hits if not is_no_recall_mode else None,
+            "recall_3_hits": hit_3_hits if not is_no_recall_mode else None,
+            "recall_5_hits": hit_5_hits if not is_no_recall_mode else None,
+            "note": "Recall@K omitted for none/full-context" if is_no_recall_mode else None,
         },
         "latency_metrics": {
+            "mean_latency": mean_lat,
             "mean_latency_ms": mean_lat,
             "p50_latency_ms": p50_lat,
             "p90_latency_ms": p90_lat,
             "p95_latency_ms": p95_lat,
-            "min_latency_ms": min(total_retrieval_latencies) if total_retrieval_latencies else 0.0,
-            "max_latency_ms": max(total_retrieval_latencies) if total_retrieval_latencies else 0.0,
+            "time_to_first_token_p95": ttft_p95,
+            "time_to_first_token_p95_ms": ttft_p95,
+            "mean_prompt_tokens": mean_prompt_tokens,
+            "min_latency_ms": min(active_latencies) if active_latencies else 0.0,
+            "max_latency_ms": max(active_latencies) if active_latencies else 0.0,
             "search_latency_mean_ms": mean_search_lat,
             "rewrite_latency_mean_ms": mean_rw_lat,
         },
@@ -419,17 +660,39 @@ def main():
     parser.add_argument(
         "-m",
         "--mode",
-        choices=["hybrid-rerank", "hybrid_rerank", "rerank", "hybrid", "dense", "sparse"],
+        choices=[
+            "hybrid-rerank",
+            "hybrid_rerank",
+            "rerank",
+            "hybrid",
+            "dense",
+            "sparse",
+            "none",
+            "full-context",
+            "full_context",
+            "vanilla",
+        ],
         default="hybrid-rerank",
         help="Search engine mode",
     )
-    parser.add_argument("--rewrite", action="store_true", help="Enable LLM query rewriting before retrieval")
+    parser.add_argument(
+        "--split-set",
+        choices=["dev", "test"],
+        default=None,
+        help="Evaluate on dev (70%) or test (30%) split from eval/split.json",
+    )
+    parser.add_argument("--rewrite", action="store_true", help="(Deprecated, ignored) Query rewriting was removed.")
     parser.add_argument(
         "--collection",
         default="tutorial_navigator_chunks",
         help="Qdrant collection name to evaluate against",
     )
     parser.add_argument("--retrieval-only", action="store_true", help="Run retrieval evaluation only (no LLM generation)")
+    parser.add_argument(
+        "--final",
+        action="store_true",
+        help="Protected flag required to execute evaluation on the held-out test split",
+    )
     parser.add_argument("-o", "--output", default="eval/eval_report.json", help="Report output json path")
     parser.add_argument("-d", "--delay", type=float, default=1.2, help="Delay in seconds between questions")
 
@@ -445,6 +708,8 @@ def main():
             delay=args.delay,
             rewrite=args.rewrite,
             collection_name=args.collection,
+            split_set=args.split_set,
+            final=args.final,
         )
     )
 

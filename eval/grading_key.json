@@ -1,0 +1,1599 @@
+{
+  "metadata": {
+    "created_at": "2026-11-02T08:55:08.697135+00:00",
+    "random_seed": 42,
+    "total_questions": 88,
+    "total_evaluations": 264,
+    "reports_evaluated": [
+      "hybrid_rerank_retrieval_report.json",
+      "hybrid_retrieval_report.json",
+      "dense_retrieval_report.json"
+    ]
+  },
+  "key": [
+    {
+      "question_id": "GS-01",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-01",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-01",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-02",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-02",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-02",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-03",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-03",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-03",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-04",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-04",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-04",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-05",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-05",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-05",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-06",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-06",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-06",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-07",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-07",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-07",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-08",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-08",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-08",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-09",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-09",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-09",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-10",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-10",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-10",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-11",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-11",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-11",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-12",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-12",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-12",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-13",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-13",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-13",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-14",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-14",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-14",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-15",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-15",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-15",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-16",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-16",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-16",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-17",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-17",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-17",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-18",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-18",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-18",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-19",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-19",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-19",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-20",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-20",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-20",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-21",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-21",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-21",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-22",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-22",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-22",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-23",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-23",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-23",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-24",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-24",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-24",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-25",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-25",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-25",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-26",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-26",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-26",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-27",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-27",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-27",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-28",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-28",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-28",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-29",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-29",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-29",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-30",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-30",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-30",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-31",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-31",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-31",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-32",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-32",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-32",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-33",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-33",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-33",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-34",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-34",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-34",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-35",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-35",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-35",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-36",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-36",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-36",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-37",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-37",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-37",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-38",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-38",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-38",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-39",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-39",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-39",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-40",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-40",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-40",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-41",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-41",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-41",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-42",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-42",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-42",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-43",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-43",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-43",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-44",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-44",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-44",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-45",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-45",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-45",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-46",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-46",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-46",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-47",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-47",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-47",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-48",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-48",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-48",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-49",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-49",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-49",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-50",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-50",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-50",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-51",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-51",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-51",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-52",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-52",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-52",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-53",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-53",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-53",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-54",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-54",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-54",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-55",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-55",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-55",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-56",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-56",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-56",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-57",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-57",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-57",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-58",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-58",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-58",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-59",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-59",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-59",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-60",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-60",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-60",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-61",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-61",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-61",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-62",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-62",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-62",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-63",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-63",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-63",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-64",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-64",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-64",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-65",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-65",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-65",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-66",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-66",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-66",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-67",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-67",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-67",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-68",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-68",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-68",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-69",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-69",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-69",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-70",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-70",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-70",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-71",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-71",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-71",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-72",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-72",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-72",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-73",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-73",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-73",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-74",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-74",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-74",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-75",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-75",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-75",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-76",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-76",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-76",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-77",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-77",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-77",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-78",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-78",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-78",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-79",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-79",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-79",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-80",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-80",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-80",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-81",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-81",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-81",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-82",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-82",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-82",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-83",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-83",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-83",
+      "system_id": "System-C",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-84",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-84",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-84",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-85",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-85",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-85",
+      "system_id": "System-C",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-86",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-86",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-86",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-87",
+      "system_id": "System-A",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-87",
+      "system_id": "System-B",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-87",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-88",
+      "system_id": "System-A",
+      "true_mode": "dense",
+      "source_report": "dense_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-88",
+      "system_id": "System-B",
+      "true_mode": "hybrid",
+      "source_report": "hybrid_retrieval_report.json"
+    },
+    {
+      "question_id": "GS-88",
+      "system_id": "System-C",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_retrieval_report.json"
+    }
+  ]
+}

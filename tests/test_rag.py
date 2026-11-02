@@ -331,3 +331,24 @@ def test_sweep_chunks_dataset():
     assert "mapped_512_chunk_ids" in chunks[0]
     assert len(chunks[0]["mapped_512_chunk_ids"]) > 0
 
+
+def test_baseline_comparison_report():
+    report_path = Path(__file__).resolve().parent.parent / "eval" / "baseline_comparison_report.json"
+    assert report_path.exists(), "baseline_comparison_report.json must exist"
+    import json
+    with open(report_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert data["total_grounded_questions"] == 30
+    assert "zero_retrieval" in data["configurations"]
+    assert "full_corpus" in data["configurations"]
+    assert "current_pipeline" in data["configurations"]
+
+    zr = data["configurations"]["zero_retrieval"]
+    fc = data["configurations"]["full_corpus"]
+    cp = data["configurations"]["current_pipeline"]
+
+    assert zr["total_valid_citations"] == 0
+    assert fc["avg_prompt_tokens"] > 30000
+    assert cp["avg_prompt_tokens"] < 3000
+    assert cp["total_valid_citations"] > 0
+

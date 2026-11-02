@@ -1,12 +1,20 @@
 import os
 import time
+import uuid
 import logging
+from pathlib import Path
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 
-from app.schemas import QueryRequest, NavigatorResponse, HealthStatus
+from app.schemas import (
+    QueryRequest,
+    NavigatorResponse,
+    HealthStatus,
+    FeedbackRequest,
+    FeedbackResponse,
+)
 from app.client import (
     generate_structured_response_async,
     stream_response_sse,
@@ -14,8 +22,14 @@ from app.client import (
     DEFAULT_CONCURRENCY_LIMIT,
 )
 from app.tools import AVAILABLE_TOOLS, search_error_catalog
-from app.rag import get_indexed_count
-from app.telemetry import log_query_trajectory, get_recent_trajectories
+from app.rag import get_indexed_count, get_chunk_by_id
+from app.telemetry import (
+    log_query_trajectory,
+    get_recent_trajectories,
+    log_user_feedback,
+    get_recent_feedback,
+    get_feedback_summary,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -26,13 +40,9 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configure allowed origins (configurable via ALLOWED_ORIGINS env var for public cloud deploys)
 ALLOWED_ORIGINS = [
     origin.strip()
-    for origin in os.getenv(
-        "ALLOWED_ORIGINS",
-        "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173",
-    ).split(",")
+    for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000").split(",")
     if origin.strip()
 ]
 
@@ -40,22 +50,39 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
 )
 
 
-@app.get("/")
-def root():
+
+
+
+FRONTEND_INDEX = Path(__file__).resolve().parent.parent / "frontend" / "index.html"
+
+
+@app.get("/", include_in_schema=False)
+@app.get("/chat", include_in_schema=False)
+def serve_chat_ui():
+    """Serve the single-page chat UI."""
+    if FRONTEND_INDEX.exists():
+        return FileResponse(FRONTEND_INDEX, media_type="text/html")
+    return {"message": "Tutorial Hell Navigator API is running. UI index.html not found."}
+
+
+@app.get("/api")
+def api_root():
     return {
         "service": "Tutorial Hell Navigator API",
         "docs": "/docs",
         "health": "/health",
+        "chat_ui": "/",
         "endpoints": {
             "navigate": "POST /navigate",
             "stream_post": "POST /navigate/stream",
             "stream_get": "GET /navigate/stream?query=...",
             "telemetry": "GET /telemetry/trajectories",
+            "feedback": "POST /api/feedback",
             "tools_catalog": "GET /tools/catalog",
         },
     }
@@ -92,10 +119,11 @@ async def navigate(request: QueryRequest) -> NavigatorResponse:
         )
         return response
     except Exception as e:
-        logger.error("Navigation error for query '%s': %s", request.query[:50], e, exc_info=True)
+        error_id = uuid.uuid4().hex[:8]
+        logger.error("[ErrorRef: %s] Navigation error for query '%s': %s", error_id, request.query[:50], e, exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Navigation failed: {e}",
+            detail=f"Navigation failed (Error Reference: {error_id})",
         )
 
 
@@ -147,3 +175,61 @@ def get_trajectories(limit: int = Query(default=20, ge=1, le=100)):
         "count": len(records),
         "trajectories": records,
     }
+
+
+@app.post("/api/feedback", response_model=FeedbackResponse)
+def submit_feedback(request: FeedbackRequest) -> FeedbackResponse:
+    """Record user thumbs-up/down, unstick metric, and comments for real-user testing telemetry."""
+    try:
+        log_user_feedback(
+            query=request.query,
+            rating=request.rating,
+            unstuck=request.unstuck,
+            comment=request.comment,
+            cited_chunk_ids=request.cited_chunk_ids,
+            session_id=request.session_id,
+        )
+        return FeedbackResponse(status="ok", message="Feedback recorded successfully")
+    except Exception as e:
+        logger.warning("Failed to save feedback: %s", e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to record feedback",
+        )
+
+
+@app.get("/api/feedback")
+def retrieve_feedback(limit: int = Query(default=20, ge=1, le=100)):
+    """Retrieve the most recent logged user feedback."""
+    records = get_recent_feedback(limit=limit)
+    return {
+        "count": len(records),
+        "feedback": records,
+    }
+
+
+@app.get("/api/feedback/summary")
+def retrieve_feedback_summary():
+    """Retrieve aggregated Phase 0 success metrics (unstick rate and sentiment)."""
+    return get_feedback_summary()
+
+
+@app.get("/api/chunks/{chunk_id}")
+def retrieve_chunk_details(chunk_id: str):
+    """Retrieve the full verbatim source text and metadata of a cited chunk."""
+    chunk = get_chunk_by_id(chunk_id)
+    if not chunk:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Chunk ID '{chunk_id}' not found in corpus.",
+        )
+    return {
+        "chunk_id": chunk.get("chunk_id"),
+        "source_file": chunk.get("source_file"),
+        "chunk_index": chunk.get("chunk_index"),
+        "char_count": chunk.get("char_count", len(chunk.get("text", ""))),
+        "text": chunk.get("text", ""),
+    }
+
+
+
