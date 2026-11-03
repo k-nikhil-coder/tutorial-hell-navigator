@@ -187,7 +187,7 @@ async def generate_structured_response_async(
                     if rerank_score != -99.0:
                         is_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
                     else:
-                        is_grounded = top_chunk.get("is_grounded", dense_score >= 0.40)
+                        is_grounded = bool(dense_score >= 0.40 and top_chunk.get("is_grounded", True))
                 else:
                     is_grounded = top_chunk.get("is_grounded", top_chunk.get("score", 0.0) >= 0.40)
 
@@ -279,7 +279,7 @@ async def stream_response_sse(
                 if rerank_score != -99.0:
                     is_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
                 else:
-                    is_grounded = top_chunk.get("is_grounded", dense_score >= 0.40)
+                    is_grounded = bool(dense_score >= 0.40 and top_chunk.get("is_grounded", True))
             else:
                 is_grounded = top_chunk.get("is_grounded", top_chunk.get("score", 0.0) >= 0.40)
 

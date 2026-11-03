@@ -27,6 +27,10 @@ TABLE_NAME = "document_chunks"
 
 # Categorization metadata mapping based on source file
 SOURCE_METADATA_MAP: Dict[str, Dict[str, str]] = {
+    "docker_compose.md": {
+        "topic": "Docker Compose & Orchestration",
+        "category": "DevOps & Infrastructure",
+    },
     "docker_compose_best_practices.md": {
         "topic": "Docker & Containerization",
         "category": "DevOps & Infrastructure",
@@ -47,6 +51,18 @@ SOURCE_METADATA_MAP: Dict[str, Dict[str, str]] = {
         "topic": "Fullstack Architecture",
         "category": "Full-Stack Engineering",
     },
+    "fastapi_validation.md": {
+        "topic": "FastAPI Request Validation",
+        "category": "Backend Architecture",
+    },
+    "git_reference.md": {
+        "topic": "Git & Version Control",
+        "category": "Developer Tooling",
+    },
+    "postgresql_psycopg2.md": {
+        "topic": "PostgreSQL & Psycopg2",
+        "category": "Databases & Storage",
+    },
     "pydantic_models.md": {
         "topic": "Pydantic Models",
         "category": "Data Validation & Typing",
@@ -54,6 +70,10 @@ SOURCE_METADATA_MAP: Dict[str, Dict[str, str]] = {
     "pydantic_validation.md": {
         "topic": "Pydantic Validation",
         "category": "Data Validation & Typing",
+    },
+    "python_debugging.md": {
+        "topic": "Python Debugging & Runtime",
+        "category": "Python Fundamentals",
     },
     "cs_engineering_roadmap.pdf": {
         "topic": "CS Fundamentals & Roadmaps",
@@ -250,13 +270,14 @@ class PgVectorStore:
             })
 
         if self._is_live:
+            vec_cast = f"halfvec({self.vector_dim})" if self.vector_dim > 2000 else f"vector({self.vector_dim})"
             insert_sql = f"""
             INSERT INTO {self.table_name} (
                 chunk_id, source_file, chunk_index, text, char_count, topic, category,
                 mapped_512_chunk_ids, metadata, embedding
             ) VALUES (
                 %(chunk_id)s, %(source_file)s, %(chunk_index)s, %(text)s, %(char_count)s,
-                %(topic)s, %(category)s, %(mapped_512_chunk_ids)s, %(metadata)s, %(embedding)s
+                %(topic)s, %(category)s, %(mapped_512_chunk_ids)s, %(metadata)s, %(embedding)s::{vec_cast}
             )
             ON CONFLICT (chunk_id) DO UPDATE SET
                 source_file = EXCLUDED.source_file,
@@ -277,7 +298,7 @@ class PgVectorStore:
                             {
                                 **row,
                                 "metadata": json.dumps(row["metadata"]),
-                                "embedding": row["embedding"].tolist(),
+                                "embedding": str(row["embedding"].tolist()),
                             },
                         )
                 conn.commit()
@@ -314,7 +335,7 @@ class PgVectorStore:
         if self._is_live:
             where_clauses = ["1=1"]
             params: Dict[str, Any] = {
-                "qvec": np.asarray(query_vec, dtype=np.float32).tolist(),
+                "qvec": str(np.asarray(query_vec, dtype=np.float32).tolist()),
                 "limit": top_k,
             }
 

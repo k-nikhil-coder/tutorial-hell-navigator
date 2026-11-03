@@ -331,3 +331,92 @@ async def test_health_endpoint_pgvector_metadata():
         assert isinstance(data["pgvector_indexed_chunks"], int)
         assert isinstance(data["pgvector_is_live"], bool)
 
+
+def test_live_postgres_upsert_chunks_dim_over_2000():
+    """Verify live PostgreSQL upsert formats DDL and INSERT with halfvec(dim) cast for dim > 2000."""
+    mock_cursor = MagicMock()
+    mock_cursor.fetchone.return_value = [1]
+    mock_conn = MagicMock()
+    mock_conn.__enter__.return_value = mock_conn
+    mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
+
+    with patch("psycopg.connect", return_value=mock_conn):
+        with patch("pgvector.psycopg.register_vector"):
+            store = PgVectorStore(
+                connection_string="postgresql://user:pass@localhost:5432/testdb",
+                in_memory=False,
+                vector_dim=3072,
+            )
+            assert store.is_live is True
+
+            sample_chunks = [
+                {
+                    "chunk_id": "test_chunk_halfvec",
+                    "source_file": "fastapi_cors.md",
+                    "text": "CORS middleware explanation",
+                    "chunk_index": 0,
+                    "char_count": 27,
+                }
+            ]
+            embeddings = [[0.01] * 3072]
+            upserted = store.upsert_chunks(sample_chunks, embeddings)
+            assert upserted == 1
+
+            # Check executed SQL queries
+            calls = [c[0] for c in mock_cursor.execute.call_args_list]
+            insert_calls = [c for c in calls if "INSERT INTO document_chunks" in c[0]]
+            assert len(insert_calls) == 1
+            sql = insert_calls[0][0]
+            params = insert_calls[0][1]
+
+            assert "embedding" in sql
+            assert "%(embedding)s::halfvec(3072)" in sql
+            assert params["chunk_id"] == "test_chunk_halfvec"
+            assert isinstance(params["embedding"], str)
+            assert params["embedding"].startswith("[") and params["embedding"].endswith("]")
+
+
+def test_live_postgres_filtered_clauses():
+    """Verify all SQL where clauses (category, source_file, min_char_count) in live mode."""
+    mock_cursor = MagicMock()
+    mock_cursor.fetchall.return_value = [
+        ("chunk_x", "fastapi_cors.md", 0, "text", 150, "CORS", "Security", [], 0.95)
+    ]
+    mock_cursor.fetchone.return_value = [1]
+    mock_conn = MagicMock()
+    mock_conn.__enter__.return_value = mock_conn
+    mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
+
+    with patch("psycopg.connect", return_value=mock_conn):
+        with patch("pgvector.psycopg.register_vector"):
+            store = PgVectorStore(
+                connection_string="postgresql://user:pass@localhost:5432/testdb",
+                in_memory=False,
+                vector_dim=3072,
+            )
+            results = store.retrieve_filtered(
+                query_vec=[0.05] * 3072,
+                top_k=3,
+                topic="CORS",
+                category="Security",
+                source_file="fastapi_cors.md",
+                min_char_count=100,
+            )
+            assert len(results) == 1
+            assert results[0]["chunk_id"] == "chunk_x"
+
+            # Check that all SQL clauses and params were constructed
+            last_call = mock_cursor.execute.call_args
+            sql_text = last_call[0][0]
+            sql_params = last_call[0][1]
+
+            assert "topic ILIKE %(topic)s" in sql_text
+            assert "category ILIKE %(category)s" in sql_text
+            assert "source_file = %(source_file)s" in sql_text
+            assert "char_count >= %(min_char)s" in sql_text
+            assert sql_params["topic"] == "%CORS%"
+            assert sql_params["category"] == "%Security%"
+            assert sql_params["source_file"] == "fastapi_cors.md"
+            assert sql_params["min_char"] == 100
+
+

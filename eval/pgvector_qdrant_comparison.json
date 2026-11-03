@@ -1,6 +1,6 @@
 {
   "benchmark": "Qdrant vs Postgres + pgvector Comparative Benchmark (Day 41)",
-  "timestamp": "2026-11-03T14:00:19.481192+00:00",
+  "timestamp": "2026-11-03T15:48:36.043007+00:00",
   "total_evaluated_per_config": 30,
   "configurations": {
     "qdrant_dense": {
@@ -16,10 +16,10 @@
       "evidence_coverage_at_3": 54.55,
       "evidence_coverage_at_5": 70.45,
       "mrr": 0.6167,
-      "mean_latency_ms": 24.45,
-      "p50_latency_ms": 6.63,
-      "p90_latency_ms": 6.85,
-      "p95_latency_ms": 7.0
+      "mean_latency_ms": 10.72,
+      "p50_latency_ms": 2.49,
+      "p90_latency_ms": 4.76,
+      "p95_latency_ms": 5.7
     },
     "qdrant_hybrid": {
       "name": "Qdrant (Hybrid RRF: Dense + BM25)",
@@ -34,10 +34,10 @@
       "evidence_coverage_at_3": 53.79,
       "evidence_coverage_at_5": 71.21,
       "mrr": 0.6174,
-      "mean_latency_ms": 12.72,
-      "p50_latency_ms": 12.5,
-      "p90_latency_ms": 13.3,
-      "p95_latency_ms": 13.57
+      "mean_latency_ms": 6.0,
+      "p50_latency_ms": 5.42,
+      "p90_latency_ms": 8.09,
+      "p95_latency_ms": 8.86
     },
     "pgvector_dense": {
       "name": "Postgres/pgvector (Dense Cosine)",
@@ -52,10 +52,10 @@
       "evidence_coverage_at_3": 54.55,
       "evidence_coverage_at_5": 70.45,
       "mrr": 0.6167,
-      "mean_latency_ms": 0.88,
-      "p50_latency_ms": 0.84,
-      "p90_latency_ms": 1.08,
-      "p95_latency_ms": 1.13
+      "mean_latency_ms": 0.37,
+      "p50_latency_ms": 0.36,
+      "p90_latency_ms": 0.39,
+      "p95_latency_ms": 0.39
     },
     "pgvector_hybrid": {
       "name": "Postgres/pgvector (Hybrid RRF: Dense + BM25)",
@@ -70,10 +70,10 @@
       "evidence_coverage_at_3": 53.79,
       "evidence_coverage_at_5": 71.21,
       "mrr": 0.6174,
-      "mean_latency_ms": 7.06,
-      "p50_latency_ms": 7.11,
-      "p90_latency_ms": 7.78,
-      "p95_latency_ms": 7.85
+      "mean_latency_ms": 3.36,
+      "p50_latency_ms": 2.76,
+      "p90_latency_ms": 5.67,
+      "p95_latency_ms": 6.36
     },
     "pgvector_sql_filtered": {
       "name": "Postgres/pgvector + SQL Topic Metadata Filter",
@@ -88,10 +88,10 @@
       "evidence_coverage_at_3": 54.55,
       "evidence_coverage_at_5": 70.45,
       "mrr": 0.6265,
-      "mean_latency_ms": 0.72,
-      "p50_latency_ms": 0.88,
-      "p90_latency_ms": 0.91,
-      "p95_latency_ms": 0.92
+      "mean_latency_ms": 0.58,
+      "p50_latency_ms": 0.52,
+      "p90_latency_ms": 0.89,
+      "p95_latency_ms": 1.37
     }
   }
 }

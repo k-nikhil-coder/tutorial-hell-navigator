@@ -352,3 +352,34 @@ def test_baseline_comparison_report():
     assert cp["avg_prompt_tokens"] < 3000
     assert cp["total_valid_citations"] > 0
 
+
+def test_hybrid_grounding_refusal_on_sparse_only_match():
+    """Verify that reciprocal_rank_fusion strictly requires dense_score >= 0.40 for is_grounded."""
+    from app.rag import reciprocal_rank_fusion
+
+    # Scenario 1: Pure sparse keyword hit with no dense semantic similarity (stopword match)
+    dense_res = []
+    sparse_res = [{"chunk_id": "chunk_unrelated", "score": 12.5}]
+    fused = reciprocal_rank_fusion(dense_res, sparse_res, k=60, top_k=1)
+    assert len(fused) == 1
+    assert fused[0]["dense_score"] == 0.0
+    assert fused[0]["sparse_score"] == 12.5
+    assert fused[0]["is_grounded"] is False
+
+    # Scenario 2: Low dense similarity below refusal threshold (e.g. 0.32)
+    dense_low = [{"chunk_id": "chunk_weak", "score": 0.32}]
+    sparse_low = [{"chunk_id": "chunk_weak", "score": 8.0}]
+    fused_low = reciprocal_rank_fusion(dense_low, sparse_low, k=60, top_k=1)
+    assert len(fused_low) == 1
+    assert fused_low[0]["dense_score"] == 0.32
+    assert fused_low[0]["is_grounded"] is False
+
+    # Scenario 3: Legitimate semantic match (>= 0.40)
+    dense_good = [{"chunk_id": "chunk_valid", "score": 0.65}]
+    sparse_good = [{"chunk_id": "chunk_valid", "score": 5.0}]
+    fused_good = reciprocal_rank_fusion(dense_good, sparse_good, k=60, top_k=1)
+    assert len(fused_good) == 1
+    assert fused_good[0]["dense_score"] == 0.65
+    assert fused_good[0]["is_grounded"] is True
+
+

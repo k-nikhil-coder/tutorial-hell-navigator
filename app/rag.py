@@ -522,7 +522,7 @@ def reciprocal_rank_fusion(
         entry["dense_score"] = round(d_score, 4)
         entry["sparse_score"] = round(s_score, 4)
         entry["score"] = round(rrf_score, 5)
-        entry["is_grounded"] = bool(d_score >= 0.40 or s_score > 0.0)
+        entry["is_grounded"] = bool(d_score >= 0.40)
         entry["retrieval_method"] = "hybrid_rrf"
         fused.append(entry)
 
