@@ -1,5 +1,3 @@
-Ran read roadmap from Downloads
-
 # Full Project Roadmap: Tutorial Hell Navigator
 
 ---

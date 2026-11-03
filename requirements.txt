@@ -14,4 +14,5 @@ qdrant-client>=1.8.0
 requests>=2.31.0
 flashrank>=0.2.0
 sentence-transformers>=3.0.0
-
+pgvector>=0.2.5
+psycopg[binary]>=3.1.0

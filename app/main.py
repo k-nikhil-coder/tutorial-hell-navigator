@@ -22,7 +22,7 @@ from app.client import (
     DEFAULT_CONCURRENCY_LIMIT,
 )
 from app.tools import AVAILABLE_TOOLS, search_error_catalog
-from app.rag import get_indexed_count, get_chunk_by_id
+from app.rag import get_indexed_count, get_chunk_by_id, get_pgvector_indexed_count, get_pgvector_store
 from app.telemetry import (
     log_query_trajectory,
     get_recent_trajectories,
@@ -90,6 +90,14 @@ def api_root():
 
 @app.get("/health", response_model=HealthStatus)
 def health_check():
+    pg_count = get_pgvector_indexed_count()
+    pg_is_live = False
+    try:
+        store = get_pgvector_store()
+        pg_is_live = store.is_live
+    except Exception:
+        pass
+
     return HealthStatus(
         status="healthy",
         model=PRIMARY_MODEL,
@@ -97,6 +105,8 @@ def health_check():
         available_tools=[tool.__name__ for tool in AVAILABLE_TOOLS],
         indexed_chunks=get_indexed_count(),
         vector_store="Qdrant",
+        pgvector_indexed_chunks=pg_count,
+        pgvector_is_live=pg_is_live,
     )
 
 
@@ -104,7 +114,12 @@ def health_check():
 async def navigate(request: QueryRequest) -> NavigatorResponse:
     start_time = time.perf_counter()
     try:
-        response = await generate_structured_response_async(request.query)
+        response = await generate_structured_response_async(
+            request.query,
+            topic=request.topic,
+            category=request.category,
+            backend=request.backend or "qdrant",
+        )
         latency_ms = (time.perf_counter() - start_time) * 1000
 
         retrieved_chunks = getattr(response, "_retrieved_chunks", [])
@@ -130,7 +145,12 @@ async def navigate(request: QueryRequest) -> NavigatorResponse:
 @app.post("/navigate/stream")
 async def navigate_stream_post(request: QueryRequest):
     return StreamingResponse(
-        stream_response_sse(request.query),
+        stream_response_sse(
+            request.query,
+            topic=request.topic,
+            category=request.category,
+            backend=request.backend or "qdrant",
+        ),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
@@ -143,9 +163,12 @@ async def navigate_stream_post(request: QueryRequest):
 @app.get("/navigate/stream")
 async def navigate_stream_get(
     query: str = Query(..., min_length=3, description="Roadblock or error description"),
+    topic: Optional[str] = Query(None, description="Topic filter for metadata search"),
+    category: Optional[str] = Query(None, description="Category filter for metadata search"),
+    backend: str = Query("qdrant", description="Vector backend: 'qdrant' or 'pgvector'"),
 ):
     return StreamingResponse(
-        stream_response_sse(query),
+        stream_response_sse(query, topic=topic, category=category, backend=backend),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",

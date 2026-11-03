@@ -252,12 +252,15 @@ async def evaluate_benchmark(
     collection_name: str = "tutorial_navigator_chunks",
     split_set: Optional[str] = None,
     final: bool = False,
+    backend: str = "qdrant",
+    sql_filter: bool = False,
 ):
     if hasattr(sys.stdout, "reconfigure"):
         try:
             sys.stdout.reconfigure(encoding="utf-8", errors="replace")
         except Exception:
             pass
+
 
     path = Path(gold_set_path)
     if not path.exists():
@@ -387,10 +390,33 @@ async def evaluate_benchmark(
         search_query = prompt
         rw_latency_ms = 0.0
 
+        topic_filter = None
+        if sql_filter or "filter" in search_mode.lower():
+            cat_low = category.lower()
+            if "docker" in cat_low or "compose" in cat_low:
+                topic_filter = "Docker"
+            elif "cors" in cat_low:
+                topic_filter = "CORS"
+            elif "background" in cat_low:
+                topic_filter = "FastAPI"
+            elif "pydantic" in cat_low or "validator" in cat_low:
+                topic_filter = "Pydantic"
+            elif "full-stack" in cat_low or "fullstack" in cat_low:
+                topic_filter = "Fullstack"
+            elif "fastapi" in cat_low:
+                topic_filter = "FastAPI"
+            elif any(w in cat_low for w in ["fundamentals", "roadmap", "study", "habits"]):
+                topic_filter = "CS Fundamentals"
+
         # 2. Fetch retrieval candidates (top-5 for Recall@3 and Recall@5 calculation) with latency instrumentation
         t_ret_start = time.perf_counter()
         retrieved_raw = retrieve_relevant_chunks(
-            search_query, top_k=5, search_mode=search_mode, collection_name=collection_name
+            search_query,
+            top_k=5,
+            search_mode=search_mode,
+            collection_name=collection_name,
+            backend=backend,
+            topic=topic_filter,
         )
         t_ret_end = time.perf_counter()
         ret_latency_ms = round((t_ret_end - t_ret_start) * 1000, 2)
@@ -599,6 +625,8 @@ async def evaluate_benchmark(
     report = {
         "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
         "search_mode": search_mode,
+        "vector_backend": backend,
+        "sql_filter_applied": sql_filter,
         "collection_name": collection_name,
         "rewrite_enabled": rewrite,
         "retrieval_only": retrieval_only,
@@ -652,6 +680,147 @@ async def evaluate_benchmark(
     return report
 
 
+async def compare_stores_benchmark(
+    gold_set_path: str = "eval/gold_set.json",
+    limit: Optional[int] = None,
+    category_filter: Optional[str] = None,
+    output_path: str = "eval/pgvector_qdrant_comparison.json",
+    split_set: Optional[str] = None,
+    final: bool = False,
+) -> Dict[str, Any]:
+    """
+    Run comparative retrieval evaluation comparing Qdrant vs PostgreSQL + pgvector,
+    including dense, hybrid, and SQL metadata filtered retrieval.
+    """
+    print("\n" + "=" * 105)
+    print("🚀 RUNNING COMPARATIVE RETRIEVAL BENCHMARK: QDRANT VS POSTGRES + PGVECTOR")
+    print("=" * 105)
+
+    from app.pgvector_store import get_pgvector_store, index_corpus_pgvector
+    pg_store = get_pgvector_store()
+    if pg_store.count() == 0:
+        print("  • Initializing and indexing corpus into pgvector store...")
+        index_corpus_pgvector(store=pg_store)
+        print(f"  • Done. Indexed {pg_store.count()} chunks into pgvector.")
+
+    configurations = [
+        {
+            "id": "qdrant_dense",
+            "name": "Qdrant (Dense Cosine)",
+            "backend": "qdrant",
+            "search_mode": "dense",
+            "sql_filter": False,
+        },
+        {
+            "id": "qdrant_hybrid",
+            "name": "Qdrant (Hybrid RRF: Dense + BM25)",
+            "backend": "qdrant",
+            "search_mode": "hybrid",
+            "sql_filter": False,
+        },
+        {
+            "id": "pgvector_dense",
+            "name": "Postgres/pgvector (Dense Cosine)",
+            "backend": "pgvector",
+            "search_mode": "dense",
+            "sql_filter": False,
+        },
+        {
+            "id": "pgvector_hybrid",
+            "name": "Postgres/pgvector (Hybrid RRF: Dense + BM25)",
+            "backend": "pgvector",
+            "search_mode": "hybrid",
+            "sql_filter": False,
+        },
+        {
+            "id": "pgvector_sql_filtered",
+            "name": "Postgres/pgvector + SQL Topic Metadata Filter",
+            "backend": "pgvector",
+            "search_mode": "dense",
+            "sql_filter": True,
+        },
+    ]
+
+    benchmark_results = {}
+    temp_report_path = Path("eval") / "_temp_eval_report.json"
+
+    for config in configurations:
+        print(f"\n[Evaluating: {config['name']}...]")
+        report = await evaluate_benchmark(
+            gold_set_path=gold_set_path,
+            limit=limit,
+            category_filter=category_filter,
+            output_path=str(temp_report_path),
+            search_mode=config["search_mode"],
+            retrieval_only=True,
+            delay=0.0,
+            backend=config["backend"],
+            sql_filter=config["sql_filter"],
+            split_set=split_set,
+            final=final,
+        )
+        if report:
+            r_metrics = report.get("retrieval_metrics", {})
+            l_metrics = report.get("latency_metrics", {})
+            benchmark_results[config["id"]] = {
+                "name": config["name"],
+                "backend": config["backend"],
+                "search_mode": config["search_mode"],
+                "sql_filter": config["sql_filter"],
+                "total_evaluated": report.get("total_evaluated", 0),
+                "recall_at_3": r_metrics.get("recall_at_3", 0.0),
+                "recall_at_5": r_metrics.get("recall_at_5", 0.0),
+                "hit_at_3": r_metrics.get("hit_at_3", 0.0),
+                "hit_at_5": r_metrics.get("hit_at_5", 0.0),
+                "evidence_coverage_at_3": r_metrics.get("evidence_coverage_at_3", 0.0),
+                "evidence_coverage_at_5": r_metrics.get("evidence_coverage_at_5", 0.0),
+                "mrr": r_metrics.get("mrr", 0.0),
+                "mean_latency_ms": l_metrics.get("mean_latency_ms", 0.0),
+                "p50_latency_ms": l_metrics.get("p50_latency_ms", 0.0),
+                "p90_latency_ms": l_metrics.get("p90_latency_ms", 0.0),
+                "p95_latency_ms": l_metrics.get("p95_latency_ms", 0.0),
+            }
+
+    if temp_report_path.exists():
+        temp_report_path.unlink()
+
+    # Print summary table
+    print("\n" + "=" * 115)
+    print("📊 COMPARATIVE BENCHMARK: QDRANT VS POSTGRES + PGVECTOR")
+    print("=" * 115)
+    header = f"{'Engine & Mode':<48} | {'Recall@3':<9} | {'Recall@5':<9} | {'MRR':<7} | {'EvidCov@3':<10} | {'Mean Lat':<10} | {'P95 Lat':<10}"
+    print(header)
+    print("-" * 115)
+    for res in benchmark_results.values():
+        row = (
+            f"{res['name']:<48} | "
+            f"{str(res['recall_at_3']) + '%':<9} | "
+            f"{str(res['recall_at_5']) + '%':<9} | "
+            f"{str(res['mrr']):<7} | "
+            f"{str(res['evidence_coverage_at_3']) + '%':<10} | "
+            f"{str(res['mean_latency_ms']) + ' ms':<10} | "
+            f"{str(res['p95_latency_ms']) + ' ms':<10}"
+        )
+        print(row)
+    print("=" * 115)
+
+    actual_count = next(iter(benchmark_results.values()))["total_evaluated"] if benchmark_results else (limit or 0)
+    comparison_report = {
+        "benchmark": "Qdrant vs Postgres + pgvector Comparative Benchmark (Day 41)",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "total_evaluated_per_config": actual_count,
+        "configurations": benchmark_results,
+    }
+
+    out_file = Path(output_path)
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_file, "w", encoding="utf-8") as f:
+        json.dump(comparison_report, f, indent=2)
+    print(f"Comparative report successfully written to {output_path}\n")
+
+    return comparison_report
+
+
 def main():
     parser = argparse.ArgumentParser(description="Gold Benchmark Evaluator with Recall@K and MRR")
     parser.add_argument("--gold-set", default="eval/gold_set.json", help="Path to gold set json")
@@ -671,9 +840,26 @@ def main():
             "full-context",
             "full_context",
             "vanilla",
+            "pgvector",
+            "pgvector-dense",
+            "pgvector-hybrid",
+            "pgvector-filtered",
         ],
         default="hybrid-rerank",
         help="Search engine mode",
+    )
+    parser.add_argument(
+        "--backend",
+        "--store",
+        dest="backend",
+        choices=["qdrant", "pgvector", "both"],
+        default="qdrant",
+        help="Vector storage engine to evaluate: 'qdrant', 'pgvector', or 'both' for comparative benchmark",
+    )
+    parser.add_argument(
+        "--sql-filter",
+        action="store_true",
+        help="Apply SQL topic metadata filtering when evaluating pgvector",
     )
     parser.add_argument(
         "--split-set",
@@ -697,22 +883,38 @@ def main():
     parser.add_argument("-d", "--delay", type=float, default=1.2, help="Delay in seconds between questions")
 
     args = parser.parse_args()
-    asyncio.run(
-        evaluate_benchmark(
-            gold_set_path=args.gold_set,
-            limit=args.limit,
-            category_filter=args.category,
-            output_path=args.output,
-            search_mode=args.mode,
-            retrieval_only=args.retrieval_only,
-            delay=args.delay,
-            rewrite=args.rewrite,
-            collection_name=args.collection,
-            split_set=args.split_set,
-            final=args.final,
+
+    if args.backend == "both":
+        asyncio.run(
+            compare_stores_benchmark(
+                gold_set_path=args.gold_set,
+                limit=args.limit,
+                category_filter=args.category,
+                output_path="eval/pgvector_qdrant_comparison.json",
+                split_set=args.split_set,
+                final=args.final,
+            )
         )
-    )
+    else:
+        asyncio.run(
+            evaluate_benchmark(
+                gold_set_path=args.gold_set,
+                limit=args.limit,
+                category_filter=args.category,
+                output_path=args.output,
+                search_mode=args.mode,
+                retrieval_only=args.retrieval_only,
+                delay=args.delay,
+                rewrite=args.rewrite,
+                collection_name=args.collection,
+                split_set=args.split_set,
+                final=args.final,
+                backend=args.backend,
+                sql_filter=args.sql_filter,
+            )
+        )
 
 
 if __name__ == "__main__":
     main()
+

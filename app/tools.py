@@ -106,17 +106,17 @@ PROJECT_TEMPLATES: Dict[str, Dict[str, Any]] = {
             {"day": 7, "name": "Docker Compose Orchestration", "focus": "Compose file with frontend, backend, and database"},
         ],
     },
-    "dsa": {
-        "title": "7-Day Technical Interview Prep",
+    "devops": {
+        "title": "7-Day DevOps & CI/CD Pipeline",
         "duration_days": 7,
         "milestones": [
-            {"day": 1, "name": "Two-Pointers & Sliding Window", "focus": "Array & string traversal, O(N) space optimizations"},
-            {"day": 2, "name": "Hash Maps & Prefix Sums", "focus": "O(1) lookups, subarray sum problems"},
-            {"day": 3, "name": "Stack, Monotonic Stack & Queues", "focus": "Parentheses matching, Next Greater Element"},
-            {"day": 4, "name": "Binary Search & Variants", "focus": "Rotated arrays, binary search on answer space"},
-            {"day": 5, "name": "Trees & BFS/DFS", "focus": "Tree traversals, level order, LCA, path sum"},
-            {"day": 6, "name": "Dynamic Programming Fundamentals", "focus": "1D DP, memoization vs tabulation, knapsack"},
-            {"day": 7, "name": "Graphs & Topological Sort", "focus": "Adjacency lists, cycle detection, course schedule"},
+            {"day": 1, "name": "Containerization with Docker", "focus": "Multi-stage Dockerfile, layer caching, non-root user"},
+            {"day": 2, "name": "Multi-Container Orchestration", "focus": "Docker Compose, networking, persistent volumes"},
+            {"day": 3, "name": "CI Automated Testing", "focus": "GitHub Actions workflow, pytest matrix, dependency caching"},
+            {"day": 4, "name": "Linting & Security Scanning", "focus": "Ruff, flake8, bandit security audits"},
+            {"day": 5, "name": "Database Migrations in CI/CD", "focus": "Alembic migrations, automated rollback testing"},
+            {"day": 6, "name": "Container Registry & Tagging", "focus": "Automated Docker image builds and GHCR push"},
+            {"day": 7, "name": "Production Monitoring & Health Checks", "focus": "Health endpoints, container restart policies, log aggregation"},
         ],
     },
 }

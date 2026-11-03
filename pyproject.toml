@@ -21,6 +21,7 @@ dependencies = [
     "uvicorn>=0.28.0",
     "pydantic>=2.6.0",
     "google-genai>=0.1.1",
+    "google-auth>=2.0.0",
     "tenacity>=8.2.0",
     "python-dotenv>=1.0.0",
     "httpx>=0.27.0",
@@ -31,6 +32,8 @@ dependencies = [
     "requests>=2.31.0",
     "flashrank>=0.2.0",
     "sentence-transformers>=3.0.0",
+    "pgvector>=0.2.5",
+    "psycopg[binary]>=3.1.0",
 ]
 
 [project.optional-dependencies]

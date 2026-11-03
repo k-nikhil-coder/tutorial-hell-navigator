@@ -141,6 +141,9 @@ async def generate_structured_response_async(
     enable_rag: bool = True,
     search_mode: str = "hybrid",
     system_instruction: Optional[str] = None,
+    topic: Optional[str] = None,
+    category: Optional[str] = None,
+    backend: str = "qdrant",
 ) -> NavigatorResponse:
     sem = semaphore or GLOBAL_SEMAPHORE
     mode_norm = search_mode.lower().replace("_", "-")
@@ -158,7 +161,12 @@ async def generate_structured_response_async(
         if enable_rag:
             try:
                 retrieved_chunks = await retrieve_relevant_chunks_async(
-                    user_query, top_k=3, search_mode=search_mode
+                    user_query,
+                    top_k=3,
+                    search_mode=search_mode,
+                    backend=backend,
+                    topic=topic,
+                    category=category,
                 )
             except Exception as e:
                 logger.warning("RAG retrieval failed (falling back to tools): %s", e)
@@ -169,16 +177,19 @@ async def generate_structured_response_async(
                 prompt = f"VERIFIED CONTEXT:\n{context_str}\n\nSTUDENT QUESTION:\n{user_query}"
             else:
                 top_chunk = retrieved_chunks[0]
-                # Grounding check: works with dense cosine scores and hybrid RRF composite scores
+                # Grounding check: works with dense cosine scores, pgvector scores, and hybrid RRF composite scores
                 method = top_chunk.get("retrieval_method", "dense")
-                if method == "dense":
+                if method in ("dense", "pgvector_dense", "pgvector_filtered"):
                     is_grounded = top_chunk.get("score", 0.0) >= 0.40
-                elif method in ("hybrid_rrf", "hybrid_rerank"):
-                    dense_score = float(top_chunk.get("dense_score", 0.0))
+                elif method in ("hybrid_rrf", "hybrid_rerank", "pgvector_hybrid_rrf"):
+                    dense_score = float(top_chunk.get("dense_score", top_chunk.get("score", 0.0)))
                     rerank_score = float(top_chunk.get("rerank_score", -99.0))
-                    is_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
+                    if rerank_score != -99.0:
+                        is_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
+                    else:
+                        is_grounded = top_chunk.get("is_grounded", dense_score >= 0.40)
                 else:
-                    is_grounded = top_chunk.get("is_grounded", True)
+                    is_grounded = top_chunk.get("is_grounded", top_chunk.get("score", 0.0) >= 0.40)
 
                 if not is_grounded:
                     context_str = "[NO VERIFIED CORPUS FOUND FOR THIS TOPIC - OUT OF BOUNDS]"
@@ -233,6 +244,9 @@ async def stream_response_sse(
     semaphore: Optional[asyncio.Semaphore] = None,
     enable_rag: bool = True,
     search_mode: str = "hybrid",
+    topic: Optional[str] = None,
+    category: Optional[str] = None,
+    backend: str = "qdrant",
 ) -> AsyncGenerator[str, None]:
     """Stream model output as Server-Sent Events."""
     sem = semaphore or GLOBAL_SEMAPHORE
@@ -243,7 +257,12 @@ async def stream_response_sse(
         if enable_rag:
             try:
                 retrieved_chunks = await retrieve_relevant_chunks_async(
-                    user_query, top_k=3, search_mode=search_mode
+                    user_query,
+                    top_k=3,
+                    search_mode=search_mode,
+                    backend=backend,
+                    topic=topic,
+                    category=category,
                 )
             except Exception as e:
                 logger.warning("RAG retrieval failed during stream: %s", e)
@@ -252,14 +271,17 @@ async def stream_response_sse(
         if retrieved_chunks:
             top_chunk = retrieved_chunks[0]
             method = top_chunk.get("retrieval_method", "dense")
-            if method == "dense":
+            if method in ("dense", "pgvector_dense", "pgvector_filtered"):
                 is_grounded = top_chunk.get("score", 0.0) >= 0.40
-            elif method in ("hybrid_rrf", "hybrid_rerank"):
-                dense_score = float(top_chunk.get("dense_score", 0.0))
+            elif method in ("hybrid_rrf", "hybrid_rerank", "pgvector_hybrid_rrf"):
+                dense_score = float(top_chunk.get("dense_score", top_chunk.get("score", 0.0)))
                 rerank_score = float(top_chunk.get("rerank_score", -99.0))
-                is_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
+                if rerank_score != -99.0:
+                    is_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
+                else:
+                    is_grounded = top_chunk.get("is_grounded", dense_score >= 0.40)
             else:
-                is_grounded = top_chunk.get("is_grounded", True)
+                is_grounded = top_chunk.get("is_grounded", top_chunk.get("score", 0.0) >= 0.40)
 
         if retrieved_chunks and is_grounded:
             context_str = format_retrieved_context(retrieved_chunks)

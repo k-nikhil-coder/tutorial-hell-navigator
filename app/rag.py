@@ -222,6 +222,22 @@ def get_qdrant_client(path: Optional[Path] = None, in_memory: bool = False) -> Q
     if _qdrant_client is None:
         db_path = path or DEFAULT_QDRANT_PATH
         db_path.mkdir(parents=True, exist_ok=True)
+        # Self-heal legacy meta.json if id_tracker field is present
+        meta_file = db_path / "meta.json"
+        if meta_file.exists():
+            try:
+                with open(meta_file, "r", encoding="utf-8") as f:
+                    meta_data = json.load(f)
+                dirty = False
+                for col in meta_data.get("collections", {}).values():
+                    if "id_tracker" in col:
+                        col.pop("id_tracker", None)
+                        dirty = True
+                if dirty:
+                    with open(meta_file, "w", encoding="utf-8") as f:
+                        json.dump(meta_data, f)
+            except Exception:
+                pass
         _qdrant_client = QdrantClient(path=str(db_path))
 
     return _qdrant_client
@@ -591,9 +607,12 @@ def retrieve_relevant_chunks(
     search_mode: str = "hybrid-rerank",
     collection_name: str = COLLECTION_NAME,
     qdrant_client: Optional[QdrantClient] = None,
+    backend: str = "qdrant",
+    topic: Optional[str] = None,
+    category: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
-    Retrieve top-K most relevant chunks using specified mode:
+    Retrieve top-K most relevant chunks using specified mode and backend:
     - 'none': Returns empty list (sends no context to the model)
     - 'vanilla': Returns empty list (plain LLM with no retrieval)
     - 'full-context': Returns entire corpus chunks for prompt injection
@@ -601,8 +620,27 @@ def retrieve_relevant_chunks(
     - 'hybrid': Dense + BM25 merged with Reciprocal Rank Fusion
     - 'dense': Dense vector cosine similarity
     - 'sparse': BM25 lexical sparse vector match
+    - 'pgvector' / 'pgvector-dense': Postgres + pgvector cosine similarity
+    - 'pgvector-hybrid': Postgres + pgvector dense + BM25 sparse merged with RRF
+    - 'pgvector-filtered': Postgres + pgvector with SQL metadata filters (topic/category)
     """
     mode = search_mode.lower().replace("_", "-")
+    backend_norm = backend.lower()
+
+    if backend_norm == "pgvector" or mode.startswith("pgvector"):
+        from app.pgvector_store import (
+            retrieve_pgvector_chunks,
+            retrieve_pgvector_hybrid_chunks,
+        )
+        if mode in ("pgvector-hybrid", "hybrid", "hybrid-rerank", "rerank"):
+            return retrieve_pgvector_hybrid_chunks(
+                query=query, top_k=top_k, topic=topic, category=category
+            )
+        else:
+            return retrieve_pgvector_chunks(
+                query=query, top_k=top_k, topic=topic, category=category
+            )
+
     if mode in ("none", "vanilla"):
         return []
     elif mode == "full-context":
@@ -632,8 +670,11 @@ async def retrieve_relevant_chunks_async(
     search_mode: str = "hybrid",
     collection_name: str = COLLECTION_NAME,
     qdrant_client: Optional[QdrantClient] = None,
+    backend: str = "qdrant",
+    topic: Optional[str] = None,
+    category: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
-    """Asynchronously retrieve top-K most relevant chunks from Qdrant."""
+    """Asynchronously retrieve top-K most relevant chunks from Qdrant or PgVector."""
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(
         None,
@@ -643,8 +684,12 @@ async def retrieve_relevant_chunks_async(
             search_mode=search_mode,
             collection_name=collection_name,
             qdrant_client=qdrant_client,
+            backend=backend,
+            topic=topic,
+            category=category,
         ),
     )
+
 
 
 def format_retrieved_context(chunks: List[Dict[str, Any]]) -> str:
@@ -672,6 +717,24 @@ def get_indexed_count(collection_name: str = COLLECTION_NAME) -> int:
         return info.points_count or 0
     except Exception:
         return 0
+
+
+def get_pgvector_indexed_count() -> int:
+    """Return count of vectors in PostgreSQL / pgvector table."""
+    try:
+        from app.pgvector_store import get_pgvector_store
+        store = get_pgvector_store()
+        return store.count()
+    except Exception:
+        return 0
+
+
+from app.pgvector_store import (
+    get_pgvector_store,
+    index_corpus_pgvector,
+    retrieve_pgvector_chunks,
+    retrieve_pgvector_hybrid_chunks,
+)
 
 
 if __name__ == "__main__":

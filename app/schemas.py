@@ -34,6 +34,8 @@ class NavigatorResponse(BaseModel):
 class QueryRequest(BaseModel):
     query: str = Field(..., min_length=3, description="User roadblock, question, or error message")
     topic: Optional[str] = None
+    category: Optional[str] = None
+    backend: Optional[str] = Field("qdrant", description="Vector store backend: 'qdrant' or 'pgvector'")
 
 
 class HealthStatus(BaseModel):
@@ -43,6 +45,8 @@ class HealthStatus(BaseModel):
     available_tools: List[str]
     indexed_chunks: int = 0
     vector_store: str = "Qdrant"
+    pgvector_indexed_chunks: Optional[int] = None
+    pgvector_is_live: Optional[bool] = None
 
 
 class RetrievedChunk(BaseModel):
