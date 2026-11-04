@@ -1420,11 +1420,11 @@
             <!-- Progress Bar -->
             <div class="hero-progress">
                 <div class="hp-track">
-                    <div class="hp-fill" id="hero-bar" style="width:40%"></div>
+                    <div class="hp-fill" id="hero-bar" style="width:42%"></div>
                 </div>
                 <div class="hp-stats">
-                    <span><b id="done-count">40</b> / 100 days done</span>
-                    <span id="pace-note">Today's Focus: Day 41 (Postgres + pgvector)</span>
+                    <span><b id="done-count">42</b> / 100 days done</span>
+                    <span id="pace-note">Today: Day 42 (Week 6 Milestone Review)</span>
                 </div>
             </div>
         </div>
@@ -1941,7 +1941,7 @@
                 const saved = localStorage.getItem('nikhil_100day_project_notes');
                 if (saved) return JSON.parse(saved);
                 const seeded = {
-                    "proj2": "Tutorial Hell Navigator Flagship v1 Status:\n- Current Head: feat(day42): Week 6 Milestone Review complete, 5-line empirical summaries, and Week 7 roadmap cuts/priorities.\n- Test Suite: All 84 tests passing in 96s.\n- Completed Milestones: Hybrid BM25+RRF, Cross-Encoder reranker, 384-token chunk sweep, pgvector dual-storage, Apple/Claude chat UI.\n- Week 7 Priorities: 60+ gold set expansion, LLM judge calibration, Langfuse tracing, CI eval gate, Capstone 2 launch."
+                    "proj2": "Tutorial Hell Navigator Flagship v1 Status:\n- Current Head: feat(day-42): complete Week 6 Milestone Review, add 5-line measured effect summaries, and update sprint tracker.\n- Test Suite: All 88 tests passing cleanly.\n- Completed Milestones: Hybrid BM25+RRF, Cross-Encoder reranker, 384-token chunk sweep, pgvector dual-storage, Apple/Claude chat UI.\n- Week 7 Priorities: 60+ gold set expansion, LLM judge calibration, Langfuse tracing, CI eval gate, Capstone 2 launch."
                 };
                 localStorage.setItem('nikhil_100day_project_notes', JSON.stringify(seeded));
                 return seeded;
