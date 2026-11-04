@@ -277,27 +277,27 @@ Below is the consolidated empirical summary of every architectural experiment ex
 
 2. **Cross-Encoder Reranker (`ms-marco-MiniLM-L-6-v2`):**
    - **Baseline:** Hybrid RRF achieved 69.6% Recall@3 and 78.3% Recall@5.
-   - **Measured Effect:** Pushed Recall@5 to 82.6% (+4.3 points) and MRR to 0.578, but lowered Recall@3 to 65.2% due to short query calibration.
-   - **Cost & Latency:** Incurs 120–160 ms local CPU inference latency per query.
-   - **Verdict:** **KEEP FOR TOP-5 CANDIDATES.** Essential as a second-stage filter on ambiguous queries.
+   - **Measured Effect:** Pushed Recall@5 to 82.6% (+1 question, 19/23) and MRR to 0.578 (+0.005), but lowered Recall@3 to 65.2% (-1 question, 15/23).
+   - **Cost & Latency:** Adds ~500 ms local CPU inference latency per query.
+   - **Verdict:** **PROVISIONAL.** Kept under evaluation; unproven at K=3 until sealed test set evaluation.
 
 3. **384-Token Chunk Size Sweep (with 60-Token Overlap):**
-   - **Baseline:** 512-token chunks achieved 65.2% Recall@3 and 0.578 MRR.
-   - **Measured Effect:** Delivered a +13.0 point lift on Recall@3 (to 78.3%) and increased MRR to 0.667 by isolating single architectural concepts.
-   - **Cost & Latency:** Expanded corpus from 58 to 92 chunks (+58%), while reducing irrelevant token bloat in top-3 prompt injections.
-   - **Verdict:** **KEEP.** The single highest-impact retrieval hyperparameter optimization in the sprint.
+   - **Baseline:** 512-token ceiling chunks (67 chunks, mean ~440 tokens) achieved 65.2% Recall@3 and 0.578 MRR.
+   - **Measured Effect:** Moved Recall@3 to 78.3% (+3 questions, 18/23) and MRR to 0.667, but Recall@5 fell from 82.6% to 78.3% (-1 question, 18/23). Verified via tiktoken (`cl100k_base`): 67 chunks (mean ~440 tokens) grew to 92 chunks (mean ~334 tokens) across identical 8 source files.
+   - **Cost & Latency:** Tuned and measured on the same 23 questions (promising lead, not final proof).
+   - **Verdict:** **PROVISIONAL LEAD.** Requires validation on unseen test questions.
 
 4. **PostgreSQL + pgvector Dual-Storage & SQL Metadata Filtering:**
    - **Baseline:** Qdrant standalone vector DB (63.64% Recall@3, 81.82% Recall@5, 0.6167 MRR on $N=30$).
-   - **Measured Effect:** Achieved exact mathematical retrieval parity with Qdrant, while SQL metadata filtering (`topic ILIKE`) drove MRR to 0.6265 and dropped latency to 0.72 ms.
-   - **Cost & Latency:** Sub-millisecond indexed retrieval; eliminates multi-database synchronization and infrastructure sprawl.
-   - **Verdict:** **KEEP.** Primary relational + vector production engine.
+   - **Measured Effect:** Exact mathematical parity on dense cosine search. An experimental SQL metadata filter (`topic ILIKE`) reached 0.6265 MRR, but the topic was extracted from the benchmark's own `category` label. Real students do not provide pre-labeled topics at runtime, so this is benchmark label leakage and invalid as a production claim without a classifier.
+   - **Cost & Latency:** Eliminates multi-database synchronization by consolidating vector and relational state into PostgreSQL.
+   - **Verdict:** **KEEP STORAGE PARITY, INVALIDATE TOPIC FILTER CLAIM.**
 
-5. **Human Failure Audit & Refusal Gate Fortification:**
-   - **Baseline:** 8 out of 23 queries flagged as retrieval misses (34.8% nominal failure rate).
-   - **Measured Effect:** Hand audit revealed 50% of "misses" were ground-truth label errors and 25% were chunk overlaps, confirming ~87.5% true retrieval accuracy. Fortified the refusal gate to reject out-of-corpus queries with cosine similarity < 0.40 across both Qdrant and pgvector.
-   - **Cost & Latency:** Zero compute cost; 3 hours of manual log inspection prevented weeks of counter-productive model re-tuning.
-   - **Verdict:** **PERMANENT PROTOCOL.** Always audit failure logs before touching model code.
+5. **Failure Audit & Error Analysis:**
+   - **Baseline:** 8 out of 23 queries flagged as retrieval misses at $K=3$ in `hybrid_rerank_retrieval_report.json` (GS-04, 06, 11, 12, 13, 14, 15, 88).
+   - **Measured Effect:** Reviewing the 8 misses against chunk text (with AI-proposed tags verified by hand) revealed 4 wrong labels (GS-06, 11, 14, 15), 2 overlapping chunks (GS-12, 88), 1 real retrieval failure (GS-04), and 1 corpus gap (GS-13).
+   - **Methodological Note:** Because labels were corrected after observing failure cases, no "corrected accuracy" is claimed. Legacy v1 evaluation reports are marked as invalidated.
+   - **Verdict:** **PERMANENT PROTOCOL.** Always audit failure logs before adjusting model architectures.
 
 ### Format Pass Rate
 

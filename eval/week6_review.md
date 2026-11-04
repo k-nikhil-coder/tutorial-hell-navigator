@@ -27,25 +27,28 @@ During Week 6 (Days 36–42), five major architectural and empirical interventio
 - **Verdict:** **KEEP FOR TOP-5 CANDIDATES.** Keep in the pipeline as a secondary gate for high-recall candidate selection.
 
 ### 3. Chunk Size Sweep (384-Token vs. 512-Token Baseline)
-- **Baseline:** 512-token chunks with 50-token overlap achieved 65.2% Recall@3 and 0.578 MRR.
-- **Measured Effect:** Delivered a **+13.0 point lift on Recall@3 (to 78.3%, 18/23)** and boosted MRR from 0.578 to **0.667**.
-- **Mechanism:** 512-token chunks diluted specific troubleshooting steps with surrounding boilerplate. 384-token chunks with 60-token overlap cleanly isolated single architectural topics (e.g., CORS setup vs. lifespan handlers vs. background tasks).
-- **Cost & Latency:** Increased corpus size from 58 to 92 chunks (+58%), while reducing token waste in top-3 prompt injections.
-- **Verdict:** **KEEP.** The single highest-impact retrieval hyperparameter optimization of the entire sprint.
+- **Baseline:** 512-token ceiling chunks (67 chunks, mean ~440 tokens) achieved 65.2% Recall@3 and 0.578 MRR.
+- **Measured Effect:** Moved Recall@3 to **78.3% (+3 questions, 18/23)** and MRR to **0.667**, but Recall@5 fell from 82.6% to **78.3% (-1 question, 18/23)**.
+- **Mechanism:** Verified via tiktoken (`cl100k_base`): 67 chunks (mean ~440 tokens, median 475) grew to 92 chunks (mean ~334 tokens, median 359) across the exact same 8 source documents.
+- **Cost & Latency:** Index grew from 67 to 92 chunks (+37%). Both configurations scored and tuned on the same 23 questions (lead, not proven).
+- **Verdict:** **PROVISIONAL LEAD.** Must be re-tested on the unseen held-out test split.
 
 ### 4. PostgreSQL + pgvector Dual-Storage & SQL Metadata Filtering
 - **Baseline:** Qdrant standalone vector database (63.64% Recall@3, 81.82% Recall@5, 0.6167 MRR on $N=30$).
-- **Measured Effect:** Achieved exact mathematical retrieval parity with Qdrant, while SQL metadata filtering (`topic ILIKE %(topic)s`) increased MRR to **0.6265** and lowered retrieval latency to **0.72 ms**.
-- **Mechanism:** Eliminates network serialization across disparate databases; relational SQL filtering prunes out-of-domain chunks before vector distance sorting.
-- **Cost & Latency:** Sub-millisecond indexed retrieval; collapses vector storage and application data into a single ACID-compliant database.
-- **Verdict:** **KEEP.** The primary production relational + vector storage engine for deployment.
+- **Measured Effect:** Exact mathematical parity on dense cosine search. An experimental SQL metadata filter (`topic ILIKE %(topic)s`) registered 0.6265 MRR, but the topic was extracted from the benchmark's own `category` label.
+- **Mechanism & Leakage:** Because real students do not provide pre-classified topic labels at runtime, this filter suffers from benchmark label leakage and represents no valid production claim until paired with a verified query classifier.
+- **Cost & Latency:** Replaces Qdrant with an ACID-compliant Postgres database.
+- **Verdict:** **KEEP STORAGE PARITY, INVALIDATE TOPIC FILTER CLAIM.**
 
-### 5. Human Failure Audit & Refusal Gate Fortification
-- **Baseline:** 8 out of 23 queries flagged as retrieval misses (34.8% nominal failure rate).
-- **Measured Effect:** Hand audit revealed **50.0% of "misses" were ground-truth label errors** and 25.0% were chunk overlaps, confirming ~87.5% true retrieval accuracy. Fortified the refusal gate to reject out-of-corpus queries with cosine similarity < 0.40 across both Qdrant and pgvector.
-- **Mechanism:** Human error analysis prevented wasted cycles tuning retrieval models to hit incorrect labels.
-- **Cost & Latency:** Zero compute cost; 3 hours of manual log review saved weeks of misdirected engineering.
-- **Verdict:** **PERMANENT PROTOCOL.** Always audit failure logs before adjusting model architectures.
+### 5. Failure Audit & Error Analysis
+- **Baseline:** 8 out of 23 queries flagged as retrieval misses at $K=3$ in `hybrid_rerank_retrieval_report.json` (GS-04, 06, 11, 12, 13, 14, 15, 88).
+- **Measured Effect:** Reviewing the 8 misses against the chunk text (with AI-proposed tags verified by hand) revealed:
+  - **4 wrong labels** (GS-06, GS-11, GS-14, GS-15: ground truth pointed to irrelevant docs like Docker for auth questions)
+  - **2 overlapping chunk artifacts** (GS-12, GS-88: retrieved valid adjacent chunks covering the answer)
+  - **1 real retrieval failure** (GS-04: multi-chunk query failed to pull the database answer section)
+  - **1 gap in the corpus** (GS-13: no chunk in the corpus answered the project ideation question)
+- **Methodological Caveat:** Because labels were inspected and corrected after seeing failure cases, quoting a "corrected accuracy" is contaminated and methodologically invalid.
+- **Verdict:** **PERMANENT PROTOCOL.** Label quality and metric calibration dominate algorithmic tweaks. Legacy v1 evaluation reports are invalidated.
 
 ---
 
