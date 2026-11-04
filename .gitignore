@@ -234,3 +234,7 @@ __marimo__/
 data/qdrant_db/
 logs/*.jsonl
 scratch/
+
+# Local personal planning and trackers
+*sprint*.html
+dsa/
