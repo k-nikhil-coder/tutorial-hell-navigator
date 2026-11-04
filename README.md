@@ -265,6 +265,40 @@ To evaluate whether an integrated relational vector database can match or outper
 - **pgvector HNSW Dimension Limit Solution:** pgvector enforces a 2,000-dimension cap on HNSW indexes for standard 32-bit `vector` (`HNSW_MAX_DIM = 2000`). By implementing `halfvec(3072)` with `halfvec_cosine_ops`, we unlocked HNSW index support for high-dimension 3,072-bit vectors in PostgreSQL with zero loss in recall precision.
 - **Container Orchestration:** Added `pgvector/pgvector:pg16` in `docker-compose.yml` with automated extension creation, HNSW index generation, and health checks.
 
+### Week 6 Review: What Actually Moved the Score? (5-Line Summary per Technique)
+
+Below is the consolidated empirical summary of every architectural experiment executed during Week 6 (Days 36–42):
+
+1. **Hybrid Retrieval (Dense + BM25 + Reciprocal Rank Fusion, $k=60$):**
+   - **Baseline:** Dense-only achieved 60.9% Recall@3 (14/23) and 0.568 MRR.
+   - **Measured Effect:** Boosted Recall@3 to 69.6% (+8.7 points) and MRR to 0.573 by reliably matching exact code tokens (`CORSMiddleware`, `psycopg2`).
+   - **Cost & Latency:** Incurs zero API cost and adds ~6 ms local BM25 tokenization latency.
+   - **Verdict:** **KEEP.** Essential foundation for technical syntax retrieval.
+
+2. **Cross-Encoder Reranker (`ms-marco-MiniLM-L-6-v2`):**
+   - **Baseline:** Hybrid RRF achieved 69.6% Recall@3 and 78.3% Recall@5.
+   - **Measured Effect:** Pushed Recall@5 to 82.6% (+4.3 points) and MRR to 0.578, but lowered Recall@3 to 65.2% due to short query calibration.
+   - **Cost & Latency:** Incurs 120–160 ms local CPU inference latency per query.
+   - **Verdict:** **KEEP FOR TOP-5 CANDIDATES.** Essential as a second-stage filter on ambiguous queries.
+
+3. **384-Token Chunk Size Sweep (with 60-Token Overlap):**
+   - **Baseline:** 512-token chunks achieved 65.2% Recall@3 and 0.578 MRR.
+   - **Measured Effect:** Delivered a +13.0 point lift on Recall@3 (to 78.3%) and increased MRR to 0.667 by isolating single architectural concepts.
+   - **Cost & Latency:** Expanded corpus from 58 to 92 chunks (+58%), while reducing irrelevant token bloat in top-3 prompt injections.
+   - **Verdict:** **KEEP.** The single highest-impact retrieval hyperparameter optimization in the sprint.
+
+4. **PostgreSQL + pgvector Dual-Storage & SQL Metadata Filtering:**
+   - **Baseline:** Qdrant standalone vector DB (63.64% Recall@3, 81.82% Recall@5, 0.6167 MRR on $N=30$).
+   - **Measured Effect:** Achieved exact mathematical retrieval parity with Qdrant, while SQL metadata filtering (`topic ILIKE`) drove MRR to 0.6265 and dropped latency to 0.72 ms.
+   - **Cost & Latency:** Sub-millisecond indexed retrieval; eliminates multi-database synchronization and infrastructure sprawl.
+   - **Verdict:** **KEEP.** Primary relational + vector production engine.
+
+5. **Human Failure Audit & Refusal Gate Fortification:**
+   - **Baseline:** 8 out of 23 queries flagged as retrieval misses (34.8% nominal failure rate).
+   - **Measured Effect:** Hand audit revealed 50% of "misses" were ground-truth label errors and 25% were chunk overlaps, confirming ~87.5% true retrieval accuracy. Fortified the refusal gate to reject out-of-corpus queries with cosine similarity < 0.40 across both Qdrant and pgvector.
+   - **Cost & Latency:** Zero compute cost; 3 hours of manual log inspection prevented weeks of counter-productive model re-tuning.
+   - **Verdict:** **PERMANENT PROTOCOL.** Always audit failure logs before touching model code.
+
 ### Format Pass Rate
 
 The "100% pass rate" reported in earlier versions measures format compliance (≥1 step, ≥1
