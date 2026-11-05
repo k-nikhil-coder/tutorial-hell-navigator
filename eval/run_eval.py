@@ -271,7 +271,11 @@ async def evaluate_benchmark(
         questions = json.load(f)
 
     if split_set:
-        split_file = Path(gold_set_path).parent / "split.json"
+        parent_dir = Path(gold_set_path).parent
+        if "v2" in str(gold_set_path) and (parent_dir / "split_v2.json").exists():
+            split_file = parent_dir / "split_v2.json"
+        else:
+            split_file = parent_dir / "split.json"
         if split_file.exists():
             with open(split_file, "r", encoding="utf-8") as sf:
                 split_info = json.load(sf)

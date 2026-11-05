@@ -211,3 +211,59 @@ def test_retrieval_metrics_acceptable_alternatives():
     assert metrics["evidence_coverage_at_3"] == 1.0
     assert metrics["hit_at_3"] == 1.0
     assert metrics["reciprocal_rank"] == 1.0
+
+
+def test_day_43_gold_benchmark_v2_integrity():
+    """Verify Day 43 expanded multi-author benchmark (eval/gold_benchmark_v2.json)."""
+    import hashlib
+    benchmark_path = PROJECT_ROOT / "eval" / "gold_benchmark_v2.json"
+    split_path = PROJECT_ROOT / "eval" / "split_v2.json"
+    sha_path = PROJECT_ROOT / "eval" / "test_ids.sha256"
+
+    assert benchmark_path.exists(), "gold_benchmark_v2.json not found"
+    assert split_path.exists(), "split_v2.json not found"
+    assert sha_path.exists(), "test_ids.sha256 not found"
+
+    with open(benchmark_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # 1. Size requirement: 60+ questions (65 built)
+    assert len(data) >= 60, f"Expected at least 60 questions, found {len(data)}"
+
+    # 2. Validate all 5 schema rules
+    validated = validate_dataset(data, corpus_raw_dir=RAW_DIR)
+    assert len(validated) == len(data)
+
+    # 3. Multi-author provenance: no single contributor accounts for > 20%
+    author_counts = {}
+    for q in validated:
+        author_counts[q.labeled_by] = author_counts.get(q.labeled_by, 0) + 1
+    max_share = max(author_counts.values()) / len(validated)
+    assert max_share <= 0.20, f"Max author share {max_share:.2%} exceeds 20% limit"
+    assert len(author_counts) >= 5, "Expected at least 5 distinct contributors"
+
+    # 4. Out-of-scope refusal questions have strictly empty evidence (Rule 1)
+    refusals = [q for q in validated if q.answerability == "not_answerable"]
+    assert len(refusals) >= 15, "Expected at least 15 refusal control questions"
+    for r in refusals:
+        assert len(r.answer_spans) == 0
+        assert len(r.acceptable_alternatives) == 0
+
+    # 5. In-scope answerable questions have verified verbatim spans (Rules 2 & 3)
+    answerable = [q for q in validated if q.answerability == "answerable"]
+    assert len(answerable) >= 40, "Expected at least 40 answerable questions"
+    for a in answerable:
+        assert len(a.answer_spans) >= 1
+        assert a.span_status == "VERIFIED"
+
+    # 6. Test split hygiene: SHA256 integrity and zero burned questions (Rule 4)
+    with open(split_path, "r", encoding="utf-8") as f:
+        split_meta = json.load(f)
+    test_ids = split_meta.get("test_question_ids", [])
+    assert len(test_ids) >= 20, "Expected at least 20 held-out test questions"
+
+    test_ids_sorted = sorted(test_ids)
+    computed_sha = hashlib.sha256("\n".join(test_ids_sorted).encode("utf-8")).hexdigest()
+    recorded_sha = sha_path.read_text(encoding="utf-8").strip()
+    assert computed_sha == recorded_sha, "test_ids.sha256 mismatch with split_v2.json"
+

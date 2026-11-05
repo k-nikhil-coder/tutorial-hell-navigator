@@ -1,0 +1,1219 @@
+{
+  "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
+  "search_mode": "hybrid-rerank",
+  "vector_backend": "qdrant",
+  "sql_filter_applied": false,
+  "collection_name": "tutorial_navigator_chunks",
+  "rewrite_enabled": false,
+  "retrieval_only": true,
+  "timestamp": "2026-11-05T15:09:43.089827+00:00",
+  "total_evaluated": 40,
+  "ground_truth_count": 31,
+  "mean_latency": 1947.27,
+  "time_to_first_token_p95": 813.31,
+  "mean_prompt_tokens": 2789.3,
+  "retrieval_metrics": {
+    "evidence_coverage_at_3": 45.16,
+    "evidence_coverage_at_5": 45.16,
+    "hit_at_3": 45.16,
+    "hit_at_5": 45.16,
+    "recall_at_3": 45.16,
+    "recall_at_5": 45.16,
+    "mrr": 0.3763,
+    "hit_3_hits": 14,
+    "hit_5_hits": 14,
+    "recall_3_hits": 14,
+    "recall_5_hits": 14,
+    "note": null
+  },
+  "latency_metrics": {
+    "mean_latency": 1947.27,
+    "mean_latency_ms": 1947.27,
+    "p50_latency_ms": 1951.79,
+    "p90_latency_ms": 2022.16,
+    "p95_latency_ms": 2033.28,
+    "time_to_first_token_p95": 813.31,
+    "time_to_first_token_p95_ms": 813.31,
+    "mean_prompt_tokens": 2789.3,
+    "min_latency_ms": 1789.3,
+    "max_latency_ms": 2057.13,
+    "search_latency_mean_ms": 1947.27,
+    "rewrite_latency_mean_ms": 0.0
+  },
+  "llm_metrics": null,
+  "items": [
+    {
+      "id": "GS-V2-01",
+      "category": "General",
+      "question": "In web security and FastAPI, what exact parameters define a distinct browser origin in CORS?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_0",
+        "fastapi_cors_chunk_1",
+        "fastapi_cors_chunk_2",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1995.7,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1995.7
+      }
+    },
+    {
+      "id": "GS-V2-02",
+      "category": "General",
+      "question": "How do I configure Cross-Origin Resource Sharing (CORS) in a FastAPI Python application?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_0",
+        "fastapi_cors_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_cors_chunk_2",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2005.25,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2005.25
+      }
+    },
+    {
+      "id": "GS-V2-03",
+      "category": "General",
+      "question": "Why does my browser reject responses when I set allow_origins=['*'] alongside allow_credentials=True in FastAPI?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_2",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_cors_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_cors_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1789.3,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1789.3
+      }
+    },
+    {
+      "id": "GS-V2-04",
+      "category": "General",
+      "question": "How does FastAPI CORSMiddleware process preflight HTTP OPTIONS requests from web browsers?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_2",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_cors_chunk_1",
+        "fastapi_cors_chunk_0",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1854.39,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1854.39
+      }
+    },
+    {
+      "id": "GS-V2-05",
+      "category": "General",
+      "question": "Where does FastAPI's CORSMiddleware implementation originate under the hood if I want to import it directly?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_1",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_cors_chunk_2",
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1816.15,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1816.15
+      }
+    },
+    {
+      "id": "GS-V2-06",
+      "category": "General",
+      "question": "What is the primary design purpose of BackgroundTasks in FastAPI for request handling?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_2",
+        "fastapi_background_tasks_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1888.53,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1888.53
+      }
+    },
+    {
+      "id": "GS-V2-07",
+      "category": "General",
+      "question": "Which method is called on a BackgroundTasks instance to schedule a function execution in FastAPI?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_0",
+        "fastapi_background_tasks_chunk_2",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_cors_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1900.75,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1900.75
+      }
+    },
+    {
+      "id": "GS-V2-08",
+      "category": "General",
+      "question": "Can BackgroundTasks parameters be declared inside FastAPI dependency functions via Depends?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_2",
+        "fastapi_background_tasks_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_cors_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1936.14,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1936.14
+      }
+    },
+    {
+      "id": "GS-V2-09",
+      "category": "General",
+      "question": "When should a developer switch from FastAPI built-in BackgroundTasks to an external worker queue like Celery?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_chunk_2",
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_background_tasks_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2023.05,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2023.05
+      }
+    },
+    {
+      "id": "GS-V2-13",
+      "category": "General",
+      "question": "Why did my application build artifacts and installed libraries disappear when I added a bind mount in docker-compose.yml?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_1",
+        "docker_compose_best_practices_chunk_1",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1865.89,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1865.89
+      }
+    },
+    {
+      "id": "GS-V2-14",
+      "category": "General",
+      "question": "Does depends_on in Docker Compose pause container startup until the database process is ready to receive SQL queries?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_compose_best_practices_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1908.15,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1908.15
+      }
+    },
+    {
+      "id": "GS-V2-15",
+      "category": "General",
+      "question": "What runtime error occurs if an API service starts before PostgreSQL completes its initialization in Docker Compose?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "cs_engineering_roadmap_chunk_0",
+        "docker_compose_best_practices_chunk_0",
+        "fastapi_fullstack_guide_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1911.38,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1911.38
+      }
+    },
+    {
+      "id": "GS-V2-16",
+      "category": "General",
+      "question": "Can Docker Compose execute docker compose build while simultaneously running another container service as a build dependency?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "docker_compose_best_practices_chunk_1",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1896.05,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1896.05
+      }
+    },
+    {
+      "id": "GS-V2-17",
+      "category": "General",
+      "question": "Where should native C build tools like gcc and libpq-dev reside in a production multi-stage Dockerfile?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1915.46,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1915.46
+      }
+    },
+    {
+      "id": "GS-V2-18",
+      "category": "General",
+      "question": "What is the central operational benefit of defining services within a Docker Compose YAML file?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_0",
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1965.66,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1965.66
+      }
+    },
+    {
+      "id": "GS-V2-19",
+      "category": "General",
+      "question": "How does Docker Compose optimize restart latency when services have not changed between commands?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_0",
+        "docker_compose_best_practices_chunk_1",
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1964.95,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1964.95
+      }
+    },
+    {
+      "id": "GS-V2-20",
+      "category": "General",
+      "question": "Why is Docker Compose widely used in CI/CD pipelines for automated testing environments?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_1",
+        "docker_compose_best_practices_chunk_0",
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "cs_engineering_roadmap_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1848.81,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1848.81
+      }
+    },
+    {
+      "id": "GS-V2-21",
+      "category": "General",
+      "question": "What drawbacks arise from using single-stage Dockerfiles when packaging Python production services?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_0",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "pydantic_validation_chunk_9",
+        "docker_compose_best_practices_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1930.18,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1930.18
+      }
+    },
+    {
+      "id": "GS-V2-25",
+      "category": "General",
+      "question": "How does exiting a psycopg2 connection context manager block (with conn:) manage SQL transaction state?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3",
+        "docker_production_guide_chunk_0",
+        "pydantic_models_chunk_15",
+        "pydantic_validation_chunk_11"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1981.8,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1981.8
+      }
+    },
+    {
+      "id": "GS-V2-26",
+      "category": "General",
+      "question": "Does exiting a with conn: context manager in psycopg2 close the underlying TCP database connection?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_3",
+        "pydantic_validation_chunk_11",
+        "pydantic_models_chunk_15"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 2033.06,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2033.06
+      }
+    },
+    {
+      "id": "GS-V2-27",
+      "category": "General",
+      "question": "What database condition triggers the psycopg2.errors.InFailedSqlTransaction error during query execution?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "docker_production_guide_chunk_0",
+        "pydantic_validation_chunk_9",
+        "cs_engineering_roadmap_chunk_1",
+        "pydantic_models_chunk_15"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1926.4,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1926.4
+      }
+    },
+    {
+      "id": "GS-V2-28",
+      "category": "General",
+      "question": "How do you recover a psycopg2 connection after encountering an InFailedSqlTransaction exception?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_chunk_1",
+        "pydantic_validation_chunk_5",
+        "docker_production_guide_chunk_0",
+        "pydantic_models_chunk_14",
+        "pydantic_validation_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1999.71,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1999.71
+      }
+    },
+    {
+      "id": "GS-V2-29",
+      "category": "General",
+      "question": "Why should developers never format SQL query strings using Python f-strings or string interpolation?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_11",
+        "pydantic_models_chunk_15",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_0",
+        "pydantic_models_chunk_10"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1926.23,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1926.23
+      }
+    },
+    {
+      "id": "GS-V2-30",
+      "category": "General",
+      "question": "How can a Python list of variable length be passed into a SQL query in psycopg2 using the ANY construct?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_2",
+        "pydantic_models_chunk_25",
+        "pydantic_validation_chunk_4",
+        "pydantic_validation_chunk_3",
+        "docker_production_guide_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1990.16,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1990.16
+      }
+    },
+    {
+      "id": "GS-V2-31",
+      "category": "General",
+      "question": "Why is opening a separate TCP connection for every incoming API request inefficient in high-throughput applications?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_0",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_background_tasks_chunk_1",
+        "fastapi_cors_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 2022.06,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2022.06
+      }
+    },
+    {
+      "id": "GS-V2-32",
+      "category": "General",
+      "question": "What three primary pool configuration settings should be checked when database connection timeouts occur?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_6",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_0",
+        "pydantic_models_chunk_15"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 2057.13,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2057.13
+      }
+    },
+    {
+      "id": "GS-V2-36",
+      "category": "General",
+      "question": "In Pydantic v2, which decorator replaces the legacy @validator decorator for validating model fields?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_7",
+        "pydantic_validation_chunk_6",
+        "pydantic_validation_chunk_1",
+        "pydantic_validation_chunk_2",
+        "pydantic_models_chunk_10"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1891.58,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1891.58
+      }
+    },
+    {
+      "id": "GS-V2-37",
+      "category": "General",
+      "question": "Why should developers use discriminated unions when working with large Union schemas in FastAPI and Pydantic?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_2",
+        "pydantic_models_chunk_0",
+        "pydantic_models_chunk_12",
+        "pydantic_validation_chunk_13",
+        "pydantic_models_chunk_25"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1932.79,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1932.79
+      }
+    },
+    {
+      "id": "GS-V2-38",
+      "category": "General",
+      "question": "What does Pydantic do when a custom @field_validator raises a standard Python ValueError?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_9",
+        "pydantic_models_chunk_14",
+        "pydantic_validation_chunk_5",
+        "pydantic_validation_chunk_1",
+        "pydantic_validation_chunk_7"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1997.81,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1997.81
+      }
+    },
+    {
+      "id": "GS-V2-39",
+      "category": "General",
+      "question": "Why is a model_validator advantageous over multiple field_validators when validating dependent model attributes?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_6",
+        "pydantic_validation_chunk_7",
+        "pydantic_validation_chunk_0",
+        "pydantic_models_chunk_4",
+        "pydantic_validation_chunk_10"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 1960.47,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1960.47
+      }
+    },
+    {
+      "id": "GS-V2-40",
+      "category": "General",
+      "question": "How do 'after' field validators function in Pydantic v2 and why are they considered type-safe?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_chunk_1",
+        "pydantic_validation_chunk_7",
+        "pydantic_validation_chunk_0",
+        "pydantic_validation_chunk_2",
+        "pydantic_validation_chunk_6"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2037.37,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2037.37
+      }
+    },
+    {
+      "id": "GS-V2-46",
+      "category": "General",
+      "question": "How do I implement custom backpropagation and calculate gradient clipping thresholds in PyTorch for an LSTM model?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_14",
+        "pydantic_models_chunk_23",
+        "pydantic_validation_chunk_11",
+        "pydantic_models_chunk_13",
+        "pydantic_validation_chunk_5"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1936.28,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1936.28
+      }
+    },
+    {
+      "id": "GS-V2-47",
+      "category": "General",
+      "question": "What hyperparameters should I set for LoRA rank and alpha when fine-tuning Llama-3-8B on an instruction dataset?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_13",
+        "pydantic_validation_chunk_9",
+        "docker_production_guide_chunk_1",
+        "pydantic_validation_chunk_6",
+        "pydantic_validation_chunk_11"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1959.93,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1959.93
+      }
+    },
+    {
+      "id": "GS-V2-48",
+      "category": "General",
+      "question": "How do I build an automated feature store with Feast and integrate data drift detection with Evidently AI in production?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_chunk_1",
+        "fastapi_fullstack_guide_chunk_1",
+        "docker_production_guide_chunk_1",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1954.13,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1954.13
+      }
+    },
+    {
+      "id": "GS-V2-49",
+      "category": "General",
+      "question": "What is the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_22",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_validation_chunk_9",
+        "pydantic_validation_chunk_2",
+        "pydantic_models_chunk_5"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1999.69,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1999.69
+      }
+    },
+    {
+      "id": "GS-V2-50",
+      "category": "General",
+      "question": "How do I configure vLLM with PagedAttention and tensor parallelism across four NVIDIA A100 GPUs for low-latency serving?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_chunk_1",
+        "fastapi_fullstack_guide_chunk_3",
+        "docker_production_guide_chunk_2",
+        "fastapi_fullstack_guide_chunk_0",
+        "docker_production_guide_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 2004.52,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2004.52
+      }
+    },
+    {
+      "id": "GS-V2-51",
+      "category": "General",
+      "question": "Prove why the Banker's algorithm prevents deadlock in operating systems with multi-resource allocation matrices.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_chunk_1",
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_fullstack_guide_chunk_1",
+        "pydantic_models_chunk_12"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 2000.19,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2000.19
+      }
+    },
+    {
+      "id": "GS-V2-52",
+      "category": "General",
+      "question": "Explain the difference between working set page replacement and the clock algorithm with second-chance reference bits.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_chunk_2",
+        "pydantic_models_chunk_12",
+        "pydantic_models_chunk_8",
+        "fastapi_fullstack_guide_chunk_3",
+        "fastapi_background_tasks_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1949.44,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1949.44
+      }
+    },
+    {
+      "id": "GS-V2-53",
+      "category": "General",
+      "question": "Provide a formal mathematical proof for Boyce-Codd Normal Form (BCNF) decomposition preserving functional dependencies.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_chunk_2",
+        "cs_engineering_roadmap_chunk_0",
+        "pydantic_validation_chunk_0",
+        "pydantic_models_chunk_31",
+        "pydantic_models_chunk_28"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1980.86,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1980.86
+      }
+    },
+    {
+      "id": "GS-V2-54",
+      "category": "General",
+      "question": "Explain the exact bitwise structure of the TCP header including urgent pointer and selective acknowledgment (SACK) options.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "cs_engineering_roadmap_chunk_1",
+        "fastapi_cors_chunk_2",
+        "fastapi_fullstack_guide_chunk_2",
+        "fastapi_cors_chunk_0",
+        "pydantic_models_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1933.33,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1933.33
+      }
+    }
+  ]
+}

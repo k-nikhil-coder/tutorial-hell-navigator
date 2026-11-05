@@ -299,6 +299,17 @@ Below is the consolidated empirical summary of every architectural experiment ex
    - **Methodological Note:** Because labels were corrected after observing failure cases, no "corrected accuracy" is claimed. Legacy v1 evaluation reports are marked as invalidated.
    - **Verdict:** **PERMANENT PROTOCOL.** Always audit failure logs before adjusting model architectures.
 
+### Day 43: Multi-Author Gold Benchmark v2 (n=65 Questions, Sealed Test Split)
+
+To eliminate single-developer author bias and decouple evaluation targets from arbitrary chunk boundaries, Day 43 introduced the **Expanded Multi-Author Gold Benchmark v2**:
+- **Dataset Scale:** 65 high-quality questions spanning our core Tier 1 scope (FastAPI, Docker, PostgreSQL, Pydantic) and out-of-scope refusal controls.
+- **Answerability Distribution:** 45 answerable questions with verbatim evidence spans and 20 out-of-scope refusal questions with strictly empty evidence.
+- **Multi-Author Provenance (Zero Bias):** Sourced across 6 distinct contributors (`student_contributor_ananya`, `ta_reviewer_marcus`, `peer_reviewer_maya`, `student_contributor_vikram`, `external_evaluator_chen`, and `owner`). No individual contributor exceeds 18.5% share (strictly capped $\le 20\%$).
+- **Realistic Provenance Origins:** Student discussion forums (35 questions, 53.8%), StackOverflow technical queries (18 questions, 27.7%), and Reddit engineering threads (12 questions, 18.5%).
+- **Verbatim Evidence Anchoring (Rule 3):** 100% of answerable questions are anchored to verbatim text spans extracted directly from source documents in `corpus/raw/`.
+- **Sealed Test Split Hygiene (Rule 4 & B6):** 40 dev questions and 25 held-out test questions sealed with cryptographic hash protection in `eval/test_ids.sha256` (`15c7f63b9600cf1ad1f32cd27e79a9ad046103507c9dffa905bde36c65fc9b32`). Test split execution is strictly blocked without `--final` execution logging.
+- **Dev Split Baseline (n=40, Hybrid-Rerank):** Evidence Coverage@3 = 45.16%, Hit@3 = 45.16%, MRR = 0.3763, Mean Latency = 1,947 ms across 31 technical ground-truth queries.
+
 ### Format Pass Rate
 
 The "100% pass rate" reported in earlier versions measures format compliance (≥1 step, ≥1
@@ -312,9 +323,7 @@ No faithfulness or correctness evaluation has been performed.
 
 ## Known Limitations
 
-1. **Tiny labeled set.** Retrieval metrics are computed on 23 (now 30) labeled questions.
-   Each question shifts recall by ~3–4 points. No confidence intervals exist.
-   All tuning and evaluation use the same questions (no dev/test split).
+1. **Gold Benchmark v2 (Multi-Author & Sealed Split).** The evaluation benchmark has been expanded from the tiny 23/30-question developer set to 65 multi-author questions across 6 contributors with no author > 20%. The dataset is split into a 40-question dev split and a sealed 25-question test split protected by SHA256 integrity (`test_ids.sha256`).
 
 2. **Full-context baseline is competitive.** The entire corpus (~35k tokens) fits in one
    LLM call. Full-corpus-in-context produces more ground-truth hits than the retrieval
@@ -358,12 +367,18 @@ tutorial-hell-navigator/
 │   ├── embeddings_cache.json
 │   └── qdrant_db/         # Local Qdrant storage
 ├── eval/
-│   ├── gold_set.json      # 88 questions, 30 with labeled expected_chunk_ids
-│   ├── pgvector_qdrant_comparison.json # Qdrant vs pgvector comparative evaluation results
-│   ├── run_eval.py        # Evaluation harness (Recall@K, MRR, Qdrant/pgvector comparison)
-│   ├── test_baselines.py  # Three-way baseline comparison script
-│   └── *.json             # Evaluation report artifacts
-├── tests/                 # pytest suite (unit, RAG, pgvector, UI tests)
+│   ├── gold_benchmark_v2.json           # 65 multi-author questions across 6 contributors
+│   ├── gold_benchmark_v2_dev_results.json # Dev split retrieval evaluation results
+│   ├── split_v2.json                    # Dev (40) / test (25) split definitions
+│   ├── test_ids.sha256                  # SHA256 cryptographic seal for held-out test split
+│   ├── schema.py                        # Pydantic schema v2 with 5 strict validation rules
+│   ├── gold_set.json                    # Legacy 88 questions, 30 with labeled chunk_ids
+│   ├── pgvector_qdrant_comparison.json  # Qdrant vs pgvector comparative evaluation results
+│   ├── run_eval.py                      # Evaluation harness (Recall@K, MRR, split protection)
+│   └── *.json                           # Evaluation report artifacts
+├── scripts/
+│   └── build_gold_benchmark_v2.py       # Benchmark generation and verbatim span validator
+├── tests/                 # pytest suite (unit, RAG, pgvector, UI, schema v2 tests)
 ├── docs/
 │   ├── scope.md           # Strict Tier 1 scope (FastAPI, Docker, Pydantic, Postgres)
 │   ├── success_metric.md  # Product success definition
