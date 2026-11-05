@@ -367,6 +367,8 @@ async def evaluate_benchmark(
     coverage_3_sum = 0.0
     coverage_5_sum = 0.0
     rr_sum = 0.0
+    out_of_scope_queries = 0
+    out_of_scope_refused = 0
     # Latency and token tracking counters
     retrieval_latencies: List[float] = []
     rewrite_latencies: List[float] = []
@@ -487,6 +489,34 @@ async def evaluate_benchmark(
                 coverage_5_sum += retrieval_metrics.get("evidence_coverage_at_5", 0.0) or 0.0
                 rr_sum += retrieval_metrics["reciprocal_rank"]
 
+        # Refusal gate check for out-of-scope control queries
+        is_oos = (item.get("answerability") == "not_answerable")
+        gate_refused = False
+        if not retrieved_raw:
+            gate_refused = True
+        else:
+            top_chunk = retrieved_raw[0]
+            method = top_chunk.get("retrieval_method", "dense")
+            if method in ("dense", "pgvector_dense", "pgvector_filtered"):
+                gate_grounded = top_chunk.get("score", 0.0) >= 0.40
+            elif method in ("hybrid_rrf", "hybrid_rerank", "pgvector_hybrid_rrf"):
+                dense_score = float(top_chunk.get("dense_score", top_chunk.get("score", 0.0)))
+                rerank_score = float(top_chunk.get("rerank_score", -99.0))
+                if rerank_score != -99.0:
+                    gate_grounded = (dense_score >= 0.40 and rerank_score >= 0.5) or (dense_score >= 0.55)
+                else:
+                    gate_grounded = bool(dense_score >= 0.40 and top_chunk.get("is_grounded", True))
+            else:
+                gate_grounded = top_chunk.get("is_grounded", top_chunk.get("score", 0.0) >= 0.40)
+            gate_refused = not gate_grounded
+
+        retrieval_metrics["is_out_of_scope"] = is_oos
+        retrieval_metrics["refusal_gate_triggered"] = gate_refused
+        if is_oos:
+            out_of_scope_queries += 1
+            if gate_refused:
+                out_of_scope_refused += 1
+
         print(f"[{idx:02d}/{len(batch):02d}] {qid} ({category[:22]}):", end=" ", flush=True)
 
         if retrieval_only:
@@ -499,6 +529,9 @@ async def evaluate_benchmark(
                 rr = retrieval_metrics["reciprocal_rank"]
                 status = f"HIT (Rank #{hit_rank}, RR={rr:.2f})" if hit_rank else "MISS (Not in top 5)"
                 print(f"Hit@3={h3:.0f} | Cov@3={cov3:.0f}% | {status} | Latency: {lat_str} | Top: {retrieved_chunk_ids[:3]}")
+            elif is_oos:
+                oos_status = "REFUSED (Correct)" if gate_refused else "LEAKED (Failed to refuse)"
+                print(f"Out-of-Scope -> {oos_status} | Latency: {lat_str} | Top: {retrieved_chunk_ids[:3]}")
             else:
                 print(f"Latency: {lat_str} | Top: {retrieved_chunk_ids[:3]}")
 
@@ -623,6 +656,9 @@ async def evaluate_benchmark(
         print(f"  • Hit@3:                     {hit_3_hits}/{queries_with_gt} ({mean_hit_3:.1f}%)")
         print(f"  • Hit@5:                     {hit_5_hits}/{queries_with_gt} ({mean_hit_5:.1f}%)")
         print(f"  • Mean Reciprocal Rank (MRR):{mrr:.4f}")
+    if out_of_scope_queries:
+        ref_rate = round((out_of_scope_refused / out_of_scope_queries) * 100, 2)
+        print(f"  • Refusal Gate (Out-of-Scope):{out_of_scope_refused}/{out_of_scope_queries} ({ref_rate:.1f}%)")
     print(f"  • Mean Latency:              {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
     print(f"  • Time to First Token (p95): {ttft_p95:.2f} ms")
     print(f"  • Mean Prompt Tokens:        {mean_prompt_tokens:.1f}")
@@ -665,6 +701,11 @@ async def evaluate_benchmark(
             "recall_3_hits": hit_3_hits if not is_no_recall_mode else None,
             "recall_5_hits": hit_5_hits if not is_no_recall_mode else None,
             "note": "Recall@K omitted for none/full-context" if is_no_recall_mode else None,
+        },
+        "refusal_metrics": {
+            "total_out_of_scope": out_of_scope_queries,
+            "refused_count": out_of_scope_refused,
+            "refusal_rate": round((out_of_scope_refused / out_of_scope_queries) * 100, 2) if out_of_scope_queries else None,
         },
         "latency_metrics": {
             "mean_latency": mean_lat,

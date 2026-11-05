@@ -30,7 +30,7 @@
       "Must mention protocol, domain, and port combinations as defining an origin."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -73,7 +73,7 @@
       "Must specify importing and adding CORSMiddleware with allowed origins."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -111,7 +111,7 @@
       "Explains wildcard origin prohibition when cookies/credentials are enabled."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -149,7 +149,7 @@
       "Clarifies that preflight requests are intercepted with CORS headers without reaching endpoint handler."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -187,7 +187,7 @@
       "Points to starlette.middleware.cors as underlying source."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -225,7 +225,7 @@
       "Specifies execution after response dispatch to avoid blocking client latency."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -263,7 +263,7 @@
       "Identifies .add_task() method call."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -301,7 +301,7 @@
       "Explains that dependency injection merges background tasks across all levels."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -339,7 +339,7 @@
       "Highlights multi-process or multi-server distributed compute needs over in-memory tasks."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -377,7 +377,7 @@
       "Explicitly names HTTP 422 Unprocessable Entity."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -415,7 +415,7 @@
       "Points out single-read stream limit and advises accessing exc.body."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "owner",
+    "labeled_by": "Kumbham Nikhil",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -453,7 +453,7 @@
       "Discusses Python fluency across full-stack web and data/AI integrations."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -491,7 +491,7 @@
       "Explains that runtime volume mounts overwrite built container directories at that destination."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -529,7 +529,7 @@
       "Clarifies depends_on only checks container start status, not application socket readiness."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -567,7 +567,7 @@
       "Identifies connection refused failure caused by lack of health check synchronization."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -605,7 +605,7 @@
       "Affirms that depends_on is runtime-only and cannot provision live services during image building."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -643,7 +643,7 @@
       "States build toolchains must be restricted strictly to temporary builder stage."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -681,7 +681,7 @@
       "Cites unified orchestration and configuration management via single YAML."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "owner",
+    "labeled_by": "Kumbham Nikhil",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -719,7 +719,7 @@
       "Mentions container configuration caching and existing container reuse."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -757,7 +757,7 @@
       "Highlights repeatable creation and teardown of isolated test dependencies."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -795,7 +795,7 @@
       "Identifies 1GB+ bloated sizes and lingering compiler security risks."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -833,7 +833,7 @@
       "Identifies missing C headers (libpq-dev) and compiler (gcc) needed for psycopg2 native build."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -871,7 +871,7 @@
       "Recommends psycopg2-binary with pre-compiled wheels."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "owner",
+    "labeled_by": "Kumbham Nikhil",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -909,7 +909,7 @@
       "Instructs injecting secrets via environment variables and never committing .env files."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -947,7 +947,7 @@
       "Explains automatic commit on success and automatic rollback on exception."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -985,7 +985,7 @@
       "Clarifies connection remains open and requires manual conn.close()."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1023,7 +1023,7 @@
       "Notes that prior unhandled error aborts transaction, causing subsequent commands to fail."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1061,7 +1061,7 @@
       "Specifies calling conn.rollback() to reset transaction state."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1099,7 +1099,7 @@
       "Prohibits string formatting and insists on query placeholders."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1137,7 +1137,7 @@
       "Demonstrates passing list as single tuple parameter to ANY(%s)."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "owner",
+    "labeled_by": "Kumbham Nikhil",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1175,7 +1175,7 @@
       "Points to connection overhead under load and recommends pooling solutions."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1213,7 +1213,7 @@
       "Lists pool size (maxconn), statement timeouts, and idle lifetime."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1251,7 +1251,7 @@
       "Names SQLAlchemy 2.0 async engine and Alembic migrations."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -1289,7 +1289,7 @@
       "Specifies CI/CD build step execution prior to launching new server instances."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -1327,7 +1327,7 @@
       "Explains that each nested block initiates a distinct transaction."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "owner",
+    "labeled_by": "Kumbham Nikhil",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -1365,7 +1365,7 @@
       "Identifies @field_validator."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1403,7 +1403,7 @@
       "Points out that union errors become excessively verbose without a discriminator."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1441,7 +1441,7 @@
       "Explains conversion from ValueError to ValidationError and subsequent HTTP 422."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1479,7 +1479,7 @@
       "Notes collecting multiple errors simultaneously without early short-circuit."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1517,7 +1517,7 @@
       "Explains execution after core validation ensures validated input types."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1555,7 +1555,7 @@
       "Names BaseModel from pydantic.main."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -1593,7 +1593,7 @@
       "Specifies guarantee that fields conform to defined types upon instantiation."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -1631,7 +1631,7 @@
       "Emphasizes guaranteeing output types and constraints rather than merely checking raw inputs."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -1669,7 +1669,7 @@
       "Identifies failure to parse data into valid model instance."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -1707,7 +1707,7 @@
       "Explains return of concise targeted errors over exhaustive schema enumeration."
     ],
     "span_status": "VERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -1735,7 +1735,7 @@
       "Must refuse answering out-of-scope PyTorch deep learning and backpropagation mechanics."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1763,7 +1763,7 @@
       "Must refuse answering LLM fine-tuning and LoRA weight adaptation."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1791,7 +1791,7 @@
       "Must refuse answering MLOps feature store architecture and drift detection."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1819,7 +1819,7 @@
       "Must refuse answering mathematical machine learning theory and loss formulas."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1847,7 +1847,7 @@
       "Must refuse answering GPU hardware clustering and model inference server internals."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1875,7 +1875,7 @@
       "Must refuse answering theoretical operating systems deadlock proofs."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1903,7 +1903,7 @@
       "Must refuse answering theoretical OS virtual memory paging algorithms."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1931,7 +1931,7 @@
       "Must refuse answering formal relational algebra and database normalization proofs."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1959,7 +1959,7 @@
       "Must refuse answering low-level networking packet dissection and OSI theory."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "dev",
@@ -1987,7 +1987,7 @@
       "Must refuse answering salary benchmarking and compensation negotiation."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2015,7 +2015,7 @@
       "Must refuse answering speculative career offer evaluations."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "owner",
+    "labeled_by": "Kumbham Nikhil",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2043,7 +2043,7 @@
       "Must refuse answering tech stack flame wars and job forecasting."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2071,7 +2071,7 @@
       "Must refuse answering subjective company tier ranking."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2099,7 +2099,7 @@
       "Must refuse answering resume styling and ATS optimization."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "Ravi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2127,7 +2127,7 @@
       "Must refuse answering social media branding and profile headline critiques."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "student_contributor_vikram",
+    "labeled_by": "Imam",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2155,7 +2155,7 @@
       "Must refuse answering GitHub profile aesthetics and markdown decoration."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "external_evaluator_chen",
+    "labeled_by": "Haadi",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2183,7 +2183,7 @@
       "Must refuse answering resume layout and project listing limits."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "owner",
+    "labeled_by": "Kumbham Nikhil",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2211,7 +2211,7 @@
       "Must refuse answering competitive programming contest implementations."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "student_contributor_ananya",
+    "labeled_by": "Rohan",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2239,7 +2239,7 @@
       "Must refuse answering Git packfile surgery and historical commit rewriting outside Tier 1."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "ta_reviewer_marcus",
+    "labeled_by": "Yeshwanth",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",
@@ -2267,7 +2267,7 @@
       "Must refuse answering non-T1 CPython runtime internals and PEP 668 OS packaging."
     ],
     "span_status": "UNVERIFIED",
-    "labeled_by": "peer_reviewer_maya",
+    "labeled_by": "swamy",
     "labeled_on": "2026-11-04",
     "corpus_version": "v2",
     "split": "test",

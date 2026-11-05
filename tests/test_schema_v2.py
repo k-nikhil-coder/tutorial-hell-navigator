@@ -241,7 +241,12 @@ def test_day_43_gold_benchmark_v2_integrity():
         author_counts[q.labeled_by] = author_counts.get(q.labeled_by, 0) + 1
     max_share = max(author_counts.values()) / len(validated)
     assert max_share <= 0.20, f"Max author share {max_share:.2%} exceeds 20% limit"
-    assert len(author_counts) >= 5, "Expected at least 5 distinct contributors"
+    assert len(author_counts) >= 6, "Expected at least 6 distinct contributors"
+
+    # Verify real friend contributors and author/owner curator
+    expected_friends = {"Haadi", "Rohan", "Yeshwanth", "swamy", "Ravi", "Imam"}
+    assert expected_friends.issubset(set(author_counts.keys())), f"Missing friend contributors: {expected_friends - set(author_counts.keys())}"
+    assert "Kumbham Nikhil" in author_counts, "Expected project author Kumbham Nikhil as owner/curator"
 
     # 4. Out-of-scope refusal questions have strictly empty evidence (Rule 1)
     refusals = [q for q in validated if q.answerability == "not_answerable"]

@@ -85,21 +85,21 @@ Returns machine-readable JSON via Pydantic schema enforcement: sequential steps 
 commands, explanations, verification checks, and inline `chunk_id` citations.
 
 ### Dual Vector Storage Backends (Qdrant & PostgreSQL + pgvector)
-Supports seamless switching between two production vector search engines:
+Supports switching between two vector search engines:
 - **Qdrant**: Local vector database with payload filtering and dual dense/sparse vector indexing.
-- **PostgreSQL + pgvector**: Enterprise relational vector store using `pgvector/pgvector:pg16`.
+- **PostgreSQL + pgvector**: Relational vector store using `pgvector/pgvector:pg16`.
   - **High-Dimension HNSW Indexing (`halfvec(3072)`):** Standard 32-bit `vector` in pgvector has a hard limit of 2,000 dimensions for HNSW indexes (`HNSW_MAX_DIM = 2000`). To support 3,072-dimensional embeddings (`gemini-embedding-001`), the engine utilizes 16-bit half-precision `halfvec(3072)` with `halfvec_cosine_ops`, enabling fast HNSW graph traversal without exceeding PostgreSQL indexing limits.
   - **SQL Metadata Filtering:** Relational metadata attributes (`topic`, `category`, `source_file`, `char_count`) can be filtered directly in SQL alongside vector distance (`<=>`) in a single query.
-  - **In-Memory Simulation Fallback:** Automatic graceful fallback to in-memory cosine search when running offline or in lightweight test environments.
+  - **In-Memory Simulation Fallback:** Automatic fallback to in-memory cosine search when running offline or in lightweight test environments.
 
 ### Hybrid Retrieval & Reciprocal Rank Fusion
 Dual-index collection combining semantic embeddings with lexical BM25 matching.
 Reciprocal Rank Fusion (RRF, $k=60$) merges both dense and sparse candidate sets. An optional cross-encoder (`ms-marco-MiniLM-L-6-v2`) reranks the top 10 candidates down to 3 for the LLM prompt.
 
-### Hardened Grounding & Refusal Gate
+### Uncalibrated Grounding & Refusal Gate
 Every claim in the action plan must cite a verified `chunk_id`. To prevent high-frequency English stopwords (e.g., "how", "do", "I") from generating non-zero sparse scores on off-topic questions, raw BM25 hits are decoupled from grounding checks:
-- **Composite confidence gate:** Queries must satisfy $(\text{dense\_score} \ge 0.40 \land \text{rerank\_score} \ge 0.50) \lor (\text{dense\_score} \ge 0.55)$ or $\text{dense\_score} \ge 0.40$ on pgvector.
-- If ungrounded, context is injected with an out-of-bounds marker, triggering a deterministic structured refusal rather than hallucination.
+- **Uncalibrated confidence gate:** Queries must satisfy $(\text{dense\_score} \ge 0.40 \land \text{rerank\_score} \ge 0.50) \lor (\text{dense\_score} \ge 0.55)$ on Qdrant/hybrid-rerank, or a weaker rule of $\text{dense\_score} \ge 0.40$ alone on pgvector. None of these thresholds have been calibrated on a validation set.
+- If ungrounded, context is injected with an out-of-bounds marker, triggering a structured refusal rather than hallucination.
 
 ### Concurrency Control
 `asyncio.Semaphore(5)` caps concurrent outbound LLM requests to prevent 429 rate limit errors.
@@ -249,20 +249,22 @@ cost/latency optimization, not an accuracy improvement.
 
 ### Day 41: Qdrant vs PostgreSQL + pgvector Comparative Benchmark (n=30 Gold Set Questions)
 
-To evaluate whether an integrated relational vector database can match or outperform dedicated vector engines, we benchmarked Qdrant against PostgreSQL + pgvector across our 30-question gold set (22 technical retrieval targets + 8 refusal controls) using identical 3,072-dimensional embeddings (`gemini-embedding-001`):
+To evaluate whether a relational vector database can match dedicated vector engines, Qdrant was benchmarked against PostgreSQL + pgvector across the 30-question gold set (22 technical retrieval targets + 8 refusal controls) using identical 3,072-dimensional embeddings (`gemini-embedding-001`):
 
-| Vector Engine & Mode | Recall@3 | Recall@5 | MRR | Evidence Coverage@3 | Mean Latency | P95 Latency |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| Qdrant (Dense Cosine) | 63.64% | 81.82% | 0.6167 | 54.55% | 24.45 ms | 7.00 ms |
-| Qdrant (Hybrid RRF: Dense + BM25) | 68.18% | 81.82% | 0.6174 | 53.79% | 12.72 ms | 13.57 ms |
-| Postgres/pgvector (Dense Cosine) | 63.64% | 81.82% | 0.6167 | 54.55% | 0.88 ms | 1.13 ms |
-| Postgres/pgvector (Hybrid RRF: Dense + BM25) | 68.18% | 81.82% | 0.6174 | 53.79% | 7.06 ms | 7.85 ms |
-| Postgres/pgvector + SQL Topic Metadata Filter | 63.64% | 81.82% | **0.6265** | 54.55% | **0.72 ms** | **0.92 ms** |
+| Vector Engine & Mode | Recall@3 | Recall@5 | MRR | Evidence Coverage@3 | Mean Latency | P95 Latency | Notes |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| Qdrant (Dense Cosine) | 63.64% | 81.82% | 0.6167 | 54.55% | 24.45 ms | 7.00 ms | Mean skewed by ~540 ms cold-start outlier; warm P50/P95 is 6.6–7.0 ms |
+| Qdrant (Hybrid RRF: Dense + BM25) | 68.18% | 81.82% | 0.6174 | 53.79% | 12.72 ms | 13.57 ms | Local BM25 tokenization + RRF |
+| Postgres/pgvector (Dense Cosine) | 63.64% | 81.82% | 0.6167 | 54.55% | 0.88 ms | 1.13 ms | *In-memory simulation fallback (in-process math, not live socket)* |
+| Postgres/pgvector (Hybrid RRF: Dense + BM25) | 68.18% | 81.82% | 0.6174 | 53.79% | 7.06 ms | 7.85 ms | *In-memory simulation fallback* |
+| Postgres/pgvector + SQL Topic Metadata Filter | 63.64% | 81.82% | **0.6265** | 54.55% | **0.72 ms** | **0.92 ms** | *In-memory simulation fallback; filter uses benchmark category labels* |
 
-**Benchmark Highlights:**
-- **Exact Retrieval Parity:** PostgreSQL + pgvector yields identical Recall@3 (63.64% Dense, 68.18% Hybrid) and Recall@5 (81.82%) to Qdrant.
-- **SQL Metadata Ranking Boost:** Combining relational SQL filtering on `topic` directly within the vector query pushes MRR from 0.6167 to **0.6265**, eliminating cross-domain distractor chunks before ranking.
-- **pgvector HNSW Dimension Limit Solution:** pgvector enforces a 2,000-dimension cap on HNSW indexes for standard 32-bit `vector` (`HNSW_MAX_DIM = 2000`). By implementing `halfvec(3072)` with `halfvec_cosine_ops`, we unlocked HNSW index support for high-dimension 3,072-bit vectors in PostgreSQL with zero loss in recall precision.
+**Benchmark Methodology & Terminology Notes:**
+- **In-Memory Fallback Disclosure:** The pgvector latency numbers above (0.72–0.88 ms) ran against the local in-memory fallback simulation (`pgvector_is_live: false`), computing cosine similarities in-process rather than making network round-trips over a live PostgreSQL TCP socket. Live database network queries will incur real socket and query overhead.
+- **Qdrant Latency Distribution:** Qdrant's 24.45 ms mean latency reflects a single cold-start connection outlier (~540 ms) on the initial query. Steady-state warm requests operate at P50 = 6.6 ms and P95 = 7.0 ms.
+- **Exact Retrieval Parity:** On dense cosine search, pgvector and Qdrant produce mathematically identical recall and MRR rankings on the same embedding vectors.
+- **SQL Metadata Filter Caveat:** Combining SQL filtering on `topic` pushes MRR to 0.6265, but the topic was extracted from the benchmark's own `category` label (benchmark label leakage), which is invalid in production unless an upfront classifier provides the topic.
+- **pgvector HNSW Dimension Limit:** pgvector enforces a 2,000-dimension cap on HNSW indexes for standard 32-bit float `vector` (`HNSW_MAX_DIM = 2000`). To support 3,072-dimensional embeddings (`gemini-embedding-001`), the implementation utilizes 16-bit half-precision float `halfvec(3072)` with `halfvec_cosine_ops`, enabling HNSW graph indexing in PostgreSQL.
 - **Container Orchestration:** Added `pgvector/pgvector:pg16` in `docker-compose.yml` with automated extension creation, HNSW index generation, and health checks.
 
 ### Week 6 Review: What Actually Moved the Score? (5-Line Summary per Technique)
@@ -301,14 +303,16 @@ Below is the consolidated empirical summary of every architectural experiment ex
 
 ### Day 43: Multi-Author Gold Benchmark v2 (n=65 Questions, Sealed Test Split)
 
-To eliminate single-developer author bias and decouple evaluation targets from arbitrary chunk boundaries, Day 43 introduced the **Expanded Multi-Author Gold Benchmark v2**:
-- **Dataset Scale:** 65 high-quality questions spanning our core Tier 1 scope (FastAPI, Docker, PostgreSQL, Pydantic) and out-of-scope refusal controls.
+To reduce single-developer author bias and decouple evaluation targets from arbitrary chunk boundaries, Day 43 introduced the **Expanded Multi-Author Gold Benchmark v2**:
+- **Dataset Scale:** 65 questions spanning core Tier 1 scope (FastAPI, Docker, PostgreSQL, Pydantic) and out-of-scope refusal controls.
 - **Answerability Distribution:** 45 answerable questions with verbatim evidence spans and 20 out-of-scope refusal questions with strictly empty evidence.
-- **Multi-Author Provenance (Zero Bias):** Sourced across 6 distinct contributors (`student_contributor_ananya`, `ta_reviewer_marcus`, `peer_reviewer_maya`, `student_contributor_vikram`, `external_evaluator_chen`, and `owner`). No individual contributor exceeds 18.5% share (strictly capped $\le 20\%$).
-- **Realistic Provenance Origins:** Student discussion forums (35 questions, 53.8%), StackOverflow technical queries (18 questions, 27.7%), and Reddit engineering threads (12 questions, 18.5%).
-- **Verbatim Evidence Anchoring (Rule 3):** 100% of answerable questions are anchored to verbatim text spans extracted directly from source documents in `corpus/raw/`.
-- **Sealed Test Split Hygiene (Rule 4 & B6):** 40 dev questions and 25 held-out test questions sealed with cryptographic hash protection in `eval/test_ids.sha256` (`15c7f63b9600cf1ad1f32cd27e79a9ad046103507c9dffa905bde36c65fc9b32`). Test split execution is strictly blocked without `--final` execution logging.
-- **Dev Split Baseline (n=40, Hybrid-Rerank):** Evidence Coverage@3 = 45.16%, Hit@3 = 45.16%, MRR = 0.3763, Mean Latency = 1,947 ms across 31 technical ground-truth queries.
+- **Multi-Author Provenance:** Curated and labeled across 6 peer contributors (`Haadi`, `Rohan`, `Yeshwanth`, `swamy`, `Ravi`, `Imam`) and project author `Kumbham Nikhil` as curator. No individual contributor exceeds 15.4% share (10/65).
+- **Provenance Origins:** Student study group discussions and questions from course/study forums (35 questions, 53.8%), StackOverflow technical queries (18 questions, 27.7%), and Reddit engineering threads (12 questions, 18.5%).
+- **Verbatim Evidence Anchoring:** 100% of answerable questions are anchored to verbatim text spans in `corpus/raw/`. (Note: 5 of the 10 source documents are custom guides written for this project rather than raw upstream official documentation).
+- **Sealed Test Split:** 40 dev questions and 25 held-out test questions with ID hash protection in `eval/test_ids.sha256` (`15c7f63b9600cf1ad1f32cd27e79a9ad046103507c9dffa905bde36c65fc9b32`) to detect accidental test split modification. Test split evaluation is blocked in `eval/run_eval.py` without the explicit `--final` flag.
+- **Dev Split Baseline (n=40, Hybrid-Rerank):**
+  - **Answerable queries (n=31):** Evidence Coverage@3 = 45.16% (14 of 31), Hit@3 = 45.16% (14 of 31), MRR = 0.3763. With n=31, each question represents ~3.2 percentage points (95% Wilson confidence interval: ~29% to 62%). Evidence Coverage@3 and Hit@3 are identical because each answerable question currently has a single required evidence span.
+  - **Out-of-scope refusal queries (n=9):** The refusal gate correctly rejected 8 of 9 (88.9%). One technical question (`GS-V2-48`, Feast feature store) leaked through due to uncalibrated dense thresholding.
 
 ### Format Pass Rate
 
@@ -323,13 +327,13 @@ No faithfulness or correctness evaluation has been performed.
 
 ## Known Limitations
 
-1. **Gold Benchmark v2 (Multi-Author & Sealed Split).** The evaluation benchmark has been expanded from the tiny 23/30-question developer set to 65 multi-author questions across 6 contributors with no author > 20%. The dataset is split into a 40-question dev split and a sealed 25-question test split protected by SHA256 integrity (`test_ids.sha256`).
+1. **Gold Benchmark v2 (Peer Contributors & Sealed Split).** The evaluation benchmark has been expanded from the tiny 23/30-question developer set to 65 questions labeled across 6 peer contributors (Haadi, Rohan, Yeshwanth, swamy, Ravi, Imam) and project author Kumbham Nikhil. The dataset is split into a 40-question dev split and a sealed 25-question test split with question ID hash protection in `test_ids.sha256`.
 
 2. **Full-context baseline is competitive.** The entire corpus (~35k tokens) fits in one
    LLM call. Full-corpus-in-context produces more ground-truth hits than the retrieval
    pipeline. The RAG stack is justified only by token cost savings at scale.
 
-3. **Refusal gate hardened against sparse stopwords.** The refusal gate has been upgraded from raw sparse thresholding to a composite confidence gate `(dense_score >= 0.40 AND rerank_score >= 0.5) OR (dense_score >= 0.55)` or `dense_score >= 0.40` for pgvector. While this rejects conversational stopwords and ungrounded off-topic queries, near-miss technical edge cases still require calibrated semantic classification.
+3. **Uncalibrated refusal gate.** The refusal gate uses a heuristic rule: `(dense_score >= 0.40 AND rerank_score >= 0.5) OR (dense_score >= 0.55)` for Qdrant/hybrid-rerank, and a weaker `dense_score >= 0.40` alone on pgvector. None of these thresholds have been calibrated on a validation set. While the gate catches 8 of 9 (88.9%) out-of-scope dev questions, adjacent topics (e.g. career advice matching roadmap text) can leak through without semantic calibration.
 
 4. **No correctness evaluation.** "Pass rate" checks format, not whether advice is right
    or supported by the cited chunk. No faithfulness metric exists.
@@ -367,10 +371,10 @@ tutorial-hell-navigator/
 │   ├── embeddings_cache.json
 │   └── qdrant_db/         # Local Qdrant storage
 ├── eval/
-│   ├── gold_benchmark_v2.json           # 65 multi-author questions across 6 contributors
+│   ├── gold_benchmark_v2.json           # 65 questions across 6 peer contributors and author
 │   ├── gold_benchmark_v2_dev_results.json # Dev split retrieval evaluation results
 │   ├── split_v2.json                    # Dev (40) / test (25) split definitions
-│   ├── test_ids.sha256                  # SHA256 cryptographic seal for held-out test split
+│   ├── test_ids.sha256                  # SHA256 question ID hash for held-out test split
 │   ├── schema.py                        # Pydantic schema v2 with 5 strict validation rules
 │   ├── gold_set.json                    # Legacy 88 questions, 30 with labeled chunk_ids
 │   ├── pgvector_qdrant_comparison.json  # Qdrant vs pgvector comparative evaluation results
