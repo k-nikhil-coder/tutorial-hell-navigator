@@ -244,7 +244,7 @@ async def evaluate_benchmark(
     gold_set_path: str = "eval/gold_set.json",
     limit: Optional[int] = None,
     category_filter: Optional[str] = None,
-    output_path: str = "eval/eval_report.json",
+    output_path: Optional[str] = None,
     search_mode: str = "hybrid",
     retrieval_only: bool = False,
     delay: float = 1.2,
@@ -260,6 +260,12 @@ async def evaluate_benchmark(
             sys.stdout.reconfigure(encoding="utf-8", errors="replace")
         except Exception:
             pass
+
+    if output_path is None:
+        if "v2" in str(gold_set_path):
+            output_path = "eval/gold_benchmark_v2_results.json"
+        else:
+            output_path = "eval/eval_results.json"
 
 
     path = Path(gold_set_path)
@@ -626,8 +632,14 @@ async def evaluate_benchmark(
         print(f"  • Avg Citations / Plan:      {avg_citations}")
     print("=" * 75)
 
+    benchmark_name = (
+        "Tutorial Hell Navigator Gold Benchmark v2 (Day 43)"
+        if "v2" in str(gold_set_path)
+        else "Tutorial Hell Navigator Hardened Gold Set"
+    )
+
     report = {
-        "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
+        "benchmark": benchmark_name,
         "search_mode": search_mode,
         "vector_backend": backend,
         "sql_filter_applied": sql_filter,
@@ -746,47 +758,48 @@ async def compare_stores_benchmark(
     ]
 
     benchmark_results = {}
-    temp_report_path = Path("eval") / "_temp_eval_report.json"
+    temp_report_path = Path("eval") / "_temp_eval_results.json"
 
-    for config in configurations:
-        print(f"\n[Evaluating: {config['name']}...]")
-        report = await evaluate_benchmark(
-            gold_set_path=gold_set_path,
-            limit=limit,
-            category_filter=category_filter,
-            output_path=str(temp_report_path),
-            search_mode=config["search_mode"],
-            retrieval_only=True,
-            delay=0.0,
-            backend=config["backend"],
-            sql_filter=config["sql_filter"],
-            split_set=split_set,
-            final=final,
-        )
-        if report:
-            r_metrics = report.get("retrieval_metrics", {})
-            l_metrics = report.get("latency_metrics", {})
-            benchmark_results[config["id"]] = {
-                "name": config["name"],
-                "backend": config["backend"],
-                "search_mode": config["search_mode"],
-                "sql_filter": config["sql_filter"],
-                "total_evaluated": report.get("total_evaluated", 0),
-                "recall_at_3": r_metrics.get("recall_at_3", 0.0),
-                "recall_at_5": r_metrics.get("recall_at_5", 0.0),
-                "hit_at_3": r_metrics.get("hit_at_3", 0.0),
-                "hit_at_5": r_metrics.get("hit_at_5", 0.0),
-                "evidence_coverage_at_3": r_metrics.get("evidence_coverage_at_3", 0.0),
-                "evidence_coverage_at_5": r_metrics.get("evidence_coverage_at_5", 0.0),
-                "mrr": r_metrics.get("mrr", 0.0),
-                "mean_latency_ms": l_metrics.get("mean_latency_ms", 0.0),
-                "p50_latency_ms": l_metrics.get("p50_latency_ms", 0.0),
-                "p90_latency_ms": l_metrics.get("p90_latency_ms", 0.0),
-                "p95_latency_ms": l_metrics.get("p95_latency_ms", 0.0),
-            }
-
-    if temp_report_path.exists():
-        temp_report_path.unlink()
+    try:
+        for config in configurations:
+            print(f"\n[Evaluating: {config['name']}...]")
+            report = await evaluate_benchmark(
+                gold_set_path=gold_set_path,
+                limit=limit,
+                category_filter=category_filter,
+                output_path=str(temp_report_path),
+                search_mode=config["search_mode"],
+                retrieval_only=True,
+                delay=0.0,
+                backend=config["backend"],
+                sql_filter=config["sql_filter"],
+                split_set=split_set,
+                final=final,
+            )
+            if report:
+                r_metrics = report.get("retrieval_metrics", {})
+                l_metrics = report.get("latency_metrics", {})
+                benchmark_results[config["id"]] = {
+                    "name": config["name"],
+                    "backend": config["backend"],
+                    "search_mode": config["search_mode"],
+                    "sql_filter": config["sql_filter"],
+                    "total_evaluated": report.get("total_evaluated", 0),
+                    "recall_at_3": r_metrics.get("recall_at_3", 0.0),
+                    "recall_at_5": r_metrics.get("recall_at_5", 0.0),
+                    "hit_at_3": r_metrics.get("hit_at_3", 0.0),
+                    "hit_at_5": r_metrics.get("hit_at_5", 0.0),
+                    "evidence_coverage_at_3": r_metrics.get("evidence_coverage_at_3", 0.0),
+                    "evidence_coverage_at_5": r_metrics.get("evidence_coverage_at_5", 0.0),
+                    "mrr": r_metrics.get("mrr", 0.0),
+                    "mean_latency_ms": l_metrics.get("mean_latency_ms", 0.0),
+                    "p50_latency_ms": l_metrics.get("p50_latency_ms", 0.0),
+                    "p90_latency_ms": l_metrics.get("p90_latency_ms", 0.0),
+                    "p95_latency_ms": l_metrics.get("p95_latency_ms", 0.0),
+                }
+    finally:
+        if temp_report_path.exists():
+            temp_report_path.unlink()
 
     # Print summary table
     print("\n" + "=" * 115)
@@ -883,7 +896,7 @@ def main():
         action="store_true",
         help="Protected flag required to execute evaluation on the held-out test split",
     )
-    parser.add_argument("-o", "--output", default="eval/eval_report.json", help="Report output json path")
+    parser.add_argument("-o", "--output", default=None, help="Report output json path")
     parser.add_argument("-d", "--delay", type=float, default=1.2, help="Delay in seconds between questions")
 
     args = parser.parse_args()

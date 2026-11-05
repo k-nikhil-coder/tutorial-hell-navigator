@@ -1,5 +1,5 @@
 {
-  "benchmark": "Tutorial Hell Navigator Hardened Gold Set",
+  "benchmark": "Tutorial Hell Navigator Gold Benchmark v2 (Day 43)",
   "search_mode": "hybrid-rerank",
   "vector_backend": "qdrant",
   "sql_filter_applied": false,

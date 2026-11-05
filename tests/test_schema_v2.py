@@ -7,6 +7,7 @@ Unit tests verifying:
 3. Retrieval metrics: Evidence coverage@K, Hit@K, and MRR.
 """
 
+import sys
 import json
 import pytest
 from pathlib import Path
@@ -260,10 +261,43 @@ def test_day_43_gold_benchmark_v2_integrity():
     with open(split_path, "r", encoding="utf-8") as f:
         split_meta = json.load(f)
     test_ids = split_meta.get("test_question_ids", [])
+    dev_ids = split_meta.get("dev_question_ids", [])
     assert len(test_ids) >= 20, "Expected at least 20 held-out test questions"
+    assert len(dev_ids) >= 35, "Expected at least 35 dev questions"
+
+    # Verify complete and disjoint partition
+    test_set = set(test_ids)
+    dev_set = set(dev_ids)
+    all_validated_ids = {q.id for q in validated}
+    assert test_set.isdisjoint(dev_set), "Overlap detected between dev and test split IDs"
+    assert (test_set | dev_set) == all_validated_ids, "Split partition does not match all benchmark question IDs"
+
+    # Explicitly enforce Rule 4: zero burned questions in test split
+    test_qs = [q for q in validated if q.split == "test"]
+    assert len(test_qs) == len(test_ids)
+    assert all(q.labeling_status == "CLEAN" for q in test_qs), "Test split contains burned or post-hoc questions"
 
     test_ids_sorted = sorted(test_ids)
     computed_sha = hashlib.sha256("\n".join(test_ids_sorted).encode("utf-8")).hexdigest()
     recorded_sha = sha_path.read_text(encoding="utf-8").strip()
     assert computed_sha == recorded_sha, "test_ids.sha256 mismatch with split_v2.json"
+
+
+def test_gold_benchmark_v2_runner_test_split_refusal():
+    """Verify eval/run_eval.py refuses evaluation on gold_benchmark_v2 test split without --final."""
+    import subprocess
+    cmd = [
+        sys.executable,
+        "eval/run_eval.py",
+        "--gold-set",
+        "eval/gold_benchmark_v2.json",
+        "--split-set",
+        "test",
+        "-n",
+        "1",
+    ]
+    proc = subprocess.run(cmd, cwd=str(PROJECT_ROOT), capture_output=True, text=True)
+    assert proc.returncode != 0
+    assert "refused" in proc.stdout.lower() or "final" in proc.stdout.lower()
+
 

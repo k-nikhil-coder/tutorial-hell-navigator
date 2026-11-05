@@ -5,7 +5,7 @@ Generates the Day 43 Expanded Multi-Author Gold Benchmark Dataset:
 - 65 high-quality questions across Tier 1 scope (FastAPI, Docker, PostgreSQL, Pydantic)
   and rigorous out-of-scope refusal controls (AI/ML, Systems Theory, Career, Portfolio).
 - Multi-author provenance eliminating single-developer author bias:
-  * Origins: student (30), stackoverflow (15), reddit (10), owner (10)
+  * Origins: student (35), stackoverflow (18), reddit (12)
   * Evaluators / labeled_by: 6 distinct contributors (student_contributor_vikram,
     student_contributor_ananya, ta_reviewer_marcus, peer_reviewer_maya,
     external_evaluator_chen, owner). No single author > 20%.

@@ -5,6 +5,7 @@ import math
 import json
 import logging
 import asyncio
+import atexit
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Tuple
 from collections import Counter
@@ -241,6 +242,20 @@ def get_qdrant_client(path: Optional[Path] = None, in_memory: bool = False) -> Q
         _qdrant_client = QdrantClient(path=str(db_path))
 
     return _qdrant_client
+
+
+def close_qdrant_client() -> None:
+    """Explicitly close the cached local Qdrant client before interpreter teardown."""
+    global _qdrant_client
+    if _qdrant_client is not None:
+        try:
+            _qdrant_client.close()
+        except Exception:
+            pass
+        _qdrant_client = None
+
+
+atexit.register(close_qdrant_client)
 
 
 def ensure_collection(
