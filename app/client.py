@@ -24,6 +24,8 @@ PRIMARY_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest")
 FALLBACK_MODELS = list(dict.fromkeys([
     PRIMARY_MODEL,
     "gemini-flash-lite-latest",
+    "gemini-3.1-flash-lite",
+    "gemini-3-flash-preview",
     "gemini-3.5-flash-lite",
     "gemini-3.5-flash",
     "gemini-3.8-flash",
@@ -102,10 +104,11 @@ async def _execute_chat_with_fallback(
     for model_name in FALLBACK_MODELS:
         try:
             config_params: Dict[str, Any] = {
-                "tools": AVAILABLE_TOOLS,
                 "temperature": temperature,
                 "system_instruction": active_sys_instruction,
             }
+            if not response_schema:
+                config_params["tools"] = AVAILABLE_TOOLS
             if response_schema:
                 config_params["response_schema"] = response_schema
             if response_mime_type:
@@ -118,6 +121,7 @@ async def _execute_chat_with_fallback(
             response = await chat.send_message(user_query)
             if response and response.text:
                 return response.text
+            logger.warning("Model %s returned empty text. Checking fallback...", model_name)
         except Exception as e:
             last_err = e
             logger.warning("Model %s failed: %s. Checking fallback...", model_name, e)
