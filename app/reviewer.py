@@ -55,10 +55,11 @@ FORBIDDEN_PATTERNS = [
         r"(?:never|do not|don't)\s+call\s+(?:conn\.)?rollback",
         "Database integrity risk: suppressing conn.rollback() leaves transactions in aborted state.",
     ),
-    # PgVector dimension limit contradiction
+    # PgVector HNSW/IVFFlat index dimension limit contradiction
+    # Note: pgvector's vector type stores up to 16,000 dimensions, but HNSW and IVFFlat indexes are capped at 2,000 dimensions for vector (4,000 for halfvec).
     (
-        r"(?:standard\s+vector|vector\(3072\))[\s\S]*?(?:supports|indexes)[\s\S]*?10[,\.]?000\s+dimensions",
-        "Unsupported claim: standard pgvector vector type is limited to 2,000 dimensions for HNSW indexes.",
+        r"(?:hnsw|ivfflat)[\s\S]*?(?:supports|indexes|with)[\s\S]*?10[,\.]?000\s+dimensions|(?:standard\s+vector|vector\(3072\))[\s\S]*?(?:hnsw|ivfflat)[\s\S]*?10[,\.]?000\s+dimensions",
+        "Unsupported claim: pgvector HNSW and IVFFlat indexes are limited to 2,000 dimensions for standard vector type (halfvec supports up to 4,000; unindexed vector supports up to 16,000).",
     ),
     # FastAPI route tags database sharding hallucination
     (

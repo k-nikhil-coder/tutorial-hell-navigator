@@ -371,7 +371,7 @@ def test_reviewer_detects_pgvector_dimension_contradiction():
 
     assert result.is_valid is False
     assert result.verdict == "FAIL"
-    assert any("standard pgvector vector type is limited to 2,000 dimensions" in h for h in result.hallucinated_code)
+    assert any("2,000 dimensions" in h for h in result.hallucinated_code)
 
 
 def test_reviewer_accepts_safe_commands_with_env_vars():

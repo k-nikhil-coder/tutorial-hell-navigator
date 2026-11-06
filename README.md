@@ -306,7 +306,7 @@ Below is the consolidated empirical summary of every architectural experiment ex
 To reduce single-developer author bias and decouple evaluation targets from arbitrary chunk boundaries, Day 43 introduced the **Expanded Multi-Author Gold Benchmark v2**:
 - **Dataset Scale:** 65 questions spanning core Tier 1 scope (FastAPI, Docker, PostgreSQL, Pydantic) and out-of-scope refusal controls.
 - **Answerability Distribution:** 45 answerable questions with verbatim evidence spans and 20 out-of-scope refusal questions with strictly empty evidence.
-- **Multi-Author Provenance:** Curated and labeled across 6 peer contributors (`Haadi`, `Rohan`, `Yeshwanth`, `swamy`, `Ravi`, `Imam`) and project author `Kumbham Nikhil` as curator. No individual contributor exceeds 15.4% share (10/65).
+- **Multi-Author Provenance:** Curated and labeled across 6 peer contributors (`contributor_1` through `contributor_6`) and project author `Kumbham Nikhil` as curator. No individual contributor exceeds 15.4% share (10/65).
 - **Provenance Origins:** Student study group discussions and questions from course/study forums (35 questions, 53.8%), StackOverflow technical queries (18 questions, 27.7%), and Reddit engineering threads (12 questions, 18.5%).
 - **Verbatim Evidence Anchoring:** 100% of answerable questions are anchored to verbatim text spans in `corpus/raw/`. (Note: 5 of the 10 source documents are custom guides written for this project rather than raw upstream official documentation).
 - **Sealed Test Split:** 40 dev questions and 25 held-out test questions with ID hash protection in `eval/test_ids.sha256` (`15c7f63b9600cf1ad1f32cd27e79a9ad046103507c9dffa905bde36c65fc9b32`) to detect accidental test split modification. Test split evaluation is blocked in `eval/run_eval.py` without the explicit `--final` flag.
@@ -314,32 +314,40 @@ To reduce single-developer author bias and decouple evaluation targets from arbi
   - **Answerable queries (n=31):** Evidence Coverage@3 = 45.16% (14 of 31), Hit@3 = 45.16% (14 of 31), MRR = 0.3763. With n=31, each question represents ~3.2 percentage points (95% Wilson confidence interval: ~29% to 62%). Evidence Coverage@3 and Hit@3 are identical because each answerable question currently has a single required evidence span.
   - **Out-of-scope refusal queries (n=9):** The refusal gate correctly rejected 8 of 9 (88.9%). One technical question (`GS-V2-48`, Feast feature store) leaked through due to uncalibrated dense thresholding.
 
-### Day 44: LLM Judge Calibration & AI Reviewer Agent (n=50 Hand-Labeled Pairs)
+### Day 44: Heuristic Evaluation Judge & Reviewer Audit Endpoint (n=50 Hand-Labeled Pairs)
 
-To move past vanity "format pass rate" metrics and evaluate whether generated guidance is truthful, grounded, and executable, Day 44 introduced an **LLM Evaluation Judge and AI Reviewer Agent**:
-- **Hand-Labeled Calibration Benchmark (n=50 Pairs):** Graded 50 real question-response pairs across FastAPI, Docker, PostgreSQL, Pydantic, and refusal controls. Ground-truth grades labeled by hand across 4 dimensions: faithfulness, groundedness, code correctness, and criteria adherence (34 PASS, 16 FAIL).
-- **Inter-Rater Agreement:** Achieved **100.0% observed human-judge agreement** (50 of 50 pairs), exceeding the $\ge 80\%$ calibration threshold.
-  - 95% Wilson Score Confidence Interval: **[92.86%, 100.0%]**.
-- **Cohen's Kappa ($\kappa$):** **1.0** (Categorized as "Almost Perfect Agreement" under Landis & Koch 1977).
-- **Dimension Breakdown:** Groundedness Agreement = 84.0%, Code Correctness Agreement = 94.0%, Faithfulness Agreement = 82.0%, Adherence Agreement = 84.0%.
-- **Confusion Matrix:** True Positives = 34, True Negatives = 16, False Positives = 0, False Negatives = 0 (Precision: 1.0, Recall: 1.0, Specificity: 1.0, F1 Score: 1.0). Recorded in `eval/judge_calibration_report.json`.
-- **AI Reviewer Agent (`app/reviewer.py` & `POST /api/review`):**
-  - Audits responses for **hallucinated code** (deprecated Pydantic v1 imports like `BaseSettings`, SQL injection vulnerabilities via string formatting, committed secrets, database rollback suppression, invalid CLI tools).
-  - Audits for **unsupported claims** contradicting or absent from retrieved documentation chunks (e.g. invalid CORS credential wildcard combinations, pgvector dimension limit contradictions).
-  - Audits for **ungrounded steps** (steps lacking chunk citations or citing fabricated chunk IDs).
-  - Enforces **refusal correctness** (rejecting ungrounded out-of-scope queries while preventing false refusals on in-corpus queries).
+To move past vanity "format pass rate" metrics and attempt to evaluate whether generated guidance is truthful, grounded, and executable, Day 44 introduced a **Heuristic Evaluation Judge and Reviewer Audit Endpoint**:
+- **Critical Limitation (No Command Execution):** The judge does not run commands. It cannot verify whether an action plan or shell command actually succeeds or works in an execution environment. It only catches known static patterns (deprecated imports, f-string SQL, CORS wildcard with credentials), verifies chunk ID existence, and computes lexical token overlap against retrieved context.
+- **Hand-Labeled Calibration Benchmark (n=50 Pairs):** Graded 50 question-response pairs across FastAPI, Docker, PostgreSQL, Pydantic, and refusal controls across 4 binary axes: faithfulness (lexical overlap with context), citation validity (checking cited chunk IDs exist in retrieved chunks), code correctness (known static anti-patterns), and criteria adherence (34 PASS, 16 FAIL).
+  - *Provenance of FAILs:* All 16 FAIL pairs were synthetic bad answers written by hand to test specific error patterns (0 were real model outputs). A heuristic checker finding bugs planted by the author measures rule coverage on known anti-patterns, not real-world model error distributions.
+  - *Annotation Order:* The pairs were hand-graded first with human criteria before the automated judge was run against them.
+- **First-Run Inter-Rater Calibration Results:**
+  - **Observed Agreement:** **84.0%** (42 of 50 pairs).
+  - **95% Wilson Score Confidence Interval:** **[71.5%, 91.7%]**. Note that the lower bound does not reliably clear the $\ge 80\%$ calibration threshold.
+  - **Cohen's Kappa ($\kappa$):** **0.6324** (Substantial agreement).
+  - **Confusion Matrix:** 30 True Positives, 12 True Negatives, 4 False Positives, 4 False Negatives (Precision: 88.2%, Recall: 88.2%, Specificity: 75.0%, F1 Score: 88.2%). Recorded in `eval/judge_calibration_report.json`.
+  - **Dimension Breakdown:** Faithfulness Agreement = 80.0%, Citation Validity Agreement = 84.0%, Code Correctness Agreement = 82.0%, Adherence Agreement = 78.0%.
+- **Methodological Note on Post-Hoc Tuning (100% Agreement):**
+  - Modifying the reviewer's regex rules and criteria after inspecting where it disagreed with human grades drove measured agreement to 100% ($\kappa = 1.0$) on these same 50 pairs. That 100% number represents memorization/overfitting on the training set and carries no generalization validity. Genuine calibration requires freezing the judge and scoring unseen validation pairs blind.
+- **AI Reviewer Agent & Offline Audit Endpoint (`app/reviewer.py` & `POST /api/review`):**
+  - Exposes an offline audit endpoint (`POST /api/review`) to inspect model outputs before manual inspection:
+    - Hallucinated Code: Flags deprecated Pydantic v1 imports (`from pydantic import BaseSettings`), unescaped SQL f-strings (`cursor.execute(f"...")`), credentials committed to git, database transaction rollback suppression (`never call conn.rollback()`), and invalid CLI executables.
+    - Unsupported Claims: Catches claims contradicting retrieved documentation (e.g. invalid CORS credential wildcard combinations, or claiming HNSW/IVFFlat indexes support 10,000 dimensions when pgvector caps index dimensions at 2,000 for standard vector type).
+    - Citation Validity: Flags steps lacking chunk citations or citing fabricated chunk IDs.
+    - Refusal Enforcement: Flags responses that answer out-of-scope queries when the retrieval gate returned no evidence.
+  - *Runtime Scope:* This is an offline audit endpoint (`POST /api/review`); the runtime `/navigate` endpoint does not block or execute this reviewer inline.
 
 ---
 
 ## Known Limitations
 
-1. **Gold Benchmark v2 (Peer Contributors & Sealed Split).** The evaluation benchmark has been expanded from the tiny 23/30-question developer set to 65 questions labeled across 6 peer contributors (Haadi, Rohan, Yeshwanth, swamy, Ravi, Imam) and project author Kumbham Nikhil. The dataset is split into a 40-question dev split and a sealed 25-question test split with question ID hash protection in `test_ids.sha256`.
+1. **Gold Benchmark v2 (Peer Contributors & Sealed Split).** The evaluation benchmark has been expanded from the tiny 23/30-question developer set to 65 questions labeled across 6 peer contributors (`contributor_1` through `contributor_6`) and project author Kumbham Nikhil. The dataset is split into a 40-question dev split and a sealed 25-question test split with question ID hash protection in `test_ids.sha256`.
 
 2. **Full-context baseline is competitive.** The entire corpus (~35k tokens) fits in one LLM call. Full-corpus-in-context produces more ground-truth hits than the retrieval pipeline. The RAG stack is justified only by token cost savings at scale.
 
 3. **Uncalibrated refusal gate.** The refusal gate uses a heuristic rule: `(dense_score >= 0.40 AND rerank_score >= 0.5) OR (dense_score >= 0.55)` for Qdrant/hybrid-rerank, and a weaker `dense_score >= 0.40` alone on pgvector. None of these thresholds have been calibrated on a validation set. While the gate catches 8 of 9 (88.9%) out-of-scope dev questions, adjacent topics (e.g. career advice matching roadmap text) can leak through without semantic calibration.
 
-4. **Offline Reviewer Agent Heuristics vs. Sandboxed Runtime.** While the AI Reviewer Agent achieves 100% agreement ($\kappa = 1.0$) on this 50-pair calibration suite, heuristic pattern analysis and token overlap cannot replace true sandboxed runtime execution. Adversarial prompts or code snippets with novel syntax variations can evade static regex filters.
+4. **Offline Reviewer Agent Heuristics vs. Sandboxed Runtime.** The reviewer agent is an offline audit endpoint relying on static regexes, token overlap, and chunk ID verification. It does not execute commands in a sandboxed runtime. While post-hoc rule adjustments scored 100% on the 50 development pairs, the honest first-run calibration was 84.0% ($\kappa = 0.6324$, 95% CI [71.5%, 91.7%]), which does not clear the 80% calibration gate with statistical confidence on unseen examples. Adversarial prompts or code snippets with novel syntax variations easily evade static filters.
 
 5. **No real users.** Zero students have used this tool. The product thesis (that structured step-by-step plans help students escape tutorial hell) is untested.
 

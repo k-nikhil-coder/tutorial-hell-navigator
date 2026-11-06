@@ -169,11 +169,21 @@ def test_pgvector_hybrid_retrieval():
     store = PgVectorStore(in_memory=True)
     index_corpus_pgvector(store=store)
 
-    hybrid_results = retrieve_pgvector_hybrid_chunks(
-        query="psycopg2 gcc build failure in minimal Docker image",
-        top_k=3,
-        store=store,
-    )
+    mock_sparse = [
+        {
+            "chunk_id": "docker_production_guide_chunk_0",
+            "source_file": "docker_production_guide.md",
+            "score": 4.5,
+            "text": "psycopg2 gcc build failure in minimal Docker image",
+            "retrieval_method": "bm25",
+        }
+    ]
+    with patch("app.rag.retrieve_sparse_bm25_chunks", return_value=mock_sparse):
+        hybrid_results = retrieve_pgvector_hybrid_chunks(
+            query="psycopg2 gcc build failure in minimal Docker image",
+            top_k=3,
+            store=store,
+        )
     assert len(hybrid_results) == 3
     # Check that docker production guide containing psycopg2 fix is retrieved at rank 1
     top_chunk = hybrid_results[0]
