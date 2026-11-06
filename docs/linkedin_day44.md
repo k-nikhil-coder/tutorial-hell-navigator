@@ -17,4 +17,6 @@ What it can't do: it doesn't run any commands. It catches patterns I already kno
 
 Tomorrow: 30 new pairs, graded blind before I run the judge. I freeze the judge, run it once, and that's the number I trust. Thanks to the commenter on Day 43 who told me to grade first.
 
+Code, calibration dataset, and reports: https://github.com/k-nikhil-coder/tutorial-hell-navigator
+
 How do you check an LLM judge without fooling yourself?
