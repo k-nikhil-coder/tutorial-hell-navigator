@@ -24,7 +24,7 @@ CS students and self-taught developers get trapped passively copying code from t
 When faced with an empty editor, a broken build, or a database connection error, they freeze.
 
 This tool retrieves relevant documentation chunks from a small technical corpus and generates
-structured, step-by-step action plans with inline source citations. It refuses to answer
+structured, step-by-step action plans with inline source citations. It attempts to refuse to answer
 questions outside its corpus.
 
 ---
@@ -194,148 +194,27 @@ Returns logged query trajectories for analysis.
 
 ## Evaluation Results
 
-### Metric Definitions
+Detailed historical progression, ablations, baseline comparisons, and failure audits are documented in [`docs/eval_log.md`](docs/eval_log.md). Below is the current measured state of the system:
 
-To ensure evaluation rigor and prevent metric drift, retrieval metrics are strictly defined:
+### Current Benchmark Status
 
-- **Evidence Coverage@K**: The fraction of `required_evidence` items covered within top $K$ candidates. An item counts as covered if a retrieved chunk contains its verbatim span or one of its acceptable alternatives:
-  $$\text{Evidence Coverage}@K = \frac{1}{|Q|} \sum_{q=1}^{|Q|} \frac{\sum_{i=1}^{M_q} \mathbb{I}(\text{item } i \text{ covered in top } K)}{M_q}$$
-- **Hit@K**: Binary indicator of whether at least one required evidence item is covered in the top $K$ retrieved chunks:
-  $$\text{Hit}@K = \frac{1}{|Q|} \sum_{q=1}^{|Q|} \mathbb{I}\left(\sum_{i=1}^{M_q} \mathbb{I}(\text{item } i \text{ covered in top } K) \ge 1\right)$$
-- **Mean Reciprocal Rank (MRR)**: Evaluates ranking quality based on the rank of the first covered evidence item:
-  $$\text{MRR} = \frac{1}{|Q|} \sum_{q=1}^{|Q|} \frac{1}{\text{rank of first covered item in } q}$$
-  *(Rank 1 = 1.0, Rank 2 = 0.50, Rank 3 = 0.333, unretrieved = 0.0)*
+| Metric | Target | Current Pipeline | Baseline / Ceiling | Status |
+| :--- | :---: | :---: | :---: | :--- |
+| **Dev Split Hit@3 (v2)** | $\ge 80\%$ | **45.16%** (14/31) | 45.16% structural ceiling | ⚠️ **Corpus gap:** 17 of 31 spans reference unindexed files |
+| **Dev Split Evidence Coverage@3** | $\ge 80\%$ | **45.16%** (14/31) | 45.16% structural ceiling | 100% retrieval on indexable spans (14/14 retrieved) |
+| **Dev Split MRR** | — | **0.3763** | — | Evaluated on Hybrid-Rerank (384-token chunks) |
+| **Out-of-Scope Refusal Rate** | $\ge 90\%$ | **88.9%** (8/9) | 0% (zero-refusal baseline) | 1 technical query (`GS-V2-48`) leaked past gate |
+| **Judge First-Run Agreement** | $\ge 80\%$ | **84.0%** (42/50) | 95% Wilson CI: [71.5%, 91.7%] | Substantial ($\kappa = 0.6324$); lower bound misses 80% gate |
+| **P50 Generation Latency** | $< 3,000\text{ ms}$ | **3,031 ms** | 4,201 ms (full context) | Saves ~18× prompt tokens vs full corpus |
 
-*(Note: In historical v1 logs, "Recall@K" referred to Hit@K binary chunk matching. Under the v2 schema, both Evidence Coverage@K and Hit@K are tracked independently).*
+> [!IMPORTANT]
+> **Understanding the 45.16% Retrieval Score (Structural Index Ceiling):**
+> The 40-question dev split contains 31 answerable questions. Auditing chunk text reveals that **17 of these 31 questions** reference evidence in 3 source files (`fastapi_validation.md`, `docker_compose.md`, `postgresql_psycopg2.md`) that exist in `corpus/raw/` but were omitted from the current 8-file `chunks_384.json` index.
+> The theoretical maximum retrieval score on this index is therefore **14 of 31 (45.16%)**. The hybrid-rerank pipeline retrieved **14 of 14 indexable questions (100% of available ceiling)** with zero misses on indexed material. Indexing the 3 missing files is required before higher recall can be measured.
 
-### Retrieval Metrics (n=23 labeled questions out of 88 total)
-
-All retrieval numbers below are measured on the 23 questions in
-[`eval/gold_set.json`](eval/gold_set.json) that have human-labeled `expected_chunk_ids`.
-Each question is worth ~4.3 points of recall. No confidence intervals have been computed.
-No held-out test split exists — all tuning and reporting use the same 23 questions.
-
-| Pipeline | Recall@3 (n=23) | Recall@5 (n=23) | MRR (n=23) |
-| :--- | :---: | :---: | :---: |
-| Dense-only (`gemini-embedding-001`) | 60.9% (14/23) | 78.3% (18/23) | 0.568 |
-| Hybrid (Dense + BM25 + RRF) | 69.6% (16/23) | 78.3% (18/23) | 0.573 |
-| Hybrid + Cross-Encoder Reranker | 65.2% (15/23) | 82.6% (19/23) | 0.578 |
-| Hybrid + Reranker + 384-token chunks | 78.3% (18/23) | 78.3% (18/23) | 0.667 |
-
-**Differences between pipelines:**
-- Hybrid vs Dense-only: +8.7 points Recall@3 (+2 questions)
-- 384-token sweep vs 512-token baseline: +13.0 points Recall@3 (+3 questions), but -4.3 points Recall@5 (-1 question)
-- Reranker vs Hybrid: -4.3 points Recall@3 (-1 question), +4.3 points Recall@5 (+1 question)
-
-At n=23, a single question changes any metric by ~4.3 points. These differences are not
-statistically validated.
-
-### Three-Way Baseline Comparison (n=30 questions with labels)
-
-To test whether the retrieval pipeline outperforms simpler alternatives, three
-configurations were benchmarked on 30 labeled questions using a pinned model
-(`gemini-flash-lite-latest`, no fallback chain):
-
-| Configuration | Avg Prompt Tokens | Valid Citations | Ground-Truth Hits | P50 Latency |
-| :--- | :---: | :---: | :---: | :---: |
-| Zero-retrieval (LLM weights only) | 277 | 0 | 0 | 3,140 ms |
-| Full-corpus-in-context (~35k tokens) | 33,279 | 123 | 40 | 4,201 ms |
-| Current pipeline (Hybrid + Reranker, K=3) | 1,833 | 64 | 29 | 3,031 ms |
-
-Full-corpus-in-context achieves more ground-truth citation hits (40 vs 29) by giving the
-LLM access to all 92 chunks. The retrieval pipeline's advantage is **18× fewer prompt
-tokens** and ~1,170 ms lower P50 latency. At this corpus size, the retrieval stack is a
-cost/latency optimization, not an accuracy improvement.
-
-### Day 41: Qdrant vs PostgreSQL + pgvector Comparative Benchmark (n=30 Gold Set Questions)
-
-To evaluate whether a relational vector database can match dedicated vector engines, Qdrant was benchmarked against PostgreSQL + pgvector across the 30-question gold set (22 technical retrieval targets + 8 refusal controls) using identical 3,072-dimensional embeddings (`gemini-embedding-001`):
-
-| Vector Engine & Mode | Recall@3 | Recall@5 | MRR | Evidence Coverage@3 | Mean Latency | P95 Latency | Notes |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| Qdrant (Dense Cosine) | 63.64% | 81.82% | 0.6167 | 54.55% | 24.45 ms | 7.00 ms | Mean skewed by ~540 ms cold-start outlier; warm P50/P95 is 6.6–7.0 ms |
-| Qdrant (Hybrid RRF: Dense + BM25) | 68.18% | 81.82% | 0.6174 | 53.79% | 12.72 ms | 13.57 ms | Local BM25 tokenization + RRF |
-| Postgres/pgvector (Dense Cosine) | 63.64% | 81.82% | 0.6167 | 54.55% | 0.88 ms | 1.13 ms | *In-memory simulation fallback (in-process math, not live socket)* |
-| Postgres/pgvector (Hybrid RRF: Dense + BM25) | 68.18% | 81.82% | 0.6174 | 53.79% | 7.06 ms | 7.85 ms | *In-memory simulation fallback* |
-| Postgres/pgvector + SQL Topic Metadata Filter | 63.64% | 81.82% | **0.6265** | 54.55% | **0.72 ms** | **0.92 ms** | *In-memory simulation fallback; filter uses benchmark category labels* |
-
-**Benchmark Methodology & Terminology Notes:**
-- **In-Memory Fallback Disclosure:** The pgvector latency numbers above (0.72–0.88 ms) ran against the local in-memory fallback simulation (`pgvector_is_live: false`), computing cosine similarities in-process rather than making network round-trips over a live PostgreSQL TCP socket. Live database network queries will incur real socket and query overhead.
-- **Qdrant Latency Distribution:** Qdrant's 24.45 ms mean latency reflects a single cold-start connection outlier (~540 ms) on the initial query. Steady-state warm requests operate at P50 = 6.6 ms and P95 = 7.0 ms.
-- **Exact Retrieval Parity:** On dense cosine search, pgvector and Qdrant produce mathematically identical recall and MRR rankings on the same embedding vectors.
-- **SQL Metadata Filter Caveat:** Combining SQL filtering on `topic` pushes MRR to 0.6265, but the topic was extracted from the benchmark's own `category` label (benchmark label leakage), which is invalid in production unless an upfront classifier provides the topic.
-- **pgvector HNSW Dimension Limit:** pgvector enforces a 2,000-dimension cap on HNSW indexes for standard 32-bit float `vector` (`HNSW_MAX_DIM = 2000`). To support 3,072-dimensional embeddings (`gemini-embedding-001`), the implementation utilizes 16-bit half-precision float `halfvec(3072)` with `halfvec_cosine_ops`, enabling HNSW graph indexing in PostgreSQL.
-- **Container Orchestration:** Added `pgvector/pgvector:pg16` in `docker-compose.yml` with automated extension creation, HNSW index generation, and health checks.
-
-### Week 6 Review: What Actually Moved the Score? (5-Line Summary per Technique)
-
-Below is the consolidated empirical summary of every architectural experiment executed during Week 6 (Days 36–42):
-
-1. **Hybrid Retrieval (Dense + BM25 + Reciprocal Rank Fusion, $k=60$):**
-   - **Baseline:** Dense-only achieved 60.9% Recall@3 (14/23) and 0.568 MRR.
-   - **Measured Effect:** Boosted Recall@3 to 69.6% (+8.7 points) and MRR to 0.573 by reliably matching exact code tokens (`CORSMiddleware`, `psycopg2`).
-   - **Cost & Latency:** Incurs zero API cost and adds ~6 ms local BM25 tokenization latency.
-   - **Verdict:** **KEEP.** Essential foundation for technical syntax retrieval.
-
-2. **Cross-Encoder Reranker (`ms-marco-MiniLM-L-6-v2`):**
-   - **Baseline:** Hybrid RRF achieved 69.6% Recall@3 and 78.3% Recall@5.
-   - **Measured Effect:** Pushed Recall@5 to 82.6% (+1 question, 19/23) and MRR to 0.578 (+0.005), but lowered Recall@3 to 65.2% (-1 question, 15/23).
-   - **Cost & Latency:** Adds ~500 ms local CPU inference latency per query.
-   - **Verdict:** **PROVISIONAL.** Kept under evaluation; unproven at K=3 until sealed test set evaluation.
-
-3. **384-Token Chunk Size Sweep (with 60-Token Overlap):**
-   - **Baseline:** 512-token ceiling chunks (67 chunks, mean ~440 tokens) achieved 65.2% Recall@3 and 0.578 MRR.
-   - **Measured Effect:** Moved Recall@3 to 78.3% (+3 questions, 18/23) and MRR to 0.667, but Recall@5 fell from 82.6% to 78.3% (-1 question, 18/23). Verified via tiktoken (`cl100k_base`): 67 chunks (mean ~440 tokens) grew to 92 chunks (mean ~334 tokens) across identical 8 source files.
-   - **Cost & Latency:** Tuned and measured on the same 23 questions (promising lead, not final proof).
-   - **Verdict:** **PROVISIONAL LEAD.** Requires validation on unseen test questions.
-
-4. **PostgreSQL + pgvector Dual-Storage & SQL Metadata Filtering:**
-   - **Baseline:** Qdrant standalone vector DB (63.64% Recall@3, 81.82% Recall@5, 0.6167 MRR on $N=30$).
-   - **Measured Effect:** Exact mathematical parity on dense cosine search. An experimental SQL metadata filter (`topic ILIKE`) reached 0.6265 MRR, but the topic was extracted from the benchmark's own `category` label. Real students do not provide pre-labeled topics at runtime, so this is benchmark label leakage and invalid as a production claim without a classifier.
-   - **Cost & Latency:** Eliminates multi-database synchronization by consolidating vector and relational state into PostgreSQL.
-   - **Verdict:** **KEEP STORAGE PARITY, INVALIDATE TOPIC FILTER CLAIM.**
-
-5. **Failure Audit & Error Analysis:**
-   - **Baseline:** 8 out of 23 queries flagged as retrieval misses at $K=3$ in `hybrid_rerank_retrieval_report.json` (GS-04, 06, 11, 12, 13, 14, 15, 88).
-   - **Measured Effect:** Reviewing the 8 misses against chunk text (with AI-proposed tags verified by hand) revealed 4 wrong labels (GS-06, 11, 14, 15), 2 overlapping chunks (GS-12, 88), 1 real retrieval failure (GS-04), and 1 corpus gap (GS-13).
-   - **Methodological Note:** Because labels were corrected after observing failure cases, no "corrected accuracy" is claimed. Legacy v1 evaluation reports are marked as invalidated.
-   - **Verdict:** **PERMANENT PROTOCOL.** Always audit failure logs before adjusting model architectures.
-
-### Day 43: Multi-Author Gold Benchmark v2 (n=65 Questions, Sealed Test Split)
-
-To reduce single-developer author bias and decouple evaluation targets from arbitrary chunk boundaries, Day 43 introduced the **Expanded Multi-Author Gold Benchmark v2**:
-- **Dataset Scale:** 65 questions spanning core Tier 1 scope (FastAPI, Docker, PostgreSQL, Pydantic) and out-of-scope refusal controls.
-- **Answerability Distribution:** 45 answerable questions with verbatim evidence spans and 20 out-of-scope refusal questions with strictly empty evidence.
-- **Multi-Author Provenance:** Curated and labeled across 6 peer contributors (`contributor_1` through `contributor_6`) and project author `Kumbham Nikhil` as curator. No individual contributor exceeds 15.4% share (10/65).
-- **Provenance Origins:** Student study group discussions and questions from course/study forums (35 questions, 53.8%), StackOverflow technical queries (18 questions, 27.7%), and Reddit engineering threads (12 questions, 18.5%).
-- **Verbatim Evidence Anchoring:** 100% of answerable questions are anchored to verbatim text spans in `corpus/raw/`. (Note: 5 of the 10 source documents are custom guides written for this project rather than raw upstream official documentation).
-- **Sealed Test Split:** 40 dev questions and 25 held-out test questions with ID hash protection in `eval/test_ids.sha256` (`15c7f63b9600cf1ad1f32cd27e79a9ad046103507c9dffa905bde36c65fc9b32`) to detect accidental test split modification. Test split evaluation is blocked in `eval/run_eval.py` without the explicit `--final` flag.
-- **Dev Split Baseline (n=40, Hybrid-Rerank):**
-  - **Answerable queries (n=31):** Evidence Coverage@3 = 45.16% (14 of 31), Hit@3 = 45.16% (14 of 31), MRR = 0.3763. With n=31, each question represents ~3.2 percentage points (95% Wilson confidence interval: ~29% to 62%). Evidence Coverage@3 and Hit@3 are identical because each answerable question currently has a single required evidence span.
-  - **Out-of-scope refusal queries (n=9):** The refusal gate correctly rejected 8 of 9 (88.9%). One technical question (`GS-V2-48`, Feast feature store) leaked through due to uncalibrated dense thresholding.
-
-### Day 44: Heuristic Evaluation Judge & Reviewer Audit Endpoint (n=50 Hand-Labeled Pairs)
-
-To move past vanity "format pass rate" metrics and attempt to evaluate whether generated guidance is truthful, grounded, and executable, Day 44 introduced a **Heuristic Evaluation Judge and Reviewer Audit Endpoint**:
-- **Critical Limitation (No Command Execution):** The judge does not run commands. It cannot verify whether an action plan or shell command actually succeeds or works in an execution environment. It only catches known static patterns (deprecated imports, f-string SQL, CORS wildcard with credentials), verifies chunk ID existence, and computes lexical token overlap against retrieved context.
-- **Hand-Labeled Calibration Benchmark (n=50 Pairs):** Graded 50 question-response pairs across FastAPI, Docker, PostgreSQL, Pydantic, and refusal controls across 4 binary axes: faithfulness (lexical overlap with context), citation validity (checking cited chunk IDs exist in retrieved chunks), code correctness (known static anti-patterns), and criteria adherence (34 PASS, 16 FAIL).
-  - *Provenance of FAILs:* All 16 FAIL pairs were synthetic bad answers written by hand to test specific error patterns (0 were real model outputs). A heuristic checker finding bugs planted by the author measures rule coverage on known anti-patterns, not real-world model error distributions.
-  - *Annotation Order:* The pairs were hand-graded first with human criteria before the automated judge was run against them.
-- **First-Run Inter-Rater Calibration Results:**
-  - **Observed Agreement:** **84.0%** (42 of 50 pairs).
-  - **95% Wilson Score Confidence Interval:** **[71.5%, 91.7%]**. Note that the lower bound does not reliably clear the $\ge 80\%$ calibration threshold.
-  - **Cohen's Kappa ($\kappa$):** **0.6324** (Substantial agreement).
-  - **Confusion Matrix:** 30 True Positives, 12 True Negatives, 4 False Positives, 4 False Negatives (Precision: 88.2%, Recall: 88.2%, Specificity: 75.0%, F1 Score: 88.2%). Recorded in `eval/judge_calibration_report.json`.
-  - **Dimension Breakdown:** Faithfulness Agreement = 80.0%, Citation Validity Agreement = 84.0%, Code Correctness Agreement = 82.0%, Adherence Agreement = 78.0%.
-- **Methodological Note on Post-Hoc Tuning (100% Agreement):**
-  - Modifying the reviewer's regex rules and criteria after inspecting where it disagreed with human grades drove measured agreement to 100% ($\kappa = 1.0$) on these same 50 pairs. That 100% number represents memorization/overfitting on the training set and carries no generalization validity. Genuine calibration requires freezing the judge and scoring unseen validation pairs blind.
-- **AI Reviewer Agent & Offline Audit Endpoint (`app/reviewer.py` & `POST /api/review`):**
-  - Exposes an offline audit endpoint (`POST /api/review`) to inspect model outputs before manual inspection:
-    - Hallucinated Code: Flags deprecated Pydantic v1 imports (`from pydantic import BaseSettings`), unescaped SQL f-strings (`cursor.execute(f"...")`), credentials committed to git, database transaction rollback suppression (`never call conn.rollback()`), and invalid CLI executables.
-    - Unsupported Claims: Catches claims contradicting retrieved documentation (e.g. invalid CORS credential wildcard combinations, or claiming HNSW/IVFFlat indexes support 10,000 dimensions when pgvector caps index dimensions at 2,000 for standard vector type).
-    - Citation Validity: Flags steps lacking chunk citations or citing fabricated chunk IDs.
-    - Refusal Enforcement: Flags responses that answer out-of-scope queries when the retrieval gate returned no evidence.
-  - *Runtime Scope:* This is an offline audit endpoint (`POST /api/review`); the runtime `/navigate` endpoint does not block or execute this reviewer inline.
+> [!NOTE]
+> **Heuristic Judge Calibration & Overfitting Disclosure:**
+> The first-run inter-rater calibration between human grades and the automated judge scored 84.0% observed agreement ($\kappa = 0.6324$, 95% CI [71.5%, 91.7%]). While subsequent post-hoc rule adjustments drove measured agreement to 100% ($\kappa = 1.0$) on these same 50 pairs, that number represents training-set memorization and is not a valid generalization claim. All 16 FAIL pairs were synthetic bad answers written by hand to test known anti-patterns (0 real model outputs). The judge is a heuristic regex/token-overlap checker and does not execute commands. Full details and pre-tuning commit tags are documented in [`docs/eval_log.md`](docs/eval_log.md).
 
 ---
 
@@ -380,9 +259,9 @@ tutorial-hell-navigator/
 │   ├── embeddings_cache.json
 │   └── qdrant_db/         # Local Qdrant storage
 ├── eval/
-│   ├── judge.py                         # LLM Evaluation Judge & Inter-rater calibration runner
-│   ├── judge_calibration_data.json      # 50 hand-graded pairs (faithfulness, groundedness, adherence)
-│   ├── judge_calibration_report.json    # Calibration results (84.0% agreement, Cohen's kappa 0.6324)
+│   ├── judge.py                         # Heuristic evaluation judge & calibration engine
+│   ├── judge_calibration_data.json      # 50 hand-graded pairs (faithfulness, citation validity, adherence)
+│   ├── judge_calibration_report.json    # First-run calibration results (84.0% agreement, Cohen's kappa 0.6324)
 │   ├── gold_benchmark_v2.json           # 65 questions across 6 peer contributors and author
 │   ├── gold_benchmark_v2_dev_results.json # Dev split retrieval evaluation results
 │   ├── split_v2.json                    # Dev (40) / test (25) split definitions
@@ -397,6 +276,7 @@ tutorial-hell-navigator/
 │   └── build_judge_calibration_data.py  # Day 44 calibration dataset builder
 ├── tests/                 # pytest suite (unit, RAG, pgvector, UI, reviewer, judge tests)
 ├── docs/
+│   ├── eval_log.md        # Comprehensive evaluation log & experiment notebook
 │   ├── scope.md           # Strict Tier 1 scope (FastAPI, Docker, Pydantic, Postgres)
 │   ├── success_metric.md  # Product success definition
 │   └── user_testing_guide.md # Script and protocol for observing real students

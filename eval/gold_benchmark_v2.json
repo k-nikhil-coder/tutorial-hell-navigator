@@ -5,9 +5,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/cors-origin-confusion/101",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "In web security and FastAPI, what exact parameters define a distinct browser origin in CORS?",
     "answerability": "answerable",
@@ -88,7 +88,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/fastapi/comments/allow_credentials_wildcard_fail",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "Why does my browser reject responses when I set allow_origins=['*'] alongside allow_credentials=True in FastAPI?",
     "answerability": "answerable",
@@ -124,9 +124,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/options-preflight-fastapi/104",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "How does FastAPI CORSMiddleware process preflight HTTP OPTIONS requests from web browsers?",
     "answerability": "answerable",
@@ -200,9 +200,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/when-to-use-background-tasks/106",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What is the primary design purpose of BackgroundTasks in FastAPI for request handling?",
     "answerability": "answerable",
@@ -238,9 +238,9 @@
     "type": "exact_syntax",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/add-task-method-signature/107",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Which method is called on a BackgroundTasks instance to schedule a function execution in FastAPI?",
     "answerability": "answerable",
@@ -316,7 +316,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/fastapi/comments/celery_vs_backgroundtasks",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "When should a developer switch from FastAPI built-in BackgroundTasks to an external worker queue like Celery?",
     "answerability": "answerable",
@@ -352,9 +352,9 @@
     "type": "debugging",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/fastapi-422-unprocessable-entity/110",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What HTTP status code does FastAPI automatically return when incoming JSON fails Pydantic schema validation?",
     "answerability": "answerable",
@@ -428,9 +428,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/react-fastapi-vs-node-advice/112",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Why is React + Python FastAPI recommended for computer science students aiming for modern engineering and AI backend roles?",
     "answerability": "answerable",
@@ -466,9 +466,9 @@
     "type": "debugging",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/volume-overwrites-copy-node-modules/113",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Why did my application build artifacts and installed libraries disappear when I added a bind mount in docker-compose.yml?",
     "answerability": "answerable",
@@ -506,7 +506,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/docker/comments/depends_on_not_waiting_for_db",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "Does depends_on in Docker Compose pause container startup until the database process is ready to receive SQL queries?",
     "answerability": "answerable",
@@ -580,9 +580,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/build-time-database-access/116",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Can Docker Compose execute docker compose build while simultaneously running another container service as a build dependency?",
     "answerability": "answerable",
@@ -618,9 +618,9 @@
     "type": "exact_syntax",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/keep-gcc-out-of-production/117",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Where should native C build tools like gcc and libpq-dev reside in a production multi-stage Dockerfile?",
     "answerability": "answerable",
@@ -696,7 +696,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/docker/comments/compose_container_reuse_cache",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "How does Docker Compose optimize restart latency when services have not changed between commands?",
     "answerability": "answerable",
@@ -732,9 +732,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/automated-testing-with-compose/120",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Why is Docker Compose widely used in CI/CD pipelines for automated testing environments?",
     "answerability": "answerable",
@@ -770,9 +770,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/bloated-python-images-1gb/121",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What drawbacks arise from using single-stage Dockerfiles when packaging Python production services?",
     "answerability": "answerable",
@@ -846,9 +846,9 @@
     "type": "exact_syntax",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/psycopg2-vs-psycopg2-binary/123",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "How can a developer avoid needing gcc and libpq-dev when prototyping with PostgreSQL in local development?",
     "answerability": "answerable",
@@ -884,9 +884,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/handling-secrets-in-docker-production/124",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "How should API keys and database credentials be injected into production Docker containers without leaking secrets?",
     "answerability": "answerable",
@@ -922,9 +922,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/psycopg2-with-conn-transaction/125",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "How does exiting a psycopg2 connection context manager block (with conn:) manage SQL transaction state?",
     "answerability": "answerable",
@@ -1000,7 +1000,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/postgresql/comments/infailedsqltransaction_error",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "What database condition triggers the psycopg2.errors.InFailedSqlTransaction error during query execution?",
     "answerability": "answerable",
@@ -1074,9 +1074,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/sql-injection-placeholders/129",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Why should developers never format SQL query strings using Python f-strings or string interpolation?",
     "answerability": "answerable",
@@ -1150,9 +1150,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/why-use-connection-pooling/131",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Why is opening a separate TCP connection for every incoming API request inefficient in high-throughput applications?",
     "answerability": "answerable",
@@ -1190,7 +1190,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/postgresql/comments/db_pool_timeout_settings",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "What three primary pool configuration settings should be checked when database connection timeouts occur?",
     "answerability": "answerable",
@@ -1226,9 +1226,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/fullstack-fastapi-postgres-tech/133",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What combination of ORM and migration tool is recommended for relational persistence with FastAPI and PostgreSQL?",
     "answerability": "answerable",
@@ -1264,9 +1264,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/when-to-run-alembic-migrations/134",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "When and where should Alembic database migrations be executed during production deployment?",
     "answerability": "answerable",
@@ -1340,9 +1340,9 @@
     "type": "exact_syntax",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/pydantic-v2-validator-migration/136",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "In Pydantic v2, which decorator replaces the legacy @validator decorator for validating model fields?",
     "answerability": "answerable",
@@ -1416,9 +1416,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/raising-valueerror-in-validator/138",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What does Pydantic do when a custom @field_validator raises a standard Python ValueError?",
     "answerability": "answerable",
@@ -1456,7 +1456,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/fastapi/comments/model_validator_vs_field_validator",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "Why is a model_validator advantageous over multiple field_validators when validating dependent model attributes?",
     "answerability": "answerable",
@@ -1530,9 +1530,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/pydantic-basemodel-subclassing/141",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What primary base class do Pydantic schema models inherit from to define typed attributes?",
     "answerability": "answerable",
@@ -1568,9 +1568,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/untrusted-data-guarantee-pydantic/142",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What structural guarantee does Pydantic provide when untrusted input data is parsed into a model instance?",
     "answerability": "answerable",
@@ -1646,7 +1646,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/fastapi/comments/pydantic_validationerror_when_thrown",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "Under what specific failure condition does Pydantic raise a ValidationError during model processing?",
     "answerability": "answerable",
@@ -1682,9 +1682,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/fastapi-discriminator-error-clarity/145",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "How does adding a discriminator field improve validation error responses returned by FastAPI?",
     "answerability": "answerable",
@@ -1720,9 +1720,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/pytorch-lstm-gradients/146",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "How do I implement custom backpropagation and calculate gradient clipping thresholds in PyTorch for an LSTM model?",
     "answerability": "not_answerable",
@@ -1778,7 +1778,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/MachineLearning/comments/feature_store_drift_detection",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "How do I build an automated feature store with Feast and integrate data drift detection with Evidently AI in production?",
     "answerability": "not_answerable",
@@ -1804,9 +1804,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/transformer-loss-smoothing/149",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What is the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures?",
     "answerability": "not_answerable",
@@ -1860,9 +1860,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/bankers-algorithm-proof/151",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Prove why the Banker's algorithm prevents deadlock in operating systems with multi-resource allocation matrices.",
     "answerability": "not_answerable",
@@ -1888,9 +1888,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/page-replacement-algorithms/152",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Explain the difference between working set page replacement and the clock algorithm with second-chance reference bits.",
     "answerability": "not_answerable",
@@ -1944,9 +1944,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/tcp-header-bitwise-structure/154",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Explain the exact bitwise structure of the TCP header including urgent pointer and selective acknowledgment (SACK) options.",
     "answerability": "not_answerable",
@@ -1972,9 +1972,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/salary-negotiation-london-bangalore/155",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What is the average base salary for an L4 software engineer in London vs Bangalore, and how should I counter-offer?",
     "answerability": "not_answerable",
@@ -2002,7 +2002,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/cscareerquestions/comments/startup_equity_vs_fintech_cash",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "Should I accept an offer from an early-stage startup with stock options or an established fintech company with higher cash?",
     "answerability": "not_answerable",
@@ -2028,9 +2028,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/golang-vs-rust-job-market/157",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Is Golang or Rust better for backend developer job openings over the next five years in European tech hubs?",
     "answerability": "not_answerable",
@@ -2058,7 +2058,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/cscareerquestions/comments/tier_ranking_tech_companies",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "Rank Tier 1 tech companies based on work-life balance and promotion velocity for junior software developers.",
     "answerability": "not_answerable",
@@ -2084,9 +2084,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/ats-resume-bullet-points/159",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "How should I format bullet points on my software engineering resume to pass ATS screening algorithms?",
     "answerability": "not_answerable",
@@ -2112,9 +2112,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/linkedin-headline-critique/160",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "Critique my professional profile headline and suggest how often I should post project progress updates to attract tech recruiters.",
     "answerability": "not_answerable",
@@ -2140,9 +2140,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/github-readme-badges-theme/161",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What color scheme, shields.io badges, and GIF previews make a personal GitHub profile README look aesthetic to hiring managers?",
     "answerability": "not_answerable",
@@ -2168,9 +2168,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/one-page-resume-project-count/162",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "How many fullstack projects should I list on my one-page software resume when applying for entry-level developer roles?",
     "answerability": "not_answerable",
@@ -2196,9 +2196,9 @@
     "type": "conceptual",
     "origin": {
       "kind": "student",
-      "url": "https://forum.tutorialnavigator.internal/t/segment-tree-lazy-propagation/163",
+      "url": "paraphrased, no public source",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "unlicensed student discussion"
     },
     "question": "What is the optimal segment tree implementation with lazy propagation for range minimum queries in online coding competitions?",
     "answerability": "not_answerable",
@@ -2254,7 +2254,7 @@
       "kind": "reddit",
       "url": "https://reddit.com/r/Python/comments/pep_668_externally_managed_environment",
       "collected_on": "2026-11-04",
-      "license": "permissive"
+      "license": "permissive / Reddit user content"
     },
     "question": "Explain how Python 3.12 handles Debian PEP 668 externally managed environment markers and sys.breakpointhook overriding.",
     "answerability": "not_answerable",
