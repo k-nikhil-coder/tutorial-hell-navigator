@@ -251,3 +251,155 @@ def test_fastapi_review_endpoint(sample_chunks):
     assert data["verdict"] == "PASS"
     assert data["groundedness_score"] == 1.0
     assert "feedback" in data
+
+
+def test_reviewer_detects_sql_injection():
+    reviewer = ReviewerAgent()
+    resp = NavigatorResponse(
+        summary="Query users with string interpolation directly.",
+        action_plan=[
+            ActionableStep(
+                step_number=1,
+                title="Execute Query",
+                command="python query.py",
+                explanation="Run cursor.execute(f'SELECT * FROM users WHERE id = {user_id}') directly.",
+                verification="python query.py",
+                citations=["sql_chunk_0"],
+            )
+        ],
+        anti_patterns_to_avoid=["Do not skip error checks."],
+        is_refusal=False,
+        cited_chunk_ids=["sql_chunk_0"],
+    )
+
+    result = reviewer.audit(
+        query="How do I query a user by ID in psycopg2?",
+        response=resp,
+        retrieved_chunks=[{"chunk_id": "sql_chunk_0", "text": "Always use parameterized queries."}],
+    )
+
+    assert result.is_valid is False
+    assert result.verdict == "FAIL"
+    assert result.code_correctness_score == 0.0
+    assert any("SQL injection risk" in h for h in result.hallucinated_code)
+
+
+def test_reviewer_detects_git_secret_commit():
+    reviewer = ReviewerAgent()
+    resp = NavigatorResponse(
+        summary="Save passwords directly in git repository.",
+        action_plan=[
+            ActionableStep(
+                step_number=1,
+                title="Commit passwords",
+                command="git add docker-compose.yml && git commit -m 'save password'",
+                explanation="Putting POSTGRES_PASSWORD=secret in git is convenient.",
+                verification="git status",
+                citations=["docker_chunk_0"],
+            )
+        ],
+        anti_patterns_to_avoid=["None."],
+        is_refusal=False,
+        cited_chunk_ids=["docker_chunk_0"],
+    )
+
+    result = reviewer.audit(
+        query="How should I configure environment variables in Docker?",
+        response=resp,
+        retrieved_chunks=[{"chunk_id": "docker_chunk_0", "text": "Keep .env in .gitignore."}],
+    )
+
+    assert result.is_valid is False
+    assert result.verdict == "FAIL"
+    assert any("Security violation: committing raw credentials" in h for h in result.hallucinated_code)
+
+
+def test_reviewer_detects_rollback_suppression():
+    reviewer = ReviewerAgent()
+    resp = NavigatorResponse(
+        summary="Do not rollback on transaction errors.",
+        action_plan=[
+            ActionableStep(
+                step_number=1,
+                title="Ignore errors",
+                command="python script.py",
+                explanation="Never call conn.rollback(). Just keep executing queries.",
+                verification="echo ok",
+                citations=["pg_chunk_0"],
+            )
+        ],
+        anti_patterns_to_avoid=["None."],
+        is_refusal=False,
+        cited_chunk_ids=["pg_chunk_0"],
+    )
+
+    result = reviewer.audit(
+        query="How do you handle transaction failures in psycopg2?",
+        response=resp,
+        retrieved_chunks=[{"chunk_id": "pg_chunk_0", "text": "Always call conn.rollback() in the exception handler."}],
+    )
+
+    assert result.is_valid is False
+    assert result.verdict == "FAIL"
+    assert any("Database integrity risk: suppressing conn.rollback()" in h for h in result.hallucinated_code)
+
+
+def test_reviewer_detects_pgvector_dimension_contradiction():
+    reviewer = ReviewerAgent()
+    resp = NavigatorResponse(
+        summary="pgvector supports huge dimensions.",
+        action_plan=[
+            ActionableStep(
+                step_number=1,
+                title="Index Large Vectors",
+                command="CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops);",
+                explanation="standard vector(3072) supports HNSW indexes with up to 10,000 dimensions.",
+                verification="SELECT 1;",
+                citations=["pgvector_chunk_0"],
+            )
+        ],
+        anti_patterns_to_avoid=["None."],
+        is_refusal=False,
+        cited_chunk_ids=["pgvector_chunk_0"],
+    )
+
+    result = reviewer.audit(
+        query="Can standard vector(3072) be indexed with HNSW?",
+        response=resp,
+        retrieved_chunks=[{"chunk_id": "pgvector_chunk_0", "text": "Standard pgvector vector type has an HNSW index limit of 2,000 dimensions."}],
+    )
+
+    assert result.is_valid is False
+    assert result.verdict == "FAIL"
+    assert any("standard pgvector vector type is limited to 2,000 dimensions" in h for h in result.hallucinated_code)
+
+
+def test_reviewer_accepts_safe_commands_with_env_vars():
+    reviewer = ReviewerAgent()
+    resp = NavigatorResponse(
+        summary="Run migration with environment variable.",
+        action_plan=[
+            ActionableStep(
+                step_number=1,
+                title="Run Migration",
+                command="DATABASE_URL=postgresql://localhost:5432/db alembic upgrade head",
+                explanation="Apply the database migrations.",
+                verification="echo done",
+                citations=["alembic_chunk_0"],
+            )
+        ],
+        anti_patterns_to_avoid=["Do not skip migrations."],
+        is_refusal=False,
+        cited_chunk_ids=["alembic_chunk_0"],
+    )
+
+    result = reviewer.audit(
+        query="How do I run Alembic migrations with custom database URL?",
+        response=resp,
+        retrieved_chunks=[{"chunk_id": "alembic_chunk_0", "text": "alembic upgrade head"}],
+    )
+
+    assert result.is_valid is True
+    assert result.verdict == "PASS"
+    assert len(result.hallucinated_code) == 0
+

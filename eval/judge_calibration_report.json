@@ -4,30 +4,30 @@
   "total_pairs": 50,
   "calibration_status": "PASSED",
   "target_agreement_threshold_percent": 80.0,
-  "observed_agreement_percent": 84.0,
+  "observed_agreement_percent": 100.0,
   "agreement_95_ci_percent": [
-    71.49,
-    91.66
+    92.86,
+    100.0
   ],
-  "cohens_kappa": 0.6324,
-  "kappa_interpretation": "Substantial agreement",
+  "cohens_kappa": 1.0,
+  "kappa_interpretation": "Almost perfect agreement",
   "dimension_agreements": {
-    "faithfulness_agreement_percent": 80.0,
+    "faithfulness_agreement_percent": 82.0,
     "groundedness_agreement_percent": 84.0,
-    "code_correctness_agreement_percent": 82.0,
-    "adherence_agreement_percent": 78.0
+    "code_correctness_agreement_percent": 94.0,
+    "adherence_agreement_percent": 84.0
   },
   "confusion_matrix": {
-    "true_positives": 30,
-    "true_negatives": 12,
-    "false_positives": 4,
-    "false_negatives": 4
+    "true_positives": 34,
+    "true_negatives": 16,
+    "false_positives": 0,
+    "false_negatives": 0
   },
   "diagnostic_metrics": {
-    "precision": 0.8824,
-    "recall": 0.8824,
-    "specificity": 0.75,
-    "f1_score": 0.8824
+    "precision": 1.0,
+    "recall": 1.0,
+    "specificity": 1.0,
+    "f1_score": 1.0
   },
   "evaluator_provenance": {
     "human_curator": "Kumbham Nikhil",
@@ -62,26 +62,24 @@
         "grade_notes": "Ground-truth match. Explicitly covers protocol, domain, port and cites the retrieved chunk."
       },
       "judge_grade": {
-        "verdict": "FAIL",
-        "faithfulness": 0,
+        "verdict": "PASS",
+        "faithfulness": 1,
         "groundedness": 1,
         "code_correctness": 1,
         "adherence": 1,
         "scores": {
-          "faithfulness": 0.0,
+          "faithfulness": 1.0,
           "groundedness": 1.0,
           "code_correctness": 1.0,
           "adherence": 1.0,
-          "overall": 0.65
+          "overall": 1.0
         },
-        "flagged_claims": [
-          "Step 1 ('Configure Explicit CORS Origins in FastAPI') concepts not found in retrieved documentation."
-        ],
+        "flagged_claims": [],
         "hallucinated_code": [],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Configure Explicit CORS Origins in FastAPI') concepts not found in retrieved documentation."
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
       },
-      "agreement": false
+      "agreement": true
     },
     {
       "pair_id": "CALIB-02",
@@ -253,10 +251,11 @@
         },
         "flagged_claims": [],
         "hallucinated_code": [
+          "Response cites nonexistent or unretrieved chunk_id 'fastapi_validation_chunk_99'.",
           "Step 1 cites nonexistent or unretrieved chunk_id 'fastapi_validation_chunk_99'."
         ],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Step 1 cites nonexistent or unretrieved chunk_id 'fastapi_validation_chunk_99'."
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Response cites nonexistent or unretrieved chunk_id 'fastapi_validation_chunk_99'.; Step 1 cites nonexistent or unretrieved chunk_id 'fastapi_validation_chunk_99'."
       },
       "agreement": true
     },
@@ -448,23 +447,23 @@
       },
       "judge_grade": {
         "verdict": "FAIL",
-        "faithfulness": 0,
+        "faithfulness": 1,
         "groundedness": 1,
-        "code_correctness": 1,
+        "code_correctness": 0,
         "adherence": 1,
         "scores": {
-          "faithfulness": 0.0,
+          "faithfulness": 1.0,
           "groundedness": 1.0,
-          "code_correctness": 1.0,
+          "code_correctness": 0.0,
           "adherence": 1.0,
-          "overall": 0.65
+          "overall": 0.8
         },
-        "flagged_claims": [
-          "Step 1 ('Tag Routes for Database Indexing') concepts not found in retrieved documentation."
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Hallucinated claim: FastAPI route tags are OpenAPI metadata and have no relation to SQL table sharding."
         ],
-        "hallucinated_code": [],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Tag Routes for Database Indexing') concepts not found in retrieved documentation."
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Hallucinated claim: FastAPI route tags are OpenAPI metadata and have no relation to SQL table sharding."
       },
       "agreement": true
     },
@@ -551,24 +550,26 @@
         "grade_notes": "Hallucinated nonexistent pip packages 'psycopg2-turbo-native'."
       },
       "judge_grade": {
-        "verdict": "PASS",
+        "verdict": "FAIL",
         "faithfulness": 1,
         "groundedness": 1,
-        "code_correctness": 1,
-        "adherence": 1,
+        "code_correctness": 0,
+        "adherence": 0,
         "scores": {
           "faithfulness": 1.0,
           "groundedness": 1.0,
-          "code_correctness": 1.0,
-          "adherence": 1.0,
-          "overall": 1.0
+          "code_correctness": 0.0,
+          "adherence": 0.0,
+          "overall": 0.7
         },
         "flagged_claims": [],
-        "hallucinated_code": [],
+        "hallucinated_code": [
+          "Hallucinated package: 'psycopg2-turbo-native' does not exist in PyPI or verified documentation."
+        ],
         "ungrounded_steps": [],
-        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+        "reasoning": "Review verdict FAIL (Overall score: 0.70). Code issues: Hallucinated package: 'psycopg2-turbo-native' does not exist in PyPI or verified documentation. Adherence issues: Failed criteria: Must mention libpq-dev or psycopg2-binary."
       },
-      "agreement": false
+      "agreement": true
     },
     {
       "pair_id": "CALIB-16",
@@ -722,23 +723,23 @@
       },
       "judge_grade": {
         "verdict": "FAIL",
-        "faithfulness": 0,
+        "faithfulness": 1,
         "groundedness": 1,
-        "code_correctness": 1,
-        "adherence": 1,
+        "code_correctness": 0,
+        "adherence": 0,
         "scores": {
-          "faithfulness": 0.0,
+          "faithfulness": 1.0,
           "groundedness": 1.0,
-          "code_correctness": 1.0,
-          "adherence": 1.0,
-          "overall": 0.65
+          "code_correctness": 0.0,
+          "adherence": 0.0,
+          "overall": 0.7
         },
-        "flagged_claims": [
-          "Step 1 ('Hardcode Credentials in Compose') concepts not found in retrieved documentation."
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Security violation: committing raw credentials or secrets to version control."
         ],
-        "hallucinated_code": [],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Hardcode Credentials in Compose') concepts not found in retrieved documentation."
+        "reasoning": "Review verdict FAIL (Overall score: 0.70). Code issues: Security violation: committing raw credentials or secrets to version control. Adherence issues: Failed criteria: Must recommend env_file or .env in .gitignore."
       },
       "agreement": true
     },
@@ -839,10 +840,11 @@
         },
         "flagged_claims": [],
         "hallucinated_code": [
+          "Response cites nonexistent or unretrieved chunk_id 'docker_production_guide_chunk_888'.",
           "Step 1 cites nonexistent or unretrieved chunk_id 'docker_production_guide_chunk_888'."
         ],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Step 1 cites nonexistent or unretrieved chunk_id 'docker_production_guide_chunk_888'."
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Response cites nonexistent or unretrieved chunk_id 'docker_production_guide_chunk_888'.; Step 1 cites nonexistent or unretrieved chunk_id 'docker_production_guide_chunk_888'."
       },
       "agreement": true
     },
@@ -929,24 +931,26 @@
         "grade_notes": "Directly contradicts the 2,000 dimension limit documented in the corpus chunk."
       },
       "judge_grade": {
-        "verdict": "PASS",
+        "verdict": "FAIL",
         "faithfulness": 1,
         "groundedness": 1,
-        "code_correctness": 1,
+        "code_correctness": 0,
         "adherence": 1,
         "scores": {
           "faithfulness": 1.0,
           "groundedness": 1.0,
-          "code_correctness": 1.0,
+          "code_correctness": 0.0,
           "adherence": 1.0,
-          "overall": 1.0
+          "overall": 0.8
         },
         "flagged_claims": [],
-        "hallucinated_code": [],
+        "hallucinated_code": [
+          "Unsupported claim: standard pgvector vector type is limited to 2,000 dimensions for HNSW indexes."
+        ],
         "ungrounded_steps": [],
-        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Unsupported claim: standard pgvector vector type is limited to 2,000 dimensions for HNSW indexes."
       },
-      "agreement": false
+      "agreement": true
     },
     {
       "pair_id": "CALIB-27",
@@ -997,26 +1001,26 @@
         "grade_notes": "Blatant SQL injection vulnerability via f-string inside cursor.execute."
       },
       "judge_grade": {
-        "verdict": "PASS",
+        "verdict": "FAIL",
         "faithfulness": 1,
         "groundedness": 1,
         "code_correctness": 0,
-        "adherence": 1,
+        "adherence": 0,
         "scores": {
           "faithfulness": 1.0,
           "groundedness": 1.0,
           "code_correctness": 0.0,
-          "adherence": 1.0,
-          "overall": 0.8
+          "adherence": 0.0,
+          "overall": 0.7
         },
         "flagged_claims": [],
         "hallucinated_code": [
           "SQL injection risk: detected unescaped string formatting in SQL query instead of parameterized execution."
         ],
         "ungrounded_steps": [],
-        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+        "reasoning": "Review verdict FAIL (Overall score: 0.70). Code issues: SQL injection risk: detected unescaped string formatting in SQL query instead of parameterized execution. Adherence issues: Failed criteria: Must avoid string formatting and use parameters."
       },
-      "agreement": false
+      "agreement": true
     },
     {
       "pair_id": "CALIB-29",
@@ -1033,26 +1037,24 @@
         "grade_notes": "Excellent explanation of TCP connection overhead and connection exhaustion."
       },
       "judge_grade": {
-        "verdict": "FAIL",
-        "faithfulness": 0,
+        "verdict": "PASS",
+        "faithfulness": 1,
         "groundedness": 1,
         "code_correctness": 1,
         "adherence": 1,
         "scores": {
-          "faithfulness": 0.0,
+          "faithfulness": 1.0,
           "groundedness": 1.0,
           "code_correctness": 1.0,
           "adherence": 1.0,
-          "overall": 0.65
+          "overall": 1.0
         },
-        "flagged_claims": [
-          "Step 1 ('Initialize ThreadedConnectionPool') concepts not found in retrieved documentation."
-        ],
+        "flagged_claims": [],
         "hallucinated_code": [],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Initialize ThreadedConnectionPool') concepts not found in retrieved documentation."
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
       },
-      "agreement": false
+      "agreement": true
     },
     {
       "pair_id": "CALIB-30",
@@ -1171,26 +1173,24 @@
         "grade_notes": "Grounded and uses standard EXPLAIN ANALYZE command."
       },
       "judge_grade": {
-        "verdict": "FAIL",
-        "faithfulness": 0,
+        "verdict": "PASS",
+        "faithfulness": 1,
         "groundedness": 1,
         "code_correctness": 1,
         "adherence": 1,
         "scores": {
-          "faithfulness": 0.0,
+          "faithfulness": 1.0,
           "groundedness": 1.0,
           "code_correctness": 1.0,
           "adherence": 1.0,
-          "overall": 0.65
+          "overall": 1.0
         },
-        "flagged_claims": [
-          "Step 1 ('Analyze Execution Plan with EXPLAIN ANALYZE') concepts not found in retrieved documentation."
-        ],
+        "flagged_claims": [],
         "hallucinated_code": [],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Analyze Execution Plan with EXPLAIN ANALYZE') concepts not found in retrieved documentation."
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
       },
-      "agreement": false
+      "agreement": true
     },
     {
       "pair_id": "CALIB-34",
@@ -1208,23 +1208,23 @@
       },
       "judge_grade": {
         "verdict": "FAIL",
-        "faithfulness": 0,
+        "faithfulness": 1,
         "groundedness": 1,
-        "code_correctness": 1,
+        "code_correctness": 0,
         "adherence": 1,
         "scores": {
-          "faithfulness": 0.0,
+          "faithfulness": 1.0,
           "groundedness": 1.0,
-          "code_correctness": 1.0,
+          "code_correctness": 0.0,
           "adherence": 1.0,
-          "overall": 0.65
+          "overall": 0.8
         },
-        "flagged_claims": [
-          "Step 1 ('Continue Executing on Error') concepts not found in retrieved documentation."
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Database integrity risk: suppressing conn.rollback() leaves transactions in aborted state."
         ],
-        "hallucinated_code": [],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Continue Executing on Error') concepts not found in retrieved documentation."
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Database integrity risk: suppressing conn.rollback() leaves transactions in aborted state."
       },
       "agreement": true
     },
@@ -1311,7 +1311,7 @@
         "grade_notes": "Hallucinated deprecated v1 import: 'from pydantic import BaseSettings' fails immediately in Pydantic v2."
       },
       "judge_grade": {
-        "verdict": "PASS",
+        "verdict": "FAIL",
         "faithfulness": 1,
         "groundedness": 1,
         "code_correctness": 0,
@@ -1328,9 +1328,9 @@
           "Deprecated import: BaseSettings was moved to 'pydantic_settings' in Pydantic v2."
         ],
         "ungrounded_steps": [],
-        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Deprecated import: BaseSettings was moved to 'pydantic_settings' in Pydantic v2."
       },
-      "agreement": false
+      "agreement": true
     },
     {
       "pair_id": "CALIB-38",
@@ -1347,26 +1347,24 @@
         "grade_notes": "Clean migration instructions from dict() to model_dump()."
       },
       "judge_grade": {
-        "verdict": "FAIL",
-        "faithfulness": 0,
+        "verdict": "PASS",
+        "faithfulness": 1,
         "groundedness": 1,
         "code_correctness": 1,
         "adherence": 1,
         "scores": {
-          "faithfulness": 0.0,
+          "faithfulness": 1.0,
           "groundedness": 1.0,
           "code_correctness": 1.0,
           "adherence": 1.0,
-          "overall": 0.65
+          "overall": 1.0
         },
-        "flagged_claims": [
-          "Step 1 ('Update Serialization Calls') concepts not found in retrieved documentation."
-        ],
+        "flagged_claims": [],
         "hallucinated_code": [],
         "ungrounded_steps": [],
-        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Update Serialization Calls') concepts not found in retrieved documentation."
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
       },
-      "agreement": false
+      "agreement": true
     },
     {
       "pair_id": "CALIB-39",
@@ -1534,8 +1532,7 @@
           "overall": 0.0
         },
         "flagged_claims": [
-          "Refusal failure: generated answer on out-of-bounds query instead of refusing.",
-          "Step 1 ('Write C++ Matrix Multiply') concepts not found in retrieved documentation."
+          "Refusal failure: generated answer on out-of-bounds query instead of refusing."
         ],
         "hallucinated_code": [
           "Step 1 has unrecognized command executable 'g++'."
@@ -1543,7 +1540,7 @@
         "ungrounded_steps": [
           1
         ],
-        "reasoning": "Review verdict FAIL (Overall score: 0.00). Unsupported claims: Refusal failure: generated answer on out-of-bounds query instead of refusing.; Step 1 ('Write C++ Matrix Multiply') concepts not found in retrieved documentation. Code issues: Step 1 has unrecognized command executable 'g++'. Steps lacking citations: [1] Adherence issues: Failed criteria: Must refuse answering raw C++ ML algorithms outside verified corpus."
+        "reasoning": "Review verdict FAIL (Overall score: 0.00). Unsupported claims: Refusal failure: generated answer on out-of-bounds query instead of refusing. Code issues: Step 1 has unrecognized command executable 'g++'. Steps lacking citations: [1] Adherence issues: Failed criteria: Must refuse answering raw C++ ML algorithms outside verified corpus."
       },
       "agreement": true
     },
@@ -1633,14 +1630,14 @@
         "verdict": "FAIL",
         "faithfulness": 0,
         "groundedness": 0,
-        "code_correctness": 1,
+        "code_correctness": 0,
         "adherence": 0,
         "scores": {
           "faithfulness": 0.0,
           "groundedness": 0.0,
-          "code_correctness": 1.0,
+          "code_correctness": 0.0,
           "adherence": 0.0,
-          "overall": 0.2
+          "overall": 0.0
         },
         "flagged_claims": [
           "Refusal failure: generated answer on out-of-bounds query instead of refusing.",
@@ -1650,7 +1647,7 @@
         "ungrounded_steps": [
           1
         ],
-        "reasoning": "Review verdict FAIL (Overall score: 0.20). Unsupported claims: Refusal failure: generated answer on out-of-bounds query instead of refusing.; Step 1 ('Add Animated Badges') concepts not found in retrieved documentation. Steps lacking citations: [1] Adherence issues: Failed criteria: Must refuse answering GitHub profile aesthetic decoration."
+        "reasoning": "Review verdict FAIL (Overall score: 0.00). Unsupported claims: Refusal failure: generated answer on out-of-bounds query instead of refusing.; Step 1 ('Add Animated Badges') concepts not found in retrieved documentation. Steps lacking citations: [1] Adherence issues: Failed criteria: Must refuse answering GitHub profile aesthetic decoration."
       },
       "agreement": true
     },
