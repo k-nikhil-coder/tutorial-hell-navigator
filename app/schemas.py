@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -78,3 +78,24 @@ class FeedbackRequest(BaseModel):
 class FeedbackResponse(BaseModel):
     status: str = "ok"
     message: str = "Feedback recorded"
+
+
+class ReviewResult(BaseModel):
+    is_valid: bool = Field(..., description="Overall pass/fail verdict from reviewer")
+    verdict: str = Field(..., description="'PASS', 'FAIL', or 'WARN'")
+    faithfulness_score: float = Field(..., ge=0.0, le=1.0, description="Score indicating whether claims are supported by context")
+    groundedness_score: float = Field(..., ge=0.0, le=1.0, description="Score indicating whether steps have verified chunk citations")
+    code_correctness_score: float = Field(..., ge=0.0, le=1.0, description="Score indicating absence of hallucinated code/commands")
+    adherence_score: float = Field(..., ge=0.0, le=1.0, description="Score for meeting rubric constraints and avoiding anti-patterns")
+    overall_score: float = Field(..., ge=0.0, le=1.0, description="Aggregate correctness score")
+    flagged_claims: List[str] = Field(default_factory=list, description="Unsupported or hallucinated claims detected")
+    hallucinated_code: List[str] = Field(default_factory=list, description="Hallucinated commands, flags, or invalid code detected")
+    ungrounded_steps: List[int] = Field(default_factory=list, description="Step numbers lacking verified chunk citations")
+    feedback: str = Field(..., description="Detailed reviewer explanation and critique")
+
+
+class ReviewRequest(BaseModel):
+    query: str = Field(..., min_length=3, description="User query or question")
+    response: NavigatorResponse = Field(..., description="Navigator response to audit")
+    retrieved_chunks: Optional[List[Dict[str, Any]]] = Field(default_factory=list, description="Retrieved chunks used as context")
+

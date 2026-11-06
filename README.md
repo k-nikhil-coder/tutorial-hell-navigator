@@ -314,14 +314,20 @@ To reduce single-developer author bias and decouple evaluation targets from arbi
   - **Answerable queries (n=31):** Evidence Coverage@3 = 45.16% (14 of 31), Hit@3 = 45.16% (14 of 31), MRR = 0.3763. With n=31, each question represents ~3.2 percentage points (95% Wilson confidence interval: ~29% to 62%). Evidence Coverage@3 and Hit@3 are identical because each answerable question currently has a single required evidence span.
   - **Out-of-scope refusal queries (n=9):** The refusal gate correctly rejected 8 of 9 (88.9%). One technical question (`GS-V2-48`, Feast feature store) leaked through due to uncalibrated dense thresholding.
 
-### Format Pass Rate
+### Day 44: LLM Judge Calibration & AI Reviewer Agent (n=50 Hand-Labeled Pairs)
 
-The "100% pass rate" reported in earlier versions measures format compliance (≥1 step, ≥1
-command, ≥1 anti-pattern, no banned phrases). The Pydantic schema enforces most of these
-constraints by construction. This metric does not measure whether the advice is correct or
-whether cited chunks actually support the claims made.
-
-No faithfulness or correctness evaluation has been performed.
+To move past vanity "format pass rate" metrics and evaluate whether generated guidance is truthful, grounded, and executable, Day 44 introduced an **LLM Evaluation Judge and AI Reviewer Agent**:
+- **Hand-Labeled Calibration Benchmark (n=50 Pairs):** Graded 50 real question-response pairs across FastAPI, Docker, PostgreSQL, Pydantic, and refusal controls. Ground-truth grades labeled by hand across 4 dimensions: faithfulness, groundedness, code correctness, and criteria adherence (34 PASS, 16 FAIL).
+- **Inter-Rater Agreement:** Achieved **84.0% observed human-judge agreement** (42 of 50 pairs), exceeding the $\ge 80\%$ calibration threshold.
+  - 95% Wilson Score Confidence Interval: **[71.49%, 91.66%]**.
+- **Cohen's Kappa ($\kappa$):** **0.6324** (Categorized as "Substantial Agreement" under Landis & Koch 1977), confirming agreement significantly exceeds chance ($P_e = 56.48\%$).
+- **Dimension Breakdown:** Groundedness Agreement = 84.0%, Code Correctness Agreement = 82.0%, Faithfulness Agreement = 80.0%, Adherence Agreement = 78.0%.
+- **Confusion Matrix:** True Positives = 30, True Negatives = 12, False Positives = 4, False Negatives = 4 (Precision: 0.8824, Recall: 0.8824, Specificity: 0.7500, F1 Score: 0.8824). Recorded in `eval/judge_calibration_report.json`.
+- **AI Reviewer Agent (`app/reviewer.py` & `POST /api/review`):**
+  - Audits responses for **hallucinated code** (deprecated Pydantic v1 imports like `BaseSettings`, SQL injection vulnerabilities via string formatting, invalid CLI tools).
+  - Audits for **unsupported claims** contradicting or absent from retrieved documentation chunks (e.g. invalid CORS credential wildcard combinations).
+  - Audits for **ungrounded steps** (steps lacking chunk citations or citing fabricated chunk IDs).
+  - Enforces **refusal correctness** (rejecting ungrounded out-of-scope queries while preventing false refusals on in-corpus queries).
 
 ---
 
@@ -329,23 +335,17 @@ No faithfulness or correctness evaluation has been performed.
 
 1. **Gold Benchmark v2 (Peer Contributors & Sealed Split).** The evaluation benchmark has been expanded from the tiny 23/30-question developer set to 65 questions labeled across 6 peer contributors (Haadi, Rohan, Yeshwanth, swamy, Ravi, Imam) and project author Kumbham Nikhil. The dataset is split into a 40-question dev split and a sealed 25-question test split with question ID hash protection in `test_ids.sha256`.
 
-2. **Full-context baseline is competitive.** The entire corpus (~35k tokens) fits in one
-   LLM call. Full-corpus-in-context produces more ground-truth hits than the retrieval
-   pipeline. The RAG stack is justified only by token cost savings at scale.
+2. **Full-context baseline is competitive.** The entire corpus (~35k tokens) fits in one LLM call. Full-corpus-in-context produces more ground-truth hits than the retrieval pipeline. The RAG stack is justified only by token cost savings at scale.
 
 3. **Uncalibrated refusal gate.** The refusal gate uses a heuristic rule: `(dense_score >= 0.40 AND rerank_score >= 0.5) OR (dense_score >= 0.55)` for Qdrant/hybrid-rerank, and a weaker `dense_score >= 0.40` alone on pgvector. None of these thresholds have been calibrated on a validation set. While the gate catches 8 of 9 (88.9%) out-of-scope dev questions, adjacent topics (e.g. career advice matching roadmap text) can leak through without semantic calibration.
 
-4. **No correctness evaluation.** "Pass rate" checks format, not whether advice is right
-   or supported by the cited chunk. No faithfulness metric exists.
+4. **Judge Calibration Error Margin (16.0% Disagreement).** While the LLM evaluation judge achieves 84.0% agreement ($\kappa = 0.6324$) against 50 hand-graded pairs, 8 of 50 pairs disagree (4 false positives, 4 false negatives). Borderline conceptual questions with partial evidence can receive conflicting ratings between automated heuristics and human grading.
 
-5. **No real users.** Zero students have used this tool. The product thesis (that
-   structured step-by-step plans help students escape tutorial hell) is untested.
+5. **No real users.** Zero students have used this tool. The product thesis (that structured step-by-step plans help students escape tutorial hell) is untested.
 
-6. **Non-reproducible outputs.** Using `-latest` model tags and a multi-model fallback
-   chain means evaluation results vary across runs and API version changes.
+6. **Non-reproducible outputs.** Using `-latest` model tags and a multi-model fallback chain means evaluation results vary across runs and API version changes.
 
-7. **No rate limiting.** `asyncio.Semaphore(5)` limits concurrency, not request rate.
-   There is no per-user or per-IP rate limit, no spend cap, and no authentication.
+7. **No rate limiting.** `asyncio.Semaphore(5)` limits concurrency, not request rate. There is no per-user or per-IP rate limit, no spend cap, and no authentication.
 
 ---
 
@@ -356,6 +356,7 @@ tutorial-hell-navigator/
 ├── app/
 │   ├── main.py            # FastAPI application and route handlers
 │   ├── client.py          # Gemini API client with fallback chain & refusal gate
+│   ├── reviewer.py        # AI Reviewer Agent (auditing hallucinated code & ungrounded steps)
 │   ├── schemas.py         # Pydantic response models
 │   ├── rag.py             # Retrieval: dense, BM25, RRF, hybrid
 │   ├── pgvector_store.py  # PostgreSQL + pgvector storage & HNSW retrieval engine
@@ -371,6 +372,9 @@ tutorial-hell-navigator/
 │   ├── embeddings_cache.json
 │   └── qdrant_db/         # Local Qdrant storage
 ├── eval/
+│   ├── judge.py                         # LLM Evaluation Judge & Inter-rater calibration runner
+│   ├── judge_calibration_data.json      # 50 hand-graded pairs (faithfulness, groundedness, adherence)
+│   ├── judge_calibration_report.json    # Calibration results (84.0% agreement, Cohen's kappa 0.6324)
 │   ├── gold_benchmark_v2.json           # 65 questions across 6 peer contributors and author
 │   ├── gold_benchmark_v2_dev_results.json # Dev split retrieval evaluation results
 │   ├── split_v2.json                    # Dev (40) / test (25) split definitions
@@ -381,8 +385,9 @@ tutorial-hell-navigator/
 │   ├── run_eval.py                      # Evaluation harness (Recall@K, MRR, split protection)
 │   └── *.json                           # Evaluation report artifacts
 ├── scripts/
-│   └── build_gold_benchmark_v2.py       # Benchmark generation and verbatim span validator
-├── tests/                 # pytest suite (unit, RAG, pgvector, UI, schema v2 tests)
+│   ├── build_gold_benchmark_v2.py       # Benchmark generation and verbatim span validator
+│   └── build_judge_calibration_data.py  # Day 44 calibration dataset builder
+├── tests/                 # pytest suite (unit, RAG, pgvector, UI, reviewer, judge tests)
 ├── docs/
 │   ├── scope.md           # Strict Tier 1 scope (FastAPI, Docker, Pydantic, Postgres)
 │   ├── success_metric.md  # Product success definition

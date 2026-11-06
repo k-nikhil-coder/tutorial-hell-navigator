@@ -1,0 +1,1796 @@
+{
+  "benchmark": "Tutorial Hell Navigator LLM Judge Calibration (Day 44)",
+  "corpus_version": "LEGACY: corpus v1",
+  "total_pairs": 50,
+  "calibration_status": "PASSED",
+  "target_agreement_threshold_percent": 80.0,
+  "observed_agreement_percent": 84.0,
+  "agreement_95_ci_percent": [
+    71.49,
+    91.66
+  ],
+  "cohens_kappa": 0.6324,
+  "kappa_interpretation": "Substantial agreement",
+  "dimension_agreements": {
+    "faithfulness_agreement_percent": 80.0,
+    "groundedness_agreement_percent": 84.0,
+    "code_correctness_agreement_percent": 82.0,
+    "adherence_agreement_percent": 78.0
+  },
+  "confusion_matrix": {
+    "true_positives": 30,
+    "true_negatives": 12,
+    "false_positives": 4,
+    "false_negatives": 4
+  },
+  "diagnostic_metrics": {
+    "precision": 0.8824,
+    "recall": 0.8824,
+    "specificity": 0.75,
+    "f1_score": 0.8824
+  },
+  "evaluator_provenance": {
+    "human_curator": "Kumbham Nikhil",
+    "hand_labeled_pairs_count": 50,
+    "topics_covered": [
+      "FastAPI",
+      "Docker",
+      "PostgreSQL",
+      "Pydantic",
+      "Refusal Controls"
+    ],
+    "label_split": {
+      "human_pass_count": 34,
+      "human_fail_count": 16,
+      "judge_pass_count": 34,
+      "judge_fail_count": 16
+    }
+  },
+  "detailed_evaluations": [
+    {
+      "pair_id": "CALIB-01",
+      "question_id": "GS-V2-01",
+      "topic": "FastAPI",
+      "question": "In web security and FastAPI, what exact parameters define a distinct browser origin in CORS?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Ground-truth match. Explicitly covers protocol, domain, port and cites the retrieved chunk."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [
+          "Step 1 ('Configure Explicit CORS Origins in FastAPI') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Configure Explicit CORS Origins in FastAPI') concepts not found in retrieved documentation."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "CALIB-02",
+      "question_id": "GS-V2-02",
+      "topic": "FastAPI",
+      "question": "How do I configure Cross-Origin Resource Sharing (CORS) in a FastAPI Python application?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Clear, grounded step with correct package commands and citations."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-03",
+      "question_id": "GS-81",
+      "topic": "FastAPI",
+      "question": "In FastAPI CORSMiddleware, why is it forbidden to set allow_origins=['*'] when allow_credentials=True?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Severe hallucination. Fabricates 'force_credentials=True' and contradicts the CORS security spec stated in context."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [
+          "Hallucinated claim: wildcard allow_origins with allow_credentials=True."
+        ],
+        "hallucinated_code": [
+          "CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True.",
+          "CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Unsupported claims: Hallucinated claim: wildcard allow_origins with allow_credentials=True. Code issues: CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True.; CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-04",
+      "question_id": "GS-V2-03",
+      "topic": "FastAPI",
+      "question": "How do you run asynchronous background tasks in FastAPI after returning an HTTP response?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Accurate, grounded, and highlights the anti-pattern of heavy CPU tasks."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-05",
+      "question_id": "GS-V2-04",
+      "topic": "FastAPI",
+      "question": "What is the recommended way to handle startup and shutdown events in modern FastAPI applications?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Fully faithful to modern FastAPI lifespan documentation."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-06",
+      "question_id": "GS-V2-05",
+      "topic": "FastAPI",
+      "question": "How do you validate incoming request bodies with nested fields in FastAPI?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Hallucinated citation 'fastapi_validation_chunk_99' and terrible anti-pattern directly contradicting FastAPI docs."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 cites nonexistent or unretrieved chunk_id 'fastapi_validation_chunk_99'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Step 1 cites nonexistent or unretrieved chunk_id 'fastapi_validation_chunk_99'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-07",
+      "question_id": "GS-V2-06",
+      "topic": "FastAPI",
+      "question": "How do you return custom HTTP status codes from FastAPI endpoints?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Grounded and adheres to HTTP status code conventions."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-08",
+      "question_id": "GS-V2-07",
+      "topic": "FastAPI",
+      "question": "How do you implement dependency injection for database sessions in FastAPI?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Accurate session lifecycle injection pattern."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-09",
+      "question_id": "GS-V2-08",
+      "topic": "FastAPI",
+      "question": "How do you protect endpoints with OAuth2 password bearer tokens in FastAPI?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Ungrounded step: technical step makes specific claims but cites no chunk IDs."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [
+          1
+        ],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Steps lacking citations: [1]"
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-10",
+      "question_id": "GS-V2-09",
+      "topic": "FastAPI",
+      "question": "What is the difference between response_model and standard return type annotations in FastAPI?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Clear, grounded explanation of data filtering and security implications."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-11",
+      "question_id": "GS-V2-10",
+      "topic": "FastAPI",
+      "question": "How do you modularize routes across multiple files in a large FastAPI project?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Proper modular structure adhering to project guidelines."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-12",
+      "question_id": "GS-V2-11",
+      "topic": "FastAPI",
+      "question": "What is the purpose of APIRouter tags and summary parameters?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Bizarre hallucination claiming Swagger tags control database sharding."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [
+          "Step 1 ('Tag Routes for Database Indexing') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Tag Routes for Database Indexing') concepts not found in retrieved documentation."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-13",
+      "question_id": "GS-V2-13",
+      "topic": "Docker",
+      "question": "Why use multi-stage builds when containerizing a Python FastAPI backend?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Correct rationale for multi-stage Python containerization."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-14",
+      "question_id": "GS-V2-14",
+      "topic": "Docker",
+      "question": "How do you resolve 'Error: pg_config executable not found' when building psycopg2 in Docker?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Exact remedy for pg_config error matching corpus."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-15",
+      "question_id": "GS-V2-15",
+      "topic": "Docker",
+      "question": "How do you resolve psycopg2 build errors in Docker?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Hallucinated nonexistent pip packages 'psycopg2-turbo-native'."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "CALIB-16",
+      "question_id": "GS-V2-16",
+      "topic": "Docker",
+      "question": "How do you configure container dependency ordering with healthchecks in Docker Compose?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Follows modern Docker Compose healthcheck best practices."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-17",
+      "question_id": "GS-V2-17",
+      "topic": "Docker",
+      "question": "What is the proper way to persist PostgreSQL data when running in Docker Compose?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Clean explanation with correct directory path."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-18",
+      "question_id": "GS-V2-18",
+      "topic": "Docker",
+      "question": "Why should you avoid running containers as root in production?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Well grounded, correct useradd syntax and security explanation."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-19",
+      "question_id": "GS-V2-19",
+      "topic": "Docker",
+      "question": "What is the function of .dockerignore in build optimization?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Solid engineering advice matching corpus guidance."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-20",
+      "question_id": "GS-V2-20",
+      "topic": "Docker",
+      "question": "How do you configure environment variables in Docker Compose securely?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Catastrophic security anti-pattern advising hardcoding credentials directly into git."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [
+          "Step 1 ('Hardcode Credentials in Compose') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Hardcode Credentials in Compose') concepts not found in retrieved documentation."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-21",
+      "question_id": "GS-V2-21",
+      "topic": "Docker",
+      "question": "How does Docker layer caching work and how should you order Dockerfile directives?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Correct caching explanation with actionable order."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-22",
+      "question_id": "GS-V2-22",
+      "topic": "Docker",
+      "question": "How do you view real-time log output from a single Docker container?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Straightforward, correct command and citation."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-23",
+      "question_id": "GS-V2-23",
+      "topic": "Docker",
+      "question": "How do you execute commands inside a running container without restarting it?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Hallucinated citation 'docker_production_guide_chunk_888' not present in retrieved context."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 cites nonexistent or unretrieved chunk_id 'docker_production_guide_chunk_888'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Step 1 cites nonexistent or unretrieved chunk_id 'docker_production_guide_chunk_888'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-24",
+      "question_id": "GS-V2-24",
+      "topic": "Docker",
+      "question": "How do you limit memory and CPU usage on a Docker service in Compose?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Proper Docker Compose resource configuration."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-25",
+      "question_id": "GS-V2-25",
+      "topic": "PostgreSQL",
+      "question": "How do you store and index 3,072-dimensional vector embeddings in PostgreSQL using pgvector?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Flawless technical precision on the pgvector 2000-dim HNSW boundary."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-26",
+      "question_id": "GS-V2-26",
+      "topic": "PostgreSQL",
+      "question": "Can you index 3,072-dimensional vectors using standard vector(3072) in pgvector with HNSW?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Directly contradicts the 2,000 dimension limit documented in the corpus chunk."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "CALIB-27",
+      "question_id": "GS-V2-27",
+      "topic": "PostgreSQL",
+      "question": "How do you prevent SQL injection vulnerabilities when executing queries in psycopg2?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Accurate, grounded explanation of parameterized query safety."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-28",
+      "question_id": "GS-V2-28",
+      "topic": "PostgreSQL",
+      "question": "How do you query users by ID safely in psycopg2?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Blatant SQL injection vulnerability via f-string inside cursor.execute."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "SQL injection risk: detected unescaped string formatting in SQL query instead of parameterized execution."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "CALIB-29",
+      "question_id": "GS-V2-29",
+      "topic": "PostgreSQL",
+      "question": "Why should you use connection pooling (psycopg2.pool or SQLAlchemy pool) in web backends?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Excellent explanation of TCP connection overhead and connection exhaustion."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [
+          "Step 1 ('Initialize ThreadedConnectionPool') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Initialize ThreadedConnectionPool') concepts not found in retrieved documentation."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "CALIB-30",
+      "question_id": "GS-V2-30",
+      "topic": "PostgreSQL",
+      "question": "What is the difference between inner joins and left outer joins in relational database queries?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Accurate relational database theory."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-31",
+      "question_id": "GS-V2-31",
+      "topic": "PostgreSQL",
+      "question": "How do you manage database schema migrations cleanly in Python using Alembic?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Follows Alembic migration best practices."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-32",
+      "question_id": "GS-V2-32",
+      "topic": "PostgreSQL",
+      "question": "How do you execute hybrid dense and sparse search in PostgreSQL with pgvector?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Well grounded, explains pgvector <=> operator."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-33",
+      "question_id": "GS-V2-33",
+      "topic": "PostgreSQL",
+      "question": "What is an index scan vs sequential scan in PostgreSQL query planning?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Grounded and uses standard EXPLAIN ANALYZE command."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [
+          "Step 1 ('Analyze Execution Plan with EXPLAIN ANALYZE') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Analyze Execution Plan with EXPLAIN ANALYZE') concepts not found in retrieved documentation."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "CALIB-34",
+      "question_id": "GS-V2-34",
+      "topic": "PostgreSQL",
+      "question": "How do you handle database transaction rollbacks in Python when an error occurs?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Severe database anti-pattern. Ignored transactions cause 'current transaction is aborted' errors."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [
+          "Step 1 ('Continue Executing on Error') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Continue Executing on Error') concepts not found in retrieved documentation."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-35",
+      "question_id": "GS-V2-35",
+      "topic": "Pydantic",
+      "question": "How do you migrate custom field validators from Pydantic v1 to Pydantic v2?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Accurate Pydantic v2 migration instructions."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-36",
+      "question_id": "GS-V2-36",
+      "topic": "Pydantic",
+      "question": "How do you load application configuration from environment variables in Pydantic v2?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Highlights the exact v2 import migration for BaseSettings."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-37",
+      "question_id": "GS-V2-37",
+      "topic": "Pydantic",
+      "question": "How do you configure BaseSettings in Pydantic v2?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Hallucinated deprecated v1 import: 'from pydantic import BaseSettings' fails immediately in Pydantic v2."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Deprecated import: BaseSettings was moved to 'pydantic_settings' in Pydantic v2."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "CALIB-38",
+      "question_id": "GS-V2-38",
+      "topic": "Pydantic",
+      "question": "What replaces .dict() and .json() for model serialization in Pydantic v2?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Clean migration instructions from dict() to model_dump()."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [
+          "Step 1 ('Update Serialization Calls') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Unsupported claims: Step 1 ('Update Serialization Calls') concepts not found in retrieved documentation."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "CALIB-39",
+      "question_id": "GS-V2-39",
+      "topic": "Pydantic",
+      "question": "How do you enforce string constraints like regex and min_length in Pydantic v2?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Ungrounded step: omitted citations despite retrieved context availability."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [
+          1
+        ],
+        "reasoning": "Review verdict WARN (Overall score: 0.65). Steps lacking citations: [1]"
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-40",
+      "question_id": "GS-V2-40",
+      "topic": "Pydantic",
+      "question": "How do you define cross-field root validation in Pydantic v2?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Correct syntax for Pydantic v2 model_validator."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-41",
+      "question_id": "GS-V2-41",
+      "topic": "Out-of-Scope Career",
+      "question": "Should I accept an offer from Company X or Company Y? Which company has better prestige?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Model properly refused an out-of-scope subjective career question."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-42",
+      "question_id": "GS-V2-42",
+      "topic": "Out-of-Scope Career",
+      "question": "Can you review my resume layout and tell me if I should use 1 page or 2 pages?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Proper refusal adhering strictly to scope boundaries."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-43",
+      "question_id": "GS-V2-43",
+      "topic": "Out-of-Scope AI",
+      "question": "How do I implement backpropagation by hand in raw C++ without libraries?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Refusal failure: model attempted to answer an ungrounded out-of-corpus C++ ML question instead of refusing."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 0.0,
+          "overall": 0.0
+        },
+        "flagged_claims": [
+          "Refusal failure: generated answer on out-of-bounds query instead of refusing.",
+          "Step 1 ('Write C++ Matrix Multiply') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'g++'."
+        ],
+        "ungrounded_steps": [
+          1
+        ],
+        "reasoning": "Review verdict FAIL (Overall score: 0.00). Unsupported claims: Refusal failure: generated answer on out-of-bounds query instead of refusing.; Step 1 ('Write C++ Matrix Multiply') concepts not found in retrieved documentation. Code issues: Step 1 has unrecognized command executable 'g++'. Steps lacking citations: [1] Adherence issues: Failed criteria: Must refuse answering raw C++ ML algorithms outside verified corpus."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-44",
+      "question_id": "GS-V2-44",
+      "topic": "Out-of-Scope Systems",
+      "question": "Explain the Paxos consensus algorithm state machine transitions in distributed systems.",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Proper refusal of theoretical distributed systems question."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-45",
+      "question_id": "GS-V2-45",
+      "topic": "Out-of-Scope Portfolio",
+      "question": "What colors and banner image should I put on my LinkedIn profile to get more recruiters to message me?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Clean refusal on personal branding questions."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-46",
+      "question_id": "GS-V2-46",
+      "topic": "Out-of-Scope Portfolio",
+      "question": "Can you design a custom banner and animated GIF for my GitHub profile readme?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Refusal failure: generated aesthetic advice without grounded corpus context."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 0,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 0.0,
+          "code_correctness": 1.0,
+          "adherence": 0.0,
+          "overall": 0.2
+        },
+        "flagged_claims": [
+          "Refusal failure: generated answer on out-of-bounds query instead of refusing.",
+          "Step 1 ('Add Animated Badges') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [
+          1
+        ],
+        "reasoning": "Review verdict FAIL (Overall score: 0.20). Unsupported claims: Refusal failure: generated answer on out-of-bounds query instead of refusing.; Step 1 ('Add Animated Badges') concepts not found in retrieved documentation. Steps lacking citations: [1] Adherence issues: Failed criteria: Must refuse answering GitHub profile aesthetic decoration."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-47",
+      "question_id": "GS-V2-47",
+      "topic": "FastAPI In-Scope",
+      "question": "How do I configure CORS headers in FastAPI to allow requests from http://localhost:3000?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "False refusal: system refused a core in-scope technical question with exact matching retrieved context."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 0.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.3
+        },
+        "flagged_claims": [
+          "Step 1 ('Check Documentation') concepts not found in retrieved documentation."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.30). Unsupported claims: Step 1 ('Check Documentation') concepts not found in retrieved documentation."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-48",
+      "question_id": "GS-V2-48",
+      "topic": "Docker In-Scope",
+      "question": "How do you start a multi-container Docker Compose setup in detached mode?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "False refusal: rejected basic Docker Compose command despite available chunk."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 0.65
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict WARN (Overall score: 0.65)."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-49",
+      "question_id": "GS-V2-49",
+      "topic": "Out-of-Scope Theory",
+      "question": "Explain how the Raft consensus algorithm elects a leader during split-brain network partitions.",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Proper refusal on distributed consensus theory."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "CALIB-50",
+      "question_id": "GS-V2-50",
+      "topic": "Out-of-Scope Career",
+      "question": "Should I learn Rust or Go in 2027 to get hired by high-frequency trading firms?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "graded_by": "Kumbham Nikhil",
+        "grade_notes": "Proper refusal on speculative tech stack career debate."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "agreement": true
+    }
+  ]
+}

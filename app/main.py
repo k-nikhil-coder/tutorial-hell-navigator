@@ -14,7 +14,10 @@ from app.schemas import (
     HealthStatus,
     FeedbackRequest,
     FeedbackResponse,
+    ReviewRequest,
+    ReviewResult,
 )
+from app.reviewer import audit_response
 from app.client import (
     generate_structured_response_async,
     stream_response_sse,
@@ -84,6 +87,7 @@ def api_root():
             "telemetry": "GET /telemetry/trajectories",
             "feedback": "POST /api/feedback",
             "tools_catalog": "GET /tools/catalog",
+            "review": "POST /api/review",
         },
     }
 
@@ -253,6 +257,24 @@ def retrieve_chunk_details(chunk_id: str):
         "char_count": chunk.get("char_count", len(chunk.get("text", ""))),
         "text": chunk.get("text", ""),
     }
+
+
+@app.post("/api/review", response_model=ReviewResult)
+def review_response_endpoint(request: ReviewRequest) -> ReviewResult:
+    """Audit a generated response for hallucinated code, unsupported claims, and ungrounded steps."""
+    try:
+        return audit_response(
+            query=request.query,
+            response=request.response,
+            retrieved_chunks=request.retrieved_chunks,
+        )
+    except Exception as e:
+        logger.error("Review auditing failed: %s", e, exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Response audit failed: {e}",
+        )
+
 
 
 
