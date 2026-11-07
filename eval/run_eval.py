@@ -923,7 +923,7 @@ def main():
         "--split-set",
         choices=["dev", "test"],
         default=None,
-        help="Evaluate on dev (70%) or test (30%) split from eval/split.json",
+        help="Evaluate on dev (70%%) or test (30%%) split from eval/split.json",
     )
     parser.add_argument("--rewrite", action="store_true", help="(Deprecated, ignored) Query rewriting was removed.")
     parser.add_argument(

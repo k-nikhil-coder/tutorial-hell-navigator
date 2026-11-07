@@ -198,11 +198,11 @@ Detailed historical progression, ablations, baseline comparisons, and failure au
 
 ### Current Benchmark Status (Day 45: 10-File Corpus, 97 Chunks)
 
-| Metric | Target | Current Measured Result | Baseline / Comparison | 95% Confidence Interval / Notes |
+| Metric | Target* | Current Measured Result | Baseline / Comparison | 95% Confidence Interval / Notes |
 | :--- | :---: | :---: | :---: | :--- |
 | **Dev Split Hit@3 (v2 Overall)** | $\ge 80\%$ | **93.55%** (29/31) | 45.16% (14/31, 8-file index) | 95% Wilson CI: [79.28%, 98.21%] |
-| ↳ *Official Docs (n=13)* | — | **84.62%** (11/13) | — | 95% Wilson CI: [57.77%, 95.67%] |
-| ↳ *Owner-Authored Guides (n=18)* | — | **100.0%** (18/18) | — | 95% Wilson CI: [82.41%, 100.0%] |
+| ↳ *Official Docs (n=13)* | — | **84.62%** (11/13) | 100.0% (13/13, 8-file index) | 95% Wilson CI: [57.77%, 95.67%]; 2 questions displaced by new chunks |
+| ↳ *Owner-Authored Guides (n=18)* | — | **100.0%** (18/18) | 5.56% (1/18, 8-file index) | 95% Wilson CI: [82.41%, 100.0%]; resolved 17 missing questions |
 | **Dev Split Evidence Coverage@3** | $\ge 80\%$ | **93.55%** (29/31) | 45.16% (14/31, 8-file index) | 29/31 required evidence items retrieved in top 3 |
 | **Dev Split Hit@5** | — | **100.0%** (31/31) | 45.16% (14/31, 8-file index) | All 31 answerable questions retrieved within top 5 |
 | **Dev Split MRR** | — | **0.8172** | 0.3763 (8-file index) | 95% Bootstrap CI: [0.7124, 0.9167] |
@@ -210,13 +210,15 @@ Detailed historical progression, ablations, baseline comparisons, and failure au
 | **P50 Retrieval Latency** | $< 1,000\text{ ms}$ | **501.5 ms** | 505.7 ms | Hybrid-Rerank (Dense + BM25 + Cross-Encoder) |
 | **Judge Blind Agreement (Day 45)** | $\ge 80\%$ | **46.67%** (14/30) | 84.0% (Day 44 first run) | ❌ **Failed gate:** $\kappa = -0.0667$; 95% CI: [30.2%, 63.9%] |
 
+*\*Targets (Hit@3 $\ge 80\%$, Refusal Rate $\ge 90\%$, Judge Agreement $\ge 80\%$) were established during Phase 1 specification in commits `2830889` (Oct 29, 2026) and `c17ee26` (Nov 5, 2026), prior to evaluating the Day 45 index and calibration sets.*
+
 > [!IMPORTANT]
 > **Resolution of the 45.2% Structural Index Ceiling (Day 45) & Necessary Caveats:**
 > On Day 43, the initial benchmark v2 dev evaluation reported **45.16% Hit@3 (14/31)**, which I previously described as "the retriever got somewhere around half right." That characterization was incorrect: root-cause error analysis revealed the 45.16% score was an **indexing bug**. 17 of the 31 answerable questions referenced evidence from 3 source files (`fastapi_validation.md`, `docker_compose.md`, `postgresql_psycopg2.md`) that had been omitted from the initial 8-file index build. On what was indexed, the retriever had achieved 100% (14/14).
 > On Day 45, I rebuilt the corpus from all 10 Tier-1 source files (97 chunks total, 384 tokens, 60 overlap). An automated test (`eval/check_span_coverage.py`) now asserts that every answerable gold span exists in at least one indexed chunk before evaluation runs (31/31 dev, 14/14 test). Evaluating the dev split on the complete 10-file corpus yielded **93.55% Hit@3 (29/31)** and **0.8172 MRR**.
 > **Caveats on this score:**
 > 1. *Source text near-copies:* Gold questions were formulated from the corpus text itself, so high recall on near-verbatim questions is expected.
-> 2. *Author split imbalance:* The retriever scored 100% (18/18) on owner-authored guides but 84.6% (11/13) on official docs.
+> 2. *Author split imbalance & chunk displacement:* The retriever scored 100% (18/18) on owner-authored guides, but official documentation questions dropped from 13/13 (100%) to 11/13 (84.6%), because newly added chunks from owner guides competed for top-3 retrieval ranks and displaced 2 official questions (`GS-V2-02` on CORS and `GS-V2-07` on BackgroundTasks).
 > 3. *Statistical sample size:* At n=31, one question is 3.2 percentage points, giving a wide 95% Wilson interval [79.3%, 98.2%]. Zero actual students have used the tool.
 > 4. *Sealed test split:* The 25-question test split remains sealed and untouched.
 
@@ -224,9 +226,9 @@ Detailed historical progression, ablations, baseline comparisons, and failure au
 > **Heuristic Judge Diagnostic Breakdown Under Blind Evaluation (Day 45):**
 > On Day 44, the judge scored 84.0% agreement ($\kappa = 0.6324$) on its first run over 50 synthetic pairs, and was subsequently overfitted to 100% via post-hoc rule tuning. To test genuine generalization on Day 45, I generated 30 fresh pairs using live model outputs (15 untouched outputs and 15 single-defect injected outputs spanning families the judge had no rules for), blinded the dataset, hand-graded all 30 pairs before execution, committed the hand grades (`a6645a2`), tagged the repo (`git tag judge-frozen-d45`), and ran the frozen judge once.
 > Observed agreement dropped to **46.67% (14/30)** with $\kappa = -0.0667$ (worse than chance; 95% Wilson CI: [30.2%, 63.9%]). The diagnostic metrics explain the failure:
-> - **Defect Recall: 66.7% (10 of 15 caught).** The judge caught 4/4 defects it had regex rules for (SQL injection, BaseSettings, CORS wildcard with credentials, hallucinated chunk IDs), but missed novel bugs like misspelled CLI flags (`--relod`), wrong default ports, and reversed Docker Compose port mapping syntax.
+> - **Defect Recall: 66.7% (10 of 15 caught).** The judge caught 5/5 defects it had explicit regex rules for, but missed novel bugs like misspelled CLI flags (`--relod`), wrong default ports, and reversed Docker Compose port mapping syntax. The novel defects it flagged were caught due to parser false alarms, not defect comprehension.
 > - **Defect Precision: 47.6% (10 of 21 flagged were real defects).** Over half of the judge's FAIL verdicts were false alarms on clean model outputs.
-> - **Clean Output Specificity: 26.7% (only 4 of 15 clean answers passed).** 11 clean outputs were falsely failed due to a **parser bug**: the command-prefix validator checked only single shell executables and rejected valid multi-line Python snippets (`from fastapi import...`) and Docker Compose YAML blocks (`healthcheck: ...`). It also penalized correct out-of-scope refusals.
+> - **Clean Output Specificity: 26.7% (only 4 of 15 clean answers passed).** 11 clean outputs were falsely failed: 7 due to a command parser bug treating multi-line Python snippets (`from fastapi import...`) and Docker Compose YAML blocks (`healthcheck: ...`) as invalid shell executables, and 4 due to penalizing correct out-of-scope refusals.
 > This demonstrates that the heuristic judge has a parser bug on multi-line code and only catches bugs the author explicitly anticipated. Full data in [`docs/eval_log.md`](docs/eval_log.md).
 
 ---
@@ -235,11 +237,13 @@ Detailed historical progression, ablations, baseline comparisons, and failure au
 
 1. **Gold Benchmark v2 (Peer Contributors & Sealed Split).** The evaluation benchmark has been expanded from the tiny 23/30-question developer set to 65 questions labeled across 6 peer contributors (`contributor_1` through `contributor_6`) and project author Kumbham Nikhil. The dataset is split into a 40-question dev split and a sealed 25-question test split with question ID hash protection in `test_ids.sha256`.
 
-2. **Full-context baseline is competitive (measured on the 8-file index with v1 labels).** The entire corpus (~37k tokens) fits in one LLM call. Full-corpus-in-context produces more ground-truth hits than the retrieval pipeline. The RAG stack is justified only by token cost savings at scale.
+2. **Full-context baseline is competitive (measured on 8-file index with v1 labels; pending v2 dev rerun).** On the initial 30-question benchmark with 8 source files (~33k tokens in prompt), sending the entire corpus in context produced 100% format pass rate and zero hallucinated citations, outperforming retrieval. The RAG architecture is currently justified primarily by token-cost scaling (500 tokens vs 37k tokens per query) and latency, but whether retrieval outperforms full-context on correctness under the v2 10-file benchmark remains an open Phase 1 research question to be settled once LLM-graded correctness runs are completed.
 
 3. **Uncalibrated refusal gate.** The refusal gate uses a heuristic rule: `(dense_score >= 0.40 AND rerank_score >= 0.5) OR (dense_score >= 0.55)` for Qdrant/hybrid-rerank, and a weaker `dense_score >= 0.40` alone on pgvector. None of these thresholds have been calibrated on a validation set. While the gate catches 8 of 9 (88.9%) out-of-scope dev questions, adjacent topics can leak through: on the 10-file index, `GS-V2-50` (vLLM with Ray/tensor parallelism) leaked because re-indexed chunk `fastapi_fullstack_guide_sweep384_chunk_4` scored high enough to clear the threshold, whereas `GS-V2-48` (Feast feature store) was correctly refused.
 
-4. **Offline Reviewer Agent Heuristics vs. Sandboxed Runtime.** The reviewer agent is an offline audit endpoint relying on static regexes, token overlap, and chunk ID verification. It does not execute commands in a sandboxed runtime. While post-hoc rule adjustments on Day 44 scored 100% on the 50 development pairs (first run: 84.0%, $\kappa = 0.6324$), running the frozen judge against 30 unseen live model outputs on Day 45 collapsed observed agreement to **46.7%** ($\kappa = -0.067$, 95% Wilson CI: [30.2%, 63.9%]). The collapse was driven by parser false alarms on multi-line Python/YAML commands (73.3% false alarm rate on clean outputs) and blindness to unmodeled bugs like CLI flag typos and port mistakes (40% miss rate on novel defect families). Adversarial prompts, multi-line snippets, and novel syntax variations easily break static heuristic filters.
+4. **Offline Reviewer Agent Heuristics vs. Sandboxed Runtime.** The reviewer agent is an offline audit endpoint relying on static regexes, token overlap, and chunk ID verification. It does not execute commands in a sandboxed runtime. While post-hoc rule adjustments on Day 44 scored 100% on the 50 development pairs (first run: 84.0%, $\kappa = 0.6324$), running the frozen judge against 30 unseen live model outputs on Day 45 collapsed observed agreement to **46.7%** ($\kappa = -0.067$, 95% Wilson CI: [30.2%, 63.9%]). The collapse was driven by two major failures:
+   - High false alarms on clean outputs (73.3% / 11 of 15 clean outputs failed), caused mostly by a parser bug treating multi-line Python and YAML as shell commands (7 pairs) and penalizing correct out-of-scope refusals (4 pairs).
+   - Blindness to unmodeled bugs: the judge completely missed 4 of the 10 novel injected defects (and 5 of 11 across all unmodeled defects), while the remaining novel defects were only flagged because the parser bug triggered on multi-line syntax—not because the judge understood the defect. Across all 11 unmodeled defect cases, the heuristic judge was functionally no better than chance.
 
 5. **No real users.** Zero students have used this tool. The product thesis (that structured step-by-step plans help students escape tutorial hell) is untested.
 
