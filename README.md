@@ -196,21 +196,24 @@ Returns logged query trajectories for analysis.
 
 Detailed historical progression, ablations, baseline comparisons, and failure audits are documented in [`docs/eval_log.md`](docs/eval_log.md). Below is the current measured state of the system:
 
-### Current Benchmark Status
+### Current Benchmark Status (Day 45: 10-File Corpus, 97 ChUNKS)
 
-| Metric | Target | Current Pipeline | Baseline / Ceiling | Status |
+| Metric | Target | Current Pipeline (10 Files) | Historical 8-File Baseline | Status |
 | :--- | :---: | :---: | :---: | :--- |
-| **Dev Split Hit@3 (v2)** | $\ge 80\%$ | **45.16%** (14/31) | 45.16% structural ceiling | ⚠️ **Corpus gap:** 17 of 31 spans reference unindexed files |
-| **Dev Split Evidence Coverage@3** | $\ge 80\%$ | **45.16%** (14/31) | 45.16% structural ceiling | 100% retrieval on indexable spans (14/14 retrieved) |
-| **Dev Split MRR** | — | **0.3763** | — | Evaluated on Hybrid-Rerank (384-token chunks) |
-| **Out-of-Scope Refusal Rate** | $\ge 90\%$ | **88.9%** (8/9) | 0% (zero-refusal baseline) | 1 technical query (`GS-V2-48`) leaked past gate |
+| **Dev Split Hit@3 (v2 Overall)** | $\ge 80\%$ | **93.55%** (29/31) | 45.16% (14/31, structurally capped) | 95% Wilson CI: [79.28%, 98.21%] |
+| ↳ *Official Docs (n=13)* | - | **84.62%** (11/13) | - | 95% Wilson CI: [57.77%, 95.67%] |
+| ↳ *Owner-Authored (n=18)* | - | **100.0%** (18/18) | - | 95% Wilson CI: [82.41%, 100.0%] |
+| **Dev Split Evidence Coverage@3** | $\ge 80\%$ | **93.55%** (29/31) | 45.16% (14/31) | 29/31 required evidence items retrieved in top 3 |
+| **Dev Split Hit@5** | - | **100.0%** (31/31) | 45.16% (14/31) | All 31 answerable questions retrieved within top 5 |
+| **Dev Split MRR** | — | **0.8172** | 0.3763 | 95% Bootstrap CI: [0.7124, 0.9167] |
+| **Out-of-Scope Refusal Rate** | $\ge 90\%$ | **88.9%** (8/9) | 88.9% (8/9) | 1 technical query (`GS-V2-50`) leaked past gate |
 | **Judge First-Run Agreement** | $\ge 80\%$ | **84.0%** (42/50) | 95% Wilson CI: [71.5%, 91.7%] | Substantial ($\kappa = 0.6324$); lower bound misses 80% gate |
-| **P50 Generation Latency** | $< 3,000\text{ ms}$ | **3,031 ms** | 4,201 ms (full context) | Saves ~18× prompt tokens vs full corpus |
+| **P50 Retrieval Latency** | $< 1,000\text{ ms}$ | **501.5 ms** | 505.7 ms | Hybrid-Rerank (Dense + BM25 + Cross-Encoder) |
 
 > [!IMPORTANT]
-> **Understanding the 45.16% Retrieval Score (Structural Index Ceiling):**
-> The 40-question dev split contains 31 answerable questions. Auditing chunk text reveals that **17 of these 31 questions** reference evidence in 3 source files (`fastapi_validation.md`, `docker_compose.md`, `postgresql_psycopg2.md`) that exist in `corpus/raw/` but were omitted from the current 8-file `chunks_384.json` index.
-> The theoretical maximum retrieval score on this index is therefore **14 of 31 (45.16%)**. The hybrid-rerank pipeline retrieved **14 of 14 indexable questions (100% of available ceiling)** with zero misses on indexed material. Indexing the 3 missing files is required before higher recall can be measured.
+> **Resolution of the 45.2% Structural Index Ceiling (Day 45):**
+> On Day 43, the initial benchmark v2 dev evaluation reported **45.16% Hit@3 (14/31)**. Root-cause error analysis revealed that this score was **structurally capped at 45.2%**: 17 of the 31 answerable questions referenced evidence from 3 source files (`fastapi_validation.md`, `docker_compose.md`, `postgresql_psycopg2.md`) that existed in `corpus/raw/` but had been omitted from the initial 8-file `chunks_384.json` build. On what was indexed, the retriever had achieved 100% (14/14).
+> On Day 45, I rebuilt the corpus from all 10 Tier-1 source files (97 chunks total, 384 tokens, 60 overlap). An automated test (`eval/check_span_coverage.py`) now asserts that every answerable gold span exists in at least one indexed chunk before evaluation runs (31/31 dev, 14/14 test). Evaluating the dev split on the complete 10-file corpus yielded **93.55% Hit@3 (29/31)** and **0.8172 MRR**. The held-out test split (25 questions) remains sealed and untouched.
 
 > [!NOTE]
 > **Heuristic Judge Calibration & Overfitting Disclosure:**

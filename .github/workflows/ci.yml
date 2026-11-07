@@ -30,7 +30,7 @@ jobs:
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'dummy-key-for-unit-tests' }}
       run: |
-        pytest tests/ -v -k "not test_api_streaming_endpoint and not test_api_structured_navigation"
+        pytest tests/ eval/check_span_coverage.py -v -k "not test_api_streaming_endpoint and not test_api_structured_navigation"
 
     - name: Validate Gold Set Benchmark Schema
       run: |

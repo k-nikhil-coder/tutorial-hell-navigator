@@ -96,6 +96,7 @@ class GoldStandardQuestionV2(BaseModel):
     labeled_on: str
     corpus_version: str = "v2"
     split: Literal["dev", "test", "UNSET"] = "UNSET"
+    source_kind: Optional[Literal["official", "owner_authored", "out_of_scope"]] = None
     labeling_status: Literal["CLEAN", "LABELED_AFTER_RESULTS", "BURNED"] = "CLEAN"
     legacy_expected_chunk_ids: Optional[List[str]] = Field(default_factory=list)
 

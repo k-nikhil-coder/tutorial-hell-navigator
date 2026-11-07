@@ -35,7 +35,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-02",
@@ -78,7 +79,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-03",
@@ -116,7 +118,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-04",
@@ -154,7 +157,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-05",
@@ -192,7 +196,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-06",
@@ -230,7 +235,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-07",
@@ -268,7 +274,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-08",
@@ -306,7 +313,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-09",
@@ -344,7 +352,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-10",
@@ -382,7 +391,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-11",
@@ -420,7 +430,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-12",
@@ -458,7 +469,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-13",
@@ -496,7 +508,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-14",
@@ -534,7 +547,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-15",
@@ -572,7 +586,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-16",
@@ -610,7 +625,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-17",
@@ -648,7 +664,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-18",
@@ -686,7 +703,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-19",
@@ -724,7 +742,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-20",
@@ -762,7 +781,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-21",
@@ -800,7 +820,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-22",
@@ -838,7 +859,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-23",
@@ -876,7 +898,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-24",
@@ -914,7 +937,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-25",
@@ -952,7 +976,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-26",
@@ -990,7 +1015,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-27",
@@ -1028,7 +1054,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-28",
@@ -1066,7 +1093,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-29",
@@ -1104,7 +1132,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-30",
@@ -1142,7 +1171,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-31",
@@ -1180,7 +1210,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-32",
@@ -1218,7 +1249,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-33",
@@ -1256,7 +1288,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-34",
@@ -1294,7 +1327,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-35",
@@ -1332,7 +1366,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-36",
@@ -1370,7 +1405,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-37",
@@ -1408,7 +1444,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-38",
@@ -1446,7 +1483,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-39",
@@ -1484,7 +1522,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-40",
@@ -1522,7 +1561,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-41",
@@ -1560,7 +1600,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-42",
@@ -1598,7 +1639,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-43",
@@ -1636,7 +1678,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-44",
@@ -1674,7 +1717,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "official"
   },
   {
     "id": "GS-V2-45",
@@ -1712,7 +1756,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "owner_authored"
   },
   {
     "id": "GS-V2-46",
@@ -1740,7 +1785,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-47",
@@ -1768,7 +1814,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-48",
@@ -1796,7 +1843,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-49",
@@ -1824,7 +1872,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-50",
@@ -1852,7 +1901,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-51",
@@ -1880,7 +1930,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-52",
@@ -1908,7 +1959,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-53",
@@ -1936,7 +1988,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-54",
@@ -1964,7 +2017,8 @@
     "corpus_version": "v2",
     "split": "dev",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-55",
@@ -1992,7 +2046,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-56",
@@ -2020,7 +2075,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-57",
@@ -2048,7 +2104,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-58",
@@ -2076,7 +2133,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-59",
@@ -2104,7 +2162,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-60",
@@ -2132,7 +2191,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-61",
@@ -2160,7 +2220,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-62",
@@ -2188,7 +2249,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-63",
@@ -2216,7 +2278,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-64",
@@ -2244,7 +2307,8 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   },
   {
     "id": "GS-V2-65",
@@ -2272,6 +2336,7 @@
     "corpus_version": "v2",
     "split": "test",
     "labeling_status": "CLEAN",
-    "legacy_expected_chunk_ids": []
+    "legacy_expected_chunk_ids": [],
+    "source_kind": "out_of_scope"
   }
 ]

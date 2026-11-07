@@ -168,3 +168,47 @@ Day 44 calibrated an automated evaluator against human grades on 50 questions ac
 
 6. **Offline Audit Endpoint Scope:**
    `POST /api/review` is an offline auditing endpoint. The runtime `/navigate` endpoint does not execute or block on this reviewer inline.
+
+---
+
+## 8. Day 45: 10-File Corpus Rebuild & Dev Split Evaluation (Ceiling Resolved)
+
+On Day 45, the structural index ceiling discovered on Day 43 was resolved:
+
+1. **Tag & Snapshot:**
+   - Tagged historical 8-file state: `git tag index-8files`.
+   - Archived 8-file dev results in `eval/gold_benchmark_v2_dev_results_8files.json`.
+
+2. **Full Ingestion & Chunking:**
+   - Rebuilt `corpus/processed/chunks_384.json` from all 10 Tier-1 files (`docker_compose.md`, `docker_compose_best_practices.md`, `docker_production_guide.md`, `fastapi_background_tasks.md`, `fastapi_cors.md`, `fastapi_fullstack_guide.md`, `fastapi_validation.md`, `postgresql_psycopg2.md`, `pydantic_models.md`, `pydantic_validation.md`).
+   - Settings strictly unchanged: `RecursiveCharacterTextSplitter.from_tiktoken_encoder("cl100k_base", chunk_size=384, chunk_overlap=60)`.
+   - Result: 97 chunks generated across 10 files (mean char count: ~1,304 chars).
+   - Rebuilt dual dense (3,072 dims via `gemini-embedding-001`) and BM25 sparse indexes in Qdrant (`tutorial_navigator_chunks_sweep` and `tutorial_navigator_chunks`) and pgvector in-memory store.
+
+3. **Pre-Evaluation Span Coverage Assertion (`eval/check_span_coverage.py`):**
+   - Implemented automated pytest checking that every answerable question's verbatim evidence span appears in at least one indexed chunk.
+   - Dev split: 31/31 (100%) covered.
+   - Sealed test split: 14/14 (100%) covered (verified silently, count only, zero question text leaked).
+
+4. **Source Kind Classification:**
+   - Tagged each question with `source_kind: "official" | "owner_authored" | "out_of_scope"` in `eval/gold_benchmark_v2.json`.
+   - Dev split breakdown: 13 official docs, 18 owner-authored guides, 9 out-of-scope controls.
+
+5. **Dev Split Evaluation Results (Hybrid-Rerank, K=3):**
+   - **Overall (n=31):**
+     - Hit@3: **93.55%** (29/31), 95% Wilson CI: **[79.28%, 98.21%]**
+     - Evidence Coverage@3: **93.55%** (29/31)
+     - Hit@5: **100.0%** (31/31)
+     - MRR: **0.8172** (95% Bootstrap CI: **[0.7124, 0.9167]**)
+     - Out-of-Scope Refusal Rate: **88.89%** (8/9)
+   - **By Source Kind:**
+     - *Official Docs (n=13):* Hit@3 = **84.62%** (11/13), 95% Wilson CI: **[57.77%, 95.67%]**, MRR = **0.7051** (95% CI: [0.5256, 0.8718])
+     - *Owner-Authored Guides (n=18):* Hit@3 = **100.0%** (18/18), 95% Wilson CI: **[82.41%, 100.0%]**, MRR = **0.8981** (95% CI: [0.7778, 1.0])
+   - **Error Analysis of the 2 Misses:**
+     - `GS-V2-02` (FastAPI CORS allowed origins): retrieved at Rank #4 (RR = 0.25).
+     - `GS-V2-07` (FastAPI background tasks dependency injection): retrieved at Rank #4 (RR = 0.25).
+     - Both questions hit within top 5, yielding 100% Hit@5.
+
+6. **Protocol Discipline:**
+   - No retrieval thresholds, reranker models, or chunking parameters were modified.
+   - The sealed test split (25 questions) was not executed.

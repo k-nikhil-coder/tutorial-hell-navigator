@@ -1,23 +1,19 @@
 [
   {
-    "chunk_id": "cs_engineering_roadmap_sweep384_chunk_0",
-    "source_file": "cs_engineering_roadmap.pdf",
+    "chunk_id": "docker_compose_sweep384_chunk_0",
+    "source_file": "docker_compose.md",
     "chunk_index": 0,
-    "text": "CS Engineering Roadmap: Escaping Tutorial Hell & Independent Building\n1. The Pathology of Tutorial Hell\nTutorial hell is the state where a student can follow a 10-hour coding video line-by-line,\nbut freezes when faced with a blank editor. The root cause is the absence of active problem\ndecomposition. Following someone else's thinking creates the illusion of competence without\nthe struggle of architectural synthesis.\n2. Breaking Projects into 14-Day Scoped Milestones\nTo build an independent project (such as a Student Task Manager with authentication,\nPostgreSQL, and reminders), decompose the work into sequential non-negotiable phases:\n- Day 1-2: Architecture RFC & Database Schemas (Users, Tasks, Reminders, Foreign Keys)\n- Day 3-5: Async Backend Core (FastAPI CRUD, Status Codes, Dependency Injection)\n- Day 6-8: Authentication & Security (Password Hashing with Bcrypt, JWT Tokens)\n- Day 9-11: Frontend Shell & API Integration (React, TailwindCSS, State Management)\n- Day 12-13: Testing & Edge Cases (Pytest, HTTPX Async Client, Error Handling)\n- Day 14: Containerization & Cloud Deployment (Docker, Docker Compose, Supabase/Neon)\n3. What to Learn First vs What to Postpone\nWhen overwhelmed by React, TypeScript, APIs, SQL, Git, Docker, and Cloud platforms:\n- Learn Immediately: Git version control, REST API fundamentals, relational SQL, and FastAPI.\n- Postpone to Later: Kubernetes, distributed caching with Redis, microservices, and complex cloud IAM.",
-    "char_count": 1462,
-    "mapped_512_chunk_ids": [
-      "cs_engineering_roadmap_chunk_0"
-    ]
+    "text": "# Docker and Docker Compose\n\n## Volumes vs COPY in Multi-stage Builds\n\nFiles copied into an image during `docker build` (via `COPY` or `ADD`) are present in the image layers. When a container is started with a volume mount that targets the same path, the volume content **replaces** the image content at that path.\n\nExample:\n\n```dockerfile\n# Dockerfile\nFROM python:3.12-slim AS builder\nWORKDIR /app\nCOPY . .\nRUN pip install -r requirements.txt\n\nFROM python:3.12-slim\nWORKDIR /app\nCOPY --from=builder /app /app\n```\n\n```yaml\n# docker-compose.yml\nservices:\n  app:\n    build: .\n    volumes:\n      - ./:/app          # this overwrites everything that was COPYed\n```\n\nThe `vendor/` or `node_modules/` directory that existed after the build is hidden by the bind mount. Solutions:\n\n1. Do not mount over the path that contains build artifacts in production.\n2. Use a named volume only for data that must persist (database, uploads).\n3. Mount a sub-directory instead of the whole application root.\n\n## depends_on and Service Readiness\n\n`depends_on` only guarantees that the dependent container has *started*. It does **not** wait for the application inside the container to be ready to accept connections.\n\n```yaml\nservices:\n  db:\n    image: postgres:16\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      timeout: 5s\n      retries: 5\n\n  app:\n    build: .\n    depends_on:\n      db:\n        condition: service_healthy\n```",
+    "char_count": 1453,
+    "mapped_512_chunk_ids": []
   },
   {
-    "chunk_id": "cs_engineering_roadmap_sweep384_chunk_1",
-    "source_file": "cs_engineering_roadmap.pdf",
+    "chunk_id": "docker_compose_sweep384_chunk_1",
+    "source_file": "docker_compose.md",
     "chunk_index": 1,
-    "text": "Production Debugging Methodology for Software Engineers\n1. The 4-Step Failure Tree Isolation\nWhen an application crashes or returns unexpected HTTP 500 errors:\n- Step 1: Read the Root Cause in the Stack Trace. Start from the bottom of the trace,\n  not the top. Identify the exact line of user code where the exception occurred.\n- Step 2: Reproduce with a Minimal Script. Disconnect the frontend and UI. Use curl\n  or Python httpx to send the exact payload directly to the endpoint.\n- Step 3: Inspect Network & Data Boundaries. Verify that database migrations have\n  executed and that environment variables are non-empty.\n- Step 4: Add Regression Tests. Before closing the issue, write an automated test in\n  pytest that replicates the failure condition.\n2. Core CS Fundamentals: OS, DBMS & Networking\n- OS Fundamentals: Understand processes vs threads, file descriptors, and non-blocking I/O loops.\n- DBMS Fundamentals: Master ACID transactions, B-Tree indexing, foreign key integrity, and isolation levels.\n- Networking Fundamentals: Understand the TCP three-way handshake, DNS resolution, HTTP/1.1 vs HTTP/2,\n  and TLS handshake encryption.",
-    "char_count": 1142,
-    "mapped_512_chunk_ids": [
-      "cs_engineering_roadmap_chunk_1"
-    ]
+    "text": "app:\n    build: .\n    depends_on:\n      db:\n        condition: service_healthy\n```\n\nWithout a healthcheck the app often receives \"connection refused\" because Postgres is still initializing.\n\n## Build-time Dependencies\n\nDocker Compose has no built-in way to start services *during* an image build. `depends_on` is a runtime directive only.\n\nCommon work-arounds:\n\n- Split the workflow into a Makefile or shell script that starts the required services first, then runs `docker compose build`.\n- Use a multi-stage build that does not need a live service (copy static data into the image).\n- Generate API clients or static sites at container *start* time rather than build time.\n\n## Multi-stage Builds for Smaller Images\n\nCompilers and development headers (gcc, libpq-dev, python3-dev) should live only in a builder stage:\n\n```dockerfile\nFROM python:3.12-slim AS builder\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    gcc libpq-dev \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY requirements.txt .\nRUN pip install --user -r requirements.txt\n\nFROM python:3.12-slim\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    libpq5 \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\nCOPY . .\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\"]\n```\n\nThe final image contains only the runtime shared library `libpq5`, not the compiler toolchain.",
+    "char_count": 1428,
+    "mapped_512_chunk_ids": []
   },
   {
     "chunk_id": "docker_compose_best_practices_sweep384_chunk_0",
@@ -256,6 +252,46 @@
     "mapped_512_chunk_ids": [
       "fastapi_fullstack_guide_chunk_3"
     ]
+  },
+  {
+    "chunk_id": "fastapi_validation_sweep384_chunk_0",
+    "source_file": "fastapi_validation.md",
+    "chunk_index": 0,
+    "text": "# FastAPI Validation and Error Handling\n\n## Request Validation Errors\n\nFastAPI uses Pydantic models to validate request data. When validation fails, FastAPI automatically returns a 422 Unprocessable Entity response.\n\nThe default response body looks like:\n\n```json\n{\n  \"detail\": [\n    {\n      \"type\": \"missing\",\n      \"loc\": [\"body\", \"password\"],\n      \"msg\": \"Field required\",\n      \"input\": null\n    }\n  ]\n}\n```\n\n### Custom Exception Handler for RequestValidationError\n\nYou can override the default behavior by registering a custom exception handler:\n\n```python\nfrom fastapi import FastAPI, Request, status\nfrom fastapi.exceptions import RequestValidationError\nfrom fastapi.responses import JSONResponse\n\napp = FastAPI()\n\n@app.exception_handler(RequestValidationError)\nasync def validation_exception_handler(request: Request, exc: RequestValidationError):\n    errors = exc.errors()\n    # Optionally clean ctx that may contain non-serializable objects\n    for err in errors:\n        if \"ctx\" in err and err[\"ctx\"]:\n            err[\"ctx\"] = {\n                k: str(v) if isinstance(v, Exception) else v\n                for k, v in err[\"ctx\"].items()\n            }\n    # The original body is available as exc.body\n    body = exc.body\n    return JSONResponse(\n        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,\n        content={\"detail\": errors, \"body\": body},\n    )\n```\n\nNote: `await request.body()` can only be called once. Prefer `exc.body` when available.\n\n## Pydantic v2 Field Validators\n\nIn Pydantic v2 the `@validator` decorator was replaced by `@field_validator`.\n\n```python\nfrom pydantic import BaseModel, field_validator, ValidationInfo",
+    "char_count": 1651,
+    "mapped_512_chunk_ids": []
+  },
+  {
+    "chunk_id": "fastapi_validation_sweep384_chunk_1",
+    "source_file": "fastapi_validation.md",
+    "chunk_index": 1,
+    "text": "## Pydantic v2 Field Validators\n\nIn Pydantic v2 the `@validator` decorator was replaced by `@field_validator`.\n\n```python\nfrom pydantic import BaseModel, field_validator, ValidationInfo\n\nclass ManagerSchema(BaseModel):\n    operation_type: str\n    background_hex_color: str | None = None\n\n    @field_validator(\"background_hex_color\", mode=\"before\")\n    @classmethod\n    def validate_background_hex_color(cls, value, info: ValidationInfo):\n        operation_type = info.data.get(\"operation_type\")\n        if operation_type == \"UPDATE_BACKGROUND_COLOR\" and not value:\n            raise ValueError(\"background_hex_color is required for UPDATE_BACKGROUND_COLOR\")\n        return value\n```\n\nImportant: when a field has a default of `None`, a `mode=\"before\"` validator still receives the value (including the default) only if the field is present in the input data or you use a model-level validator.\n\n## Discriminated Unions\n\nWhen you have a large Union of schemas, validation errors become extremely verbose because Pydantic tries every member. Use a discriminator:\n\n```python\nfrom typing import Annotated, Literal, Union\nfrom pydantic import BaseModel, Field\n\nclass SchemaA(BaseModel):\n    type: Literal[\"A\"]\n    value_a: int\n\nclass SchemaB(BaseModel):\n    type: Literal[\"B\"]\n    value_b: str\n\nMasterRequest = Annotated[\n    Union[SchemaA, SchemaB],\n    Field(discriminator=\"type\")\n]\n```\n\nWith a discriminator FastAPI returns a short, targeted error instead of enumerating every possible schema.\n\n## Raising Validation Errors from Custom Validators",
+    "char_count": 1543,
+    "mapped_512_chunk_ids": []
+  },
+  {
+    "chunk_id": "fastapi_validation_sweep384_chunk_2",
+    "source_file": "fastapi_validation.md",
+    "chunk_index": 2,
+    "text": "MasterRequest = Annotated[\n    Union[SchemaA, SchemaB],\n    Field(discriminator=\"type\")\n]\n```\n\nWith a discriminator FastAPI returns a short, targeted error instead of enumerating every possible schema.\n\n## Raising Validation Errors from Custom Validators\n\nIf a `@field_validator` or `@model_validator` raises `ValueError`, Pydantic converts it into a `ValidationError`. FastAPI turns any `ValidationError` into an HTTP 422 response automatically. You do not need to raise `HTTPException` inside validators for ordinary validation failures.\n\n```python\nfrom pydantic import BaseModel, model_validator, ValidationError\n\nclass BookUpdate(BaseModel):\n    title: str | None = None\n    author: str | None = None\n\n    @model_validator(mode=\"after\")\n    def validate_pairs(self):\n        errors = []\n        if self.title and not self.author:\n            errors.append({\n                \"type\": \"value_error\",\n                \"loc\": (\"author\",),\n                \"msg\": \"author is required when title is provided\",\n                \"input\": self.author,\n            })\n        if errors:\n            raise ValidationError.from_exception_data(\"ModelValidationError\", errors)\n        return self\n```\n\nUsing a single `model_validator` lets you collect multiple errors at once instead of short-circuiting after the first field_validator failure.",
+    "char_count": 1330,
+    "mapped_512_chunk_ids": []
+  },
+  {
+    "chunk_id": "postgresql_psycopg2_sweep384_chunk_0",
+    "source_file": "postgresql_psycopg2.md",
+    "chunk_index": 0,
+    "text": "# PostgreSQL and psycopg2\n\n## Transactions and Atomic Multi-table Inserts\n\nTo insert a parent row and its child rows atomically with psycopg2:\n\n```python\nimport psycopg2\n\nconn = psycopg2.connect(DSN)\ntry:\n    with conn:                     # begins a transaction\n        with conn.cursor() as cur:\n            cur.execute(\n                \"INSERT INTO listing (title) VALUES (%s) RETURNING listing_sk\",\n                (title,)\n            )\n            listing_id = cur.fetchone()[0]\n            for rate in shipping_rates:\n                cur.execute(\n                    \"INSERT INTO shipping_rate (listing_sk, amount) VALUES (%s, %s)\",\n                    (listing_id, rate)\n                )\n    # commit happens automatically on successful exit of the with block\nexcept Exception:\n    # rollback happens automatically\n    raise\nfinally:\n    conn.close()\n```\n\nKey points:\n\n- Exiting a connection's `with` block commits if no exception occurred, otherwise rolls back.\n- The connection itself is **not** closed by the context manager; you must call `conn.close()` yourself.\n- Each nested `with conn:` starts a new transaction.\n\nAlternative using `lastval()` / `currval()`:\n\n```sql\nINSERT INTO listing (title) VALUES (%s);\nINSERT INTO shipping_rate (listing_sk, amount)\nVALUES (currval(pg_get_serial_sequence('listing', 'listing_sk')), %s);\n```\n\n## InFailedSqlTransaction\n\nAfter any error inside a transaction, PostgreSQL aborts the whole transaction. Subsequent commands on the same connection raise:\n\n```\npsycopg2.errors.InFailedSqlTransaction:\ncurrent transaction is aborted, commands ignored until end of transaction block\n```\n\nRecovery:\n\n```python\nconn.rollback()   # or let a context manager do it\n# now you can start a new transaction\n```",
+    "char_count": 1747,
+    "mapped_512_chunk_ids": []
+  },
+  {
+    "chunk_id": "postgresql_psycopg2_sweep384_chunk_1",
+    "source_file": "postgresql_psycopg2.md",
+    "chunk_index": 1,
+    "text": "```\npsycopg2.errors.InFailedSqlTransaction:\ncurrent transaction is aborted, commands ignored until end of transaction block\n```\n\nRecovery:\n\n```python\nconn.rollback()   # or let a context manager do it\n# now you can start a new transaction\n```\n\nAlways prefer context managers so that rollbacks happen automatically.\n\n## Parameterized Queries and IN Lists\n\nNever interpolate values with string formatting. Use placeholders:\n\n```python\ncur.execute(\"SELECT * FROM users WHERE id = %s\", (user_id,))\n```\n\nFor an `IN` list of variable length:\n\n```python\nids = [1, 2, 3, 4]\ncur.execute(\n    \"SELECT * FROM users WHERE id = ANY(%s)\",\n    (ids,)          # pass the list as a single parameter\n)\n# or\nplaceholders = ','.join(['%s'] * len(ids))\ncur.execute(\n    f\"SELECT * FROM users WHERE id IN ({placeholders})\",\n    ids\n)\n```\n\n## Connection Pooling Notes\n\nUnder load, opening a new TCP connection for every request is expensive. Use a pool (psycopg2.pool or an external pooler such as PgBouncer). Typical settings to inspect first when seeing timeouts:\n\n- `maxconn` / pool size\n- statement timeouts\n- idle connection lifetime",
+    "char_count": 1116,
+    "mapped_512_chunk_ids": []
   },
   {
     "chunk_id": "pydantic_models_sweep384_chunk_0",
