@@ -1,0 +1,1101 @@
+{
+  "benchmark": "Tutorial Hell Navigator LLM Judge Calibration (Day 44)",
+  "corpus_version": "LEGACY: corpus v1",
+  "total_pairs": 30,
+  "calibration_status": "FAILED",
+  "target_agreement_threshold_percent": 80.0,
+  "observed_agreement_percent": 46.67,
+  "agreement_95_ci_percent": [
+    30.23,
+    63.86
+  ],
+  "cohens_kappa": -0.0667,
+  "kappa_interpretation": "Poor (Less than chance agreement)",
+  "dimension_agreements": {
+    "faithfulness_agreement_percent": 60.0,
+    "groundedness_agreement_percent": 80.0,
+    "code_correctness_agreement_percent": 30.0,
+    "adherence_agreement_percent": 50.0
+  },
+  "confusion_matrix": {
+    "true_positives": 3,
+    "true_negatives": 11,
+    "false_positives": 4,
+    "false_negatives": 12
+  },
+  "diagnostic_metrics": {
+    "precision": 0.4286,
+    "recall": 0.2,
+    "specificity": 0.7333,
+    "f1_score": 0.2727
+  },
+  "evaluator_provenance": {
+    "human_curator": "Kumbham Nikhil",
+    "hand_labeled_pairs_count": 50,
+    "topics_covered": [
+      "FastAPI",
+      "Docker",
+      "PostgreSQL",
+      "Pydantic",
+      "Refusal Controls"
+    ],
+    "label_split": {
+      "human_pass_count": 15,
+      "human_fail_count": 15,
+      "judge_pass_count": 7,
+      "judge_fail_count": 23
+    }
+  },
+  "detailed_evaluations": [
+    {
+      "pair_id": "D45-01",
+      "question_id": "GS-V2-19",
+      "topic": "Docker",
+      "question": "How does Docker Compose optimize restart latency when services have not changed between commands?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Groundedness failure: Cites completely irrelevant chunk 'fastapi_cors_sweep384_chunk_3' for a Docker Compose restart latency query."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Response cites nonexistent or unretrieved chunk_id 'fastapi_cors_sweep384_chunk_3'.",
+          "Step 1 cites nonexistent or unretrieved chunk_id 'fastapi_cors_sweep384_chunk_3'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Response cites nonexistent or unretrieved chunk_id 'fastapi_cors_sweep384_chunk_3'.; Step 1 cites nonexistent or unretrieved chunk_id 'fastapi_cors_sweep384_chunk_3'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-02",
+      "question_id": "GS-V2-25",
+      "topic": "PostgreSQL",
+      "question": "How does exiting a psycopg2 connection context manager block (with conn:) manage SQL transaction state?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Faithfulness/Code failure: States PostgreSQL listens by default on port 3306 (MySQL default port) instead of 5432."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'import'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'import'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-03",
+      "question_id": "GS-V2-47",
+      "topic": "AI/ML",
+      "question": "What hyperparameters should I set for LoRA rank and alpha when fine-tuning Llama-3-8B on an instruction dataset?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Correct refusal of out-of-scope query (LoRA hyperparameters) with appropriate advisory reference."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.1
+        },
+        "flagged_claims": [
+          "False refusal: system refused despite relevant technical context being retrieved."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.10). Unsupported claims: False refusal: system refused despite relevant technical context being retrieved."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-04",
+      "question_id": "GS-V2-08",
+      "topic": "FastAPI",
+      "question": "Can BackgroundTasks parameters be declared inside FastAPI dependency functions via Depends?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Accurate and grounded explanation of declaring BackgroundTasks in FastAPI dependencies via Depends."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'from'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'from'."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-05",
+      "question_id": "GS-V2-17",
+      "topic": "Docker",
+      "question": "Where should native C build tools like gcc and libpq-dev reside in a production multi-stage Dockerfile?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Accurate production multi-stage Docker build separating gcc/libpq-dev in builder and libpq5 in runner."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-06",
+      "question_id": "GS-V2-06",
+      "topic": "FastAPI",
+      "question": "What is the primary design purpose of BackgroundTasks in FastAPI for request handling?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Accurate description of BackgroundTasks for non-blocking post-response operations."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'from'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'from'."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-07",
+      "question_id": "GS-V2-07",
+      "topic": "FastAPI",
+      "question": "Which method is called on a BackgroundTasks instance to schedule a function execution in FastAPI?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Accurate method invocation of background_tasks.add_task in path operation."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'from'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'from'."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-08",
+      "question_id": "GS-V2-05",
+      "topic": "FastAPI",
+      "question": "Where does FastAPI's CORSMiddleware implementation originate under the hood if I want to import it directly?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Security anti-pattern: Configures wildcard allow_origins=['*'] alongside allow_credentials=True, violating CORS specification."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [
+          "Hallucinated claim: wildcard allow_origins with allow_credentials=True."
+        ],
+        "hallucinated_code": [
+          "CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True.",
+          "Step 1 has unrecognized command executable 'app.add_middleware(corsmiddleware,'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Unsupported claims: Hallucinated claim: wildcard allow_origins with allow_credentials=True. Code issues: CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True.; Step 1 has unrecognized command executable 'app.add_middleware(corsmiddleware,'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-09",
+      "question_id": "GS-V2-30",
+      "topic": "PostgreSQL",
+      "question": "How can a Python list of variable length be passed into a SQL query in psycopg2 using the ANY construct?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Faithful guidance on diagnosing psycopg2 connection pool exhaustion and leaks."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'ids'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'ids'."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-10",
+      "question_id": "GS-V2-02",
+      "topic": "FastAPI",
+      "question": "How do I configure Cross-Origin Resource Sharing (CORS) in a FastAPI Python application?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Faithfulness failure: Claims FastAPI request validation errors return HTTP 200 OK with body instead of HTTP 422 Unprocessable Entity."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [
+          "Hallucinated claim: wildcard allow_origins with allow_credentials=True."
+        ],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'from'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Unsupported claims: Hallucinated claim: wildcard allow_origins with allow_credentials=True. Code issues: Step 1 has unrecognized command executable 'from'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-11",
+      "question_id": "GS-V2-29",
+      "topic": "PostgreSQL",
+      "question": "Why should developers never format SQL query strings using Python f-strings or string interpolation?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Faithfulness failure: Claims FastAPI/uvicorn runs by default on port 5000 (Flask default) instead of 8000."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'cur.execute(\"select'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'cur.execute(\"select'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-12",
+      "question_id": "GS-V2-28",
+      "topic": "PostgreSQL",
+      "question": "How do you recover a psycopg2 connection after encountering an InFailedSqlTransaction exception?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Security vulnerability: Employs vulnerable Python f-string interpolation in SQL cursor.execute instead of parameterized %s query."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-13",
+      "question_id": "GS-V2-37",
+      "topic": "Pydantic",
+      "question": "Why should developers use discriminated unions when working with large Union schemas in FastAPI and Pydantic?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Execution failure: Missing mandatory prerequisite step ('pip install psycopg2-binary'), running python script directly crashes."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Response cites nonexistent or unretrieved chunk_id 'docker_compose_best_practices_sweep384_chunk_0'.",
+          "Step 1 cites nonexistent or unretrieved chunk_id 'docker_compose_best_practices_sweep384_chunk_0'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Response cites nonexistent or unretrieved chunk_id 'docker_compose_best_practices_sweep384_chunk_0'.; Step 1 cites nonexistent or unretrieved chunk_id 'docker_compose_best_practices_sweep384_chunk_0'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-14",
+      "question_id": "GS-V2-16",
+      "topic": "Docker",
+      "question": "Can Docker Compose execute docker compose build while simultaneously running another container service as a build dependency?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Faithfulness contradiction: Falsely claims different ports on localhost share the same origin under CORS, contradicting the cited documentation."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'make'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'make'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-15",
+      "question_id": "GS-V2-49",
+      "topic": "AI/ML",
+      "question": "What is the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Proper refusal of out-of-scope Triton inference server model repository query."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.1
+        },
+        "flagged_claims": [
+          "False refusal: system refused despite relevant technical context being retrieved."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.10). Unsupported claims: False refusal: system refused despite relevant technical context being retrieved."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-16",
+      "question_id": "GS-V2-26",
+      "topic": "PostgreSQL",
+      "question": "Does exiting a with conn: context manager in psycopg2 close the underlying TCP database connection?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Faithful guidance on configuring psycopg2 connection autocommit mode for DDL statements."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-17",
+      "question_id": "GS-V2-27",
+      "topic": "PostgreSQL",
+      "question": "What database condition triggers the psycopg2.errors.InFailedSqlTransaction error during query execution?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Syntax error in CLI command: Uses misspelled flag '--detatch' instead of '--detach' or '-d'."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "SQL injection risk: detected unescaped string formatting in SQL query instead of parameterized execution.",
+          "Step 1 has unrecognized command executable 'cursor.execute(f\"select'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: SQL injection risk: detected unescaped string formatting in SQL query instead of parameterized execution.; Step 1 has unrecognized command executable 'cursor.execute(f\"select'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-18",
+      "question_id": "GS-V2-38",
+      "topic": "Pydantic",
+      "question": "What does Pydantic do when a custom @field_validator raises a standard Python ValueError?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Correct technical explanation that psycopg2 autocommit must be enabled outside an active transaction block."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Deprecated import: BaseSettings was moved to 'pydantic_settings' in Pydantic v2."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Deprecated import: BaseSettings was moved to 'pydantic_settings' in Pydantic v2."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-19",
+      "question_id": "GS-V2-04",
+      "topic": "FastAPI",
+      "question": "How does FastAPI CORSMiddleware process preflight HTTP OPTIONS requests from web browsers?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Code correctness failure: Uses deprecated Pydantic v1 import 'from pydantic import BaseSettings' which fails in Pydantic v2."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-20",
+      "question_id": "GS-V2-36",
+      "topic": "Pydantic",
+      "question": "In Pydantic v2, which decorator replaces the legacy @validator decorator for validating model fields?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Groundedness failure: Cites irrelevant chunk 'docker_compose_best_practices_sweep384_chunk_0' for Pydantic field validation."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-21",
+      "question_id": "GS-V2-48",
+      "topic": "AI/ML",
+      "question": "How do I build an automated feature store with Feast and integrate data drift detection with Evidently AI in production?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Refusal gate leakage: Answered out-of-scope query (Feast feature store) with hallucinated diffusion training advice without refusing."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Response cites nonexistent or unretrieved chunk_id 'pytorch_diffusion_sweep384_chunk_0'.",
+          "Step 1 cites nonexistent or unretrieved chunk_id 'pytorch_diffusion_sweep384_chunk_0'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Code issues: Response cites nonexistent or unretrieved chunk_id 'pytorch_diffusion_sweep384_chunk_0'.; Step 1 cites nonexistent or unretrieved chunk_id 'pytorch_diffusion_sweep384_chunk_0'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-22",
+      "question_id": "GS-V2-46",
+      "topic": "AI/ML",
+      "question": "How do I implement custom backpropagation and calculate gradient clipping thresholds in PyTorch for an LSTM model?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Proper refusal of out-of-scope PyTorch custom backpropagation query."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.1
+        },
+        "flagged_claims": [
+          "False refusal: system refused despite relevant technical context being retrieved."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.10). Unsupported claims: False refusal: system refused despite relevant technical context being retrieved."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-23",
+      "question_id": "GS-V2-01",
+      "topic": "FastAPI",
+      "question": "In web security and FastAPI, what exact parameters define a distinct browser origin in CORS?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Syntax error in CLI command: Contains misspelled flag '--relod' instead of '--reload'."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-24",
+      "question_id": "GS-V2-15",
+      "topic": "Docker",
+      "question": "What runtime error occurs if an API service starts before PostgreSQL completes its initialization in Docker Compose?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Accurate Docker Compose configuration resolving database startup race conditions using healthcheck and depends_on condition."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'healthcheck:'.",
+          "Step 2 has unrecognized command executable 'depends_on:'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'healthcheck:'.; Step 2 has unrecognized command executable 'depends_on:'."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-25",
+      "question_id": "GS-V2-14",
+      "topic": "Docker",
+      "question": "Does depends_on in Docker Compose pause container startup until the database process is ready to receive SQL queries?",
+      "human_grade": {
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Faithfulness failure: Reverses Docker Compose ports mapping syntax by claiming it is CONTAINER:HOST instead of HOST:CONTAINER."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'services:'.",
+          "Step 2 has unrecognized command executable 'services:'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 1 has unrecognized command executable 'services:'.; Step 2 has unrecognized command executable 'services:'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-26",
+      "question_id": "GS-V2-03",
+      "topic": "FastAPI",
+      "question": "Why does my browser reject responses when I set allow_origins=['*'] alongside allow_credentials=True in FastAPI?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Faithful explanation and remediation of browser rejection for CORS wildcard origins with credentials."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.45
+        },
+        "flagged_claims": [
+          "Hallucinated claim: wildcard allow_origins with allow_credentials=True."
+        ],
+        "hallucinated_code": [
+          "Step 1 has unrecognized command executable 'app.add_middleware(corsmiddleware,'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.45). Unsupported claims: Hallucinated claim: wildcard allow_origins with allow_credentials=True. Code issues: Step 1 has unrecognized command executable 'app.add_middleware(corsmiddleware,'."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-27",
+      "question_id": "GS-V2-50",
+      "topic": "AI/ML",
+      "question": "How do I configure vLLM with PagedAttention and tensor parallelism across four NVIDIA A100 GPUs for low-latency serving?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Proper refusal of out-of-scope query (vLLM tensor parallelism) with appropriate advice."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 0,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 0.0,
+          "groundedness": 0.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.1
+        },
+        "flagged_claims": [
+          "False refusal: system refused despite relevant technical context being retrieved."
+        ],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.10). Unsupported claims: False refusal: system refused despite relevant technical context being retrieved."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-28",
+      "question_id": "GS-V2-20",
+      "topic": "Docker",
+      "question": "Why is Docker Compose widely used in CI/CD pipelines for automated testing environments?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Faithful and actionable guidance on running ephemeral Docker Compose stacks in CI/CD automated test pipelines."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.8
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Step 2 has unrecognized command executable 'run_tests'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.80). Code issues: Step 2 has unrecognized command executable 'run_tests'."
+      },
+      "agreement": false
+    },
+    {
+      "pair_id": "D45-29",
+      "question_id": "GS-V2-18",
+      "topic": "Docker",
+      "question": "What is the central operational benefit of defining services within a Docker Compose YAML file?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 1,
+        "adherence": 0,
+        "verdict": "FAIL",
+        "notes": "Groundedness failure: Cites hallucinated, non-existent chunk ID 'docker_turbo_volume_chunk_99'."
+      },
+      "judge_grade": {
+        "verdict": "FAIL",
+        "faithfulness": 1,
+        "groundedness": 0,
+        "code_correctness": 0,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 0.5,
+          "code_correctness": 0.0,
+          "adherence": 1.0,
+          "overall": 0.625
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [
+          "Response cites nonexistent or unretrieved chunk_id 'docker_turbo_volume_chunk_99'.",
+          "Step 1 cites nonexistent or unretrieved chunk_id 'docker_turbo_volume_chunk_99'."
+        ],
+        "ungrounded_steps": [],
+        "reasoning": "Review verdict FAIL (Overall score: 0.62). Code issues: Response cites nonexistent or unretrieved chunk_id 'docker_turbo_volume_chunk_99'.; Step 1 cites nonexistent or unretrieved chunk_id 'docker_turbo_volume_chunk_99'."
+      },
+      "agreement": true
+    },
+    {
+      "pair_id": "D45-30",
+      "question_id": "GS-V2-13",
+      "topic": "Docker",
+      "question": "Why did my application build artifacts and installed libraries disappear when I added a bind mount in docker-compose.yml?",
+      "human_grade": {
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "verdict": "PASS",
+        "notes": "Faithful explanation of Docker bind mounts masking image layer files and remediation via subfolder mounting."
+      },
+      "judge_grade": {
+        "verdict": "PASS",
+        "faithfulness": 1,
+        "groundedness": 1,
+        "code_correctness": 1,
+        "adherence": 1,
+        "scores": {
+          "faithfulness": 1.0,
+          "groundedness": 1.0,
+          "code_correctness": 1.0,
+          "adherence": 1.0,
+          "overall": 1.0
+        },
+        "flagged_claims": [],
+        "hallucinated_code": [],
+        "ungrounded_steps": [],
+        "reasoning": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "agreement": true
+    }
+  ]
+}

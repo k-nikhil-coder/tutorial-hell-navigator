@@ -212,3 +212,54 @@ On Day 45, the structural index ceiling discovered on Day 43 was resolved:
 6. **Protocol Discipline:**
    - No retrieval thresholds, reranker models, or chunking parameters were modified.
    - The sealed test split (25 questions) was not executed.
+
+---
+
+## 9. Day 45: Frozen Blind LLM Judge Calibration (Pre-Registered Experiment)
+
+To resolve the overfitting confound identified on Day 44 (where rule-tuning against the 50 development pairs drove measured agreement to 100%), a pre-registered blind calibration was executed on Day 45:
+
+### 1. Dataset Construction & Mix (n=30 Fresh Pairs)
+- **Source Questions:** 30 questions drawn exclusively from the dev split in `eval/gold_benchmark_v2.json` (25 technical questions across FastAPI, Docker, PostgreSQL, Pydantic, and 5 out-of-scope controls). Zero questions from the sealed test split. Zero pairs repeated from the Day 44 dataset.
+- **Fresh Live Generation:** All responses were generated live by the production model (`gemini-flash-lite-latest`) using hybrid-rerank context over the 10-file corpus.
+- **Balanced Composition:**
+  - **15 Untouched Real Model Outputs:** Baseline live model responses without human modification.
+  - **15 Single-Defect Injected Outputs:** Derived by introducing exactly one targeted defect into a real model output.
+- **Defect Family Selection:** Defect families were pre-chosen by the author before running the judge, explicitly incorporating 6 families for which `app/reviewer.py` has no heuristic rule:
+  1. *Wrong CLI flag spelling* (e.g. `uvicorn --relod`, `docker compose up --detatch`) — [No judge rule]
+  2. *Wrong default port* (e.g. stating PostgreSQL listens by default on port 3306 or FastAPI on port 5000) — [No judge rule]
+  3. *Semantic contradiction of cited chunk* (e.g. claiming distinct ports on localhost share the same origin, or reversing Docker Compose `HOST:CONTAINER` port mapping) — [No judge rule]
+  4. *Real but irrelevant chunk citation* (e.g. citing a Docker chunk for Pydantic validation) — [No judge rule]
+  5. *Missing required prerequisite step* (e.g. running psycopg2 Python code without installing `psycopg2-binary`) — [No judge rule]
+  6. *Wrong HTTP status code* (e.g. claiming validation errors return HTTP 200 instead of HTTP 422) — [No judge rule]
+  7. *Rule-matched anti-patterns* (`from pydantic import BaseSettings`, f-string SQL injection, CORS wildcard with credentials, hallucinated chunk ID, false answer on out-of-scope) — [Judge has rule]
+
+### 2. Blind Protocol & Pre-Execution Commit
+- **Shuffled & Blinded:** Pairs were deterministically shuffled (seed 45) and assigned IDs `D45-01` through `D45-30` in `eval/judge_day45_pairs.json`, stripped of all injection metadata and judge outputs. The injection key was saved separately in `eval/injection_key_d45.json`.
+- **Pre-Execution Commit:** Human grades for all 4 binary criteria (faithfulness, groundedness, code correctness, adherence) and overall PASS/FAIL were committed to version control in `eval/hand_grades_d45.json` (commit `a6645a2`) **BEFORE** the judge was executed.
+- **Frozen State Tag:** The repository was tagged with `git tag judge-frozen-d45`.
+- **Single Run:** The judge was executed once against the blind dataset (`eval/judge_day45_report.json`) with strictly zero rule modifications afterward.
+
+### 3. Empirical Results & Findings
+
+| Metric | Target | Measured Result | Interpretation / Assessment |
+| :--- | :---: | :---: | :--- |
+| **Observed Agreement** | $\ge 80.0\%$ | **46.67%** (14/30) | ❌ **Failed:** Drops sharply from overfitted 100% on unseen pairs |
+| **95% Wilson Confidence Interval** | - | **[30.23%, 63.86%]** | Upper bound (63.9%) falls well below the 80% gate |
+| **Cohen's Kappa ($\kappa$)** | $> 0.60$ | **-0.0667** | **Poor (Less than chance agreement)** |
+| **Confusion Matrix (PASS = Pos)** | - | **TP: 3, TN: 11, FP: 4, FN: 12** | High false-negative rate on clean outputs |
+| **Precision / Recall / F1 (PASS)** | - | **42.86% / 20.00% / 27.27%** | Precision 0.429, Recall 0.200 |
+| **Recall on FAIL (Defect Catch Rate)** | - | **73.33%** (11/15) | Catches known rules, blind to subtle semantic bugs |
+| ↳ *Rule-Matched Families* | - | **100.0%** (4/4) | Perfect recall when a hand-crafted regex exists |
+| ↳ *Novel Families (No Rule)* | - | **60.0%** (6/10) | Misses flag typos, port mixups, and status codes |
+| **Natural False Alarm Rate** | - | **73.33%** (11/15) | 11 clean model outputs falsely failed by heuristic judge |
+| **Human vs. Injection Key Agreement** | - | **93.33%** (28/30) | High consistency between human grading and injection key |
+
+### 4. Root Causes of Heuristic Collapse
+1. **Brittleness on Natural Model Formats (False Alarm Rate: 73.3%):**
+   - The judge's command-prefix checker validates only single shell executables (`KNOWN_SAFE_COMMAND_PREFIXES`). When the model output inline Python snippets (e.g., `from fastapi import BackgroundTasks...` or `app.add_middleware(...)`) or YAML blocks (`healthcheck: ...`, `depends_on: ...`) in the `command` field, the judge failed them as unrecognized executables.
+   - For proper out-of-scope refusals, because the retriever returned nonzero semantic context chunks, the judge triggered its false-refusal heuristic (`"False refusal: system refused despite relevant technical context being retrieved"`), penalizing correct refusals.
+2. **Blindness on Unmodeled Defects (Miss Rate: 40% on Novel Families):**
+   - Because the judge does not execute commands in a sandboxed runner, it cannot detect misspelled flags (`--relod`, `--detatch`) or missing prerequisite dependencies (`pip install psycopg2-binary`).
+   - Because token-overlap does not model semantics, factual contradictions (e.g. port 3306 vs 5432, HTTP 200 vs 422) pass undetected.
+3. **Conclusion:** Static regex and token-overlap heuristics are fundamentally unsuitable as a standalone LLM judge. They overfit rapidly to training examples ($\kappa = 1.0$), but generalize poorly to real-world model outputs ($\kappa = -0.0667$). An execution sandbox and model-graded semantic evaluations are required for robust verification.

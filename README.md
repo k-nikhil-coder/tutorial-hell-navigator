@@ -207,7 +207,8 @@ Detailed historical progression, ablations, baseline comparisons, and failure au
 | **Dev Split Hit@5** | - | **100.0%** (31/31) | 45.16% (14/31) | All 31 answerable questions retrieved within top 5 |
 | **Dev Split MRR** | — | **0.8172** | 0.3763 | 95% Bootstrap CI: [0.7124, 0.9167] |
 | **Out-of-Scope Refusal Rate** | $\ge 90\%$ | **88.9%** (8/9) | 88.9% (8/9) | 1 technical query (`GS-V2-50`) leaked past gate |
-| **Judge First-Run Agreement** | $\ge 80\%$ | **84.0%** (42/50) | 95% Wilson CI: [71.5%, 91.7%] | Substantial ($\kappa = 0.6324$); lower bound misses 80% gate |
+| **Judge First-Run Agreement (Day 44)** | $\ge 80\%$ | **84.0%** (42/50) | 95% Wilson CI: [71.5%, 91.7%] | Substantial ($\kappa = 0.6324$); synthetic pairs |
+| **Judge Blind Evaluation (Day 45 Frozen)** | $\ge 80\%$ | **46.67%** (14/30) | 95% Wilson CI: [30.23%, 63.86%] | ❌ **Failed gate:** $\kappa = -0.0667$; collapses on fresh outputs |
 | **P50 Retrieval Latency** | $< 1,000\text{ ms}$ | **501.5 ms** | 505.7 ms | Hybrid-Rerank (Dense + BM25 + Cross-Encoder) |
 
 > [!IMPORTANT]
@@ -216,8 +217,11 @@ Detailed historical progression, ablations, baseline comparisons, and failure au
 > On Day 45, I rebuilt the corpus from all 10 Tier-1 source files (97 chunks total, 384 tokens, 60 overlap). An automated test (`eval/check_span_coverage.py`) now asserts that every answerable gold span exists in at least one indexed chunk before evaluation runs (31/31 dev, 14/14 test). Evaluating the dev split on the complete 10-file corpus yielded **93.55% Hit@3 (29/31)** and **0.8172 MRR**. The held-out test split (25 questions) remains sealed and untouched.
 
 > [!NOTE]
-> **Heuristic Judge Calibration & Overfitting Disclosure:**
-> The first-run inter-rater calibration between human grades and the automated judge scored 84.0% observed agreement ($\kappa = 0.6324$, 95% CI [71.5%, 91.7%]). While subsequent post-hoc rule adjustments drove measured agreement to 100% ($\kappa = 1.0$) on these same 50 pairs, that number represents training-set memorization and is not a valid generalization claim. All 16 FAIL pairs were synthetic bad answers written by hand to test known anti-patterns (0 real model outputs). The judge is a heuristic regex/token-overlap checker and does not execute commands. Full details and pre-tuning commit tags are documented in [`docs/eval_log.md`](docs/eval_log.md).
+> **Heuristic Judge Collapse Under Blind Evaluation (Day 45):**
+> On Day 44, post-hoc tuning on 50 synthetic pairs drove measured agreement to 100%. To test genuine generalization, on Day 45 I generated 30 fresh pairs using live model outputs (15 untouched outputs and 15 with one injected defect spanning families the judge had no rule for), blinded the dataset, hand-graded all 30 pairs before execution, committed the hand grades, and tagged the repository (`git tag judge-frozen-d45`). 
+> Running the frozen judge once yielded **46.67% agreement (14/30)** and **$\kappa = -0.0667$ (worse than chance)**:
+> - **False Alarms on Clean Outputs (73.3%):** The judge falsely failed 11 of 15 valid model outputs because its static prefix parser flagged valid Python code or YAML blocks in command fields (`from ...`, `healthcheck: ...`, `app.add_middleware`), and falsely penalized proper refusals on out-of-scope queries.
+> - **Blind Spots on Injected Defects (40% missed on novel families):** While catching 100% (4/4) of defects it had regex rules for (SQL injection, BaseSettings, CORS wildcard), it failed to detect 4 of 10 novel defects (misspelled CLI flags like `--relod`, wrong default ports, and reversed port syntax) because it cannot execute commands or verify semantic facts. Full data in [`docs/eval_log.md`](docs/eval_log.md).
 
 ---
 
