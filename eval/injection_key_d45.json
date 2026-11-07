@@ -1,0 +1,302 @@
+[
+  {
+    "pair_id": "D45-01",
+    "question_id": "GS-V2-19",
+    "topic": "Docker",
+    "is_injected": true,
+    "defect_family": "real_but_irrelevant_chunk_id",
+    "defect_description": "Cites a real but completely irrelevant chunk ID (fastapi_cors_sweep384_chunk_3) for Docker ignore files.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-02",
+    "question_id": "GS-V2-25",
+    "topic": "PostgreSQL",
+    "is_injected": true,
+    "defect_family": "wrong_default_port",
+    "defect_description": "States PostgreSQL listens by default on port 3306 (MySQL default) instead of 5432.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-03",
+    "question_id": "GS-V2-47",
+    "topic": "AI/ML",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-04",
+    "question_id": "GS-V2-08",
+    "topic": "FastAPI",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-05",
+    "question_id": "GS-V2-17",
+    "topic": "Docker",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-06",
+    "question_id": "GS-V2-06",
+    "topic": "FastAPI",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-07",
+    "question_id": "GS-V2-07",
+    "topic": "FastAPI",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-08",
+    "question_id": "GS-V2-05",
+    "topic": "FastAPI",
+    "is_injected": true,
+    "defect_family": "cors_wildcard_with_credentials",
+    "defect_description": "Configures wildcard allow_origins=['*'] with allow_credentials=True.",
+    "has_judge_rule": true,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-09",
+    "question_id": "GS-V2-30",
+    "topic": "PostgreSQL",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-10",
+    "question_id": "GS-V2-02",
+    "topic": "FastAPI",
+    "is_injected": true,
+    "defect_family": "claim_contradicts_cited_chunk",
+    "defect_description": "Contradicts cited chunk by claiming distinct ports on localhost share the same origin.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-11",
+    "question_id": "GS-V2-29",
+    "topic": "PostgreSQL",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-12",
+    "question_id": "GS-V2-28",
+    "topic": "PostgreSQL",
+    "is_injected": true,
+    "defect_family": "missing_required_step",
+    "defect_description": "Missing prerequisite dependency installation step ('pip install psycopg2-binary'), plan runs broken python script immediately.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-13",
+    "question_id": "GS-V2-37",
+    "topic": "Pydantic",
+    "is_injected": true,
+    "defect_family": "real_but_irrelevant_chunk_id",
+    "defect_description": "Cites a real but completely irrelevant chunk ID (docker_compose_best_practices_sweep384_chunk_0) for Pydantic validation.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-14",
+    "question_id": "GS-V2-16",
+    "topic": "Docker",
+    "is_injected": true,
+    "defect_family": "wrong_cli_flag_spelling",
+    "defect_description": "Wrong CLI flag spelling '--detatch' instead of '--detach' in docker compose command.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-15",
+    "question_id": "GS-V2-49",
+    "topic": "AI/ML",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-16",
+    "question_id": "GS-V2-26",
+    "topic": "PostgreSQL",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-17",
+    "question_id": "GS-V2-27",
+    "topic": "PostgreSQL",
+    "is_injected": true,
+    "defect_family": "sql_injection_fstring",
+    "defect_description": "Uses vulnerable Python f-string formatting in SQL execute command.",
+    "has_judge_rule": true,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-18",
+    "question_id": "GS-V2-38",
+    "topic": "Pydantic",
+    "is_injected": true,
+    "defect_family": "deprecated_import_basesettings",
+    "defect_description": "Uses deprecated Pydantic v1 import 'from pydantic import BaseSettings'.",
+    "has_judge_rule": true,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-19",
+    "question_id": "GS-V2-04",
+    "topic": "FastAPI",
+    "is_injected": true,
+    "defect_family": "wrong_default_port",
+    "defect_description": "Claims FastAPI/uvicorn runs by default on port 5000 (Flask default) instead of 8000.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-20",
+    "question_id": "GS-V2-36",
+    "topic": "Pydantic",
+    "is_injected": true,
+    "defect_family": "wrong_http_status_code",
+    "defect_description": "Claims FastAPI request validation errors return HTTP 200 OK with body instead of HTTP 422.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-21",
+    "question_id": "GS-V2-48",
+    "topic": "AI/ML",
+    "is_injected": true,
+    "defect_family": "refusal_gate_leak_false_answer",
+    "defect_description": "Out-of-scope query answered with invented ungrounded advice instead of proper refusal.",
+    "has_judge_rule": true,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-22",
+    "question_id": "GS-V2-46",
+    "topic": "AI/ML",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-23",
+    "question_id": "GS-V2-01",
+    "topic": "FastAPI",
+    "is_injected": true,
+    "defect_family": "wrong_cli_flag_spelling",
+    "defect_description": "Wrong CLI flag spelling '--relod' instead of '--reload' in uvicorn command.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-24",
+    "question_id": "GS-V2-15",
+    "topic": "Docker",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-25",
+    "question_id": "GS-V2-14",
+    "topic": "Docker",
+    "is_injected": true,
+    "defect_family": "claim_contradicts_cited_chunk",
+    "defect_description": "Contradicts Docker documentation by claiming Compose ports mapping syntax is CONTAINER:HOST.",
+    "has_judge_rule": false,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-26",
+    "question_id": "GS-V2-03",
+    "topic": "FastAPI",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-27",
+    "question_id": "GS-V2-50",
+    "topic": "AI/ML",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-28",
+    "question_id": "GS-V2-20",
+    "topic": "Docker",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  },
+  {
+    "pair_id": "D45-29",
+    "question_id": "GS-V2-18",
+    "topic": "Docker",
+    "is_injected": true,
+    "defect_family": "hallucinated_chunk_id",
+    "defect_description": "Cites hallucinated, non-existent chunk ID 'docker_turbo_volume_chunk_99'.",
+    "has_judge_rule": true,
+    "expected_verdict": "FAIL"
+  },
+  {
+    "pair_id": "D45-30",
+    "question_id": "GS-V2-13",
+    "topic": "Docker",
+    "is_injected": false,
+    "defect_family": null,
+    "defect_description": "Untouched real model output",
+    "has_judge_rule": null,
+    "expected_verdict": "PASS"
+  }
+]

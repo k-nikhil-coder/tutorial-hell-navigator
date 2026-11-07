@@ -1,0 +1,242 @@
+{
+  "D45-01": {
+    "faithfulness": 1,
+    "groundedness": 0,
+    "code_correctness": 1,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Groundedness failure: Cites completely irrelevant chunk 'fastapi_cors_sweep384_chunk_3' for a Docker Compose restart latency query."
+  },
+  "D45-02": {
+    "faithfulness": 0,
+    "groundedness": 1,
+    "code_correctness": 0,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Faithfulness/Code failure: States PostgreSQL listens by default on port 3306 (MySQL default port) instead of 5432."
+  },
+  "D45-03": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Correct refusal of out-of-scope query (LoRA hyperparameters) with appropriate advisory reference."
+  },
+  "D45-04": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Accurate and grounded explanation of declaring BackgroundTasks in FastAPI dependencies via Depends."
+  },
+  "D45-05": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Accurate production multi-stage Docker build separating gcc/libpq-dev in builder and libpq5 in runner."
+  },
+  "D45-06": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Accurate description of BackgroundTasks for non-blocking post-response operations."
+  },
+  "D45-07": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Accurate method invocation of background_tasks.add_task in path operation."
+  },
+  "D45-08": {
+    "faithfulness": 0,
+    "groundedness": 1,
+    "code_correctness": 0,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Security anti-pattern: Configures wildcard allow_origins=['*'] alongside allow_credentials=True, violating CORS specification."
+  },
+  "D45-09": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Faithful guidance on diagnosing psycopg2 connection pool exhaustion and leaks."
+  },
+  "D45-10": {
+    "faithfulness": 0,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Faithfulness failure: Claims FastAPI request validation errors return HTTP 200 OK with body instead of HTTP 422 Unprocessable Entity."
+  },
+  "D45-11": {
+    "faithfulness": 0,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Faithfulness failure: Claims FastAPI/uvicorn runs by default on port 5000 (Flask default) instead of 8000."
+  },
+  "D45-12": {
+    "faithfulness": 0,
+    "groundedness": 1,
+    "code_correctness": 0,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Security vulnerability: Employs vulnerable Python f-string interpolation in SQL cursor.execute instead of parameterized %s query."
+  },
+  "D45-13": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 0,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Execution failure: Missing mandatory prerequisite step ('pip install psycopg2-binary'), running python script directly crashes."
+  },
+  "D45-14": {
+    "faithfulness": 0,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Faithfulness contradiction: Falsely claims different ports on localhost share the same origin under CORS, contradicting the cited documentation."
+  },
+  "D45-15": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Proper refusal of out-of-scope Triton inference server model repository query."
+  },
+  "D45-16": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Faithful guidance on configuring psycopg2 connection autocommit mode for DDL statements."
+  },
+  "D45-17": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 0,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Syntax error in CLI command: Uses misspelled flag '--detatch' instead of '--detach' or '-d'."
+  },
+  "D45-18": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Correct technical explanation that psycopg2 autocommit must be enabled outside an active transaction block."
+  },
+  "D45-19": {
+    "faithfulness": 0,
+    "groundedness": 1,
+    "code_correctness": 0,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Code correctness failure: Uses deprecated Pydantic v1 import 'from pydantic import BaseSettings' which fails in Pydantic v2."
+  },
+  "D45-20": {
+    "faithfulness": 1,
+    "groundedness": 0,
+    "code_correctness": 1,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Groundedness failure: Cites irrelevant chunk 'docker_compose_best_practices_sweep384_chunk_0' for Pydantic field validation."
+  },
+  "D45-21": {
+    "faithfulness": 0,
+    "groundedness": 0,
+    "code_correctness": 0,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Refusal gate leakage: Answered out-of-scope query (Feast feature store) with hallucinated diffusion training advice without refusing."
+  },
+  "D45-22": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Proper refusal of out-of-scope PyTorch custom backpropagation query."
+  },
+  "D45-23": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 0,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Syntax error in CLI command: Contains misspelled flag '--relod' instead of '--reload'."
+  },
+  "D45-24": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Accurate Docker Compose configuration resolving database startup race conditions using healthcheck and depends_on condition."
+  },
+  "D45-25": {
+    "faithfulness": 0,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Faithfulness failure: Reverses Docker Compose ports mapping syntax by claiming it is CONTAINER:HOST instead of HOST:CONTAINER."
+  },
+  "D45-26": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Faithful explanation and remediation of browser rejection for CORS wildcard origins with credentials."
+  },
+  "D45-27": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Proper refusal of out-of-scope query (vLLM tensor parallelism) with appropriate advice."
+  },
+  "D45-28": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Faithful and actionable guidance on running ephemeral Docker Compose stacks in CI/CD automated test pipelines."
+  },
+  "D45-29": {
+    "faithfulness": 1,
+    "groundedness": 0,
+    "code_correctness": 1,
+    "adherence": 0,
+    "verdict": "FAIL",
+    "notes": "Groundedness failure: Cites hallucinated, non-existent chunk ID 'docker_turbo_volume_chunk_99'."
+  },
+  "D45-30": {
+    "faithfulness": 1,
+    "groundedness": 1,
+    "code_correctness": 1,
+    "adherence": 1,
+    "verdict": "PASS",
+    "notes": "Faithful explanation of Docker bind mounts masking image layer files and remediation via subfolder mounting."
+  }
+}
