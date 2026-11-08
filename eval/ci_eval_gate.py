@@ -2,35 +2,28 @@
 """
 CI Evaluation Gate for Tutorial Hell Navigator (Day 46)
 
-Executes retrieval evaluation and span coverage verification against the
-Gold Benchmark v2 DEV split. Fails the build (exit code 1) if any metric
-regresses below the defined Phase 1 operational thresholds.
+Performs a deterministic, per-question retrieval regression check against
+the established 10-file dev baseline (eval/gold_benchmark_v2_dev_results.json).
 
-Thresholds:
-- Overall Dev Hit@3:        >= 80.0% (Baseline target)
-- Official Docs Hit@3:      >= 80.0% (Must not degrade below target)
-- Evidence Coverage@3:      >= 80.0%
-- Out-of-Scope Refusal:     >= 80.0%
-- Span Coverage on Dev:     == 100.0% (All answerable spans present in corpus)
+Instead of brittle overall percentage thresholds, this gate enforces:
+1. Span Coverage: 100% of answerable gold spans must exist in the indexed corpus.
+2. Per-Question Retrieval: Every question that hits today (29/31 dev answerable)
+   must continue to hit. Any drop from Hit to Miss fails the build.
+3. Per-Question Refusal: Every out-of-scope question that is refused today
+   (8/9 dev out-of-scope) must continue to be refused. Any leak fails the build.
+4. Actionable Diffs: Reports exact question IDs that regressed or improved.
 """
 
 import sys
 import json
 import subprocess
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, List, Tuple
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 GOLD_BENCHMARK_FILE = PROJECT_ROOT / "eval" / "gold_benchmark_v2.json"
-REPORT_OUTPUT_FILE = PROJECT_ROOT / "eval" / "ci_eval_results.json"
-
-THRESHOLDS = {
-    "min_overall_hit_at_3": 80.0,
-    "min_official_hit_at_3": 80.0,
-    "min_evidence_coverage_at_3": 80.0,
-    "min_refusal_rate": 80.0,
-    "min_hit_at_5": 95.0,
-}
+BASELINE_DEV_FILE = PROJECT_ROOT / "eval" / "gold_benchmark_v2_dev_results.json"
+CURRENT_RUN_OUTPUT = PROJECT_ROOT / "eval" / "ci_eval_results.json"
 
 
 def run_span_coverage_check() -> bool:
@@ -47,7 +40,7 @@ def run_span_coverage_check() -> bool:
     return True
 
 
-def run_retrieval_dev_eval() -> Dict[str, Any]:
+def run_current_dev_eval() -> Dict[str, Any]:
     """Execute run_eval.py in retrieval-only mode against the dev split."""
     print("\n" + "=" * 70)
     print("[STEP 2] Running Automated Retrieval Evaluation on Dev Split...")
@@ -58,97 +51,113 @@ def run_retrieval_dev_eval() -> Dict[str, Any]:
         "--gold-set", str(GOLD_BENCHMARK_FILE),
         "--retrieval-only",
         "--split-set", "dev",
-        "-o", str(REPORT_OUTPUT_FILE),
+        "-o", str(CURRENT_RUN_OUTPUT),
     ]
     res = subprocess.run(cmd, cwd=PROJECT_ROOT)
     if res.returncode != 0:
         print("[FAIL] run_eval.py exited with non-zero status.")
         sys.exit(1)
 
-    if not REPORT_OUTPUT_FILE.exists():
-        print(f"[FAIL] Output report file {REPORT_OUTPUT_FILE} was not created.")
+    if not CURRENT_RUN_OUTPUT.exists():
+        print(f"[FAIL] Output file {CURRENT_RUN_OUTPUT} was not created.")
         sys.exit(1)
 
-    with open(REPORT_OUTPUT_FILE, "r", encoding="utf-8") as f:
+    with open(CURRENT_RUN_OUTPUT, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-def audit_results(report: Dict[str, Any]) -> bool:
-    """Audit report against regression thresholds."""
+def audit_per_question_diff(current_report: Dict[str, Any]) -> bool:
+    """Compare current run per-question outcomes against the baseline."""
     print("\n" + "=" * 70)
-    print("[STEP 3] Auditing Metrics Against CI Regression Thresholds...")
+    print("[STEP 3] Auditing Per-Question Retrieval & Refusal Regressions...")
     print("=" * 70)
+
+    if not BASELINE_DEV_FILE.exists():
+        print(f"[FAIL] Baseline file {BASELINE_DEV_FILE} not found.")
+        return False
+
+    with open(BASELINE_DEV_FILE, "r", encoding="utf-8") as f:
+        baseline_data = json.load(f)
+
+    baseline_items = {it["id"]: it for it in baseline_data.get("items", [])}
+    current_items = {it["id"]: it for it in current_report.get("items", [])}
 
     with open(GOLD_BENCHMARK_FILE, "r", encoding="utf-8") as f:
         gold_benchmark = json.load(f)
     q_map = {q["id"]: q for q in gold_benchmark}
 
-    ret_metrics = report.get("retrieval_metrics", {})
-    ref_metrics = report.get("refusal_metrics", {})
-    items = report.get("items", [])
+    regressions: List[Tuple[str, str, str]] = []
+    improvements: List[Tuple[str, str, str]] = []
+    unchanged_hits = 0
+    unchanged_misses = 0
+    unchanged_refusals = 0
 
-    overall_hit3 = ret_metrics.get("hit_at_3", 0.0)
-    overall_hit5 = ret_metrics.get("hit_at_5", 0.0)
-    evidence_cov3 = ret_metrics.get("evidence_coverage_at_3", 0.0)
-    refusal_rate = ref_metrics.get("refusal_rate", 0.0)
+    for qid, cur_it in current_items.items():
+        base_it = baseline_items.get(qid)
+        if not base_it:
+            continue
 
-    # Calculate Official Docs vs Owner-Authored breakdown
-    official_items = [
-        it for it in items
-        if q_map.get(it["id"], {}).get("source_kind") == "official"
-        and q_map.get(it["id"], {}).get("answerability") == "answerable"
-    ]
-    official_hits3 = sum(1 for it in official_items if it.get("retrieval_metrics", {}).get("hit_at_3"))
-    official_hit3_pct = round((official_hits3 / max(1, len(official_items))) * 100.0, 2)
+        q_meta = q_map.get(qid, {})
+        is_answerable = (q_meta.get("answerability") == "answerable")
+        question_text = q_meta.get("question", "")
+        source_kind = q_meta.get("source_kind", "unknown")
 
-    owner_items = [
-        it for it in items
-        if q_map.get(it["id"], {}).get("source_kind") == "owner_authored"
-        and q_map.get(it["id"], {}).get("answerability") == "answerable"
-    ]
-    owner_hits3 = sum(1 for it in owner_items if it.get("retrieval_metrics", {}).get("hit_at_3"))
-    owner_hit3_pct = round((owner_hits3 / max(1, len(owner_items))) * 100.0, 2)
+        if is_answerable:
+            base_hit = bool(base_it.get("retrieval_metrics", {}).get("hit_at_3"))
+            cur_hit = bool(cur_it.get("retrieval_metrics", {}).get("hit_at_3"))
 
-    checks = [
-        ("Overall Dev Hit@3", overall_hit3, THRESHOLDS["min_overall_hit_at_3"], overall_hit3 >= THRESHOLDS["min_overall_hit_at_3"]),
-        ("Official Docs Hit@3", official_hit3_pct, THRESHOLDS["min_official_hit_at_3"], official_hit3_pct >= THRESHOLDS["min_official_hit_at_3"]),
-        ("Evidence Coverage@3", evidence_cov3, THRESHOLDS["min_evidence_coverage_at_3"], evidence_cov3 >= THRESHOLDS["min_evidence_coverage_at_3"]),
-        ("Out-of-Scope Refusal Rate", refusal_rate, THRESHOLDS["min_refusal_rate"], refusal_rate >= THRESHOLDS["min_refusal_rate"]),
-        ("Overall Dev Hit@5", overall_hit5, THRESHOLDS["min_hit_at_5"], overall_hit5 >= THRESHOLDS["min_hit_at_5"]),
-    ]
+            if base_hit and not cur_hit:
+                regressions.append((qid, f"Hit@3 dropped from 1 to 0 ({source_kind})", question_text))
+            elif not base_hit and cur_hit:
+                improvements.append((qid, f"Hit@3 improved from 0 to 1 ({source_kind})", question_text))
+            elif cur_hit:
+                unchanged_hits += 1
+            else:
+                unchanged_misses += 1
+        else:
+            # Out-of-scope query
+            base_refused = bool(base_it.get("retrieval_metrics", {}).get("refusal_gate_triggered"))
+            cur_refused = bool(cur_it.get("retrieval_metrics", {}).get("refusal_gate_triggered"))
 
-    all_passed = True
-    print(f"{'Metric':<30} | {'Measured':<12} | {'Target':<10} | {'Status':<10}")
-    print("-" * 70)
-    for name, measured, target, passed in checks:
-        status_str = "[PASS]" if passed else "[REGRESSED]"
-        print(f"{name:<30} | {measured:>6.2f}%      | >={target:>5.1f}%   | {status_str}")
-        if not passed:
-            all_passed = False
+            if base_refused and not cur_refused:
+                regressions.append((qid, "Out-of-scope query leaked (was refused in baseline)", question_text))
+            elif not base_refused and cur_refused:
+                improvements.append((qid, "Out-of-scope query now refused (leaked in baseline)", question_text))
+            elif cur_refused:
+                unchanged_refusals += 1
 
-    print("-" * 70)
-    print(f"Owner-Authored Guides Hit@3: {owner_hit3_pct:.2f}% ({owner_hits3}/{len(owner_items)})")
-    print(f"Official Docs Breakdown:     {official_hit3_pct:.2f}% ({official_hits3}/{len(official_items)})")
-    print(f"Mean Reciprocal Rank (MRR):  {ret_metrics.get('mrr', 0.0):.4f}")
-    print(f"Evaluated Items:             {len(items)} questions (31 answerable, 9 out-of-scope)")
+    print(f"Baseline Unchanged: {unchanged_hits} hits maintained, {unchanged_refusals} refusals maintained, {unchanged_misses} known misses.")
+    
+    if improvements:
+        print(f"\n[IMPROVEMENT] {len(improvements)} question(s) improved:")
+        for qid, change, text in improvements:
+            print(f"  + {qid}: {change} | '{text[:60]}...'")
 
-    return all_passed
+    if regressions:
+        print(f"\n[REGRESSION] {len(regressions)} question(s) regressed below baseline:")
+        for qid, change, text in regressions:
+            print(f"  - {qid}: {change} | '{text[:60]}...'")
+        print("\n" + "=" * 70)
+        print(f"[FAIL] Build failed: {len(regressions)} retrieval regression(s) detected.")
+        print("=" * 70)
+        return False
+
+    print("\n[PASS] Zero per-question regressions detected across all 40 dev questions.")
+    return True
 
 
 def main():
-    print("[INFO] Running Tutorial Hell Navigator CI Evaluation Gate (Day 46)...")
-    span_ok = run_span_coverage_check()
-    if not span_ok:
+    print("[INFO] Running Tutorial Hell Navigator Per-Question CI Evaluation Gate...")
+    if not run_span_coverage_check():
         sys.exit(1)
 
-    report = run_retrieval_dev_eval()
-    passed = audit_results(report)
+    current_report = run_current_dev_eval()
+    passed = audit_per_question_diff(current_report)
 
     if passed:
-        print("\n[SUCCESS] ALL CI EVALUATION GATES PASSED! No retrieval regressions detected.")
+        print("\n[SUCCESS] ALL PER-QUESTION CI GATES PASSED! No regressions detected.")
         sys.exit(0)
     else:
-        print("\n[FAIL] CI EVALUATION GATE FAILED: One or more metrics regressed below target thresholds.")
         sys.exit(1)
 
 

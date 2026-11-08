@@ -287,21 +287,18 @@ Day 46 focuses on two engineering milestones:
 
 ---
 
-### 2. Automated CI Evaluation Gate (`eval/ci_eval_gate.py`)
+### 2. Automated Per-Question CI Evaluation Gate (`eval/ci_eval_gate.py`)
 
-A standalone CI regression harness was built and integrated into `.github/workflows/ci.yml`. It runs fully offline (zero external API dependencies) in ~25 seconds and enforces 6 gates:
+A standalone CI regression harness was built and integrated into `.github/workflows/ci.yml`. Rather than relying on arbitrary percentage thresholds (where a single question swing on 13 official docs questions swings the score by 7.7% and breaks the build, and where Evidence Coverage@3 simply duplicates Hit@3 for single-span benchmarks), the CI gate enforces a deterministic **Per-Question Regression Check** against `eval/gold_benchmark_v2_dev_results.json`:
 
-| Gate Check | Metric | CI Threshold | Measured Result | Status |
+| Check | Scope | Enforced Requirement | Baseline Status | Status |
 | :--- | :--- | :---: | :---: | :---: |
-| **Span Coverage** | Answerable Gold Spans in Index | $100.0\%$ | **100.0%** (31/31 dev, 14/14 test) | ✅ PASS |
-| **Overall Retrieval Hit@3** | Top-3 Evidence Retrieval (Dev) | $\ge 80.0\%$ | **93.55%** (29/31) | ✅ PASS |
-| **Official Docs Hit@3** | Official Docs Retrieval (Dev) | $\ge 80.0\%$ | **84.62%** (11/13) | ✅ PASS |
-| **Evidence Coverage@3** | Required Spans in Top-3 Chunks | $\ge 80.0\%$ | **93.55%** (29/31) | ✅ PASS |
-| **Out-of-Scope Refusal** | Refusal Gate Accuracy on Dev | $\ge 80.0\%$ | **88.89%** (8/9) | ✅ PASS |
-| **Top-5 Retrieval Ceiling** | Top-5 Evidence Retrieval (Dev) | $\ge 95.0\%$ | **100.00%** (31/31) | ✅ PASS |
-| **Test Split Protection** | SHA-256 of 25 Test Question IDs | Match `test_ids.sha256` | `15c7f63b96...` | ✅ PASS |
+| **Span Coverage** | All 45 answerable questions | 100.0% gold spans in indexed corpus | 31/31 dev, 14/14 test | ✅ PASS |
+| **Per-Question Retrieval** | 31 dev answerable questions | All 29 baseline hits maintained (0 regressions) | 29/31 hits (11/13 official, 18/18 owner) | ✅ PASS |
+| **Per-Question Refusal** | 9 dev out-of-scope questions | All 8 baseline refusals maintained (0 leaks) | 8/9 refusals maintained | ✅ PASS |
+| **Test ID Protection** | Held-out 25-question split | Match `test_ids.sha256` digest | `15c7f63b96...` | ✅ PASS |
 
-If any metric regresses below its threshold, `eval/ci_eval_gate.py` prints a diff table and exits with code 1, automatically blocking the pull request.
+If any question regresses from Hit to Miss, or any out-of-scope query leaks, `eval/ci_eval_gate.py` prints an actionable per-question diff and exits with code 1, automatically blocking CI merges.
 
 ---
 
@@ -317,14 +314,16 @@ If any metric regresses below its threshold, `eval/ci_eval_gate.py` prints a dif
 
 | Metric | Day 45 Frozen First-Run | Day 46 Post-Fix (Dev) | Absolute Change |
 | :--- | :---: | :---: | :---: |
-| **Observed Agreement** | 46.67% (14/30) | **70.00%** (21/30) | **+23.33 pts** |
+| **Observed Agreement** | 46.67% (14/30) | **70.00%** (21/30) | **+23.33 pts** (in-sample) |
 | **Cohen's Kappa ($\kappa$)** | -0.0667 (Poor) | **0.4000** (Moderate) | **+0.4667** |
 | **95% Wilson CI** | [30.2%, 63.9%] | **[52.1%, 83.3%]** | Lower bound $> 50\%$ |
-| **Clean False Alarm Rate** | 73.33% (11/15) | **0.00%** (0/15) | **-73.33 pts** |
-| **Defect Detection Rate** | 66.67% (10/15) | **53.33%** (8/15)* | -13.34 pts (unintentional catches eliminated) |
-| **Confusion Matrix (PASS=Pos)** | TP: 3, TN: 11, FP: 4, FN: 12 | **TP: 14, TN: 7, FP: 8, FN: 1** | False negatives down from 12 to 1 |
+| **Clean False Alarm Rate** | 73.33% (11/15) | **0.00%** (0/15) | **-73.33 pts** (15/15 pass) |
+| **Defects Flagged / Recall** | 66.67% (10/15) | **40.00%** (6/15) | **-26.67 pts** (4 accidental catches eliminated) |
+| **Missed Defects** | 33.33% (5/15) | **60.00%** (9/15) | +4 novel defects correctly identified as missed |
 
-*\*Note on Defect Detection Rate: On Day 45, 2 novel defects (`D45-02` wrong port and `D45-14` misspelled flag) were "flagged" solely because the command parser choked on their code syntax, not because the judge detected the semantic bug. Fixing the parser eliminated those false-positive defect catches, surfacing the genuine limitation of static regex checks on novel semantic bugs.*
+> [!WARNING]
+> **In-Sample Disclosure:** The 70.0% agreement is strictly in-sample. The bug fixes were developed after inspecting the 30 Day 45 failure traces. Tuning heuristic rules on known failures is how the judge previously reached 100% on Day 44 before collapsing to 46.7% on blind data. A new blind evaluation batch is required to verify true out-of-sample generalization.
+> Furthermore, defect recall dropped from 67% to 40% (6 caught, 9 missed) because the 4 novel catches on Day 45 were accidental hits triggered by the command parser choking on multi-line syntax, not genuine defect detection.
 
 ---
 
@@ -332,8 +331,8 @@ If any metric regresses below its threshold, `eval/ci_eval_gate.py` prints a dif
 
 | Dimension | Hybrid-Rerank RAG | Full-Corpus In-Context | Impact / Assessment |
 | :--- | :---: | :---: | :--- |
-| **Prompt Tokens / Query** | **~2,235 tokens** | ~37,500 tokens | **94.0% token reduction** per request |
-| **Query Latency (P50)** | **~501 ms** | ~4,200 ms (est.) | **8.4x faster response turnaround** |
+| **Prompt Tokens / Query** | **~2,235 tokens** | ~37,284 tokens | **~17x token reduction** (94.0% reduction) |
+| **Turnaround Latency (P50)** | **~3,031 ms** (end-to-end) | ~4,201 ms (end-to-end) | **~1.4x faster turnaround** (retrieval-only is ~501 ms) |
 | **Top-3 Evidence Coverage** | **93.55%** (29/31) | 100.0% (est.) | High fidelity with 2 minor chunk displacements |
 | **Top-5 Evidence Coverage** | **100.00%** (31/31) | 100.0% | Perfect evidence capture within candidate pool |
-| **Operational Feasibility** | **High** | Cost-prohibitive at scale | RAG is required for token economics and speed |
+| **Correctness Trade-off** | Pending Phase 1 dev rerun | 100% format pass (v1) | Head-to-head dev correctness evaluation remains open |
