@@ -26,6 +26,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Build Local Vector & BM25 Indexes
+      run: |
+        python -c "from scripts.rebuild_corpus_384 import rebuild_qdrant_indexes; rebuild_qdrant_indexes()"
+
     - name: Execute Pytest Suite
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'dummy-key-for-unit-tests' }}

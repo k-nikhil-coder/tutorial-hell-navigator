@@ -21,6 +21,9 @@ from pathlib import Path
 from typing import Dict, Any, List, Tuple
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 GOLD_BENCHMARK_FILE = PROJECT_ROOT / "eval" / "gold_benchmark_v2.json"
 BASELINE_DEV_FILE = PROJECT_ROOT / "eval" / "gold_benchmark_v2_dev_results.json"
 CURRENT_RUN_OUTPUT = PROJECT_ROOT / "eval" / "ci_eval_results.json"
@@ -40,10 +43,31 @@ def run_span_coverage_check() -> bool:
     return True
 
 
+def ensure_qdrant_indexed() -> None:
+    """Ensure local Qdrant collection is populated with the 97 chunks from the committed cache."""
+    print("\n" + "=" * 70)
+    print("[STEP 2] Verifying Local Qdrant Vector Index...")
+    print("=" * 70)
+    from app.rag import get_indexed_count, COLLECTION_NAME, close_qdrant_client
+    try:
+        count = get_indexed_count(COLLECTION_NAME)
+        if count < 97:
+            print(f"[INFO] Collection '{COLLECTION_NAME}' has {count} points (expected 97).")
+            print("[INFO] Rebuilding Qdrant indexes offline from committed chunks & embeddings cache...")
+            from scripts.rebuild_corpus_384 import rebuild_qdrant_indexes
+            rebuild_qdrant_indexes()
+            count = get_indexed_count(COLLECTION_NAME)
+            print(f"[PASS] Qdrant index rebuilt successfully with {count} points.")
+        else:
+            print(f"[PASS] Qdrant index already populated with {count} points.")
+    finally:
+        close_qdrant_client()
+
+
 def run_current_dev_eval() -> Dict[str, Any]:
     """Execute run_eval.py in retrieval-only mode against the dev split."""
     print("\n" + "=" * 70)
-    print("[STEP 2] Running Automated Retrieval Evaluation on Dev Split...")
+    print("[STEP 3] Running Automated Retrieval Evaluation on Dev Split...")
     print("=" * 70)
     cmd = [
         sys.executable,
@@ -69,7 +93,7 @@ def run_current_dev_eval() -> Dict[str, Any]:
 def audit_per_question_diff(current_report: Dict[str, Any]) -> bool:
     """Compare current run per-question outcomes against the baseline."""
     print("\n" + "=" * 70)
-    print("[STEP 3] Auditing Per-Question Retrieval & Refusal Regressions...")
+    print("[STEP 4] Auditing Per-Question Retrieval & Refusal Regressions...")
     print("=" * 70)
 
     if not BASELINE_DEV_FILE.exists():
@@ -150,6 +174,8 @@ def main():
     print("[INFO] Running Tutorial Hell Navigator Per-Question CI Evaluation Gate...")
     if not run_span_coverage_check():
         sys.exit(1)
+
+    ensure_qdrant_indexed()
 
     current_report = run_current_dev_eval()
     passed = audit_per_question_diff(current_report)
