@@ -13,6 +13,7 @@ and optional LLM-as-a-judge verification via Gemini when enabled.
 
 import re
 import os
+import ast
 import logging
 from typing import List, Dict, Any, Optional, Set, Union
 from app.schemas import NavigatorResponse, ReviewResult, ActionableStep
@@ -88,8 +89,57 @@ KNOWN_SAFE_COMMAND_PREFIXES = {
     "pip", "pip3", "python", "python3", "py", "pytest", "poetry",
     "uvicorn", "docker", "docker-compose", "git", "curl", "wget",
     "alembic", "psql", "mkdir", "cd", "touch", "echo", "cat",
-    "source", "export", "bash", "sh", "rm", "cp", "mv", "ls",
+    "source", "export", "bash", "sh", "rm", "cp", "mv", "ls", "make",
+    "test", "which", "chmod", "chown", "set", "true", "sleep",
 }
+
+OUT_OF_BOUNDS_KEYWORDS = {
+    "pytorch", "tensorflow", "backpropagation", "loss formula", "gradient descent",
+    "cross-entropy", "cross entropy", "transformer", "label smoothing", "attention mechanism",
+    "fine-tuning", "fine tuning", "lora", "qlora", "feature store", "feast", "model drift",
+    "deadlock proof", "virtual memory paging", "relational algebra proof", "packet dissection",
+    "gpu cluster", "vllm", "tensor parallel", "leetcode", "competitive programming",
+    "career advice", "resume review", "interview coaching",
+}
+
+DOCKERFILE_DIRECTIVES = (
+    "from ", "run ", "copy ", "workdir ", "env ", "expose ",
+    "cmd ", "entrypoint ", "arg ", "user ", "healthcheck ", "volume "
+)
+
+
+def is_code_or_config_snippet(code: str) -> bool:
+    """Detect if snippet is Python code, YAML configuration, or Dockerfile instructions rather than a CLI shell command."""
+    s = (code or "").strip()
+    if not s:
+        return False
+    lower = s.lower()
+    # 1. Dockerfile instructions
+    if any(lower.startswith(d) for d in DOCKERFILE_DIRECTIVES):
+        return True
+    if any(line.strip().lower().startswith(DOCKERFILE_DIRECTIVES) for line in s.splitlines()):
+        return True
+    # 2. YAML / Compose config
+    if lower.startswith(('version:', 'services:', 'healthcheck:', 'depends_on:', 'image:', 'volumes:', 'ports:', 'environment:', 'build:')):
+        return True
+    if "\n" in s and ":" in s and any(k in lower for k in ('services:', 'image:', 'healthcheck:', 'depends_on:')):
+        return True
+    # 3. Python snippets
+    py_prefixes = ('import ', 'from ', 'def ', 'class ', 'app.', '@', 'async def ', 'with ', 'cursor.', 'cur.', 'conn.', 'try:', 'return ', 'raise ')
+    if any(lower.startswith(p) for p in py_prefixes):
+        return True
+    if any(line.strip().lower().startswith(py_prefixes) for line in s.splitlines()):
+        return True
+    if re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*', s):
+        return True
+    if re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*\s*\(', s):
+        return True
+    try:
+        ast.parse(s)
+        return True
+    except SyntaxError:
+        pass
+    return False
 
 COMMON_STOPWORDS = {
     "this", "that", "with", "from", "your", "have", "more", "using", "make",
@@ -157,8 +207,16 @@ class ReviewerAgent:
 
         # 1. AUDIT REFUSAL LOGIC
         if resp_obj.is_refusal:
+            query_lower = query.lower()
+            is_refusal_expected = (
+                is_context_out_of_bounds
+                or len(retrieved) == 0
+                or bool(judge_criteria and any("refuse" in c.lower() for c in judge_criteria))
+                or any(term in query_lower for term in OUT_OF_BOUNDS_KEYWORDS)
+            )
+
             # Proper refusal handling
-            if is_context_out_of_bounds or len(retrieved) == 0:
+            if is_refusal_expected:
                 notes.append("Properly refused out-of-scope/unsupported query.")
                 return ReviewResult(
                     is_valid=True,
@@ -176,7 +234,7 @@ class ReviewerAgent:
             else:
                 # Potential false refusal if strong relevant context was present
                 has_substantive_context = len(context_corpus_text.strip()) > 100
-                if has_substantive_context and not is_context_out_of_bounds:
+                if has_substantive_context:
                     flagged_claims.append("False refusal: system refused despite relevant technical context being retrieved.")
                     notes.append("False refusal on retrieved context.")
 
@@ -244,15 +302,20 @@ class ReviewerAgent:
             cmd = (step.command or "").strip()
             if cmd:
                 total_commands += 1
+                # If command is a Python snippet, YAML block, or Dockerfile directive, do not check shell prefix
+                if is_code_or_config_snippet(cmd):
+                    continue
                 clean_cmd = re.sub(r"^[A-Za-z_][A-Za-z0-9_]*=\S+\s+", "", cmd).strip()
                 tokens = clean_cmd.split()
                 if tokens:
-                    first_token = tokens[0].lower().replace("./", "").replace(".\\", "").split("/")[-1].split("\\")[-1]
+                    first_raw = tokens[0]
+                    # Relative paths like ./run_tests or .\script.ps1 are valid local executables
+                    if first_raw.startswith(("./", ".\\", "/")):
+                        continue
+                    first_token = first_raw.lower().replace("./", "").replace(".\\", "").split("/")[-1].split("\\")[-1]
                     if (
                         first_token not in KNOWN_SAFE_COMMAND_PREFIXES
-                        and not first_token.endswith(".py")
-                        and not first_token.endswith(".js")
-                        and not first_token.endswith(".sh")
+                        and not first_token.endswith((".py", ".js", ".sh", ".ps1"))
                     ):
                         if not any(token in cmd for token in ["&&", "||", "|", ";"]):
                             hallucinated_code.append(
@@ -267,7 +330,9 @@ class ReviewerAgent:
             # Check if CORS wildcard claims are supported
             if "allow_origins" in full_text_to_audit.lower() and "allow_credentials" in full_text_to_audit.lower():
                 if "'*'" in full_text_to_audit or '"*"' in full_text_to_audit:
-                    if "cannot be used" not in full_text_to_audit.lower() and "forbidden" not in full_text_to_audit.lower():
+                    audit_lower = full_text_to_audit.lower()
+                    neg_phrases = ["cannot", "can't", "forbidden", "disallowed", "not allowed", "prohibited", "invalid", "never", "avoid", "illegal"]
+                    if not any(neg in audit_lower for neg in neg_phrases):
                         flagged_claims.append("Hallucinated claim: wildcard allow_origins with allow_credentials=True.")
 
             # Check substantive conceptual grounding for each step

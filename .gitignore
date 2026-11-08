@@ -238,3 +238,6 @@ scratch/
 # Local personal planning and trackers
 *sprint*.html
 dsa/
+
+eval/ci_eval_results.json
+eval/ci_eval_report.json

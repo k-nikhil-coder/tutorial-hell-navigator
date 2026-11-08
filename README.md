@@ -231,6 +231,11 @@ Detailed historical progression, ablations, baseline comparisons, and failure au
 > - **Clean Output Specificity: 26.7% (only 4 of 15 clean answers passed).** 11 clean outputs were falsely failed: 7 due to a command parser bug treating multi-line Python snippets (`from fastapi import...`) and Docker Compose YAML blocks (`healthcheck: ...`) as invalid shell executables, and 4 due to penalizing correct out-of-scope refusals.
 > This demonstrates that the heuristic judge has a parser bug on multi-line code and only catches bugs the author explicitly anticipated. Full data in [`docs/eval_log.md`](docs/eval_log.md).
 
+> [!TIP]
+> **Automated CI Evaluation Gate & Parser Remediation (Day 46):**
+> On Day 46, an automated CI evaluation gate ([`eval/ci_eval_gate.py`](eval/ci_eval_gate.py)) was integrated into GitHub Actions (`.github/workflows/ci.yml`). On every pull request and push to `main`, CI executes the 40-question dev split offline in ~25 seconds and enforces 5 regression gates (Overall Hit@3 $\ge 80\%$, Official Docs Hit@3 $\ge 80\%$, Evidence Coverage@3 $\ge 80\%$, Refusal Rate $\ge 80\%$, and 100% span coverage), failing builds automatically if retrieval regresses.
+> In addition, the reviewer's command parser bug and refusal penalty were remediated in `app/reviewer.py`: on the Day 45 dev dataset, clean false alarms dropped from 73.3% (11/15) to 0.0% (0/15), raising agreement from 46.7% to 70.0% ($\kappa = 0.4000$). Full details in [`docs/eval_log.md`](docs/eval_log.md).
+
 ---
 
 ## Known Limitations

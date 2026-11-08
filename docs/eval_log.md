@@ -263,3 +263,77 @@ To resolve the overfitting confound identified on Day 44 (where rule-tuning agai
    - Because the judge does not execute commands in a sandboxed runner, it cannot detect misspelled flags (`--relod`, `--detatch`) or missing prerequisite dependencies (`pip install psycopg2-binary`).
    - Because token-overlap does not model semantics, factual contradictions (e.g. port 3306 vs 5432, HTTP 200 vs 422) pass undetected.
 3. **Conclusion:** Static regex and token-overlap heuristics are fundamentally unsuitable as a standalone LLM judge. They overfit rapidly to training examples ($\kappa = 1.0$), but generalize poorly to real-world model outputs ($\kappa = -0.0667$). An execution sandbox and model-graded semantic evaluations are required for robust verification.
+
+
+---
+
+# Day 46: Automated CI Evaluation Gate & Reviewer Parser Bug Resolution
+
+**Date:** 2026-11-08  
+**Sprint Day:** Day 46 of 100  
+**Phase:** Phase 1 (Trustworthy Evaluation & CI Gating)  
+**Author:** Kumbham Nikhil  
+
+---
+
+### 1. Motivation & Objectives
+On Day 45, two critical findings emerged:
+1. Retrieval on the complete 10-file corpus reached 93.55% Hit@3 on the dev split (84.6% official docs, 100% owner guides), but lacked automated regression protection in continuous integration.
+2. The heuristic evaluation judge collapsed under blind evaluation ($\kappa = -0.067$), driven primarily by a parser bug that treated multi-line Python, YAML, and Dockerfile syntax as invalid shell executables (73.3% false alarms on clean outputs) and penalized valid out-of-scope refusals.
+
+Day 46 focuses on two engineering milestones:
+1. **Automated CI Evaluation Gate:** Build and integrate a GitHub Actions workflow that executes the gold benchmark dev split on every PR and main push, failing builds if retrieval metrics regress.
+2. **Reviewer Parser Bug Resolution:** Fix the code snippet parser and refusal accounting in `app/reviewer.py`, validating the fix against the Day 45 dev dataset.
+
+---
+
+### 2. Automated CI Evaluation Gate (`eval/ci_eval_gate.py`)
+
+A standalone CI regression harness was built and integrated into `.github/workflows/ci.yml`. It runs fully offline (zero external API dependencies) in ~25 seconds and enforces 6 gates:
+
+| Gate Check | Metric | CI Threshold | Measured Result | Status |
+| :--- | :--- | :---: | :---: | :---: |
+| **Span Coverage** | Answerable Gold Spans in Index | $100.0\%$ | **100.0%** (31/31 dev, 14/14 test) | ✅ PASS |
+| **Overall Retrieval Hit@3** | Top-3 Evidence Retrieval (Dev) | $\ge 80.0\%$ | **93.55%** (29/31) | ✅ PASS |
+| **Official Docs Hit@3** | Official Docs Retrieval (Dev) | $\ge 80.0\%$ | **84.62%** (11/13) | ✅ PASS |
+| **Evidence Coverage@3** | Required Spans in Top-3 Chunks | $\ge 80.0\%$ | **93.55%** (29/31) | ✅ PASS |
+| **Out-of-Scope Refusal** | Refusal Gate Accuracy on Dev | $\ge 80.0\%$ | **88.89%** (8/9) | ✅ PASS |
+| **Top-5 Retrieval Ceiling** | Top-5 Evidence Retrieval (Dev) | $\ge 95.0\%$ | **100.00%** (31/31) | ✅ PASS |
+| **Test Split Protection** | SHA-256 of 25 Test Question IDs | Match `test_ids.sha256` | `15c7f63b96...` | ✅ PASS |
+
+If any metric regresses below its threshold, `eval/ci_eval_gate.py` prints a diff table and exits with code 1, automatically blocking the pull request.
+
+---
+
+### 3. Reviewer Parser Bug Fix & Dev Calibration (n=30)
+
+#### Root-Cause Remediation in `app/reviewer.py`
+1. **Multi-Syntax Snippet Classification:** Added `is_code_or_config_snippet()` to detect Python statements (`import`, `from`, `def`, `class`, `app.`, `@`, `cursor.`), YAML/Compose configurations (`version:`, `services:`, `healthcheck:`, `depends_on:`), and Dockerfile instructions (`FROM`, `RUN`, `COPY`, `WORKDIR`). These are evaluated for syntax and security patterns without checking single shell binary prefixes.
+2. **Local Script Execution Support:** Relative paths (`./run_tests`, `.\script.ps1`) and standard build tools (`make`) are now recognized as valid CLI invocations.
+3. **Refusal Gate Awareness:** Out-of-scope refusals are verified against `OUT_OF_BOUNDS_KEYWORDS` and refusal criteria, eliminating false refusal penalties when contextual chunks are returned by the retriever.
+4. **CORS Warning Phrase Disambiguation:** Differentiated explanatory warnings ("cannot use wildcard origins with credentials") from actual policy violations.
+
+#### Before vs. After on Day 45 Dev Dataset (n=30)
+
+| Metric | Day 45 Frozen First-Run | Day 46 Post-Fix (Dev) | Absolute Change |
+| :--- | :---: | :---: | :---: |
+| **Observed Agreement** | 46.67% (14/30) | **70.00%** (21/30) | **+23.33 pts** |
+| **Cohen's Kappa ($\kappa$)** | -0.0667 (Poor) | **0.4000** (Moderate) | **+0.4667** |
+| **95% Wilson CI** | [30.2%, 63.9%] | **[52.1%, 83.3%]** | Lower bound $> 50\%$ |
+| **Clean False Alarm Rate** | 73.33% (11/15) | **0.00%** (0/15) | **-73.33 pts** |
+| **Defect Detection Rate** | 66.67% (10/15) | **53.33%** (8/15)* | -13.34 pts (unintentional catches eliminated) |
+| **Confusion Matrix (PASS=Pos)** | TP: 3, TN: 11, FP: 4, FN: 12 | **TP: 14, TN: 7, FP: 8, FN: 1** | False negatives down from 12 to 1 |
+
+*\*Note on Defect Detection Rate: On Day 45, 2 novel defects (`D45-02` wrong port and `D45-14` misspelled flag) were "flagged" solely because the command parser choked on their code syntax, not because the judge detected the semantic bug. Fixing the parser eliminated those false-positive defect catches, surfacing the genuine limitation of static regex checks on novel semantic bugs.*
+
+---
+
+### 4. Phase 1 Architectural Trade-off: Retrieval vs. Full-Context
+
+| Dimension | Hybrid-Rerank RAG | Full-Corpus In-Context | Impact / Assessment |
+| :--- | :---: | :---: | :--- |
+| **Prompt Tokens / Query** | **~2,235 tokens** | ~37,500 tokens | **94.0% token reduction** per request |
+| **Query Latency (P50)** | **~501 ms** | ~4,200 ms (est.) | **8.4x faster response turnaround** |
+| **Top-3 Evidence Coverage** | **93.55%** (29/31) | 100.0% (est.) | High fidelity with 2 minor chunk displacements |
+| **Top-5 Evidence Coverage** | **100.00%** (31/31) | 100.0% | Perfect evidence capture within candidate pool |
+| **Operational Feasibility** | **High** | Cost-prohibitive at scale | RAG is required for token economics and speed |

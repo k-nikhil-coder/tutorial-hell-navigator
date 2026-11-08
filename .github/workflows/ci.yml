@@ -32,15 +32,25 @@ jobs:
       run: |
         pytest tests/ eval/check_span_coverage.py -v -k "not test_api_streaming_endpoint and not test_api_structured_navigation"
 
-    - name: Validate Gold Set Benchmark Schema
+    - name: Validate Gold Benchmark v2 Schema & Test Protection
       run: |
         python -c "
-        import json
-        with open('eval/gold_set.json', 'r', encoding='utf-8') as f:
+        import json, hashlib
+        with open('eval/gold_benchmark_v2.json', 'r', encoding='utf-8') as f:
             data = json.load(f)
-        assert len(data) >= 80, f'Expected at least 80 benchmark questions, found {len(data)}'
-        for q in data:
-            assert 'id' in q and 'category' in q and 'question' in q
-            assert 'expected_rubric' in q and 'negative_constraints' in q
-        print(f'Verified {len(data)} benchmark questions structure successfully!')
+        assert len(data) == 65, f'Expected 65 benchmark questions, found {len(data)}'
+        dev = [q for q in data if q.get('split') == 'dev']
+        test = [q for q in data if q.get('split') == 'test']
+        assert len(dev) == 40, f'Expected 40 dev questions, found {len(dev)}'
+        assert len(test) == 25, f'Expected 25 test questions, found {len(test)}'
+        with open('eval/test_ids.sha256', 'r', encoding='utf-8') as f:
+            expected_hash = f.read().strip()
+        test_ids_str = '\n'.join(sorted(q['id'] for q in test))
+        actual_hash = hashlib.sha256(test_ids_str.encode('utf-8')).hexdigest()
+        assert actual_hash == expected_hash, f'Test split tamper detected! Hash mismatch.'
+        print(f'Verified Gold Benchmark v2 ({len(data)} questions: {len(dev)} dev, {len(test)} sealed test) successfully!')
         "
+
+    - name: Execute Automated Retrieval CI Eval Gate (Day 46)
+      run: |
+        python eval/ci_eval_gate.py
