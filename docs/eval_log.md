@@ -409,3 +409,32 @@ The Phase 1 Roadmap Gate states:
 - [`eval/phase1_comparison_analysis.json`](eval/phase1_comparison_analysis.json): Machine-readable audit and per-question comparison.
 - [`eval/grading_sheet.csv`](eval/grading_sheet.csv): 80-row randomized blind grading sheet (`System-A` vs `System-B`).
 - [`eval/grading_key.json`](eval/grading_key.json): Decryption key mapping anonymized aliases back to true system modes.
+
+
+---
+
+### 6. Unblinded Human Hand-Grading Results (n=80 Evaluations across 40 Dev Questions)
+
+Following the automated Reviewer Agent audit, all 80 responses were evaluated blind by hand (with randomized system aliases `System-A` and `System-B`). Once all grades and defect notes were committed, the decryption key ([`eval/grading_key_fullcontext_vs_hybrid.json`](../eval/grading_key_fullcontext_vs_hybrid.json)) was applied to calculate ground-truth quality metrics:
+
+| Human Evaluation Metric | Hybrid-Rerank RAG | Full-Context Baseline | Net Difference |
+| :--- | :---: | :---: | :---: |
+| **Overall Pass Grade** | **35 / 40 (87.5%)** | **34 / 40 (85.0%)** | **+1 question (+2.5%)** |
+| **Answer Correctness (`answer_ok`)** | 37 / 40 (92.5%) | 38 / 40 (95.0%) | -1 question (-2.5%) |
+| **Code Correctness (`code_ok`)** | **37 / 40 (92.5%)** | 35 / 40 (87.5%) | **+2 questions (+5.0%)** |
+| *Automated Reviewer Agent (Before)* | *40 / 40 (100.0%)* | *39 / 40 (97.5%)* | *+1 question (+2.5%)* |
+
+#### Paired Contingency Table (n=40 Questions)
+- **Both Systems Passed:** 31 questions (77.5%)
+- **Hybrid Won (Pass vs. Fail):** 4 questions (`GS-V2-08`, `GS-V2-27`, `GS-V2-28`, `GS-V2-51`)
+  - Full-context introduced runtime type annotation `NameError`, unhandled exception classes, nested `with` syntax errors, and parametric knowledge leakage on out-of-scope theory.
+- **Full-Context Won (Fail vs. Pass):** 3 questions (`GS-V2-31`, `GS-V2-38`, `GS-V2-52`)
+  - Hybrid suffered from false refusal on `GS-V2-31`, an omitted field validator error on `GS-V2-38`, and hallucinated `man 2 mprotect` on `GS-V2-52`.
+- **Both Systems Failed:** 2 questions (`GS-V2-39`, `GS-V2-50`)
+- **Statistical Significance:**
+  - Mean Difference: **$+2.50\%$** (+1 net question)
+  - 95% Bootstrap Confidence Interval: **$[-10.00\%, +15.00\%]$** (10,000 paired resamples)
+  - McNemar Exact Binomial Test: **$p = 1.0000$** (4 vs. 3 discordant pairs; no statistically significant difference)
+
+#### Core Takeaway
+Human grading validates that on a ~33k-token corpus, stuffing the entire context into prompt memory achieves statistical parity with RAG in accuracy. However, RAG reduces prompt token consumption by **93.3%** (2,235 vs 33,298 tokens) and saves ~3 seconds of turnaround latency per query without sacrificing code correctness.
