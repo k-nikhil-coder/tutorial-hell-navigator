@@ -1,0 +1,494 @@
+{
+  "metadata": {
+    "created_at": "2026-11-09T08:03:32.976132+00:00",
+    "random_seed": 42,
+    "total_questions": 40,
+    "total_evaluations": 80,
+    "reports_evaluated": [
+      "hybrid_rerank_dev_results.json",
+      "full_context_dev_results.json"
+    ]
+  },
+  "key": [
+    {
+      "question_id": "GS-V2-01",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-01",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-02",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-02",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-03",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-03",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-04",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-04",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-05",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-05",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-06",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-06",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-07",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-07",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-08",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-08",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-09",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-09",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-13",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-13",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-14",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-14",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-15",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-15",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-16",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-16",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-17",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-17",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-18",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-18",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-19",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-19",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-20",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-20",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-21",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-21",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-25",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-25",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-26",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-26",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-27",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-27",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-28",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-28",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-29",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-29",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-30",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-30",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-31",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-31",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-32",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-32",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-36",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-36",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-37",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-37",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-38",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-38",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-39",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-39",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-40",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-40",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-46",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-46",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-47",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-47",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-48",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-48",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-49",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-49",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-50",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-50",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-51",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-51",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-52",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-52",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-53",
+      "system_id": "System-A",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-53",
+      "system_id": "System-B",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-54",
+      "system_id": "System-A",
+      "true_mode": "full-context",
+      "source_report": "full_context_dev_results.json"
+    },
+    {
+      "question_id": "GS-V2-54",
+      "system_id": "System-B",
+      "true_mode": "hybrid-rerank",
+      "source_report": "hybrid_rerank_dev_results.json"
+    }
+  ]
+}

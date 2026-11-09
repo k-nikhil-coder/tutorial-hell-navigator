@@ -1,3 +1,4 @@
+import time
 import os
 import json
 import logging
@@ -90,13 +91,25 @@ def clean_json_text(raw: str) -> str:
     return text.strip()
 
 
+def count_tokens(text: str) -> int:
+    """Calculate token count using tiktoken (cl100k_base) with word-count fallback."""
+    if not text:
+        return 0
+    try:
+        import tiktoken
+        enc = tiktoken.get_encoding("cl100k_base")
+        return len(enc.encode(text))
+    except Exception:
+        return max(1, len(text.split()))
+
+
 async def _execute_chat_with_fallback(
     user_query: str,
     response_schema: Optional[Any] = None,
     response_mime_type: Optional[str] = None,
     temperature: float = 0.2,
     system_instruction: Optional[str] = None,
-) -> str:
+) -> Tuple[str, float]:
     client = get_genai_client()
     last_err: Optional[Exception] = None
     active_sys_instruction = system_instruction or SYSTEM_PROMPT
@@ -118,9 +131,28 @@ async def _execute_chat_with_fallback(
                 model=model_name,
                 config=types.GenerateContentConfig(**config_params),
             )
-            response = await chat.send_message(user_query)
-            if response and response.text:
-                return response.text
+            gen_start = time.perf_counter()
+            try:
+                stream = await chat.send_message_stream(user_query)
+                chunks = []
+                ttft_ms: Optional[float] = None
+                async for chunk in stream:
+                    if ttft_ms is None and chunk.text:
+                        ttft_ms = (time.perf_counter() - gen_start) * 1000.0
+                    if chunk.text:
+                        chunks.append(chunk.text)
+                if chunks:
+                    if ttft_ms is None:
+                        ttft_ms = (time.perf_counter() - gen_start) * 1000.0
+                    return "".join(chunks), ttft_ms
+            except Exception as stream_err:
+                logger.debug("Streaming call failed, falling back to unary send_message: %s", stream_err)
+                gen_start = time.perf_counter()
+                response = await chat.send_message(user_query)
+                ttft_ms = (time.perf_counter() - gen_start) * 1000.0
+                if response and response.text:
+                    return response.text, ttft_ms
+
             logger.warning("Model %s returned empty text. Checking fallback...", model_name)
         except Exception as e:
             last_err = e
@@ -203,7 +235,7 @@ async def generate_structured_response_async(
         else:
             prompt = user_query
 
-        raw_output = await _execute_chat_with_fallback(
+        raw_output, ttft_ms = await _execute_chat_with_fallback(
             user_query=prompt,
             response_schema=NavigatorResponse,
             response_mime_type="application/json",
@@ -220,8 +252,22 @@ async def generate_structured_response_async(
                 all_citations.extend(step.citations)
         resp_model.cited_chunk_ids = list(dict.fromkeys(all_citations))
 
-        # Attach retrieved chunks for telemetry logging
+        prompt_tokens = count_tokens(prompt)
+        if active_instruction:
+            prompt_tokens += count_tokens(active_instruction)
+        completion_tokens = count_tokens(cleaned)
+
+        retrieval_ms = getattr(retrieved_chunks, "retrieval_ms", 0.0)
+        rerank_ms = getattr(retrieved_chunks, "rerank_ms", 0.0)
+
+        # Attach telemetry data
         object.__setattr__(resp_model, "_retrieved_chunks", retrieved_chunks)
+        object.__setattr__(resp_model, "_topic", topic)
+        object.__setattr__(resp_model, "_retrieval_ms", retrieval_ms)
+        object.__setattr__(resp_model, "_rerank_ms", rerank_ms)
+        object.__setattr__(resp_model, "_ttft_ms", ttft_ms)
+        object.__setattr__(resp_model, "_prompt_tokens", prompt_tokens)
+        object.__setattr__(resp_model, "_completion_tokens", completion_tokens)
 
         return resp_model
 

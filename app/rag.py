@@ -561,6 +561,15 @@ def retrieve_hybrid_chunks(
     return reciprocal_rank_fusion(dense_results, sparse_results, k=60, top_k=top_k)
 
 
+class TimedChunkList(list):
+    """Subclass of list carrying timing telemetry for retrieval and reranking."""
+
+    def __init__(self, iterable=None, retrieval_ms: float = 0.0, rerank_ms: float = 0.0):
+        super().__init__(iterable or [])
+        self.retrieval_ms = float(retrieval_ms)
+        self.rerank_ms = float(rerank_ms)
+
+
 def retrieve_hybrid_rerank_chunks(
     query: str,
     top_k: int = 3,
@@ -572,6 +581,8 @@ def retrieve_hybrid_rerank_chunks(
     Retrieve top candidate_n chunks via Hybrid Search (Dense + BM25 + RRF),
     then apply Cross-Encoder transformer reranking to precision-rank the top-K.
     """
+    import time
+    t0 = time.perf_counter()
     # 1. Broad candidate retrieval (N=10 or 15)
     candidates = retrieve_hybrid_chunks(
         query=query,
@@ -580,12 +591,21 @@ def retrieve_hybrid_rerank_chunks(
         qdrant_client=qdrant_client,
         candidate_k=candidate_n,
     )
+    retrieval_ms = (time.perf_counter() - t0) * 1000.0
     if not candidates:
-        return []
+        return TimedChunkList([], retrieval_ms=retrieval_ms, rerank_ms=0.0)
 
     # 2. Precision cross-encoder reranking
+    t1 = time.perf_counter()
     from app.reranker import rerank_chunks
-    return rerank_chunks(query=query, candidate_chunks=candidates, top_k=top_k)
+    reranked = rerank_chunks(query=query, candidate_chunks=candidates, top_k=top_k)
+    rerank_ms = (time.perf_counter() - t1) * 1000.0
+
+    for c in reranked:
+        c["retrieval_ms"] = round(retrieval_ms, 2)
+        c["rerank_ms"] = round(rerank_ms, 2)
+
+    return TimedChunkList(reranked, retrieval_ms=retrieval_ms, rerank_ms=rerank_ms)
 
 
 _full_corpus_cache: Dict[str, List[Dict[str, Any]]] = {}
@@ -666,17 +686,26 @@ def retrieve_relevant_chunks(
             query=query, top_k=top_k, collection_name=collection_name, qdrant_client=qdrant_client
         )
     elif mode == "dense":
-        return retrieve_dense_chunks(
+        import time
+        t_d = time.perf_counter()
+        res = retrieve_dense_chunks(
             query=query, top_k=top_k, collection_name=collection_name, qdrant_client=qdrant_client
         )
+        return TimedChunkList(res, retrieval_ms=(time.perf_counter() - t_d) * 1000.0, rerank_ms=0.0)
     elif mode == "sparse":
-        return retrieve_sparse_bm25_chunks(
+        import time
+        t_s = time.perf_counter()
+        res = retrieve_sparse_bm25_chunks(
             query=query, top_k=top_k, collection_name=collection_name, qdrant_client=qdrant_client
         )
+        return TimedChunkList(res, retrieval_ms=(time.perf_counter() - t_s) * 1000.0, rerank_ms=0.0)
     else:
-        return retrieve_hybrid_chunks(
+        import time
+        t_h = time.perf_counter()
+        res = retrieve_hybrid_chunks(
             query=query, top_k=top_k, collection_name=collection_name, qdrant_client=qdrant_client
         )
+        return TimedChunkList(res, retrieval_ms=(time.perf_counter() - t_h) * 1000.0, rerank_ms=0.0)
 
 
 async def retrieve_relevant_chunks_async(

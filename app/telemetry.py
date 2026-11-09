@@ -24,13 +24,20 @@ def log_query_trajectory(
     cited_chunk_ids: List[str],
     latency_ms: float,
     refusal_reason: Optional[str] = None,
+    topic: Optional[str] = None,
+    retrieval_ms: Optional[float] = None,
+    rerank_ms: Optional[float] = None,
+    ttft_ms: Optional[float] = None,
+    prompt_tokens: Optional[int] = None,
+    completion_tokens: Optional[int] = None,
 ) -> Dict[str, Any]:
-    """Record query, retrieved context, citations, and refusal state for failure taxonomy analysis."""
+    """Record query, retrieved context, citations, and telemetry metrics for failure taxonomy analysis."""
     init_telemetry()
 
     record = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "query": query,
+        "topic": topic,
         "retrieved_chunks": [
             {
                 "chunk_id": c.get("chunk_id", ""),
@@ -44,7 +51,12 @@ def log_query_trajectory(
         "refusal_reason": refusal_reason,
         "cited_chunk_ids": cited_chunk_ids,
         "response_summary": response_summary,
-        "latency_ms": round(latency_ms, 2),
+        "latency_ms": round(latency_ms, 2) if latency_ms is not None else None,
+        "retrieval_ms": round(retrieval_ms, 2) if retrieval_ms is not None else None,
+        "rerank_ms": round(rerank_ms, 2) if rerank_ms is not None else None,
+        "ttft_ms": round(ttft_ms, 2) if ttft_ms is not None else None,
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens,
     }
 
     try:

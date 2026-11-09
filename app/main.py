@@ -4,9 +4,12 @@ import uuid
 import logging
 from pathlib import Path
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Query, status
+from datetime import datetime, timezone
+from collections import defaultdict
+from threading import Lock
+from fastapi import FastAPI, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse, FileResponse
+from fastapi.responses import StreamingResponse, FileResponse, JSONResponse
 
 from app.schemas import (
     QueryRequest,
@@ -54,8 +57,73 @@ app.add_middleware(
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "Accept"],
+    allow_headers=["Authorization", "Content-Type", "Accept", "X-Invite-Code"],
 )
+
+# --- Tunnel Access Controls (Day 47 Lane A4) ---
+_tunnel_lock = Lock()
+_tunnel_ip_history = defaultdict(list)
+_tunnel_daily_counts = defaultdict(int)
+
+
+def is_tunnel_request(request: Request) -> bool:
+    """Detect if request arrives via tunnel / reverse proxy."""
+    if os.getenv("TUNNEL_MODE", "").lower() in ("true", "1", "yes"):
+        return True
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or ""
+    host_clean = host.lower().split(":")[0]
+    if host_clean in ("localhost", "127.0.0.1", "testserver", "0.0.0.0", "test"):
+        return False
+    tunnel_markers = ("ngrok", "localtunnel", "trycloudflare", "pinggy", "serveo", "pagekite", "telebit", "tailscale")
+    if any(m in host_clean for m in tunnel_markers):
+        return True
+    if request.headers.get("x-tunnel-request", "").lower() == "true":
+        return True
+    return False
+
+
+@app.middleware("http")
+async def tunnel_security_middleware(request: Request, call_next):
+    if is_tunnel_request(request):
+        # 1. Invite Code Check
+        expected_code = os.getenv("INVITE_CODE", "NAVIGATOR2026")
+        provided_code = request.headers.get("x-invite-code") or request.query_params.get("invite_code")
+        if provided_code != expected_code:
+            return JSONResponse(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content={"detail": "Tunnel access requires a valid invite code."},
+            )
+
+        now = time.time()
+        today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        client_ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (
+            request.client.host if request.client else "unknown"
+        )
+
+        rate_limit = int(os.getenv("TUNNEL_RATE_LIMIT_PER_MINUTE", "10"))
+        daily_cap = int(os.getenv("TUNNEL_DAILY_REQUEST_CAP", "100"))
+
+        with _tunnel_lock:
+            # 2. Daily Request Cap Check
+            if _tunnel_daily_counts[today_str] >= daily_cap:
+                return JSONResponse(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                    content={"detail": f"Tunnel daily request cap reached (max {daily_cap} requests per day)."},
+                )
+
+            # 3. Per-IP Rate Limit Check (60s sliding window)
+            timestamps = [t for t in _tunnel_ip_history[client_ip] if now - t < 60.0]
+            if len(timestamps) >= rate_limit:
+                return JSONResponse(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                    content={"detail": f"Tunnel rate limit exceeded (max {rate_limit} requests per minute)."},
+                )
+
+            timestamps.append(now)
+            _tunnel_ip_history[client_ip] = timestamps
+            _tunnel_daily_counts[today_str] += 1
+
+    return await call_next(request)
 
 
 
@@ -127,6 +195,16 @@ async def navigate(request: QueryRequest) -> NavigatorResponse:
         latency_ms = (time.perf_counter() - start_time) * 1000
 
         retrieved_chunks = getattr(response, "_retrieved_chunks", [])
+        topic = request.topic or getattr(response, "_topic", None)
+        if not topic and retrieved_chunks:
+            topic = retrieved_chunks[0].get("topic")
+
+        retrieval_ms = getattr(response, "_retrieval_ms", None)
+        rerank_ms = getattr(response, "_rerank_ms", None)
+        ttft_ms = getattr(response, "_ttft_ms", None)
+        prompt_tokens = getattr(response, "_prompt_tokens", None)
+        completion_tokens = getattr(response, "_completion_tokens", None)
+
         log_query_trajectory(
             query=request.query,
             retrieved_chunks=retrieved_chunks,
@@ -135,6 +213,12 @@ async def navigate(request: QueryRequest) -> NavigatorResponse:
             cited_chunk_ids=response.cited_chunk_ids,
             latency_ms=latency_ms,
             refusal_reason=response.refusal_reason,
+            topic=topic,
+            retrieval_ms=retrieval_ms,
+            rerank_ms=rerank_ms,
+            ttft_ms=ttft_ms,
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
         )
         return response
     except Exception as e:

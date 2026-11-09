@@ -1,0 +1,830 @@
+question_id,question,system_id,response_summary,action_plan,citations,grade,notes
+GS-V2-01,"In web security and FastAPI, what exact parameters define a distinct browser origin in CORS?",System-A,"In web security and FastAPI, a browser origin is defined strictly by the combination of three components: protocol, domain, and port.","1. Configure CORS Middleware in FastAPI
+   Command: from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[""http://localhost:3000""],
+    allow_credentials=True,
+    allow_methods=[""*""],
+    allow_headers=[""*""],
+)
+   Details: To allow a frontend running on a different origin (e.g. protocol, domain, or port) to communicate with your FastAPI backend, you must explicitly configure the CORSMiddleware with the allowed origins.","fastapi_cors_sweep384_chunk_0, fastapi_cors_sweep384_chunk_1, fastapi_fullstack_guide_sweep384_chunk_3",,
+GS-V2-01,"In web security and FastAPI, what exact parameters define a distinct browser origin in CORS?",System-B,"In FastAPI and web security, a distinct browser origin in CORS is defined by the specific combination of protocol, domain, and port.","1. Define the origin components explicitly
+   Command: python3 -c ""print('Protocol, domain, and port define the origin')""
+   Details: An origin is strictly the combination of protocol, domain, and port. Variations in any of these three elements constitute entirely different origins from the browser perspective.",fastapi_cors_sweep384_chunk_0,,
+GS-V2-02,How do I configure Cross-Origin Resource Sharing (CORS) in a FastAPI Python application?,System-A,"To enable Cross-Origin Resource Sharing (CORS) in FastAPI so that a frontend application running on a different origin (like http://localhost:3000) can successfully communicate with your backend API, you must import and add the CORSMiddleware to your FastAPI application instance with explicit allowed origins.","1. Import and add CORSMiddleware to FastAPI
+   Command: from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[""http://localhost:3000""],
+    allow_credentials=True,
+    allow_methods=[""*""],
+    allow_headers=[""*""],
+)
+   Details: Adding CORSMiddleware intercepts incoming cross-origin requests and responds with the appropriate headers allowing communication from your frontend origin.","fastapi_cors_sweep384_chunk_1, fastapi_fullstack_guide_sweep384_chunk_3, fastapi_fullstack_guide_sweep384_chunk_4",,
+GS-V2-02,How do I configure Cross-Origin Resource Sharing (CORS) in a FastAPI Python application?,System-B,"To configure CORS in a FastAPI application, you must import and mount the `CORSMiddleware` onto your FastAPI instance, specifying explicit lists for allowed origins, methods, and headers to bypass browser security blocks when your frontend and backend run on different origins.","1. Install and Import CORSMiddleware
+   Command: pip install fastapi uvicorn
+   Details: Ensure FastAPI and Uvicorn are installed, then import CORSMiddleware and configure it in your main application file.
+
+2. Mount CORSMiddleware on FastAPI App
+   Command: cat << 'EOF' > main.py
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+origins = [
+    ""http://localhost"",
+    ""http://localhost:3000"",
+    ""http://localhost:8080"",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=[""*""],
+    allow_headers=[""*""],
+)
+
+@app.get(""/"")
+async def main():
+    return {""message"": ""Hello World""}
+EOF
+   Details: Add the CORSMiddleware to your FastAPI application instance to permit incoming cross-origin requests from specified frontend origins.","fastapi_fullstack_guide_sweep384_chunk_3, fastapi_cors_sweep384_chunk_2",,
+GS-V2-03,Why does my browser reject responses when I set allow_origins=['*'] alongside allow_credentials=True in FastAPI?,System-A,Browsers reject CORS responses when allow_credentials=True and allow_origins=['*'] are used simultaneously because the CORS specification security rules forbid wildcard origins when handling credentialed requests like cookies or authorization headers.,"1. Update CORSMiddleware to explicitly list allowed origins
+   Command: app.add_middleware(CORSMiddleware, allow_origins=[""http://localhost:3000""], allow_credentials=True, allow_methods=[""*""], allow_headers=[""*""])
+   Details: When allow_credentials is True, you must explicitly specify exact origins instead of using the wildcard string ['*'].","fastapi_cors_sweep384_chunk_2, fastapi_fullstack_guide_sweep384_chunk_4",,
+GS-V2-03,Why does my browser reject responses when I set allow_origins=['*'] alongside allow_credentials=True in FastAPI?,System-B,Setting allow_origins=['*'] alongside allow_credentials=True in FastAPI causes the browser to reject CORS responses because standard CORS security specifications strictly prohibit wildcards when credentials (cookies or authorization headers) are enabled.,"1. Specify explicit origins instead of using the wildcard
+   Command: from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[""http://localhost:3000""],
+    allow_credentials=True,
+    allow_methods=[""*""],
+    allow_headers=[""*""],
+)
+   Details: Browsers reject wildcard origins when credentials are enabled. You must explicitly list your trusted frontend origin(s).","fastapi_cors_sweep384_chunk_1, fastapi_cors_sweep384_chunk_2, fastapi_fullstack_guide_sweep384_chunk_3",,
+GS-V2-04,How does FastAPI CORSMiddleware process preflight HTTP OPTIONS requests from web browsers?,System-A,"FastAPI CORSMiddleware processes preflight HTTP OPTIONS requests by intercepting incoming requests containing Origin and Access-Control-Request-Method headers, responding with appropriate CORS headers and either a 200 or 400 status code.","1. Configure CORSMiddleware on your FastAPI application
+   Command: from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[""http://localhost:3000""],
+    allow_credentials=True,
+    allow_methods=[""*""],
+    allow_headers=[""*""],
+)
+
+@app.get(""/api/items"")
+async def get_items():
+    return {""items"": [1, 2, 3]}
+   Details: Adding CORSMiddleware enables your FastAPI application to intercept browser cross-origin requests, including preflight OPTIONS requests.
+
+2. Test Preflight Handling via cURL
+   Command: curl -i -X OPTIONS http://localhost:8000/api/items \
+  -H ""Origin: http://localhost:3000"" \
+  -H ""Access-Control-Request-Method: GET""
+   Details: Simulate a browser preflight OPTIONS request to verify that the middleware intercepts it and returns the correct Access-Control-* headers.","fastapi_cors_sweep384_chunk_1, fastapi_cors_sweep384_chunk_3, fastapi_fullstack_guide_sweep384_chunk_3",,
+GS-V2-04,How does FastAPI CORSMiddleware process preflight HTTP OPTIONS requests from web browsers?,System-B,"FastAPI CORSMiddleware intercepts HTTP OPTIONS preflight requests containing Origin and Access-Control-Request-Method headers, responding with appropriate CORS headers and a 200 or 400 informational status.","1. Configure CORSMiddleware with explicit origins and methods
+   Command: pip install fastapi uvicorn
+   Details: Set up FastAPI and its CORS middleware to handle browser preflight OPTIONS requests properly.
+
+2. Test preflight handling via curl
+   Command: curl -i -X OPTIONS http://localhost:8000/api/tasks -H 'Origin: http://localhost:3000' -H 'Access-Control-Request-Method: POST'
+   Details: Verify that the CORS middleware successfully intercepts the OPTIONS request and returns the required CORS headers.","fastapi_cors_sweep384_chunk_3, fastapi_fullstack_guide_sweep384_chunk_3",,
+GS-V2-05,Where does FastAPI's CORSMiddleware implementation originate under the hood if I want to import it directly?,System-A,"FastAPI's CORSMiddleware implementation is provided as a convenience import from fastapi.middleware, but under the hood it originates directly from Starlette's CORS middleware.","1. Import CORSMiddleware directly from Starlette
+   Command: from starlette.middleware.cors import CORSMiddleware
+   Details: While FastAPI provides convenience re-exports in fastapi.middleware, CORSMiddleware comes natively from the Starlette framework package.",fastapi_cors_sweep384_chunk_3,,
+GS-V2-05,Where does FastAPI's CORSMiddleware implementation originate under the hood if I want to import it directly?,System-B,"FastAPI's CORSMiddleware is provided as a convenience import from fastapi.middleware, but its underlying implementation comes directly from Starlette.","1. Import CORSMiddleware from Starlette directly
+   Command: from starlette.middleware.cors import CORSMiddleware
+   Details: You can import CORSMiddleware directly from Starlette since FastAPI exposes these middlewares as a convenience.",fastapi_cors_sweep384_chunk_3,,
+GS-V2-06,What is the primary design purpose of BackgroundTasks in FastAPI for request handling?,System-A,"The primary design purpose of BackgroundTasks in FastAPI is to execute tasks after returning a response to the client, preventing the client from having to wait for slow operations (such as sending emails or processing data) to complete.","1. Define BackgroundTasks in a Path Operation Function
+   Command: cat << 'EOF' > main.py
+from fastapi import BackgroundTasks, FastAPI
+
+app = FastAPI()
+
+def write_notification(email: str, message: str):
+    with open(""log.txt"", ""a"") as log:
+        log.write(f""Notification to {email}: {message}\n"")
+
+@app.post(""/send-notification/{email}"")
+async def send_notification(email: str, background_tasks: BackgroundTasks):
+    background_tasks.add_task(write_notification, email, message=""some notification"")
+    return {""message"": ""Notification sent in the background""}
+EOF
+python3 -m uvicorn main:app --reload
+   Details: Declaring a parameter of type BackgroundTasks allows FastAPI to inject the background tasks manager, enabling you to queue actions that execute immediately after the HTTP response is sent.","fastapi_background_tasks_sweep384_chunk_0, fastapi_background_tasks_sweep384_chunk_1",,
+GS-V2-06,What is the primary design purpose of BackgroundTasks in FastAPI for request handling?,System-B,"The primary design purpose of BackgroundTasks in FastAPI is to allow operations to run after returning a response to the client, ensuring the client does not have to wait for slow operations (such as sending emails or processing data) to complete.","1. Import and inject BackgroundTasks into a path operation function
+   Command: from fastapi import BackgroundTasks, FastAPI
+
+app = FastAPI()
+
+def write_notification(email: str, message: str = """"):
+    with open(""log.txt"", mode=""w"") as email_file:
+        email_file.write(f""notification for {email}: {message}"")
+
+@app.post(""/send-notification/{email}"")
+async def send_notification(email: str, background_tasks: BackgroundTasks):
+    background_tasks.add_task(write_notification, email, message=""some notification"")
+    return {""message"": ""Notification sent in the background""}
+   Details: Import BackgroundTasks from fastapi (avoiding starlette.background.BackgroundTask without the 's') and declare it as a path operation parameter so FastAPI handles its instantiation and lifecycle.","fastapi_background_tasks_sweep384_chunk_0, fastapi_background_tasks_sweep384_chunk_2, fastapi_background_tasks_sweep384_chunk_3",,
+GS-V2-07,Which method is called on a BackgroundTasks instance to schedule a function execution in FastAPI?,System-A,"To schedule a function execution in the background after returning a response in FastAPI, you pass your task function to the BackgroundTasks instance using the .add_task() method.","1. Inject BackgroundTasks into Path Operation
+   Command: from fastapi import BackgroundTasks, FastAPI
+
+app = FastAPI()
+
+def write_notification(email: str, message: str = ""some notification""):
+    with open(""log.txt"", mode=""w"") as email_file:
+        email_file.write(f""notification to {email}: {message}"")
+
+@app.post(""/send-notification/{email}"")
+async def send_notification(email: str, background_tasks: BackgroundTasks):
+    background_tasks.add_task(write_notification, email, message=""some notification"")
+    return {""message"": ""Notification sent in the background""}
+   Details: Declare a parameter of type BackgroundTasks in your path operation function so FastAPI automatically instantiates and passes the background tasks manager object.","fastapi_background_tasks_sweep384_chunk_0, fastapi_background_tasks_sweep384_chunk_1",,
+GS-V2-07,Which method is called on a BackgroundTasks instance to schedule a function execution in FastAPI?,System-B,"To schedule a background task execution in FastAPI, you use the add_task method on the BackgroundTasks instance.","1. Import BackgroundTasks
+   Command: from fastapi import BackgroundTasks
+   Details: Import the BackgroundTasks class from FastAPI to leverage Starlette's background task handling integrated smoothly into FastAPI.
+
+2. Define and Schedule the Task via add_task
+   Command: from fastapi import BackgroundTasks, FastAPI
+
+app = FastAPI()
+
+def write_notification(email: str, message: str):
+    with open(""log.txt"", mode=""w"") as email_file:
+        email_file.write(f""notification to {email}: {message}"")
+
+@app.post(""/send-notification/{email}"")
+async def send_notification(email: str, background_tasks: BackgroundTasks):
+    background_tasks.add_task(write_notification, email, message=""some notification"")
+    return {""message"": ""Notification sent in the background""}
+   Details: Inject the BackgroundTasks parameter into your path operation function and call .add_task() passing your target function and its arguments.","fastapi_background_tasks_sweep384_chunk_2, fastapi_background_tasks_sweep384_chunk_0",,
+GS-V2-08,Can BackgroundTasks parameters be declared inside FastAPI dependency functions via Depends?,System-A,"Yes, BackgroundTasks parameters can be declared inside FastAPI dependency functions via Depends. FastAPI's dependency injection system seamlessly handles BackgroundTasks declarations across path operations, dependencies, and sub-dependencies, automatically merging them so that all tasks run in the background after the response is sent.","1. Define a Dependency Function Requesting BackgroundTasks
+   Command: from fastapi import BackgroundTasks, Depends
+
+async def log_action(background_tasks: BackgroundTasks):
+    background_tasks.add_task(print, 'Background task executed from dependency')
+    return 'dependency_result'
+   Details: You can declare a parameter of type BackgroundTasks inside a dependency function. FastAPI creates and injects the BackgroundTasks object automatically.
+
+2. Inject the Dependency into a Path Operation Function
+   Command: from fastapi import FastAPI, Depends, BackgroundTasks
+
+app = FastAPI()
+
+async def log_action(background_tasks: BackgroundTasks):
+    background_tasks.add_task(print, 'Background task from dependency')
+
+@app.post('/items/')
+async def create_item(bg: background_tasks = Depends(log_action)):
+    return {'message': 'Item created'}
+   Details: When the path operation is invoked, FastAPI evaluates the dependency, merges any registered background tasks, and executes them after sending the HTTP response.",fastapi_background_tasks_sweep384_chunk_1,,
+GS-V2-08,Can BackgroundTasks parameters be declared inside FastAPI dependency functions via Depends?,System-B,"Yes, BackgroundTasks can be declared within dependency functions. FastAPI's dependency injection system is designed to handle BackgroundTasks at multiple levels, including path operation functions, dependencies, and sub-dependencies, merging them all to execute after the response is sent.","1. Define a dependency that accepts BackgroundTasks
+   Command: from fastapi import BackgroundTasks, Depends
+
+def write_log(message: str):
+    with open(""log.txt"", mode=""a"") as log:
+        log.write(message + ""\n"")
+
+def dependency_task(background_tasks: BackgroundTasks):
+    background_tasks.add_task(write_log, ""Task from dependency"")
+    return True
+   Details: You can declare a parameter of type BackgroundTasks within a dependency function. FastAPI will inject the object, allowing you to register tasks that will be merged with any tasks added in the path operation function.
+
+2. Inject the dependency into a path operation
+   Command: @app.post(""/send-notification/{email}"")
+async def send_notification(email: str, background_tasks: BackgroundTasks, dep: bool = Depends(dependency_task)):
+    background_tasks.add_task(write_log, f""Task from path operation for {email}"")
+    return {""message"": ""Notification sent""}
+   Details: By injecting the dependency, FastAPI manages the BackgroundTasks object across both the dependency and the path operation, ensuring all tasks are queued and executed after the response.",fastapi_background_tasks_sweep384_chunk_1,,
+GS-V2-09,When should a developer switch from FastAPI built-in BackgroundTasks to an external worker queue like Celery?,System-A,"You should transition from FastAPI's built-in BackgroundTasks to Celery when you need to run heavy background computations, require multi-process or multi-server scaling, or cannot rely on sharing the same process memory and variables.","1. Evaluate task constraints and architecture
+   Details: Determine if your background tasks are simple, fast operations (such as small email notifications or file writes) that can run within the same FastAPI process, or heavy computations requiring dedicated workers.
+
+2. Configure Celery for multi-process scaling
+   Command: pip install celery redis
+   Details: If your application outgrows FastAPI's built-in background tasks, install Celery and a message broker like Redis to handle distributed and multi-process workloads across multiple servers.","fastapi_background_tasks_sweep384_chunk_2, fastapi_background_tasks_sweep384_chunk_3",,
+GS-V2-09,When should a developer switch from FastAPI built-in BackgroundTasks to an external worker queue like Celery?,System-B,"FastAPI's built-in BackgroundTasks are ideal for simple, low-latency tasks within the same process, while Celery is required for heavy, distributed, or long-running background processing.","1. Evaluate task requirements
+   Details: Determine if your task requires shared memory, high reliability, or multi-server execution. If the task is a simple email notification or small file processing, BackgroundTasks is sufficient.
+
+2. Implement BackgroundTasks for simple operations
+   Command: from fastapi import BackgroundTasks
+
+def send_email(email: str):
+    # Logic here
+    pass
+
+@app.post(""/send-notification/{email}"")
+async def notify(email: str, background_tasks: BackgroundTasks):
+    background_tasks.add_task(send_email, email)
+    return {""message"": ""Notification sent""}
+   Details: Use the built-in BackgroundTasks for tasks that do not need to survive application restarts or scale across multiple servers.
+
+3. Transition to Celery for heavy workloads
+   Details: If you need to perform heavy background computation, require task persistence, or need to distribute tasks across multiple servers, integrate Celery with a message broker like Redis or RabbitMQ.","fastapi_background_tasks_sweep384_chunk_0, fastapi_background_tasks_sweep384_chunk_2, fastapi_background_tasks_sweep384_chunk_3, fastapi_background_tasks_sweep384_chunk_1",,
+GS-V2-13,Why did my application build artifacts and installed libraries disappear when I added a bind mount in docker-compose.yml?,System-A,The issue occurs because a bind mount in Docker Compose replaces the entire contents of the target directory inside the container with the contents of the host directory. Any files generated during the 'docker build' process (like 'node_modules' or 'vendor') that exist in the image but not on your host machine are effectively hidden or overwritten by the mount.,"1. Identify the conflicting mount
+   Details: Check your 'docker-compose.yml' for a volume mount that maps your local project root to the same directory defined as 'WORKDIR' in your Dockerfile.
+
+2. Use anonymous volumes for build artifacts
+   Details: To prevent the host directory from overwriting build-time dependencies, add an anonymous volume for the specific directory containing the artifacts. This tells Docker to keep the image's version of that folder instead of the host's.
+
+3. Update docker-compose.yml
+   Command: services:
+  app:
+    build: .
+    volumes:
+      - ./:/app
+      - /app/node_modules  # Add this line to preserve image-based dependencies
+   Details: By adding an anonymous volume for the dependency folder, you instruct Docker to ignore the host's version of that specific sub-directory.",docker_compose_sweep384_chunk_0,,
+GS-V2-13,Why did my application build artifacts and installed libraries disappear when I added a bind mount in docker-compose.yml?,System-B,"When a container starts with a bind mount that targets the same path where files were copied during the docker build, the volume content completely replaces the image content at that path. This hides any directories like vendor/ or node_modules/ that existed after the build.","1. Review Volume Mounts in docker-compose.yml
+   Command: docker compose down && docker compose up --build
+   Details: Examine your docker-compose.yml file to ensure you are not bind-mounting the root directory directly over your application path if it overwrites built artifacts.
+
+2. Adjust Bind Mount Strategy
+   Command: sed -i 's|- ./:/app|- ./src:/app/src|g' docker-compose.yml
+   Details: Modify your docker-compose configuration to mount a sub-directory instead of the whole application root, or rely on named volumes for data that must persist rather than overwriting the build path.",docker_compose_sweep384_chunk_0,,
+GS-V2-14,Does depends_on in Docker Compose pause container startup until the database process is ready to receive SQL queries?,System-A,"No, `depends_on` does not wait for the application inside a container to be ready to accept connections; it only guarantees that the container has started. To ensure a database is ready for SQL queries, you must use a healthcheck.","1. Implement a healthcheck for the database service
+   Command: services:
+  db:
+    image: postgres:16
+    healthcheck:
+      test: [""CMD-SHELL"", ""pg_isready -U postgres""]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+   Details: Adding a healthcheck allows Docker to track the actual readiness of the database process rather than just the container state.
+
+2. Configure the application to depend on the healthy state
+   Command: services:
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+   Details: Updating the `depends_on` condition ensures the application container waits until the database reports as healthy before starting.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1",,
+GS-V2-14,Does depends_on in Docker Compose pause container startup until the database process is ready to receive SQL queries?,System-B,"Clarified that depends_on does not wait for a database to be ready to accept queries, only for the container to start, requiring a healthcheck condition.","1. Configure Postgres Healthcheck
+   Command: healthcheck:
+  test: [""CMD-SHELL"", ""pg_isready -U postgres""]
+  interval: 5s
+  timeout: 5s
+  retries: 5
+   Details: Docker Compose depends_on only guarantees container startup. A healthcheck is required to verify the database is actively ready to receive queries.
+
+2. Set depends_on condition to service_healthy
+   Command: depends_on:
+  db:
+    condition: service_healthy
+   Details: Forces the application container to wait until the database healthcheck reports a healthy state, preventing connection refused errors.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1",,
+GS-V2-15,What runtime error occurs if an API service starts before PostgreSQL completes its initialization in Docker Compose?,System-A,"When a FastAPI service attempts to connect to a PostgreSQL database before the database is fully initialized, the application will typically crash with a 'connection refused' error. This happens because Docker Compose's 'depends_on' directive only ensures the container has started, not that the database service inside is ready to accept connections.","1. Implement a Healthcheck for the Database
+   Command: services:
+  db:
+    image: postgres:16
+    healthcheck:
+      test: [""CMD-SHELL"", ""pg_isready -U postgres""]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+   Details: Adding a healthcheck allows Docker to track the actual readiness of the database service rather than just the container state.
+
+2. Configure Service Dependency with Condition
+   Command: services:
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+   Details: Updating the 'depends_on' condition ensures the application container waits until the database healthcheck passes before starting.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1",,
+GS-V2-15,What runtime error occurs if an API service starts before PostgreSQL completes its initialization in Docker Compose?,System-B,"When an API service starts before PostgreSQL finishes initialization in Docker Compose, the application often receives a 'connection refused' error because the database port is not yet accepting connections or the database cluster is still starting up.","1. Configure Database Healthcheck
+   Command: healthcheck:
+      test: [""CMD-SHELL"", ""pg_isready -U navigator_user -d navigator_db""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+   Details: Adding a healthcheck ensures Docker Compose tracks when the database is truly ready to accept connections rather than just started.
+
+2. Use service_healthy Dependency Condition
+   Command: depends_on:
+      database:
+        condition: service_healthy
+   Details: Without condition: service_healthy, the depends_on directive only waits for the container to start, not for PostgreSQL to finish its internal initialization, leading to connection refused errors.","docker_production_guide_sweep384_chunk_2, docker_compose_sweep384_chunk_1",,
+GS-V2-16,Can Docker Compose execute docker compose build while simultaneously running another container service as a build dependency?,System-A,"Docker Compose does not support starting services during the image build process. The 'depends_on' directive is strictly for runtime orchestration, not build-time dependencies.","1. Refactor build-time dependencies
+   Details: Since Docker Compose cannot start services during 'docker build', you must move build-time dependencies into a Makefile or shell script that starts the required services first, or use a multi-stage build that copies static data instead of requiring a live service.
+
+2. Implement runtime service readiness
+   Details: If your application requires a database to be ready before it starts, use 'depends_on' with a 'service_healthy' condition combined with a healthcheck in the database service definition.","docker_compose_sweep384_chunk_1, docker_compose_sweep384_chunk_0",,
+GS-V2-16,Can Docker Compose execute docker compose build while simultaneously running another container service as a build dependency?,System-B,"Docker Compose has no built-in way to start or run services during an image build. The 'depends_on' directive is strictly a runtime configuration, meaning build-time dependencies cannot be solved natively by starting a live container service during 'docker compose build'.","1. Use a Makefile or Shell Script Workflow
+   Command: make build
+   Details: Since Docker Compose cannot start services during a build, split the workflow into a script that explicitly starts required services first, and then runs the build command.
+
+2. Utilize Multi-stage Builds for Static Data
+   Command: docker build -t my-app .
+   Details: Instead of relying on a running service during the build process, use a multi-stage Dockerfile to copy static data or perform compilations cleanly within isolated build layers.",docker_compose_sweep384_chunk_1,,
+GS-V2-17,Where should native C build tools like gcc and libpq-dev reside in a production multi-stage Dockerfile?,System-A,Native C build tools like 'gcc' and 'libpq-dev' must reside exclusively in the 'builder' stage of a multi-stage Dockerfile to keep the final production image minimal and secure.,"1. Implement Multi-Stage Dockerfile
+   Command: FROM python:3.12-slim AS builder
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+FROM python:3.12-slim AS runner
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends libpq5 && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+COPY . .
+CMD [""uvicorn"", ""main:app"", ""--host"", ""0.0.0.0""]
+   Details: By separating the build environment from the runtime environment, you ensure that heavy compiler toolchains (gcc) and development headers (libpq-dev) are discarded, leaving only the necessary runtime library (libpq5) in the final image.","docker_compose_sweep384_chunk_1, docker_production_guide_sweep384_chunk_0, docker_production_guide_sweep384_chunk_1",,
+GS-V2-17,Where should native C build tools like gcc and libpq-dev reside in a production multi-stage Dockerfile?,System-B,Native C build tools like gcc and libpq-dev must reside exclusively in the builder stage of a multi-stage Dockerfile to avoid inflating image sizes and leaving security vulnerabilities in the production runtime image.,"1. Configure Builder Stage with Compilation Tools
+   Command: FROM python:3.12-slim AS builder
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+   Details: Native compilation tools like gcc and libpq-dev are placed in the builder stage so that packages requiring C extensions (such as psycopg2) can build their wheels successfully.
+
+2. Copy Compiled Wheels to Minimal Runner Stage
+   Command: FROM python:3.12-slim AS runner
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /root/.local /root/.local
+   Details: The runner stage copies only the built dependencies and runtime library (libpq5) while leaving behind the heavy compiler toolchain.","docker_production_guide_sweep384_chunk_0, docker_production_guide_sweep384_chunk_1, docker_compose_sweep384_chunk_1",,
+GS-V2-18,What is the central operational benefit of defining services within a Docker Compose YAML file?,System-A,"The central operational benefit of defining services within a Docker Compose YAML file is simplified and consistent control, allowing developers to manage multi-container applications in a single configuration file and orchestrate services (such as databases and web applications) using simple orchestration commands like docker compose up.","1. Review Compose Benefits and Use Cases
+   Command: docker compose up -d
+   Details: Docker Compose streamlines multi-container application development by centralizing service definitions, dependencies, environment variables, and volumes into a single YAML configuration file.","docker_compose_best_practices_sweep384_chunk_0, docker_compose_best_practices_sweep384_chunk_1",,
+GS-V2-18,What is the central operational benefit of defining services within a Docker Compose YAML file?,System-B,"The central operational benefit of defining services within a Docker Compose YAML file is simplified control through multi-container orchestration, allowing developers to define, configure, and manage all service dependencies and environments using a single machine-readable file and simple commands.","1. Initialize Docker Compose Configuration
+   Command: docker compose up -d
+   Details: Using Docker Compose allows you to spin up multiple services like a backend and database concurrently with a single command based on the YAML configuration.","docker_compose_best_practices_sweep384_chunk_0, docker_compose_best_practices_sweep384_chunk_1",,
+GS-V2-19,How does Docker Compose optimize restart latency when services have not changed between commands?,System-A,"Docker Compose achieves rapid restart latency by caching the configuration used to create containers, reusing existing unchanged containers when you run orchestration commands like docker compose up.","1. Examine Docker Compose Caching Behavior
+   Command: docker compose up -d
+   Details: Docker Compose caches the configuration used to create a container. When you restart a service that has not changed, Compose reuses the existing containers instead of recreating them, which provides rapid application development and startup times.",docker_compose_best_practices_sweep384_chunk_0,,
+GS-V2-19,How does Docker Compose optimize restart latency when services have not changed between commands?,System-B,"Docker Compose optimizes restart latency by caching the configuration used to create containers. When restarting a service whose configuration and context have not changed, Compose reuses the existing containers rather than rebuilding or recreating them from scratch, allowing for rapid environment iteration.","1. Start your development services
+   Command: docker compose up -d
+   Details: Initializes the multi-container development environment defined in your YAML configuration, caching the configuration state for subsequent runs.
+
+2. Restart unchanged services for low latency
+   Command: docker compose up -d
+   Details: Re-running the up command after making no changes to a service configuration causes Compose to reuse existing containers, bypassing unnecessary build and creation overhead.","docker_compose_best_practices_sweep384_chunk_0, docker_compose_best_practices_sweep384_chunk_1",,
+GS-V2-20,Why is Docker Compose widely used in CI/CD pipelines for automated testing environments?,System-A,"Docker Compose is widely used in CI/CD pipelines for automated testing because it allows developers to define a full multi-service application environment (like web servers, databases, and caches) in a single YAML file. This enables engineers to spin up, test against, and tear down completely isolated environments using simple CLI commands.","1. Define the testing environment in a Compose file
+   Command: cat << 'EOF' > docker-compose.yml
+version: '3.8'
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: navigator_user
+      POSTGRES_PASSWORD: navigator_password
+      POSTGRES_DB: navigator_db
+EOF
+   Details: Documenting all service dependencies in a machine-readable file eliminates lengthy setup instructions and ensures environment consistency.
+
+2. Spin up the isolated environment for testing
+   Command: docker compose up -d
+   Details: Starts the defined containers in detached mode so that automated test scripts can execute against active services.
+
+3. Tear down the testing environment
+   Command: docker compose down
+   Details: Destroys the isolated containers cleanly after the test suite completes to free up resources and prevent side effects.",docker_compose_best_practices_sweep384_chunk_1,,
+GS-V2-20,Why is Docker Compose widely used in CI/CD pipelines for automated testing environments?,System-B,"Docker Compose is widely used in automated testing and CI/CD pipelines because it allows developers to define and orchestrate a full multi-container application environment—including web servers, databases, and caches—in a single machine-readable YAML file, enabling engineers to spin up, test against, and tear down completely isolated environments with just a few terminal commands.","1. Define the Testing Architecture in Docker Compose
+   Command: cat << 'EOF' > docker-compose.yml
+version: '3.8'
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: navigator_user
+      POSTGRES_PASSWORD: navigator_password
+      POSTGRES_DB: navigator_db
+    healthcheck:
+      test: [""CMD-SHELL"", ""pg_isready -U navigator_user -d navigator_db""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    ports:
+      - ""8000:8000""
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://navigator_user:navigator_password@database:5432/navigator_db
+    depends_on:
+      database:
+        condition: service_healthy
+volumes:
+  pgdata:
+EOF
+   Details: Automated end-to-end testing requires an isolated testing environment complete with dependencies like databases, which can be fully documented and orchestrated via a Compose file.
+
+2. Execute Automated Testing Lifecycle via CLI Commands
+   Command: docker compose up -d
+./run_tests.sh
+docker compose down
+   Details: CI/CD pipelines leverage Docker Compose commands to launch isolated test suites, execute the test runner script, and safely tear down resources afterward.","docker_compose_best_practices_sweep384_chunk_1, docker_production_guide_sweep384_chunk_2",,
+GS-V2-21,What drawbacks arise from using single-stage Dockerfiles when packaging Python production services?,System-A,"Using single-stage Dockerfiles for Python production services inflates image sizes (often exceeding 1GB) and leaves unnecessary compilers and native build tools (such as gcc and development headers) inside the production image, increasing security surface area and deployment overhead.","1. Adopt a Multi-Stage Dockerfile Blueprint
+   Command: FROM python:3.12-slim AS builder
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+FROM python:3.12-slim AS runner
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends curl libpq5 && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+COPY . .
+CMD [""uvicorn"", ""app.main:app"", ""--host"", ""0.0.0.0"", ""--port"", ""8000""]
+   Details: Separating the build/compilation environment from the runtime environment ensures that heavy C compilers and build toolchains are left behind in the builder stage while only minimal runtime dependencies are shipped to production.",docker_production_guide_sweep384_chunk_0,,
+GS-V2-21,What drawbacks arise from using single-stage Dockerfiles when packaging Python production services?,System-B,"Single-stage Dockerfiles for Python production services lead to unnecessarily large image sizes due to leftover compilers and build tools, and they expose security risks by retaining development headers and package managers in production.","1. Adopt a Multi-Stage Dockerfile Strategy
+   Command: FROM python:3.12-slim AS builder
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+FROM python:3.12-slim AS runner
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends curl libpq5 && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+COPY . .
+CMD [""uvicorn"", ""app.main:app"", ""--host"", ""0.0.0.0"", ""--port"", ""8000""]
+   Details: Separating the build environment from the runtime environment allows you to compile native dependencies using heavy tools like gcc and libpq-dev in a builder stage, leaving only the minimal runtime libraries (like libpq5) in the final production image.","docker_production_guide_sweep384_chunk_0, docker_compose_sweep384_chunk_1",,
+GS-V2-25,How does exiting a psycopg2 connection context manager block (with conn:) manage SQL transaction state?,System-A,"Exiting a connection's 'with conn:' block in psycopg2 automatically commits the transaction if no exception occurred, or rolls it back if an exception was raised. However, the connection itself is not closed by the context manager and must be explicitly closed.","1. Use conn context manager for atomic multi-table inserts
+   Command: python3 -c ""import psycopg2; print('Context manager ready')""
+   Details: Wrap your database operations in a 'with conn:' block to let psycopg2 handle automatic commit on clean exit and automatic rollback on exceptions.
+
+2. Explicitly close the connection outside the context block
+   Command: python3 -c ""import psycopg2; print('Remember to call conn.close()')""
+   Details: The connection itself is not closed by the 'with conn:' block, so you must call conn.close() to prevent connection leaks.
+
+3. Handle transaction aborts with explicit rollback
+   Command: python3 -c ""import psycopg2; print('Use conn.rollback() on failure')""
+   Details: If a transaction fails, PostgreSQL aborts it and raises InFailedSqlTransaction until a rollback is issued.","postgresql_psycopg2_sweep384_chunk_0, postgresql_psycopg2_sweep384_chunk_1",,
+GS-V2-25,How does exiting a psycopg2 connection context manager block (with conn:) manage SQL transaction state?,System-B,"Exiting a psycopg2 connection context manager block (with conn:) automatically commits the transaction if no exception occurred within the block. If an exception occurs, it automatically rolls back the transaction. Note that the connection itself is not closed by the context manager.","1. Examine psycopg2 Transaction Context Manager Behavior
+   Command: python3 -c ""import psycopg2""
+   Details: Understanding how psycopg2 manages connection transactions via context managers prevents manual transaction state leakage and ensures atomic operations.",postgresql_psycopg2_sweep384_chunk_0,,
+GS-V2-26,Does exiting a with conn: context manager in psycopg2 close the underlying TCP database connection?,System-A,Verified explanation of psycopg2 connection context manager behavior regarding underlying TCP sockets.,"1. Examine Connection Context Manager Behavior
+   Command: python3 -c ""import psycopg2; print('Check official docs in corpus')""
+   Details: Exiting a connection's with block in psycopg2 commits or rolls back the transaction, but it does NOT close the connection itself. You must explicitly call conn.close().",postgresql_psycopg2_sweep384_chunk_0,,
+GS-V2-26,Does exiting a with conn: context manager in psycopg2 close the underlying TCP database connection?,System-B,"Exiting a connection's `with` block in psycopg2 commits or rolls back the active transaction, but it does NOT close the underlying TCP database connection. You must call `conn.close()` explicitly.","1. Examine Transaction Management vs Connection Lifecycle
+   Command: python -c ""import psycopg2; print('Reviewing psycopg2 connection behavior')""
+   Details: In psycopg2, the `with conn:` context manager handles transactions automatically (committing on success or rolling back on exception), but the connection itself must be closed manually via `conn.close()` to release the socket and prevent connection leaks.",postgresql_psycopg2_sweep384_chunk_0,,
+GS-V2-27,What database condition triggers the psycopg2.errors.InFailedSqlTransaction error during query execution?,System-A,"The `psycopg2.errors.InFailedSqlTransaction` error is triggered in PostgreSQL when you attempt to execute subsequent SQL commands on a database connection after a previous error has occurred within the same active transaction block. PostgreSQL automatically aborts the transaction on any failure, blocking further queries until the transaction is rolled back.","1. Use Transaction Context Managers for Automatic Rollbacks
+   Command: python -c ""import psycopg2; conn = psycopg2.connect('dbname=test');
+try:
+    with conn:
+        with conn.cursor() as cur:
+            cur.execute('SELECT 1')
+except Exception:
+    pass
+finally:
+    conn.close()""
+   Details: Wrap your database queries inside connection context managers (`with conn:`) so that PostgreSQL transactions automatically roll back when an exception occurs, preventing `InFailedSqlTransaction` states.
+
+2. Explicitly Roll Back Aborted Transactions
+   Command: python -c ""import psycopg2; conn = psycopg2.connect('dbname=test');
+try:
+    cur = conn.cursor()
+    cur.execute('SELECT invalid_syntax')
+except psycopg2.errors.SyntaxError:
+    conn.rollback()
+    cur.execute('SELECT 1')
+    conn.commit()
+    conn.close()""
+   Details: If not using context managers, explicitly invoke `conn.rollback()` upon catching an error before issuing new queries on the same connection.","postgresql_psycopg2_sweep384_chunk_0, postgresql_psycopg2_sweep384_chunk_1",,
+GS-V2-27,What database condition triggers the psycopg2.errors.InFailedSqlTransaction error during query execution?,System-B,"The `psycopg2.errors.InFailedSqlTransaction` error is triggered when an error occurs inside an active PostgreSQL transaction, causing the database server to abort the current transaction and ignore all subsequent commands until the transaction block is formally ended.","1. Wrap Database Operations in Connection Context Managers
+   Command: python -c ""import psycopg2; conn = psycopg2.connect('dbname=test'); 
+with conn:
+    with conn.cursor() as cur:
+        cur.execute('SELECT 1')
+conn.close()""
+   Details: Using a connection context manager (`with conn:`) ensures that transactions are automatically committed upon success or rolled back safely when an exception occurs, avoiding left-over aborted transaction states.
+
+2. Explicitly Call Rollback on Connection Errors
+   Command: python -c ""import psycopg2; conn = psycopg2.connect('dbname=test'); 
+try:
+    with conn.cursor() as cur:
+        cur.execute('SELECT * FROM non_existent_table')
+except Exception:
+    conn.rollback()
+conn.close()""
+   Details: If you are not using context managers, you must manually call `conn.rollback()` after catching an exception before attempting any new queries on that connection.","postgresql_psycopg2_sweep384_chunk_0, postgresql_psycopg2_sweep384_chunk_1",,
+GS-V2-28,How do you recover a psycopg2 connection after encountering an InFailedSqlTransaction exception?,System-A,"When a PostgreSQL transaction fails, the connection enters an 'InFailedSqlTransaction' state, rendering it unusable until the transaction is explicitly rolled back. The recommended approach is to use context managers to ensure automatic rollbacks, or to manually call `conn.rollback()` to reset the connection state.","1. Implement Context Managers for Transactions
+   Command: with conn: with conn.cursor() as cur: cur.execute('...')
+   Details: Using `with conn:` automatically handles the transaction lifecycle. If an exception occurs within the block, it triggers a rollback, preventing the connection from remaining in a failed state.
+
+2. Manual Recovery via Rollback
+   Command: conn.rollback()
+   Details: If you are not using context managers, you must explicitly call `conn.rollback()` after catching an exception to clear the aborted transaction state.","postgresql_psycopg2_sweep384_chunk_0, postgresql_psycopg2_sweep384_chunk_1",,
+GS-V2-28,How do you recover a psycopg2 connection after encountering an InFailedSqlTransaction exception?,System-B,"When a PostgreSQL error occurs within a transaction, the entire transaction is aborted, raising psycopg2.errors.InFailedSqlTransaction. To recover, you must explicitly roll back the transaction before executing new commands, though using Python context managers automates this process.","1. Roll back the aborted transaction
+   Command: conn.rollback()
+   Details: After any error inside a transaction, PostgreSQL blocks subsequent commands until the transaction block is ended. Calling rollback clears the aborted state so you can start a new transaction.
+
+2. Use context managers for automatic rollbacks
+   Command: with conn:
+    with conn.cursor() as cur:
+        cur.execute(""INSERT INTO listing (title) VALUES (%s) RETURNING listing_sk"", (title,))
+   Details: Wrapping your connection or cursor in a context manager guarantees that rollbacks happen automatically if an exception is thrown, preventing the connection from getting stuck in an aborted transaction state.","postgresql_psycopg2_sweep384_chunk_1, postgresql_psycopg2_sweep384_chunk_0",,
+GS-V2-29,Why should developers never format SQL query strings using Python f-strings or string interpolation?,System-A,Developers must never format SQL query strings using Python f-strings or string interpolation because it leaves the application vulnerable to SQL injection attacks. Using parameterized queries ensures that user-supplied input is treated strictly as data rather than executable code.,"1. Use Parameterized Queries instead of String Interpolation
+   Command: cur.execute(""SELECT * FROM users WHERE id = %s"", (user_id,))
+   Details: Passing parameters separately using placeholders allows the database driver to safely escape user inputs, completely preventing SQL injection.
+
+2. Handle Variable Length IN Lists Safely
+   Command: cur.execute(""SELECT * FROM users WHERE id = ANY(%s)"", (ids,))
+   Details: When working with lists of variable length, use the SQL ANY operator with a single list parameter or securely construct placeholders rather than raw string formatting.",postgresql_psycopg2_sweep384_chunk_1,,
+GS-V2-29,Why should developers never format SQL query strings using Python f-strings or string interpolation?,System-B,"Developers must never use Python f-strings or string formatting to construct SQL queries because it directly introduces SQL injection vulnerabilities, allowing malicious inputs to manipulate database execution.","1. Use Parameterized Queries with Placeholders
+   Command: python3 -c ""import psycopg2; print('Always use %s placeholders instead of f-strings')""
+   Details: Using placeholders allows the database driver to safely escape and separate query structure from user-supplied data, neutralizing SQL injection vectors.",postgresql_psycopg2_sweep384_chunk_1,,
+GS-V2-30,How can a Python list of variable length be passed into a SQL query in psycopg2 using the ANY construct?,System-A,"To pass a Python list of variable length into a SQL query in psycopg2 using the ANY construct, you should pass the list directly as a single parameter tuple to prevent SQL injection and let psycopg2 handle array formatting.","1. Use ANY() with a single parameter tuple
+   Command: ids = [1, 2, 3, 4]
+cur.execute(
+    ""SELECT * FROM users WHERE id = ANY(%s)"",
+    (ids,)
+)
+   Details: Passing the list as a single parameter tuple allows psycopg2 to safely map the Python list to a PostgreSQL array for the ANY operator.",postgresql_psycopg2_sweep384_chunk_1,,
+GS-V2-30,How can a Python list of variable length be passed into a SQL query in psycopg2 using the ANY construct?,System-B,"To pass a Python list of variable length into a SQL query in psycopg2 using the ANY construct, you must pass the list as a single parameter tuple rather than unpacking or string-formatting it.","1. Use the ANY operator with a single parameter tuple
+   Command: ids = [1, 2, 3, 4]
+cur.execute(
+    ""SELECT * FROM users WHERE id = ANY(%s)"",
+    (ids,)          # pass the list as a single parameter
+)
+   Details: Passing the list as a single parameter inside a tuple to execute() allows psycopg2 to correctly translate the Python list into a PostgreSQL array, preventing SQL injection and syntax errors.",postgresql_psycopg2_sweep384_chunk_1,,
+GS-V2-31,Why is opening a separate TCP connection for every incoming API request inefficient in high-throughput applications?,System-A,"The question is outside the scope of the verified corpus. As Tutorial Hell Navigator, I must refuse out-of-corpus queries to ensure guidance is grounded in verified documentation.","1. Consult Standard Networking Documentation
+   Command: echo ""Please refer to RFC 793 and standard networking textbooks regarding TCP overhead and connection pooling.""
+   Details: Since the query is out-of-corpus, students should consult standard networking and systems design documentation.","postgresql_psycopg2_sweep384_chunk_1, fastapi_fullstack_guide_sweep384_chunk_3, fastapi_cors_sweep384_chunk_3",,
+GS-V2-31,Why is opening a separate TCP connection for every incoming API request inefficient in high-throughput applications?,System-B,"Opening a separate TCP connection for every incoming API request is inefficient because TCP connection establishment requires a multi-step handshake (SYN, SYN-ACK, ACK) and teardown overhead, which introduces significant latency under high throughput. Additionally, managing thousands of simultaneous short-lived connections exhausts system resources and leads to performance degradation and timeouts. Using connection pooling mitigates this by maintaining a set of reusable active connections.","1. Inspect Connection Pooling and Timeout Settings
+   Command: python -c ""import psycopg2.pool; print('psycopg2 pool module available')""
+   Details: To prevent the overhead of opening a new TCP connection for every database request under load, you must configure a connection pool (such as psycopg2.pool or an external pooler like PgBouncer) and inspect parameters like maxconn and idle connection lifetime.",postgresql_psycopg2_sweep384_chunk_1,,
+GS-V2-32,What three primary pool configuration settings should be checked when database connection timeouts occur?,System-A,"When database connection timeouts occur under load, you should inspect three primary connection pool configuration settings first: maxconn (pool size), statement timeouts, and idle connection lifetime.","1. Inspect connection pool settings for timeouts
+   Command: python -c ""import psycopg2.pool; print('Check maxconn, statement timeouts, and idle connection lifetime.')""
+   Details: Under heavy load, opening a new TCP connection for every request is expensive. Inspecting maxconn/pool size, statement timeouts, and idle connection lifetime in your pooler (like psycopg2.pool or PgBouncer) resolves common timeout bottlenecks.",postgresql_psycopg2_sweep384_chunk_1,,
+GS-V2-32,What three primary pool configuration settings should be checked when database connection timeouts occur?,System-B,"When database connection timeouts occur under load in PostgreSQL applications using psycopg2, you should inspect three primary pool configuration settings first: maxconn (pool size), statement timeouts, and idle connection lifetime.","1. Inspect Connection Pool Settings
+   Command: python -c ""import psycopg2.pool; pool = psycopg2.pool.SimpleConnectionPool(1, 20, dsn='postgres://user:pass@localhost:5432/db'); print('Pool initialized')""
+   Details: Review pool configuration parameters like maxconn and pool size to ensure your application is not exhausting available connections under load.",postgresql_psycopg2_sweep384_chunk_1,,
+GS-V2-36,"In Pydantic v2, which decorator replaces the legacy @validator decorator for validating model fields?",System-A,"In Pydantic v2, the legacy @validator decorator has been replaced by the @field_validator decorator for validating model fields.","1. Use @field_validator in Pydantic v2
+   Command: from pydantic import BaseModel, field_validator
+
+class Model(BaseModel):
+    number: int
+
+    @field_validator('number', mode='after')
+    @classmethod
+    def validate_number(cls, value: int) -> int:
+        return value
+   Details: Pydantic v2 replaces @validator with @field_validator, which requires the @classmethod decorator on validator methods.",pydantic_validation_sweep384_chunk_1,,
+GS-V2-36,"In Pydantic v2, which decorator replaces the legacy @validator decorator for validating model fields?",System-B,"In Pydantic v2, the legacy @validator decorator has been replaced by @field_validator for validating individual fields.","1. Use @field_validator in Pydantic v2
+   Command: from pydantic import BaseModel, field_validator, ValidationInfo
+
+class ManagerSchema(BaseModel):
+    operation_type: str
+    background_hex_color: str | None = None
+
+    @field_validator(""background_hex_color"", mode=""before"")
+    @classmethod
+    def validate_background_hex_color(cls, value, info: ValidationInfo):
+        return value
+   Details: Replace old @validator imports and usages with @field_validator along with the required @classmethod decorator.",fastapi_validation_sweep384_chunk_1,,
+GS-V2-37,Why should developers use discriminated unions when working with large Union schemas in FastAPI and Pydantic?,System-A,"Developers should use discriminated unions in FastAPI and Pydantic when dealing with large Union schemas to prevent verbose and unclear validation error messages. Without a discriminator, Pydantic attempts to validate every single schema in the union, resulting in overwhelming error lists. Using a discriminator ensures Pydantic targets the correct schema immediately and returns concise, precise error responses.","1. Define Component Schemas with Literal Identifiers
+   Command: cat << 'EOF' > models.py
+from typing import Literal
+from pydantic import BaseModel
+
+class SchemaA(BaseModel):
+    type: Literal[""A""]
+    value_a: int
+
+class SchemaB(BaseModel):
+    type: Literal[""B""]
+    value_b: str
+EOF
+   Details: Create distinct Pydantic models containing a literal field that acts as a unique identifier for each schema branch.
+
+2. Configure the Master Union with a Discriminator Field
+   Command: cat << 'EOF' >> models.py
+from typing import Annotated, Union
+from pydantic import Field
+
+MasterRequest = Annotated[
+    Union[SchemaA, SchemaB],
+    Field(discriminator=""type"")
+]
+EOF
+   Details: Combine the schemas using typing.Annotated and pydantic.Field with a discriminator parameter pointing to the literal identifier field, allowing FastAPI to route validation accurately.",fastapi_validation_sweep384_chunk_1,,
+GS-V2-37,Why should developers use discriminated unions when working with large Union schemas in FastAPI and Pydantic?,System-B,"Developers should use discriminated unions with large Union schemas in FastAPI and Pydantic because they prevent verbose, inefficient validation errors and significantly speed up processing. Without a discriminator, Pydantic attempts to validate input data against every single member of the Union sequentially, resulting in massive error payloads that enumerate every failed possibility.","1. Define Distinct Schema Members with a Literal Type Discriminator
+   Command: cat << 'EOF' > models.py
+from typing import Annotated, Union, Literal
+from pydantic import BaseModel, Field
+
+class SchemaA(BaseModel):
+    type: Literal[""A""]
+    value_a: int
+
+class SchemaB(BaseModel):
+    type: Literal[""B""]
+    value_b: str
+
+MasterRequest = Annotated[
+    Union[SchemaA, SchemaB],
+    Field(discriminator=""type"")
+]
+EOF
+   Details: By adding a literal 'type' field to each schema model and wrapping the Union in an Annotated `Field(discriminator='type')`, Pydantic can instantly route the incoming request to the exact correct schema instead of testing every possibility.
+
+2. Integrate the Discriminated Union into a FastAPI Path Operation
+   Command: cat << 'EOF' > main.py
+from fastapi import FastAPI
+from models import MasterRequest, SchemaA, SchemaB
+
+app = FastAPI()
+
+@app.post(""/process"")
+async def process_payload(payload: MasterRequest):
+    if isinstance(payload, SchemaA):
+        return {""result"": payload.value_a * 2}
+    elif isinstance(payload, SchemaB):
+        return {""result"": payload.value_b.upper()}
+EOF
+   Details: Using the discriminated union type inside a FastAPI path operation ensures that FastAPI's OpenAPI generator documents the exact polymorphic choices cleanly and returns precise validation errors targeting only the matched schema branch if validation fails.","fastapi_validation_sweep384_chunk_1, fastapi_validation_sweep384_chunk_2",,
+GS-V2-38,What does Pydantic do when a custom @field_validator raises a standard Python ValueError?,System-A,"When a custom @field_validator raises a standard Python ValueError, Pydantic automatically catches it and converts it into a standard Pydantic ValidationError. FastAPI then takes any Pydantic ValidationError and automatically transforms it into an HTTP 422 Unprocessable Entity response.","1. Define a model with a field validator raising ValueError
+   Command: cat << 'EOF' > validator_test.py
+from pydantic import BaseModel, ValidationError, field_validator
+
+class Model(BaseModel):
+    number: int
+
+    @field_validator('number')
+    @classmethod
+    def is_even(cls, value: int) -> int:
+        if value % 2 == 1:
+            raise ValueError(f'{value} is not an even number')
+        return value
+
+try:
+    Model(number=1)
+except ValidationError as err:
+    print(err)
+EOF
+python3 validator_test.py
+   Details: This demonstrates how a standard ValueError raised inside a field validator is intercepted by Pydantic and encapsulated in a ValidationError.","pydantic_validation_sweep384_chunk_2, pydantic_validation_sweep384_chunk_12",,
+GS-V2-38,What does Pydantic do when a custom @field_validator raises a standard Python ValueError?,System-B,"When a custom @field_validator raises a standard Python ValueError, Pydantic converts that ValueError into a ValidationError. Furthermore, FastAPI automatically intercepts any ValidationError and converts it into a clean HTTP 422 Unprocessable Entity response.","1. Implement a custom field validator raising ValueError
+   Command: cat << 'EOF' > validator_demo.py
+from pydantic import BaseModel, field_validator, ValidationInfo
+
+class ManagerSchema(BaseModel):
+    operation_type: str
+    background_hex_color: str | None = None
+
+    @field_validator(""background_hex_color"", mode=""before"")
+    @classmethod
+    def validate_background_hex_color(cls, value, info: ValidationInfo):
+        operation_type = info.data.get(""operation_type"")
+        if operation_type == ""UPDATE_BACKGROUND_COLOR"" and not value:
+            raise ValueError(""background_hex_color is required for UPDATE_BACKGROUND_COLOR"")
+        return value
+EOF
+
+   Details: Demonstrates how raising a standard Python ValueError inside a @field_validator is handled by Pydantic.","fastapi_validation_sweep384_chunk_1, fastapi_validation_sweep384_chunk_2",,
+GS-V2-39,Why is a model_validator advantageous over multiple field_validators when validating dependent model attributes?,System-A,"Model validators are superior for cross-field dependencies because they have access to the entire model state, whereas field validators are isolated to a single attribute. Using a model validator allows you to collect multiple errors across different fields simultaneously, rather than failing on the first field validator that triggers.","1. Implement a Model Validator for Cross-Field Logic
+   Command: from pydantic import BaseModel, model_validator, ValidationError
+
+class Registration(BaseModel):
+    password: str
+    confirm_password: str
+
+    @model_validator(mode='after')
+    def validate_passwords(self) -> 'Registration':
+        if self.password != self.confirm_password:
+            raise ValueError('Passwords do not match')
+        return self
+   Details: By using 'mode=after', the model validator runs after individual fields have been parsed. This ensures you are comparing fully validated data types, and you have access to 'self' to inspect all attributes.
+
+2. Collect Multiple Errors
+   Command: from pydantic import BaseModel, model_validator, ValidationError
+
+class Order(BaseModel):
+    start_date: str
+    end_date: str
+
+    @model_validator(mode='after')
+    def validate_dates(self) -> 'Order':
+        errors = []
+        if self.start_date > self.end_date:
+            errors.append({'loc': ('start_date',), 'msg': 'Start must be before end'})
+        if not self.start_date:
+            errors.append({'loc': ('start_date',), 'msg': 'Start date required'})
+        if errors:
+            raise ValidationError.from_exception_data('DateValidationError', errors)
+        return self
+   Details: Unlike field validators which short-circuit, a model validator allows you to aggregate multiple errors into a single exception, providing better feedback to the API consumer.","pydantic_validation_sweep384_chunk_10, pydantic_validation_sweep384_chunk_11, fastapi_validation_sweep384_chunk_2",,
+GS-V2-39,Why is a model_validator advantageous over multiple field_validators when validating dependent model attributes?,System-B,The question is outside the scope of the verified corpus since no verified technical context was provided for Pydantic model validators.,"1. Consult Official Documentation
+   Command: python -m webbrowser https://docs.pydantic.dev/
+   Details: Please refer to the official Pydantic documentation regarding model_validator versus field_validator for authoritative guidance.","fastapi_validation_sweep384_chunk_2, pydantic_validation_sweep384_chunk_0, pydantic_validation_sweep384_chunk_10",,
+GS-V2-40,How do 'after' field validators function in Pydantic v2 and why are they considered type-safe?,System-A,"Explaining Pydantic v2 'after' field validators, their execution order after internal validation, and why they offer higher type safety due to running against already-parsed types.","1. Create an AfterValidator example using the Annotated pattern
+   Command: cat << 'EOF' > validator_demo.py
+from typing import Annotated
+from pydantic import AfterValidator, BaseModel, ValidationError
+
+def is_even(value: int) -> int:
+    if value % 2 == 1:
+        raise ValueError(f'{value} is not an even number')
+    return value
+
+class Model(BaseModel):
+    number: Annotated[int, AfterValidator(is_even)]
+
+try:
+    Model(number=1)
+except ValidationError as err:
+    print(err)
+EOF
+python3 validator_demo.py
+   Details: After validators run after Pydantic's internal validation has completed, ensuring the input value has already been successfully coerced or parsed into the expected base type (e.g., int), making them safer to implement.","pydantic_validation_sweep384_chunk_1, pydantic_validation_sweep384_chunk_0",,
+GS-V2-40,How do 'after' field validators function in Pydantic v2 and why are they considered type-safe?,System-B,"In Pydantic v2, 'after' field validators execute after Pydantic performs its internal type parsing and coercion. They are considered type-safe because they receive a value that is already guaranteed to conform to the specified field type, allowing validators to focus purely on business logic rules or value mutations.","1. Create a Pydantic v2 model using an 'after' field validator
+   Command: cat << 'EOF' > validator_demo.py
+from pydantic import BaseModel, ValidationError, field_validator
+
+class Model(BaseModel):
+    number: int
+
+    @field_validator('number', mode='after')
+    @classmethod
+    def is_even(cls, value: int) -> int:
+        if value % 2 == 1:
+            raise ValueError(f'{value} is not an even number')
+        return value
+
+try:
+    print(Model(number=2))
+    print(Model(number=1))
+except ValidationError as err:
+    print(err)
+EOF
+python3 validator_demo.py
+   Details: This demonstrates how an 'after' validator receives an already-parsed integer value and safely evaluates domain constraints (like checking for even numbers) without needing manual type-checking boilerplate.","pydantic_validation_sweep384_chunk_1, pydantic_validation_sweep384_chunk_2",,
+GS-V2-46,How do I implement custom backpropagation and calculate gradient clipping thresholds in PyTorch for an LSTM model?,System-A,"The student is asking how to implement custom backpropagation and gradient clipping in PyTorch for an LSTM model. This topic relates to PyTorch's autograd engine and neural network training loops, which are entirely outside the scope of the verified corpus covering Docker, FastAPI, PostgreSQL, and Pydantic validation.","1. Consult Official PyTorch Documentation
+   Command: python -c ""import torch; print(torch.__version__)""
+   Details: Since PyTorch implementation details are outside the scope of the verified documentation corpus, students should refer directly to official PyTorch tutorials on autograd, custom backward functions (torch.autograd.Function), and torch.nn.utils.clip_grad_norm_.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-46,How do I implement custom backpropagation and calculate gradient clipping thresholds in PyTorch for an LSTM model?,System-B,"The student asked about implementing custom backpropagation and gradient clipping in PyTorch for an LSTM model. However, the verified context is completely empty and out-of-bounds. Therefore, an out-of-corpus refusal is triggered.","1. Consult Official PyTorch Documentation
+   Command: python -c ""import torch; help(torch.nn.utils.clip_grad_norm_)""
+   Details: Since the question is outside the verified technical corpus, please consult the official PyTorch documentation for torch.nn.utils.clip_grad_norm_ and custom autograd functions.","pydantic_models_sweep384_chunk_19, fastapi_validation_sweep384_chunk_2, pydantic_models_sweep384_chunk_20",,
+GS-V2-47,What hyperparameters should I set for LoRA rank and alpha when fine-tuning Llama-3-8B on an instruction dataset?,System-A,"The student asked about hyperparameters for LoRA rank and alpha when fine-tuning Llama-3-8B. The provided verified context is empty, meaning this question is outside the scope of the verified corpus.","1. Consult Standard Documentation
+   Command: echo 'Refer to Hugging Face PEFT and LLaMA-Factory documentation for standard LoRA recommendations.'
+   Details: Since the question is out-of-corpus, you should consult official library documentation such as Hugging Face PEFT or transformers guidelines for parameter recommendations.","pydantic_models_sweep384_chunk_25, fastapi_cors_sweep384_chunk_2, pydantic_models_sweep384_chunk_18",,
+GS-V2-47,What hyperparameters should I set for LoRA rank and alpha when fine-tuning Llama-3-8B on an instruction dataset?,System-B,The question regarding LoRA hyperparameters (rank and alpha) for Llama-3-8B is outside the scope of the provided technical documentation.,"1. Consult Official PEFT/Hugging Face Documentation
+   Details: The provided technical corpus focuses on Docker, FastAPI, and Pydantic. For LoRA fine-tuning hyperparameters, you should refer to the official Hugging Face PEFT (Parameter-Efficient Fine-Tuning) documentation or the Llama-3 model card on Hugging Face for recommended starting points.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-48,How do I build an automated feature store with Feast and integrate data drift detection with Evidently AI in production?,System-A,The requested topic on Feast and Evidently AI is out of bounds and cannot be verified against the technical documentation corpus.,"1. Consult Official Documentation
+   Command: echo 'Please refer to official Feast and Evidently AI documentation.'
+   Details: Since the question is out-of-corpus, you must consult the official Feast and Evidently AI guides directly rather than relying on unverified commands.","docker_compose_best_practices_sweep384_chunk_1, docker_production_guide_sweep384_chunk_3, fastapi_fullstack_guide_sweep384_chunk_0",,
+GS-V2-48,How do I build an automated feature store with Feast and integrate data drift detection with Evidently AI in production?,System-B,"The student is asking about building an automated feature store with Feast and integrating data drift detection with Evidently AI in a production environment. However, the verified technical context focuses strictly on Docker, Docker Compose, FastAPI full-stack apps, PostgreSQL with psycopg2, and Pydantic validation/models. There is no information regarding Feast or Evidently AI.","1. Consult Official Documentation for Feast and Evidently AI
+   Details: Because your question regarding Feast and Evidently AI is outside the scope of our verified technical documentation corpus, you should consult the official project documentation to learn how to set up feature stores and run drift detection.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-49,What is the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures?,System-A,The requested question regarding the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures is outside the scope of the verified corpus.,"1. Consult Standard Documentation
+   Command: echo 'Please refer to official machine learning textbooks or framework documentation for cross-entropy and label smoothing formulations.'
+   Details: Since the corpus is empty, you must rely on standard verified references and mathematical documentation rather than generated assumptions.","pydantic_models_sweep384_chunk_33, pydantic_models_sweep384_chunk_29, pydantic_validation_sweep384_chunk_1",,
+GS-V2-49,What is the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures?,System-B,"The student's question regarding the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures is outside the scope of the verified documentation corpus, which focuses exclusively on Docker, Docker Compose, FastAPI, PostgreSQL, and Pydantic.","1. Consult Standard Machine Learning Reference Documentation
+   Details: Since deep learning loss functions and transformer internals are not part of the verified backend/DevOps corpus, students should refer to standard machine learning literature (such as PyTorch documentation or Attention Is All You Need papers) for mathematical formulations.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-50,How do I configure vLLM with PagedAttention and tensor parallelism across four NVIDIA A100 GPUs for low-latency serving?,System-A,"The student is asking about configuring vLLM with PagedAttention and tensor parallelism across four NVIDIA A100 GPUs for low-latency serving. This question is completely outside the scope of the verified documentation corpus (which covers Docker, FastAPI, Pydantic, and PostgreSQL).","1. Consult Official vLLM Documentation
+   Command: pip install vllm
+   Details: Since the question is out-of-corpus, refer to the official vLLM documentation and GitHub repository for tensor parallelism and PagedAttention configuration flags.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-50,How do I configure vLLM with PagedAttention and tensor parallelism across four NVIDIA A100 GPUs for low-latency serving?,System-B,"The student asked about configuring vLLM with PagedAttention and tensor parallelism across four NVIDIA A100 GPUs. However, the verified technical corpus only contains documentation regarding FastAPI middleware/CORS, PostgreSQL with async SQLAlchemy, Alembic migrations, and Docker production deployments. The question is out-of-corpus.","1. Consult Official vLLM Documentation
+   Command: pip install vllm && python3 -m vllm.entrypoints.openai.api_server --model facebook/opt-125m --tensor-parallel-size 4
+   Details: Since the query is outside the provided corpus, refer directly to official vLLM guides for tensor parallelism and PagedAttention configuration.","fastapi_fullstack_guide_sweep384_chunk_4, docker_production_guide_sweep384_chunk_3, fastapi_cors_sweep384_chunk_1",,
+GS-V2-51,Prove why the Banker's algorithm prevents deadlock in operating systems with multi-resource allocation matrices.,System-A,"The student's question regarding the mathematical proof of the Banker's algorithm is completely outside the scope of the provided verified context. Following safety and accuracy protocols, an out-of-corpus refusal has been triggered.","1. Consult Standard Operating Systems Textbooks
+   Command: echo 'Please refer to operating systems curriculum or standard academic resources such as Silberschatz, Galvin, and Gagne Operating System Concepts.'
+   Details: Since the question is out-of-corpus, you should refer to peer-reviewed academic literature or official university course materials on deadlock avoidance and safety state algorithms.","pydantic_validation_sweep384_chunk_16, fastapi_fullstack_guide_sweep384_chunk_4, postgresql_psycopg2_sweep384_chunk_0",,
+GS-V2-51,Prove why the Banker's algorithm prevents deadlock in operating systems with multi-resource allocation matrices.,System-B,The Banker's algorithm is a resource allocation and deadlock avoidance strategy that tests for safety by simulating the allocation of predetermined maximum possible amounts of all resources. It prevents deadlock by ensuring that the system never enters an unsafe state where no sequence of resource releases can satisfy the remaining needs of all processes.,"1. Consult Operating Systems Documentation
+   Details: The provided technical corpus focuses on Docker, FastAPI, and Pydantic. The Banker's algorithm is a fundamental concept in Operating Systems theory and is not covered in the provided documentation.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-52,Explain the difference between working set page replacement and the clock algorithm with second-chance reference bits.,System-A,"The student asked for an explanation of the difference between the working set page replacement algorithm and the clock algorithm with second-chance reference bits. However, this topic is outside the scope of the provided verified technical documentation corpus on Docker, PostgreSQL, FastAPI, and Pydantic.","1. Consult Operating Systems Textbooks or Documentation
+   Details: Since memory management and page replacement algorithms are out-of-corpus, please refer to standard operating systems textbooks such as Operating System Concepts by Silberschatz, Galvin, and Gagne.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-52,Explain the difference between working set page replacement and the clock algorithm with second-chance reference bits.,System-B,The student question regarding the difference between working set page replacement and the clock algorithm with second-chance reference bits is outside the scope of the verified corpus.,"1. Consult Standard OS Documentation
+   Command: man 2 mprotect
+   Details: Since the question is out-of-corpus, please refer to standard operating systems textbooks or official documentation regarding virtual memory management and page replacement algorithms.","pydantic_models_sweep384_chunk_11, fastapi_fullstack_guide_sweep384_chunk_3, pydantic_models_sweep384_chunk_17",,
+GS-V2-53,Provide a formal mathematical proof for Boyce-Codd Normal Form (BCNF) decomposition preserving functional dependencies.,System-A,"The student requested a formal mathematical proof for Boyce-Codd Normal Form (BCNF) decomposition preserving functional dependencies. Since the provided verified context is empty and out-of-bounds, this query is refused in accordance with the strict out-of-corpus refusal rules.","1. Consult Standard Relational Database Theory Textbooks
+   Command: echo ""Please refer to standard database textbooks such as 'Database System Concepts' by Silberschatz, Korth, and Sudarshan for formal database normalization proofs.""
+   Details: Because the query is outside the scope of the verified technical documentation corpus, you must look up dependency preservation proofs in standard academic literature or official database course materials.","pydantic_models_sweep384_chunk_3, pydantic_models_sweep384_chunk_39, pydantic_validation_sweep384_chunk_17",,
+GS-V2-53,Provide a formal mathematical proof for Boyce-Codd Normal Form (BCNF) decomposition preserving functional dependencies.,System-B,"The student asked for a formal mathematical proof for Boyce-Codd Normal Form (BCNF) decomposition preserving functional dependencies. This topic is entirely outside the verified technical corpus regarding Docker, Docker Compose, FastAPI, Pydantic, and PostgreSQL. Therefore, an out-of-corpus refusal has been triggered.","1. Consult Standard Database Theory Resources
+   Details: Because database normalization proofs are outside our verified corpus, please consult standard academic textbooks on database management systems, such as 'Database System Concepts' by Silberschatz, Korth, and Sudarshan, or 'Fundamentals of Database Systems' by Elmasri and Navathe.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-54,Explain the exact bitwise structure of the TCP header including urgent pointer and selective acknowledgment (SACK) options.,System-A,"The requested information regarding the bitwise structure of the TCP header, including the urgent pointer and SACK options, is outside the scope of the provided verified technical corpus. The available documentation focuses on Docker orchestration, FastAPI backend development, and Pydantic data validation.","1. Consult Official Networking Specifications (RFCs)
+   Command: curl https://www.ietf.org/rfc/rfc793.txt
+   Details: To obtain the exact bitwise layout of the TCP header, you must refer to the official Internet Engineering Task Force (IETF) specifications. RFC 793 defines the base TCP header, while RFC 2018 defines the Selective Acknowledgment (SACK) options.","docker_compose_sweep384_chunk_0, docker_compose_sweep384_chunk_1, docker_compose_best_practices_sweep384_chunk_0",,
+GS-V2-54,Explain the exact bitwise structure of the TCP header including urgent pointer and selective acknowledgment (SACK) options.,System-B,"The user's question about the exact bitwise structure of the TCP header, urgent pointer, and selective acknowledgment (SACK) options is out-of-corpus because no verified technical documentation has been provided to substantiate the low-level bit structure. Per strict compliance rules, we must issue an out-of-corpus refusal.","1. Consult Standard Documentation
+   Command: man 7 tcp
+   Details: Refer to official protocol specifications and standard documentation such as RFC 793 and RFC 2018 for authoritative details on TCP headers and SACK options.","postgresql_psycopg2_sweep384_chunk_1, fastapi_cors_sweep384_chunk_3, fastapi_cors_sweep384_chunk_0",,
