@@ -1,0 +1,3091 @@
+{
+  "benchmark": "Tutorial Hell Navigator Gold Benchmark v2 (Day 43)",
+  "search_mode": "hybrid-rerank",
+  "vector_backend": "qdrant",
+  "sql_filter_applied": false,
+  "collection_name": "tutorial_navigator_chunks",
+  "rewrite_enabled": false,
+  "retrieval_only": false,
+  "timestamp": "2026-11-09T05:24:37.672439+00:00",
+  "total_evaluated": 40,
+  "ground_truth_count": 31,
+  "mean_latency": 5972.01,
+  "time_to_first_token_p95": 2273.95,
+  "mean_prompt_tokens": 2234.93,
+  "retrieval_metrics": {
+    "evidence_coverage_at_3": 93.55,
+    "evidence_coverage_at_5": 100.0,
+    "hit_at_3": 93.55,
+    "hit_at_5": 100.0,
+    "recall_at_3": 93.55,
+    "recall_at_5": 100.0,
+    "mrr": 0.8172,
+    "hit_3_hits": 29,
+    "hit_5_hits": 31,
+    "recall_3_hits": 29,
+    "recall_5_hits": 31,
+    "note": null
+  },
+  "refusal_metrics": {
+    "total_out_of_scope": 9,
+    "refused_count": 8,
+    "refusal_rate": 88.89
+  },
+  "latency_metrics": {
+    "mean_latency": 5972.01,
+    "mean_latency_ms": 5972.01,
+    "p50_latency_ms": 6108.49,
+    "p90_latency_ms": 7505.66,
+    "p95_latency_ms": 7963.87,
+    "time_to_first_token_p95": 2273.95,
+    "time_to_first_token_p95_ms": 2273.95,
+    "mean_prompt_tokens": 2234.93,
+    "min_latency_ms": 3176.46,
+    "max_latency_ms": 11025.92,
+    "search_latency_mean_ms": 1247.73,
+    "rewrite_latency_mean_ms": 0.0
+  },
+  "llm_metrics": {
+    "passed": 40,
+    "pass_rate": 100.0,
+    "avg_steps_per_plan": 1.48,
+    "avg_commands_per_plan": 1.45,
+    "avg_citations_per_plan": 1.73,
+    "refusals_handled": 11
+  },
+  "items": [
+    {
+      "id": "GS-V2-01",
+      "category": "General",
+      "question": "In web security and FastAPI, what exact parameters define a distinct browser origin in CORS?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_sweep384_chunk_2",
+        "fastapi_cors_sweep384_chunk_0",
+        "fastapi_cors_sweep384_chunk_1",
+        "fastapi_cors_sweep384_chunk_3",
+        "fastapi_fullstack_guide_sweep384_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 824.09,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 824.09,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6447.26,
+      "ttft_ms": 1968.11,
+      "prompt_tokens": 2225,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "fastapi_cors_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "In FastAPI and web security, a distinct browser origin in CORS is defined by the specific combination of protocol, domain, and port.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Define the origin components explicitly",
+            "command": "python3 -c \"print('Protocol, domain, and port define the origin')\"",
+            "explanation": "An origin is strictly the combination of protocol, domain, and port. Variations in any of these three elements constitute entirely different origins from the browser perspective.",
+            "verification": "Verify that your CORS middleware configuration matches the exact protocol, domain, and port of your frontend client.",
+            "citations": [
+              "fastapi_cors_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming that running on the same hostname (e.g., localhost) implies the same origin regardless of port or protocol differences."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "An origin is the combination of protocol, domain, and port.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_cors_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-02",
+      "category": "General",
+      "question": "How do I configure Cross-Origin Resource Sharing (CORS) in a FastAPI Python application?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "fastapi_cors_sweep384_chunk_2",
+        "fastapi_cors_sweep384_chunk_1",
+        "fastapi_cors_sweep384_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "first_hit_rank": 4,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 667.86,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 667.86,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 4958.0,
+      "ttft_ms": 1501.55,
+      "prompt_tokens": 2222,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 3,
+        "cited_chunks": [
+          "fastapi_fullstack_guide_sweep384_chunk_3",
+          "fastapi_cors_sweep384_chunk_2"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "To configure CORS in a FastAPI application, you must import and mount the `CORSMiddleware` onto your FastAPI instance, specifying explicit lists for allowed origins, methods, and headers to bypass browser security blocks when your frontend and backend run on different origins.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Install and Import CORSMiddleware",
+            "command": "pip install fastapi uvicorn",
+            "explanation": "Ensure FastAPI and Uvicorn are installed, then import CORSMiddleware and configure it in your main application file.",
+            "verification": "python -c 'from fastapi.middleware.cors import CORSMiddleware; print(\"Imported successfully\")'",
+            "citations": [
+              "fastapi_fullstack_guide_sweep384_chunk_3"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Mount CORSMiddleware on FastAPI App",
+            "command": "cat << 'EOF' > main.py\nfrom fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\n\napp = FastAPI()\n\norigins = [\n    \"http://localhost\",\n    \"http://localhost:3000\",\n    \"http://localhost:8080\",\n]\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=origins,\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n\n@app.get(\"/\")\nasync def main():\n    return {\"message\": \"Hello World\"}\nEOF",
+            "explanation": "Add the CORSMiddleware to your FastAPI application instance to permit incoming cross-origin requests from specified frontend origins.",
+            "verification": "uvicorn main:app --reload",
+            "citations": [
+              "fastapi_fullstack_guide_sweep384_chunk_3",
+              "fastapi_cors_sweep384_chunk_2"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Setting allow_origins=['*'], allow_methods=['*'], and allow_headers=['*'] while setting allow_credentials=True, which violates security specifications and will cause errors.",
+          "Assuming that frontend running on localhost:3000 and backend on localhost:8000 share the same origin without CORS configured."
+        ],
+        "architecture_contract": "project/\n\u251c\u2500\u2500 main.py\n\u2514\u2500\u2500 requirements.txt",
+        "key_takeaway": "Browsers restrict cross-origin requests by default; FastAPI handles this via CORSMiddleware where you must explicitly declare allowed origins, methods, and headers.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_fullstack_guide_sweep384_chunk_3",
+          "fastapi_cors_sweep384_chunk_2"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-03",
+      "category": "General",
+      "question": "Why does my browser reject responses when I set allow_origins=['*'] alongside allow_credentials=True in FastAPI?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_4",
+        "fastapi_cors_sweep384_chunk_1",
+        "fastapi_cors_sweep384_chunk_3",
+        "fastapi_cors_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 604.44,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 604.44,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 4271.81,
+      "ttft_ms": 1283.58,
+      "prompt_tokens": 2220,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "fastapi_cors_sweep384_chunk_2",
+          "fastapi_fullstack_guide_sweep384_chunk_4"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Browsers reject CORS responses when allow_credentials=True and allow_origins=['*'] are used simultaneously because the CORS specification security rules forbid wildcard origins when handling credentialed requests like cookies or authorization headers.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Update CORSMiddleware to explicitly list allowed origins",
+            "command": "app.add_middleware(CORSMiddleware, allow_origins=[\"http://localhost:3000\"], allow_credentials=True, allow_methods=[\"*\"], allow_headers=[\"*\"])",
+            "explanation": "When allow_credentials is True, you must explicitly specify exact origins instead of using the wildcard string ['*'].",
+            "verification": "Start your FastAPI server and verify that browser preflight and actual requests succeed without CORS policy errors.",
+            "citations": [
+              "fastapi_cors_sweep384_chunk_2",
+              "fastapi_fullstack_guide_sweep384_chunk_4"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Setting allow_origins=['*'] while keeping allow_credentials=True",
+          "Using wildcards for origins, methods, and headers all together with credentials enabled"
+        ],
+        "architecture_contract": "from fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\n\napp = FastAPI()\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"http://localhost:3000\"],\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)",
+        "key_takeaway": "Credentialed requests require explicit origin declarations and will fail security checks in the browser if wildcards are used for origins.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_cors_sweep384_chunk_2",
+          "fastapi_fullstack_guide_sweep384_chunk_4"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-04",
+      "category": "General",
+      "question": "How does FastAPI CORSMiddleware process preflight HTTP OPTIONS requests from web browsers?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_sweep384_chunk_3",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "fastapi_cors_sweep384_chunk_2",
+        "fastapi_cors_sweep384_chunk_1",
+        "fastapi_cors_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 786.4,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 786.4,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 4796.17,
+      "ttft_ms": 1403.42,
+      "prompt_tokens": 2221,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 3,
+        "cited_chunks": [
+          "fastapi_cors_sweep384_chunk_3",
+          "fastapi_fullstack_guide_sweep384_chunk_3"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "FastAPI CORSMiddleware intercepts HTTP OPTIONS preflight requests containing Origin and Access-Control-Request-Method headers, responding with appropriate CORS headers and a 200 or 400 informational status.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Configure CORSMiddleware with explicit origins and methods",
+            "command": "pip install fastapi uvicorn",
+            "explanation": "Set up FastAPI and its CORS middleware to handle browser preflight OPTIONS requests properly.",
+            "verification": "python -c 'from fastapi.middleware.cors import CORSMiddleware; print(CORSMiddleware)'",
+            "citations": [
+              "fastapi_cors_sweep384_chunk_3",
+              "fastapi_fullstack_guide_sweep384_chunk_3"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Test preflight handling via curl",
+            "command": "curl -i -X OPTIONS http://localhost:8000/api/tasks -H 'Origin: http://localhost:3000' -H 'Access-Control-Request-Method: POST'",
+            "explanation": "Verify that the CORS middleware successfully intercepts the OPTIONS request and returns the required CORS headers.",
+            "verification": "Check that the response contains Access-Control-Allow-Origin and status 200 or 400.",
+            "citations": [
+              "fastapi_cors_sweep384_chunk_3"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming GET requests are the only allowed methods by default (allow_methods defaults to ['GET']).",
+          "Setting allow_credentials=True while keeping allow_origins=['*']."
+        ],
+        "architecture_contract": "main.py:\nfrom fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\napp = FastAPI()\napp.add_middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])",
+        "key_takeaway": "CORS preflight requests are OPTIONS requests intercepted by CORSMiddleware to validate origins, methods, and headers before permitting the actual browser request.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_cors_sweep384_chunk_3",
+          "fastapi_fullstack_guide_sweep384_chunk_3"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-05",
+      "category": "General",
+      "question": "Where does FastAPI's CORSMiddleware implementation originate under the hood if I want to import it directly?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_sweep384_chunk_3",
+        "fastapi_cors_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "fastapi_background_tasks_sweep384_chunk_2",
+        "fastapi_cors_sweep384_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 687.28,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 687.28,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 3781.33,
+      "ttft_ms": 1082.92,
+      "prompt_tokens": 2232,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "fastapi_cors_sweep384_chunk_3"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "FastAPI's CORSMiddleware is provided as a convenience import from fastapi.middleware, but its underlying implementation comes directly from Starlette.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Import CORSMiddleware from Starlette directly",
+            "command": "from starlette.middleware.cors import CORSMiddleware",
+            "explanation": "You can import CORSMiddleware directly from Starlette since FastAPI exposes these middlewares as a convenience.",
+            "verification": "python3 -c \"from starlette.middleware.cors import CORSMiddleware; print(CORSMiddleware)\"",
+            "citations": [
+              "fastapi_cors_sweep384_chunk_3"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming FastAPI reinvents every middleware instead of leveraging Starlette's robust ecosystem.",
+          "Using wildcards for origins when credentials and authorization headers are required."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "FastAPI is built on top of Starlette and inherits core ASGI middleware components like CORSMiddleware directly from it.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_cors_sweep384_chunk_3"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-06",
+      "category": "General",
+      "question": "What is the primary design purpose of BackgroundTasks in FastAPI for request handling?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_sweep384_chunk_2",
+        "fastapi_background_tasks_sweep384_chunk_3",
+        "fastapi_background_tasks_sweep384_chunk_0",
+        "fastapi_validation_sweep384_chunk_0",
+        "fastapi_background_tasks_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1587.03,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1587.03,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6794.3,
+      "ttft_ms": 1822.54,
+      "prompt_tokens": 2177,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 3,
+        "cited_chunks": [
+          "fastapi_background_tasks_sweep384_chunk_0",
+          "fastapi_background_tasks_sweep384_chunk_2",
+          "fastapi_background_tasks_sweep384_chunk_3"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "The primary design purpose of BackgroundTasks in FastAPI is to allow operations to run after returning a response to the client, ensuring the client does not have to wait for slow operations (such as sending emails or processing data) to complete.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Import and inject BackgroundTasks into a path operation function",
+            "command": "from fastapi import BackgroundTasks, FastAPI\n\napp = FastAPI()\n\ndef write_notification(email: str, message: str = \"\"):\n    with open(\"log.txt\", mode=\"w\") as email_file:\n        email_file.write(f\"notification for {email}: {message}\")\n\n@app.post(\"/send-notification/{email}\")\nasync def send_notification(email: str, background_tasks: BackgroundTasks):\n    background_tasks.add_task(write_notification, email, message=\"some notification\")\n    return {\"message\": \"Notification sent in the background\"}",
+            "explanation": "Import BackgroundTasks from fastapi (avoiding starlette.background.BackgroundTask without the 's') and declare it as a path operation parameter so FastAPI handles its instantiation and lifecycle.",
+            "verification": "uvicorn main:app --reload and curl -X POST http://127.0.0.1:8000/send-notification/test@example.com",
+            "citations": [
+              "fastapi_background_tasks_sweep384_chunk_0",
+              "fastapi_background_tasks_sweep384_chunk_2",
+              "fastapi_background_tasks_sweep384_chunk_3"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Importing `BackgroundTask` (without the 's') directly from `starlette.background` instead of using `BackgroundTasks` from `fastapi`.",
+          "Using FastAPI's built-in `BackgroundTasks` for massive, multi-server distributed processing where a dedicated message queue like Celery and Redis is actually required."
+        ],
+        "architecture_contract": "main.py -> imports BackgroundTasks from fastapi -> injects into path operation function -> adds standard def or async def task functions.",
+        "key_takeaway": "BackgroundTasks allows returning a response to the client immediately while executing slow secondary operations like notifications or file logging in the same application process.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_background_tasks_sweep384_chunk_0",
+          "fastapi_background_tasks_sweep384_chunk_2",
+          "fastapi_background_tasks_sweep384_chunk_3"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-07",
+      "category": "General",
+      "question": "Which method is called on a BackgroundTasks instance to schedule a function execution in FastAPI?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_sweep384_chunk_2",
+        "fastapi_background_tasks_sweep384_chunk_3",
+        "fastapi_background_tasks_sweep384_chunk_0",
+        "fastapi_background_tasks_sweep384_chunk_1",
+        "fastapi_validation_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "first_hit_rank": 4,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1175.2,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1175.2,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 5460.92,
+      "ttft_ms": 1500.0,
+      "prompt_tokens": 2180,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "fastapi_background_tasks_sweep384_chunk_2",
+          "fastapi_background_tasks_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "To schedule a background task execution in FastAPI, you use the add_task method on the BackgroundTasks instance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Import BackgroundTasks",
+            "command": "from fastapi import BackgroundTasks",
+            "explanation": "Import the BackgroundTasks class from FastAPI to leverage Starlette's background task handling integrated smoothly into FastAPI.",
+            "verification": "python3 -c 'from fastapi import BackgroundTasks; print(BackgroundTasks)'",
+            "citations": [
+              "fastapi_background_tasks_sweep384_chunk_2"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Define and Schedule the Task via add_task",
+            "command": "from fastapi import BackgroundTasks, FastAPI\n\napp = FastAPI()\n\ndef write_notification(email: str, message: str):\n    with open(\"log.txt\", mode=\"w\") as email_file:\n        email_file.write(f\"notification to {email}: {message}\")\n\n@app.post(\"/send-notification/{email}\")\nasync def send_notification(email: str, background_tasks: BackgroundTasks):\n    background_tasks.add_task(write_notification, email, message=\"some notification\")\n    return {\"message\": \"Notification sent in the background\"}",
+            "explanation": "Inject the BackgroundTasks parameter into your path operation function and call .add_task() passing your target function and its arguments.",
+            "verification": "uvicorn main:app --reload",
+            "citations": [
+              "fastapi_background_tasks_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Importing BackgroundTask (singular) directly from starlette.background instead of BackgroundTasks from fastapi, which requires manual instantiation and returning a Starlette Response.",
+          "Using background tasks for heavy distributed workloads across multiple servers instead of using a proper message broker like Celery with Redis or RabbitMQ."
+        ],
+        "architecture_contract": "main.py\nrequirements.txt",
+        "key_takeaway": "Always import BackgroundTasks from fastapi and invoke the .add_task() method within your path operations to schedule deferred execution cleanly.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_background_tasks_sweep384_chunk_2",
+          "fastapi_background_tasks_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-08",
+      "category": "General",
+      "question": "Can BackgroundTasks parameters be declared inside FastAPI dependency functions via Depends?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_sweep384_chunk_2",
+        "fastapi_background_tasks_sweep384_chunk_3",
+        "fastapi_background_tasks_sweep384_chunk_1",
+        "fastapi_background_tasks_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1868.23,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1868.23,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 9631.25,
+      "ttft_ms": 2717.06,
+      "prompt_tokens": 2130,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "fastapi_background_tasks_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Yes, BackgroundTasks can be declared within dependency functions. FastAPI's dependency injection system is designed to handle BackgroundTasks at multiple levels, including path operation functions, dependencies, and sub-dependencies, merging them all to execute after the response is sent.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Define a dependency that accepts BackgroundTasks",
+            "command": "from fastapi import BackgroundTasks, Depends\n\ndef write_log(message: str):\n    with open(\"log.txt\", mode=\"a\") as log:\n        log.write(message + \"\\n\")\n\ndef dependency_task(background_tasks: BackgroundTasks):\n    background_tasks.add_task(write_log, \"Task from dependency\")\n    return True",
+            "explanation": "You can declare a parameter of type BackgroundTasks within a dependency function. FastAPI will inject the object, allowing you to register tasks that will be merged with any tasks added in the path operation function.",
+            "verification": "Ensure the dependency is included in your path operation function using Depends().",
+            "citations": [
+              "fastapi_background_tasks_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Inject the dependency into a path operation",
+            "command": "@app.post(\"/send-notification/{email}\")\nasync def send_notification(email: str, background_tasks: BackgroundTasks, dep: bool = Depends(dependency_task)):\n    background_tasks.add_task(write_log, f\"Task from path operation for {email}\")\n    return {\"message\": \"Notification sent\"}",
+            "explanation": "By injecting the dependency, FastAPI manages the BackgroundTasks object across both the dependency and the path operation, ensuring all tasks are queued and executed after the response.",
+            "verification": "Check log.txt after hitting the endpoint to confirm both tasks were executed.",
+            "citations": [
+              "fastapi_background_tasks_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using 'BackgroundTask' (singular) instead of 'BackgroundTasks' (plural) when injecting into path operations, as this prevents FastAPI from handling the object automatically.",
+          "Performing heavy, long-running computations in BackgroundTasks; use Celery or similar task queues for heavy lifting to avoid blocking the main process.",
+          "Assuming background tasks share memory or state with the main request process if you eventually scale to multiple servers."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "FastAPI's dependency injection system is intelligent enough to merge BackgroundTasks objects across dependencies and path operations, ensuring all registered tasks run after the response is returned.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_background_tasks_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-09",
+      "category": "General",
+      "question": "When should a developer switch from FastAPI built-in BackgroundTasks to an external worker queue like Celery?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_background_tasks_sweep384_chunk_2",
+        "fastapi_background_tasks_sweep384_chunk_3",
+        "fastapi_background_tasks_sweep384_chunk_0",
+        "fastapi_validation_sweep384_chunk_0",
+        "fastapi_background_tasks_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2406.94,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2406.94,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 7499.39,
+      "ttft_ms": 1782.36,
+      "prompt_tokens": 2181,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 1,
+        "citation_count": 4,
+        "cited_chunks": [
+          "fastapi_background_tasks_sweep384_chunk_2",
+          "fastapi_background_tasks_sweep384_chunk_3"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "You should transition from FastAPI's built-in BackgroundTasks to Celery when you need to run heavy background computations, require multi-process or multi-server scaling, or cannot rely on sharing the same process memory and variables.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Evaluate task constraints and architecture",
+            "command": null,
+            "explanation": "Determine if your background tasks are simple, fast operations (such as small email notifications or file writes) that can run within the same FastAPI process, or heavy computations requiring dedicated workers.",
+            "verification": "Confirm that the tasks fit within the single-process constraints of FastAPI BackgroundTasks.",
+            "citations": [
+              "fastapi_background_tasks_sweep384_chunk_2",
+              "fastapi_background_tasks_sweep384_chunk_3"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Configure Celery for multi-process scaling",
+            "command": "pip install celery redis",
+            "explanation": "If your application outgrows FastAPI's built-in background tasks, install Celery and a message broker like Redis to handle distributed and multi-process workloads across multiple servers.",
+            "verification": "Run celery worker checks or test broker connectivity using python -c \"import celery\"",
+            "citations": [
+              "fastapi_background_tasks_sweep384_chunk_2",
+              "fastapi_background_tasks_sweep384_chunk_3"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using FastAPI BackgroundTasks for heavy, long-running computations that risk crashing or blocking the single FastAPI application process.",
+          "Accidentally importing `BackgroundTask` (without the 's') from `starlette.background` instead of `BackgroundTasks` from `fastapi` when trying to use path operation function parameters.",
+          "Assuming built-in background tasks can share state across multiple scaled instances or separate physical servers."
+        ],
+        "architecture_contract": "FastAPI App Process -> Built-in BackgroundTasks (same memory/process) OR External Broker (Redis/RabbitMQ) -> Celery Workers (Multi-process/Multi-server)",
+        "key_takeaway": "Built-in BackgroundTasks are ideal for light, same-process operations like small email notifications, whereas Celery is necessary for distributed, heavy computations across multiple processes and servers.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_background_tasks_sweep384_chunk_2",
+          "fastapi_background_tasks_sweep384_chunk_3"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-13",
+      "category": "General",
+      "question": "Why did my application build artifacts and installed libraries disappear when I added a bind mount in docker-compose.yml?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_sweep384_chunk_0",
+        "docker_compose_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1",
+        "docker_compose_best_practices_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2475.61,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2475.61,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 7876.11,
+      "ttft_ms": 1890.17,
+      "prompt_tokens": 2207,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "docker_compose_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "When a container starts with a bind mount that targets the same path where files were copied during the docker build, the volume content completely replaces the image content at that path. This hides any directories like vendor/ or node_modules/ that existed after the build.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Review Volume Mounts in docker-compose.yml",
+            "command": "docker compose down && docker compose up --build",
+            "explanation": "Examine your docker-compose.yml file to ensure you are not bind-mounting the root directory directly over your application path if it overwrites built artifacts.",
+            "verification": "docker compose exec app ls -la /app",
+            "citations": [
+              "docker_compose_sweep384_chunk_0"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Adjust Bind Mount Strategy",
+            "command": "sed -i 's|- ./:/app|- ./src:/app/src|g' docker-compose.yml",
+            "explanation": "Modify your docker-compose configuration to mount a sub-directory instead of the whole application root, or rely on named volumes for data that must persist rather than overwriting the build path.",
+            "verification": "docker compose config",
+            "citations": [
+              "docker_compose_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Mounting the entire application root directory directly over the working directory path where build artifacts reside in production or development.",
+          "Assuming that files copied during `docker build` persist when a volume mount targets that exact same path."
+        ],
+        "architecture_contract": "services:\n  app:\n    build: .\n    volumes:\n      - ./src:/app/src",
+        "key_takeaway": "Bind mounts override image layers at the target path. Avoid mounting over directories containing build artifacts or installed package folders.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_compose_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-14",
+      "category": "General",
+      "question": "Does depends_on in Docker Compose pause container startup until the database process is ready to receive SQL queries?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_sweep384_chunk_1",
+        "docker_compose_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_2",
+        "docker_compose_best_practices_sweep384_chunk_1",
+        "docker_compose_best_practices_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2151.35,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2151.35,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6799.3,
+      "ttft_ms": 1626.78,
+      "prompt_tokens": 2348,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 3,
+        "cited_chunks": [
+          "docker_compose_sweep384_chunk_0",
+          "docker_compose_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Clarified that depends_on does not wait for a database to be ready to accept queries, only for the container to start, requiring a healthcheck condition.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Configure Postgres Healthcheck",
+            "command": "healthcheck:\n  test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n  interval: 5s\n  timeout: 5s\n  retries: 5",
+            "explanation": "Docker Compose depends_on only guarantees container startup. A healthcheck is required to verify the database is actively ready to receive queries.",
+            "verification": "docker compose ps",
+            "citations": [
+              "docker_compose_sweep384_chunk_0"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Set depends_on condition to service_healthy",
+            "command": "depends_on:\n  db:\n    condition: service_healthy",
+            "explanation": "Forces the application container to wait until the database healthcheck reports a healthy state, preventing connection refused errors.",
+            "verification": "docker compose up --build",
+            "citations": [
+              "docker_compose_sweep384_chunk_0",
+              "docker_compose_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming depends_on alone ensures the database is ready to accept queries",
+          "Omitting healthcheck parameters in production configuration"
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "depends_on is a runtime startup directive only; always use service_healthy conditions paired with database healthchecks to prevent connection race conditions.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_compose_sweep384_chunk_0",
+          "docker_compose_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-15",
+      "category": "General",
+      "question": "What runtime error occurs if an API service starts before PostgreSQL completes its initialization in Docker Compose?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_2",
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_1",
+        "docker_compose_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 900.9,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 900.9,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 5599.3,
+      "ttft_ms": 1644.44,
+      "prompt_tokens": 2235,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 3,
+        "cited_chunks": [
+          "docker_production_guide_sweep384_chunk_2",
+          "docker_compose_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "When an API service starts before PostgreSQL finishes initialization in Docker Compose, the application often receives a 'connection refused' error because the database port is not yet accepting connections or the database cluster is still starting up.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Configure Database Healthcheck",
+            "command": "healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U navigator_user -d navigator_db\"]\n      interval: 10s\n      timeout: 5s\n      retries: 5",
+            "explanation": "Adding a healthcheck ensures Docker Compose tracks when the database is truly ready to accept connections rather than just started.",
+            "verification": "docker inspect --format='{{json .State.Health.Status}}' navigator-db",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_2"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Use service_healthy Dependency Condition",
+            "command": "depends_on:\n      database:\n        condition: service_healthy",
+            "explanation": "Without condition: service_healthy, the depends_on directive only waits for the container to start, not for PostgreSQL to finish its internal initialization, leading to connection refused errors.",
+            "verification": "docker compose up --build",
+            "citations": [
+              "docker_compose_sweep384_chunk_1",
+              "docker_production_guide_sweep384_chunk_2"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using depends_on without a healthcheck condition expecting it to wait for internal service readiness.",
+          "Ignoring database startup time and blaming application code for connection refused errors."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "depends_on is a startup order directive only; always pair it with healthchecks and condition: service_healthy to prevent connection refused race conditions.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_production_guide_sweep384_chunk_2",
+          "docker_compose_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-16",
+      "category": "General",
+      "question": "Can Docker Compose execute docker compose build while simultaneously running another container service as a build dependency?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_sweep384_chunk_1",
+        "docker_compose_sweep384_chunk_0",
+        "docker_compose_best_practices_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_2",
+        "docker_compose_best_practices_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1602.02,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1602.02,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6669.7,
+      "ttft_ms": 1773.69,
+      "prompt_tokens": 2347,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "docker_compose_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Docker Compose has no built-in way to start or run services during an image build. The 'depends_on' directive is strictly a runtime configuration, meaning build-time dependencies cannot be solved natively by starting a live container service during 'docker compose build'.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Use a Makefile or Shell Script Workflow",
+            "command": "make build",
+            "explanation": "Since Docker Compose cannot start services during a build, split the workflow into a script that explicitly starts required services first, and then runs the build command.",
+            "verification": "docker compose ps",
+            "citations": [
+              "docker_compose_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Utilize Multi-stage Builds for Static Data",
+            "command": "docker build -t my-app .",
+            "explanation": "Instead of relying on a running service during the build process, use a multi-stage Dockerfile to copy static data or perform compilations cleanly within isolated build layers.",
+            "verification": "docker image inspect my-app",
+            "citations": [
+              "docker_compose_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Expecting depends_on to wait for container readiness or build-time availability.",
+          "Attempting to spin up database containers directly inside a Dockerfile instruction."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Docker Compose 'depends_on' is a runtime-only directive; build-time dependencies must be handled via orchestration scripts (like Makefiles) or multi-stage container builds.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_compose_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-17",
+      "category": "General",
+      "question": "Where should native C build tools like gcc and libpq-dev reside in a production multi-stage Dockerfile?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_1",
+        "docker_compose_sweep384_chunk_1",
+        "docker_compose_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1097.71,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1097.71,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 5270.0,
+      "ttft_ms": 1460.3,
+      "prompt_tokens": 2153,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 5,
+        "cited_chunks": [
+          "docker_production_guide_sweep384_chunk_0",
+          "docker_production_guide_sweep384_chunk_1",
+          "docker_compose_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Native C build tools like gcc and libpq-dev must reside exclusively in the builder stage of a multi-stage Dockerfile to avoid inflating image sizes and leaving security vulnerabilities in the production runtime image.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Configure Builder Stage with Compilation Tools",
+            "command": "FROM python:3.12-slim AS builder\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    gcc \\\n    libpq-dev \\\n    && rm -rf /var/lib/apt/lists/*",
+            "explanation": "Native compilation tools like gcc and libpq-dev are placed in the builder stage so that packages requiring C extensions (such as psycopg2) can build their wheels successfully.",
+            "verification": "docker build --target builder .",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_0",
+              "docker_production_guide_sweep384_chunk_1",
+              "docker_compose_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Copy Compiled Wheels to Minimal Runner Stage",
+            "command": "FROM python:3.12-slim AS runner\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    curl \\\n    libpq5 \\\n    && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local",
+            "explanation": "The runner stage copies only the built dependencies and runtime library (libpq5) while leaving behind the heavy compiler toolchain.",
+            "verification": "docker build -t my-app .",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_0",
+              "docker_compose_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Installing gcc and libpq-dev in the final runner stage of a Dockerfile, which leaves build tools exposed in production and bloats the image size.",
+          "Using single-stage builds that accumulate 1GB+ in size and leave unnecessary compilers in production."
+        ],
+        "architecture_contract": "Multi-stage Dockerfile consisting of Stage 1 (builder with gcc & libpq-dev) and Stage 2 (runner with runtime libpq5 only).",
+        "key_takeaway": "Build-time dependencies (compilers and headers) belong only in intermediate build stages, while production runtime images should contain strictly runtime libraries.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_production_guide_sweep384_chunk_0",
+          "docker_production_guide_sweep384_chunk_1",
+          "docker_compose_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-18",
+      "category": "General",
+      "question": "What is the central operational benefit of defining services within a Docker Compose YAML file?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_2",
+        "docker_compose_best_practices_sweep384_chunk_1",
+        "docker_compose_sweep384_chunk_0",
+        "docker_compose_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2539.65,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2539.65,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6828.99,
+      "ttft_ms": 1501.27,
+      "prompt_tokens": 2344,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "docker_compose_best_practices_sweep384_chunk_0",
+          "docker_compose_best_practices_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "The central operational benefit of defining services within a Docker Compose YAML file is simplified control through multi-container orchestration, allowing developers to define, configure, and manage all service dependencies and environments using a single machine-readable file and simple commands.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Initialize Docker Compose Configuration",
+            "command": "docker compose up -d",
+            "explanation": "Using Docker Compose allows you to spin up multiple services like a backend and database concurrently with a single command based on the YAML configuration.",
+            "verification": "docker compose ps",
+            "citations": [
+              "docker_compose_best_practices_sweep384_chunk_0",
+              "docker_compose_best_practices_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Manually starting individual containers with complex standalone docker run commands instead of using a unified Compose file."
+        ],
+        "architecture_contract": "version: '3.8'\nservices:\n  database:\n    image: postgres:16-alpine\n  backend:\n    build: .",
+        "key_takeaway": "Docker Compose streamlines multi-container orchestration, caching, and environment replication through a single declarative YAML configuration file.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_compose_best_practices_sweep384_chunk_0",
+          "docker_compose_best_practices_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-19",
+      "category": "General",
+      "question": "How does Docker Compose optimize restart latency when services have not changed between commands?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_sweep384_chunk_0",
+        "docker_compose_sweep384_chunk_1",
+        "docker_compose_best_practices_sweep384_chunk_1",
+        "docker_compose_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 743.36,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 743.36,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 4317.38,
+      "ttft_ms": 1250.91,
+      "prompt_tokens": 2343,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 3,
+        "cited_chunks": [
+          "docker_compose_best_practices_sweep384_chunk_0",
+          "docker_compose_best_practices_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Docker Compose optimizes restart latency by caching the configuration used to create containers. When restarting a service whose configuration and context have not changed, Compose reuses the existing containers rather than rebuilding or recreating them from scratch, allowing for rapid environment iteration.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Start your development services",
+            "command": "docker compose up -d",
+            "explanation": "Initializes the multi-container development environment defined in your YAML configuration, caching the configuration state for subsequent runs.",
+            "verification": "docker compose ps",
+            "citations": [
+              "docker_compose_best_practices_sweep384_chunk_0",
+              "docker_compose_best_practices_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Restart unchanged services for low latency",
+            "command": "docker compose up -d",
+            "explanation": "Re-running the up command after making no changes to a service configuration causes Compose to reuse existing containers, bypassing unnecessary build and creation overhead.",
+            "verification": "Check container uptime or logs to verify existing instances were reused rather than recreated.",
+            "citations": [
+              "docker_compose_best_practices_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Rebuilding images from scratch every time when only source code changes could be handled via volume mounts.",
+          "Expecting depends_on to handle build-time service readiness without a proper healthcheck or runtime sequence."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Docker Compose caches configuration and reuses unchanged containers to speed up development iteration and minimize restart latency.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_compose_best_practices_sweep384_chunk_0",
+          "docker_compose_best_practices_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-20",
+      "category": "General",
+      "question": "Why is Docker Compose widely used in CI/CD pipelines for automated testing environments?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_sweep384_chunk_0",
+        "docker_compose_best_practices_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_2",
+        "docker_compose_sweep384_chunk_0",
+        "docker_compose_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1189.19,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1189.19,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6466.38,
+      "ttft_ms": 1847.02,
+      "prompt_tokens": 2341,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 3,
+        "command_count": 3,
+        "citation_count": 3,
+        "cited_chunks": [
+          "docker_compose_best_practices_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Docker Compose is widely used in CI/CD pipelines for automated testing because it allows developers to define a full multi-service application environment (like web servers, databases, and caches) in a single YAML file. This enables engineers to spin up, test against, and tear down completely isolated environments using simple CLI commands.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Define the testing environment in a Compose file",
+            "command": "cat << 'EOF' > docker-compose.yml\nversion: '3.8'\nservices:\n  database:\n    image: postgres:16-alpine\n    environment:\n      POSTGRES_USER: navigator_user\n      POSTGRES_PASSWORD: navigator_password\n      POSTGRES_DB: navigator_db\nEOF",
+            "explanation": "Documenting all service dependencies in a machine-readable file eliminates lengthy setup instructions and ensures environment consistency.",
+            "verification": "ls -l docker-compose.yml",
+            "citations": [
+              "docker_compose_best_practices_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Spin up the isolated environment for testing",
+            "command": "docker compose up -d",
+            "explanation": "Starts the defined containers in detached mode so that automated test scripts can execute against active services.",
+            "verification": "docker compose ps",
+            "citations": [
+              "docker_compose_best_practices_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 3,
+            "title": "Tear down the testing environment",
+            "command": "docker compose down",
+            "explanation": "Destroys the isolated containers cleanly after the test suite completes to free up resources and prevent side effects.",
+            "verification": "docker compose ps",
+            "citations": [
+              "docker_compose_best_practices_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Relying on shared, persistent global databases for automated test suites, which can cause test pollution and race conditions.",
+          "Manually installing and configuring service dependencies directly on CI runners instead of containerizing them."
+        ],
+        "architecture_contract": "docker-compose.yml defines isolated service containers (such as databases and APIs) that spin up deterministically during CI execution.",
+        "key_takeaway": "Docker Compose condenses complex multi-service setup and teardown routines into simple, reproducible CLI commands, making it ideal for isolated CI/CD testing environments.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_compose_best_practices_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-21",
+      "category": "General",
+      "question": "What drawbacks arise from using single-stage Dockerfiles when packaging Python production services?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_sweep384_chunk_0",
+        "docker_compose_sweep384_chunk_0",
+        "docker_compose_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1",
+        "docker_compose_best_practices_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1584.41,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1584.41,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6688.48,
+      "ttft_ms": 1786.42,
+      "prompt_tokens": 2208,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "docker_production_guide_sweep384_chunk_0",
+          "docker_compose_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Single-stage Dockerfiles for Python production services lead to unnecessarily large image sizes due to leftover compilers and build tools, and they expose security risks by retaining development headers and package managers in production.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Adopt a Multi-Stage Dockerfile Strategy",
+            "command": "FROM python:3.12-slim AS builder\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev\nCOPY requirements.txt .\nRUN pip install --no-cache-dir --user -r requirements.txt\n\nFROM python:3.12-slim AS runner\nWORKDIR /app\nRUN apt-get update && apt-get install -y --no-install-recommends curl libpq5 && rm -rf /var/lib/apt/lists/*\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\nCOPY . .\nCMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
+            "explanation": "Separating the build environment from the runtime environment allows you to compile native dependencies using heavy tools like gcc and libpq-dev in a builder stage, leaving only the minimal runtime libraries (like libpq5) in the final production image.",
+            "verification": "docker build -t my-python-app . && docker images my-python-app",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_0",
+              "docker_compose_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using single-stage builds that inflate image sizes to 1GB+ by retaining native compilers and build tools.",
+          "Leaving development headers and build dependencies in production runtime containers.",
+          "Mounting a root directory via docker-compose volumes that accidentally overrides and hides build artifacts."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Single-stage builds bloat production images with heavy compilers. Multi-stage builds isolate build tools in an early stage and copy only compiled artifacts or user wheels into a minimal runtime image.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_production_guide_sweep384_chunk_0",
+          "docker_compose_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-25",
+      "category": "General",
+      "question": "How does exiting a psycopg2 connection context manager block (with conn:) manage SQL transaction state?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_4",
+        "fastapi_fullstack_guide_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 896.05,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 896.05,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 5622.86,
+      "ttft_ms": 1654.38,
+      "prompt_tokens": 2070,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 3,
+        "command_count": 3,
+        "citation_count": 4,
+        "cited_chunks": [
+          "postgresql_psycopg2_sweep384_chunk_0",
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Exiting a connection's 'with conn:' block in psycopg2 automatically commits the transaction if no exception occurred, or rolls it back if an exception was raised. However, the connection itself is not closed by the context manager and must be explicitly closed.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Use conn context manager for atomic multi-table inserts",
+            "command": "python3 -c \"import psycopg2; print('Context manager ready')\"",
+            "explanation": "Wrap your database operations in a 'with conn:' block to let psycopg2 handle automatic commit on clean exit and automatic rollback on exceptions.",
+            "verification": "Ensure your python script executes multi-table inserts without manually calling conn.commit() on success.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_0"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Explicitly close the connection outside the context block",
+            "command": "python3 -c \"import psycopg2; print('Remember to call conn.close()')\"",
+            "explanation": "The connection itself is not closed by the 'with conn:' block, so you must call conn.close() to prevent connection leaks.",
+            "verification": "Check your script's finally block to confirm conn.close() is present.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_0"
+            ]
+          },
+          {
+            "step_number": 3,
+            "title": "Handle transaction aborts with explicit rollback",
+            "command": "python3 -c \"import psycopg2; print('Use conn.rollback() on failure')\"",
+            "explanation": "If a transaction fails, PostgreSQL aborts it and raises InFailedSqlTransaction until a rollback is issued.",
+            "verification": "Run a failing query followed by conn.rollback() to verify recovery before starting a new transaction.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_0",
+              "postgresql_psycopg2_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming that exiting the 'with conn:' block closes the database connection.",
+          "Forgetting to call conn.close() in a finally block.",
+          "Manually calling conn.commit() inside a transaction context manager block where automatic management is expected."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "The psycopg2 connection context manager handles transaction boundaries (commit on success, rollback on exception) but leaves connection lifecycle management (conn.close) to the developer.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "postgresql_psycopg2_sweep384_chunk_0",
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-26",
+      "category": "General",
+      "question": "Does exiting a with conn: context manager in psycopg2 close the underlying TCP database connection?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_4",
+        "pydantic_validation_sweep384_chunk_15"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1919.08,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1919.08,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6741.44,
+      "ttft_ms": 1687.83,
+      "prompt_tokens": 2150,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "postgresql_psycopg2_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Verified explanation of psycopg2 connection context manager behavior regarding underlying TCP sockets.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Examine Connection Context Manager Behavior",
+            "command": "python3 -c \"import psycopg2; print('Check official docs in corpus')\"",
+            "explanation": "Exiting a connection's with block in psycopg2 commits or rolls back the transaction, but it does NOT close the connection itself. You must explicitly call conn.close().",
+            "verification": "Ensure conn.close() is called in a finally block or outside the context manager block.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming the connection context manager automatically closes the TCP socket and omitting conn.close()."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "The connection context manager handles transactions and rollbacks automatically, but resource cleanup of the underlying socket requires an explicit conn.close() call.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "postgresql_psycopg2_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-27",
+      "category": "General",
+      "question": "What database condition triggers the psycopg2.errors.InFailedSqlTransaction error during query execution?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1",
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_20",
+        "fastapi_fullstack_guide_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.3333,
+        "first_hit_rank": 3,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 978.86,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 978.86,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 5172.3,
+      "ttft_ms": 1467.7,
+      "prompt_tokens": 2118,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 3,
+        "cited_chunks": [
+          "postgresql_psycopg2_sweep384_chunk_0",
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "The `psycopg2.errors.InFailedSqlTransaction` error is triggered when an error occurs inside an active PostgreSQL transaction, causing the database server to abort the current transaction and ignore all subsequent commands until the transaction block is formally ended.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Wrap Database Operations in Connection Context Managers",
+            "command": "python -c \"import psycopg2; conn = psycopg2.connect('dbname=test'); \nwith conn:\n    with conn.cursor() as cur:\n        cur.execute('SELECT 1')\nconn.close()\"",
+            "explanation": "Using a connection context manager (`with conn:`) ensures that transactions are automatically committed upon success or rolled back safely when an exception occurs, avoiding left-over aborted transaction states.",
+            "verification": "Run your Python database script and ensure exceptions trigger an automatic rollback without leaving the connection hanging in an aborted state.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_0",
+              "postgresql_psycopg2_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Explicitly Call Rollback on Connection Errors",
+            "command": "python -c \"import psycopg2; conn = psycopg2.connect('dbname=test'); \ntry:\n    with conn.cursor() as cur:\n        cur.execute('SELECT * FROM non_existent_table')\nexcept Exception:\n    conn.rollback()\nconn.close()\"",
+            "explanation": "If you are not using context managers, you must manually call `conn.rollback()` after catching an exception before attempting any new queries on that connection.",
+            "verification": "Verify that subsequent queries succeed immediately after calling `conn.rollback()` following a database error.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Ignoring database exceptions and trying to run subsequent `cur.execute()` statements on the same connection without issuing a `conn.rollback()` first.",
+          "Using raw string formatting to build queries instead of placeholders, which increases vulnerability and can lead to unexpected syntax execution errors inside transactions."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Any database error inside a transaction invalidates the entire transaction block in PostgreSQL; you must issue a rollback before executing further commands on that connection.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "postgresql_psycopg2_sweep384_chunk_0",
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-28",
+      "category": "General",
+      "question": "How do you recover a psycopg2 connection after encountering an InFailedSqlTransaction exception?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_1",
+        "fastapi_validation_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_19"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1957.3,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1957.3,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6591.92,
+      "ttft_ms": 1622.12,
+      "prompt_tokens": 2256,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 4,
+        "cited_chunks": [
+          "postgresql_psycopg2_sweep384_chunk_1",
+          "postgresql_psycopg2_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "When a PostgreSQL error occurs within a transaction, the entire transaction is aborted, raising psycopg2.errors.InFailedSqlTransaction. To recover, you must explicitly roll back the transaction before executing new commands, though using Python context managers automates this process.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Roll back the aborted transaction",
+            "command": "conn.rollback()",
+            "explanation": "After any error inside a transaction, PostgreSQL blocks subsequent commands until the transaction block is ended. Calling rollback clears the aborted state so you can start a new transaction.",
+            "verification": "Execute a valid SELECT or INSERT statement after calling conn.rollback() to ensure it succeeds without raising InFailedSqlTransaction.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_1",
+              "postgresql_psycopg2_sweep384_chunk_0"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Use context managers for automatic rollbacks",
+            "command": "with conn:\n    with conn.cursor() as cur:\n        cur.execute(\"INSERT INTO listing (title) VALUES (%s) RETURNING listing_sk\", (title,))",
+            "explanation": "Wrapping your connection or cursor in a context manager guarantees that rollbacks happen automatically if an exception is thrown, preventing the connection from getting stuck in an aborted transaction state.",
+            "verification": "Trigger an artificial database error inside the with block and verify that the transaction rolls back automatically without manual intervention.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_1",
+              "postgresql_psycopg2_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Ignoring the exception and continuing to execute commands on the same broken connection without calling conn.rollback() first.",
+          "Forgetting to call conn.close() when managing connections outside of context managers."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "PostgreSQL aborts the entire transaction upon encountering an error; always use connection context managers or explicit conn.rollback() calls to recover the connection state.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "postgresql_psycopg2_sweep384_chunk_1",
+          "postgresql_psycopg2_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-29",
+      "category": "General",
+      "question": "Why should developers never format SQL query strings using Python f-strings or string interpolation?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "pydantic_models_sweep384_chunk_15",
+        "fastapi_fullstack_guide_sweep384_chunk_4",
+        "pydantic_models_sweep384_chunk_8",
+        "pydantic_models_sweep384_chunk_21"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1131.77,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1131.77,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 7562.13,
+      "ttft_ms": 2250.63,
+      "prompt_tokens": 2189,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Developers must never format SQL query strings using Python f-strings or string interpolation because it leaves the application vulnerable to SQL injection attacks. Using parameterized queries ensures that user-supplied input is treated strictly as data rather than executable code.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Use Parameterized Queries instead of String Interpolation",
+            "command": "cur.execute(\"SELECT * FROM users WHERE id = %s\", (user_id,))",
+            "explanation": "Passing parameters separately using placeholders allows the database driver to safely escape user inputs, completely preventing SQL injection.",
+            "verification": "Check all database query calls across your codebase to verify that tuples or placeholders are used instead of f-strings.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Handle Variable Length IN Lists Safely",
+            "command": "cur.execute(\"SELECT * FROM users WHERE id = ANY(%s)\", (ids,))",
+            "explanation": "When working with lists of variable length, use the SQL ANY operator with a single list parameter or securely construct placeholders rather than raw string formatting.",
+            "verification": "Run unit tests verifying that list inputs containing special characters do not break queries or cause syntax errors.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Never concatenate raw user strings into SQL queries using f-strings or format methods.",
+          "Never trust client input to be pre-sanitized before inserting it raw into a query string."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always separate SQL query structure from user data by utilizing parameterized queries and placeholders.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-30",
+      "category": "General",
+      "question": "How can a Python list of variable length be passed into a SQL query in psycopg2 using the ANY construct?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "pydantic_validation_sweep384_chunk_4",
+        "pydantic_models_sweep384_chunk_34",
+        "pydantic_validation_sweep384_chunk_5"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 676.24,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 676.24,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6091.38,
+      "ttft_ms": 1895.3,
+      "prompt_tokens": 2397,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "To pass a Python list of variable length into a SQL query in psycopg2 using the ANY construct, you should pass the list directly as a single parameter tuple to prevent SQL injection and let psycopg2 handle array formatting.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Use ANY() with a single parameter tuple",
+            "command": "ids = [1, 2, 3, 4]\ncur.execute(\n    \"SELECT * FROM users WHERE id = ANY(%s)\",\n    (ids,)\n)",
+            "explanation": "Passing the list as a single parameter tuple allows psycopg2 to safely map the Python list to a PostgreSQL array for the ANY operator.",
+            "verification": "Ensure the query executes without throwing a syntax or type mismatch error.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Never interpolate values or use string formatting like f-strings to build SQL IN lists, as this exposes your application to SQL injection vulnerabilities."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always prefer parameterized queries and placeholders like ANY(%s) instead of string concatenation when handling variable-length lists in psycopg2.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-31",
+      "category": "General",
+      "question": "Why is opening a separate TCP connection for every incoming API request inefficient in high-throughput applications?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "fastapi_cors_sweep384_chunk_3",
+        "docker_compose_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_4"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1140.77,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1140.77,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 6530.13,
+      "ttft_ms": 1886.28,
+      "prompt_tokens": 2092,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The question is outside the scope of the verified corpus. As Tutorial Hell Navigator, I must refuse out-of-corpus queries to ensure guidance is grounded in verified documentation.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Networking Documentation",
+            "command": "echo \"Please refer to RFC 793 and standard networking textbooks regarding TCP overhead and connection pooling.\"",
+            "explanation": "Since the query is out-of-corpus, students should consult standard networking and systems design documentation.",
+            "verification": "Verify understanding of TCP handshake overhead by reading official transport layer specifications.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Inventing unverified technical commands or explanations when the context is empty.",
+          "Relying on passive tutorial reading without understanding transport layer mechanics."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always ground technical explanations in verified project context and documentation.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-32",
+      "category": "General",
+      "question": "What three primary pool configuration settings should be checked when database connection timeouts occur?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_2",
+        "docker_compose_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_4"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 812.49,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 812.49,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6851.27,
+      "ttft_ms": 2113.57,
+      "prompt_tokens": 2049,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "When database connection timeouts occur under load in PostgreSQL applications using psycopg2, you should inspect three primary pool configuration settings first: maxconn (pool size), statement timeouts, and idle connection lifetime.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Inspect Connection Pool Settings",
+            "command": "python -c \"import psycopg2.pool; pool = psycopg2.pool.SimpleConnectionPool(1, 20, dsn='postgres://user:pass@localhost:5432/db'); print('Pool initialized')\"",
+            "explanation": "Review pool configuration parameters like maxconn and pool size to ensure your application is not exhausting available connections under load.",
+            "verification": "Check that the connection pool initializes correctly and handles concurrent load without throwing timeout errors.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Opening a new TCP connection for every single HTTP request under load",
+          "Ignoring idle connection lifetimes which can lead to stale connections holding up the pool"
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always use connection pooling and monitor pool size, statement timeouts, and idle connection lifetimes to prevent timeouts.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-36",
+      "category": "General",
+      "question": "In Pydantic v2, which decorator replaces the legacy @validator decorator for validating model fields?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_validation_sweep384_chunk_1",
+        "pydantic_validation_sweep384_chunk_10",
+        "pydantic_validation_sweep384_chunk_9",
+        "pydantic_validation_sweep384_chunk_2",
+        "pydantic_validation_sweep384_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1516.69,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1516.69,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 11025.92,
+      "ttft_ms": 3328.23,
+      "prompt_tokens": 2472,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "fastapi_validation_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "In Pydantic v2, the legacy @validator decorator has been replaced by @field_validator for validating individual fields.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Use @field_validator in Pydantic v2",
+            "command": "from pydantic import BaseModel, field_validator, ValidationInfo\n\nclass ManagerSchema(BaseModel):\n    operation_type: str\n    background_hex_color: str | None = None\n\n    @field_validator(\"background_hex_color\", mode=\"before\")\n    @classmethod\n    def validate_background_hex_color(cls, value, info: ValidationInfo):\n        return value",
+            "explanation": "Replace old @validator imports and usages with @field_validator along with the required @classmethod decorator.",
+            "verification": "python3 -c \"from pydantic import BaseModel, field_validator; print('Pydantic v2 validator loaded successfully')\"",
+            "citations": [
+              "fastapi_validation_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using legacy @validator from Pydantic v1 without updating it to @field_validator in Pydantic v2.",
+          "Forgetting to include @classmethod when defining a @field_validator in Pydantic v2."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Pydantic v2 uses @field_validator with @classmethod instead of the legacy @validator decorator.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_validation_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-37",
+      "category": "General",
+      "question": "Why should developers use discriminated unions when working with large Union schemas in FastAPI and Pydantic?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_validation_sweep384_chunk_1",
+        "fastapi_validation_sweep384_chunk_2",
+        "pydantic_models_sweep384_chunk_17",
+        "fastapi_validation_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_34"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 601.24,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 601.24,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6125.59,
+      "ttft_ms": 1933.52,
+      "prompt_tokens": 2331,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "fastapi_validation_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Developers should use discriminated unions in FastAPI and Pydantic when dealing with large Union schemas to prevent verbose and unclear validation error messages. Without a discriminator, Pydantic attempts to validate every single schema in the union, resulting in overwhelming error lists. Using a discriminator ensures Pydantic targets the correct schema immediately and returns concise, precise error responses.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Define Component Schemas with Literal Identifiers",
+            "command": "cat << 'EOF' > models.py\nfrom typing import Literal\nfrom pydantic import BaseModel\n\nclass SchemaA(BaseModel):\n    type: Literal[\"A\"]\n    value_a: int\n\nclass SchemaB(BaseModel):\n    type: Literal[\"B\"]\n    value_b: str\nEOF",
+            "explanation": "Create distinct Pydantic models containing a literal field that acts as a unique identifier for each schema branch.",
+            "verification": "python3 -c \"import models; print('Models defined successfully')\"",
+            "citations": [
+              "fastapi_validation_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Configure the Master Union with a Discriminator Field",
+            "command": "cat << 'EOF' >> models.py\nfrom typing import Annotated, Union\nfrom pydantic import Field\n\nMasterRequest = Annotated[\n    Union[SchemaA, SchemaB],\n    Field(discriminator=\"type\")\n]\nEOF",
+            "explanation": "Combine the schemas using typing.Annotated and pydantic.Field with a discriminator parameter pointing to the literal identifier field, allowing FastAPI to route validation accurately.",
+            "verification": "python3 -c \"from models import MasterRequest; print('Discriminator configured')\"",
+            "citations": [
+              "fastapi_validation_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Relying on plain large Unions without a discriminator, which causes FastAPI to return verbose, unhelpful error outputs enumerating every single schema mismatch.",
+          "Manually parsing request dictionaries using conditional type checks in endpoints instead of leveraging Pydantic's built-in discriminated union routing."
+        ],
+        "architecture_contract": "models.py contains SchemaA, SchemaB, and MasterRequest annotated with Field(discriminator=\"type\").",
+        "key_takeaway": "Discriminated unions dramatically improve error clarity and request validation performance for polymorphic schemas by eliminating brute-force union matching.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_validation_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-38",
+      "category": "General",
+      "question": "What does Pydantic do when a custom @field_validator raises a standard Python ValueError?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_validation_sweep384_chunk_2",
+        "pydantic_models_sweep384_chunk_19",
+        "fastapi_validation_sweep384_chunk_1",
+        "pydantic_validation_sweep384_chunk_1",
+        "pydantic_validation_sweep384_chunk_13"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1056.48,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1056.48,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 7476.56,
+      "ttft_ms": 2247.03,
+      "prompt_tokens": 2358,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "fastapi_validation_sweep384_chunk_1",
+          "fastapi_validation_sweep384_chunk_2"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "When a custom @field_validator raises a standard Python ValueError, Pydantic converts that ValueError into a ValidationError. Furthermore, FastAPI automatically intercepts any ValidationError and converts it into a clean HTTP 422 Unprocessable Entity response.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Implement a custom field validator raising ValueError",
+            "command": "cat << 'EOF' > validator_demo.py\nfrom pydantic import BaseModel, field_validator, ValidationInfo\n\nclass ManagerSchema(BaseModel):\n    operation_type: str\n    background_hex_color: str | None = None\n\n    @field_validator(\"background_hex_color\", mode=\"before\")\n    @classmethod\n    def validate_background_hex_color(cls, value, info: ValidationInfo):\n        operation_type = info.data.get(\"operation_type\")\n        if operation_type == \"UPDATE_BACKGROUND_COLOR\" and not value:\n            raise ValueError(\"background_hex_color is required for UPDATE_BACKGROUND_COLOR\")\n        return value\nEOF\n",
+            "explanation": "Demonstrates how raising a standard Python ValueError inside a @field_validator is handled by Pydantic.",
+            "verification": "python3 validator_demo.py",
+            "citations": [
+              "fastapi_validation_sweep384_chunk_1",
+              "fastapi_validation_sweep384_chunk_2"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Manually raising HTTPException inside validators for normal validation errors instead of letting Pydantic convert ValueError.",
+          "Overlooking that mode='before' validators still receive default values if the field is present in input data."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Raising standard Python ValueErrors in Pydantic validators automatically translates into structured ValidationErrors and HTTP 422 responses in FastAPI.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_validation_sweep384_chunk_1",
+          "fastapi_validation_sweep384_chunk_2"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-39",
+      "category": "General",
+      "question": "Why is a model_validator advantageous over multiple field_validators when validating dependent model attributes?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_validation_sweep384_chunk_2",
+        "pydantic_validation_sweep384_chunk_0",
+        "pydantic_validation_sweep384_chunk_10",
+        "pydantic_validation_sweep384_chunk_9",
+        "pydantic_validation_sweep384_chunk_12"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 548.29,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 548.29,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 3176.46,
+      "ttft_ms": 919.86,
+      "prompt_tokens": 2375,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The question is outside the scope of the verified corpus since no verified technical context was provided for Pydantic model validators.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Official Documentation",
+            "command": "python -m webbrowser https://docs.pydantic.dev/",
+            "explanation": "Please refer to the official Pydantic documentation regarding model_validator versus field_validator for authoritative guidance.",
+            "verification": "Verify the concepts directly on the official docs site.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing library behaviors without checking official reference documentation."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always consult verified documentation sources when exploring advanced framework features.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-40",
+      "category": "General",
+      "question": "How do 'after' field validators function in Pydantic v2 and why are they considered type-safe?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_sweep384_chunk_1",
+        "pydantic_validation_sweep384_chunk_0",
+        "pydantic_validation_sweep384_chunk_10",
+        "pydantic_validation_sweep384_chunk_9",
+        "pydantic_validation_sweep384_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1403.42,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1403.42,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6350.93,
+      "ttft_ms": 1731.63,
+      "prompt_tokens": 2419,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "pydantic_validation_sweep384_chunk_1",
+          "pydantic_validation_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Explaining Pydantic v2 'after' field validators, their execution order after internal validation, and why they offer higher type safety due to running against already-parsed types.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Create an AfterValidator example using the Annotated pattern",
+            "command": "cat << 'EOF' > validator_demo.py\nfrom typing import Annotated\nfrom pydantic import AfterValidator, BaseModel, ValidationError\n\ndef is_even(value: int) -> int:\n    if value % 2 == 1:\n        raise ValueError(f'{value} is not an even number')\n    return value\n\nclass Model(BaseModel):\n    number: Annotated[int, AfterValidator(is_even)]\n\ntry:\n    Model(number=1)\nexcept ValidationError as err:\n    print(err)\nEOF\npython3 validator_demo.py",
+            "explanation": "After validators run after Pydantic's internal validation has completed, ensuring the input value has already been successfully coerced or parsed into the expected base type (e.g., int), making them safer to implement.",
+            "verification": "python3 validator_demo.py",
+            "citations": [
+              "pydantic_validation_sweep384_chunk_1",
+              "pydantic_validation_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Forgetting to return the validated value from your validator function, which results in None being assigned to the field.",
+          "Assuming an 'after' validator receives raw unparsed strings when expecting a specific primitive type like an integer."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "After validators run after Pydantic's internal parsing and type coercion, allowing you to focus purely on domain logic constraints while trusting the input type.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "pydantic_validation_sweep384_chunk_1",
+          "pydantic_validation_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-46",
+      "category": "General",
+      "question": "How do I implement custom backpropagation and calculate gradient clipping thresholds in PyTorch for an LSTM model?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_19",
+        "fastapi_validation_sweep384_chunk_2",
+        "pydantic_models_sweep384_chunk_20",
+        "pydantic_models_sweep384_chunk_11",
+        "pydantic_models_sweep384_chunk_31"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 892.12,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 892.12,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 4202.15,
+      "ttft_ms": 1158.51,
+      "prompt_tokens": 2379,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The student asked about implementing custom backpropagation and gradient clipping in PyTorch for an LSTM model. However, the verified context is completely empty and out-of-bounds. Therefore, an out-of-corpus refusal is triggered.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Official PyTorch Documentation",
+            "command": "python -c \"import torch; help(torch.nn.utils.clip_grad_norm_)\"",
+            "explanation": "Since the question is outside the verified technical corpus, please consult the official PyTorch documentation for torch.nn.utils.clip_grad_norm_ and custom autograd functions.",
+            "verification": "Check the Python interactive help output for gradient clipping utilities.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing PyTorch autograd implementation details without verifying against official documentation.",
+          "Applying gradient clipping after the optimizer step instead of before it."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always verify deep learning utilities against the official documentation and verified course corpora.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-47",
+      "category": "General",
+      "question": "What hyperparameters should I set for LoRA rank and alpha when fine-tuning Llama-3-8B on an instruction dataset?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_25",
+        "fastapi_cors_sweep384_chunk_2",
+        "pydantic_models_sweep384_chunk_18",
+        "docker_production_guide_sweep384_chunk_2",
+        "pydantic_models_sweep384_chunk_9"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1223.17,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1223.17,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 4931.59,
+      "ttft_ms": 1297.95,
+      "prompt_tokens": 2277,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The student asked about hyperparameters for LoRA rank and alpha when fine-tuning Llama-3-8B. The provided verified context is empty, meaning this question is outside the scope of the verified corpus.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Documentation",
+            "command": "echo 'Refer to Hugging Face PEFT and LLaMA-Factory documentation for standard LoRA recommendations.'",
+            "explanation": "Since the question is out-of-corpus, you should consult official library documentation such as Hugging Face PEFT or transformers guidelines for parameter recommendations.",
+            "verification": "Check official guides for PEFT configuration parameters.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Blindly copying arbitrary LoRA ranks from random blogs without testing.",
+          "Ignoring alpha scaling when changing LoRA rank."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always rely on verified documentation or run ablation experiments for model-specific hyperparameter tuning.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-48",
+      "category": "General",
+      "question": "How do I build an automated feature store with Feast and integrate data drift detection with Evidently AI in production?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_best_practices_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_3",
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_2",
+        "docker_production_guide_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 748.04,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 748.04,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 4286.43,
+      "ttft_ms": 1238.44,
+      "prompt_tokens": 2080,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The requested topic on Feast and Evidently AI is out of bounds and cannot be verified against the technical documentation corpus.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Official Documentation",
+            "command": "echo 'Please refer to official Feast and Evidently AI documentation.'",
+            "explanation": "Since the question is out-of-corpus, you must consult the official Feast and Evidently AI guides directly rather than relying on unverified commands.",
+            "verification": "Check official docs at docs.feast.dev and evidentlyai.com",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Copying unverified scripts from random blog posts without checking official documentation versions.",
+          "Running unvalidated production pipelines without monitoring or offline validation."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always verify tool combinations against official, supported technical documentation.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-49",
+      "category": "General",
+      "question": "What is the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_33",
+        "pydantic_models_sweep384_chunk_29",
+        "pydantic_validation_sweep384_chunk_1",
+        "pydantic_models_sweep384_chunk_7",
+        "pydantic_validation_sweep384_chunk_13"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1274.05,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1274.05,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 5372.37,
+      "ttft_ms": 1434.41,
+      "prompt_tokens": 2328,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The requested question regarding the mathematical formulation of cross-entropy loss with label smoothing in transformer architectures is outside the scope of the verified corpus.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Documentation",
+            "command": "echo 'Please refer to official machine learning textbooks or framework documentation for cross-entropy and label smoothing formulations.'",
+            "explanation": "Since the corpus is empty, you must rely on standard verified references and mathematical documentation rather than generated assumptions.",
+            "verification": "Verify formulas against standard ML literature.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing mathematical formulas without verified context",
+          "Copying unverified code or equations from memory without validation"
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always verify architectural and mathematical specifications against official documentation.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-50",
+      "category": "General",
+      "question": "How do I configure vLLM with PagedAttention and tensor parallelism across four NVIDIA A100 GPUs for low-latency serving?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_sweep384_chunk_4",
+        "docker_production_guide_sweep384_chunk_3",
+        "fastapi_cors_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 627.43,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 627.43,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 4110.47,
+      "ttft_ms": 1219.06,
+      "prompt_tokens": 1855,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The student asked about configuring vLLM with PagedAttention and tensor parallelism across four NVIDIA A100 GPUs. However, the verified technical corpus only contains documentation regarding FastAPI middleware/CORS, PostgreSQL with async SQLAlchemy, Alembic migrations, and Docker production deployments. The question is out-of-corpus.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Official vLLM Documentation",
+            "command": "pip install vllm && python3 -m vllm.entrypoints.openai.api_server --model facebook/opt-125m --tensor-parallel-size 4",
+            "explanation": "Since the query is outside the provided corpus, refer directly to official vLLM guides for tensor parallelism and PagedAttention configuration.",
+            "verification": "python3 -c \"import vllm; print(vllm.__version__)\"",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing CLI flags for specialized high-performance inference engines without checking official documentation",
+          "Hardcoding GPU parallelization parameters without verifying hardware topology"
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always verify deep infrastructure configurations against official vendor documentation when outside the local knowledge base.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-51",
+      "category": "General",
+      "question": "Prove why the Banker's algorithm prevents deadlock in operating systems with multi-resource allocation matrices.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_validation_sweep384_chunk_16",
+        "fastapi_fullstack_guide_sweep384_chunk_4",
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_17",
+        "fastapi_fullstack_guide_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 2071.95,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2071.95,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 5858.38,
+      "ttft_ms": 1325.25,
+      "prompt_tokens": 2321,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The student's question regarding the mathematical proof of the Banker's algorithm is completely outside the scope of the provided verified context. Following safety and accuracy protocols, an out-of-corpus refusal has been triggered.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Operating Systems Textbooks",
+            "command": "echo 'Please refer to operating systems curriculum or standard academic resources such as Silberschatz, Galvin, and Gagne Operating System Concepts.'",
+            "explanation": "Since the question is out-of-corpus, you should refer to peer-reviewed academic literature or official university course materials on deadlock avoidance and safety state algorithms.",
+            "verification": "Verify concepts against standard academic definitions of safe and unsafe states.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Inventing unverified proofs or pseudocode not backed by verified documentation.",
+          "Copying unverified solutions from random online forums without understanding the mathematical safety state constraints."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always rely on verified course contexts and standard documentation when tackling complex theoretical computer science problems.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-52",
+      "category": "General",
+      "question": "Explain the difference between working set page replacement and the clock algorithm with second-chance reference bits.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_11",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "pydantic_models_sweep384_chunk_17",
+        "fastapi_fullstack_guide_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_4"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 682.73,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 682.73,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 3514.0,
+      "ttft_ms": 990.94,
+      "prompt_tokens": 2300,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The student question regarding the difference between working set page replacement and the clock algorithm with second-chance reference bits is outside the scope of the verified corpus.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard OS Documentation",
+            "command": "man 2 mprotect",
+            "explanation": "Since the question is out-of-corpus, please refer to standard operating systems textbooks or official documentation regarding virtual memory management and page replacement algorithms.",
+            "verification": "Check standard OS literature such as Operating System Concepts by Silberschatz, Galvin, and Gagne.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing operating system internal memory management mechanisms without verifying against a known reference corpus."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always verify technical explanations against a trusted corpus before implementation.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-53",
+      "category": "General",
+      "question": "Provide a formal mathematical proof for Boyce-Codd Normal Form (BCNF) decomposition preserving functional dependencies.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_3",
+        "pydantic_models_sweep384_chunk_39",
+        "pydantic_validation_sweep384_chunk_17",
+        "pydantic_models_sweep384_chunk_42",
+        "fastapi_background_tasks_sweep384_chunk_0"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 1867.53,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1867.53,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 6844.81,
+      "ttft_ms": 1742.05,
+      "prompt_tokens": 2415,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The student requested a formal mathematical proof for Boyce-Codd Normal Form (BCNF) decomposition preserving functional dependencies. Since the provided verified context is empty and out-of-bounds, this query is refused in accordance with the strict out-of-corpus refusal rules.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Relational Database Theory Textbooks",
+            "command": "echo \"Please refer to standard database textbooks such as 'Database System Concepts' by Silberschatz, Korth, and Sudarshan for formal database normalization proofs.\"",
+            "explanation": "Because the query is outside the scope of the verified technical documentation corpus, you must look up dependency preservation proofs in standard academic literature or official database course materials.",
+            "verification": "Confirm that the chosen textbook covers lossless-join decomposition and dependency preservation theorems.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Inventing unverified mathematical proofs without corpus backing.",
+          "Assuming BCNF always preserves all original functional dependencies (in reality, BCNF guarantees lossless join but not always dependency preservation)."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "BCNF guarantees a lossless-join decomposition, but dependency preservation cannot always be guaranteed when decomposing a relation into BCNF.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-54",
+      "category": "General",
+      "question": "Explain the exact bitwise structure of the TCP header including urgent pointer and selective acknowledgment (SACK) options.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "fastapi_cors_sweep384_chunk_3",
+        "fastapi_cors_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_5",
+        "docker_production_guide_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 991.86,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 991.86,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 4285.28,
+      "ttft_ms": 1152.7,
+      "prompt_tokens": 1852,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "The user's question about the exact bitwise structure of the TCP header, urgent pointer, and selective acknowledgment (SACK) options is out-of-corpus because no verified technical documentation has been provided to substantiate the low-level bit structure. Per strict compliance rules, we must issue an out-of-corpus refusal.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Documentation",
+            "command": "man 7 tcp",
+            "explanation": "Refer to official protocol specifications and standard documentation such as RFC 793 and RFC 2018 for authoritative details on TCP headers and SACK options.",
+            "verification": "Verify the documentation matches standard networking specifications.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing bit positions or option offsets without official RFC verification."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always rely on verified context or authoritative RFC specifications when examining low-level protocol headers.",
+        "is_refusal": true,
+        "refusal_reason": "Question is out-of-corpus and cannot be verified against the technical documentation.",
+        "cited_chunk_ids": []
+      }
+    }
+  ]
+}

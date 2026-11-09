@@ -659,7 +659,7 @@ def retrieve_relevant_chunks(
     if mode in ("none", "vanilla"):
         return []
     elif mode == "full-context":
-        path = SWEEP_CHUNKS_FILE if ("sweep" in collection_name or "384" in collection_name) else PROCESSED_CHUNKS_FILE
+        path = SWEEP_CHUNKS_FILE if SWEEP_CHUNKS_FILE.exists() else PROCESSED_CHUNKS_FILE
         return load_full_corpus_chunks(path)
     elif mode in ("hybrid-rerank", "rerank"):
         return retrieve_hybrid_rerank_chunks(

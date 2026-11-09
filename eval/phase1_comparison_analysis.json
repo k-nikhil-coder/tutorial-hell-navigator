@@ -1,0 +1,1013 @@
+{
+  "summary": {
+    "total_questions": 40,
+    "hybrid_pass_rate": 0.975,
+    "full_context_pass_rate": 0.975,
+    "hybrid_p50_latency_ms": 6125.59,
+    "full_p50_latency_ms": 10134.57,
+    "hybrid_mean_prompt_tokens": 2234.925,
+    "full_mean_prompt_tokens": 33298.025
+  },
+  "per_question": [
+    {
+      "id": "GS-V2-01",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6447.26,
+        "tokens": 2225,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4971.55,
+        "tokens": 33298,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-02",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4958.0,
+        "tokens": 2222,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 3107.59,
+        "tokens": 33295,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-03",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "FAIL",
+        "overall_score": 0.8,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 0.0,
+        "latency_ms": 4271.81,
+        "tokens": 2220,
+        "issues": "Review verdict FAIL (Overall score: 0.80). Code issues: CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True.; CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True."
+      },
+      "full_context": {
+        "verdict": "FAIL",
+        "overall_score": 0.8,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 0.0,
+        "latency_ms": 3454.09,
+        "tokens": 33297,
+        "issues": "Review verdict FAIL (Overall score: 0.80). Code issues: CORS violation: allow_origins=['*'] cannot be used when allow_credentials=True."
+      }
+    },
+    {
+      "id": "GS-V2-04",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4796.17,
+        "tokens": 2221,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 3686.39,
+        "tokens": 33294,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-05",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 3781.33,
+        "tokens": 2232,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 2961.42,
+        "tokens": 33299,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-06",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6794.3,
+        "tokens": 2177,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4030.16,
+        "tokens": 33295,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-07",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 5460.92,
+        "tokens": 2180,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 3807.44,
+        "tokens": 33298,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-08",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 9631.25,
+        "tokens": 2130,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4619.95,
+        "tokens": 33293,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-09",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 7499.39,
+        "tokens": 2181,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4644.45,
+        "tokens": 33299,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-13",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 7876.11,
+        "tokens": 2207,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4778.06,
+        "tokens": 33302,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-14",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6799.3,
+        "tokens": 2348,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4102.31,
+        "tokens": 33302,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-15",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 5599.3,
+        "tokens": 2235,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 5873.49,
+        "tokens": 33301,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-16",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6669.7,
+        "tokens": 2347,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4834.17,
+        "tokens": 33301,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-17",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 5270.0,
+        "tokens": 2153,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6285.48,
+        "tokens": 33299,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-18",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6828.99,
+        "tokens": 2344,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 8275.6,
+        "tokens": 33298,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-19",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4317.38,
+        "tokens": 2343,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 11181.52,
+        "tokens": 33297,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-20",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6466.38,
+        "tokens": 2341,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 10966.56,
+        "tokens": 33295,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-21",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6688.48,
+        "tokens": 2208,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 10175.32,
+        "tokens": 33294,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-25",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 5622.86,
+        "tokens": 2070,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 10202.33,
+        "tokens": 33298,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-26",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6741.44,
+        "tokens": 2150,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 9252.13,
+        "tokens": 33298,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-27",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 5172.3,
+        "tokens": 2118,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 11122.94,
+        "tokens": 33292,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-28",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6591.92,
+        "tokens": 2256,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 13253.84,
+        "tokens": 33294,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-29",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 7562.13,
+        "tokens": 2189,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 10134.57,
+        "tokens": 33297,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-30",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6091.38,
+        "tokens": 2397,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 8666.25,
+        "tokens": 33305,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-31",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6530.13,
+        "tokens": 2092,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 11994.9,
+        "tokens": 33299,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-32",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6851.27,
+        "tokens": 2049,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 7275.03,
+        "tokens": 33297,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-36",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 11025.92,
+        "tokens": 2472,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 7282.46,
+        "tokens": 33297,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-37",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6125.59,
+        "tokens": 2331,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 15347.04,
+        "tokens": 33299,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-38",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 7476.56,
+        "tokens": 2358,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 12022.43,
+        "tokens": 33295,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-39",
+      "is_answerable": true,
+      "source_kind": "owner_authored",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 3176.46,
+        "tokens": 2375,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 11147.03,
+        "tokens": 33295,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-40",
+      "is_answerable": true,
+      "source_kind": "official",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6350.93,
+        "tokens": 2419,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 14065.46,
+        "tokens": 33298,
+        "issues": "Response is faithful, well-grounded, and free of hallucinated code."
+      }
+    },
+    {
+      "id": "GS-V2-46",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4202.15,
+        "tokens": 2379,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 8536.57,
+        "tokens": 33301,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    },
+    {
+      "id": "GS-V2-47",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4931.59,
+        "tokens": 2277,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 12036.43,
+        "tokens": 33301,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    },
+    {
+      "id": "GS-V2-48",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4286.43,
+        "tokens": 2080,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 12234.93,
+        "tokens": 33305,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    },
+    {
+      "id": "GS-V2-49",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 5372.37,
+        "tokens": 2328,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 13256.03,
+        "tokens": 33297,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    },
+    {
+      "id": "GS-V2-50",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4110.47,
+        "tokens": 1855,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 12861.03,
+        "tokens": 33302,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    },
+    {
+      "id": "GS-V2-51",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 5858.38,
+        "tokens": 2321,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 10171.09,
+        "tokens": 33297,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    },
+    {
+      "id": "GS-V2-52",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 3514.0,
+        "tokens": 2300,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 11061.01,
+        "tokens": 33299,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    },
+    {
+      "id": "GS-V2-53",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 6844.81,
+        "tokens": 2415,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 14341.71,
+        "tokens": 33297,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    },
+    {
+      "id": "GS-V2-54",
+      "is_answerable": false,
+      "source_kind": "out_of_scope",
+      "hybrid": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 4285.28,
+        "tokens": 1852,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      },
+      "full_context": {
+        "verdict": "PASS",
+        "overall_score": 1.0,
+        "faithfulness": 1.0,
+        "groundedness": 1.0,
+        "code_correctness": 1.0,
+        "latency_ms": 18712.47,
+        "tokens": 33301,
+        "issues": "Response correctly refused out-of-scope query without hallucinating ungrounded steps."
+      }
+    }
+  ]
+}
