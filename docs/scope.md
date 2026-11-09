@@ -4,22 +4,67 @@ This document defines the strict operational boundaries, corpus classification, 
 
 ---
 
-## 1. Tier 1 (T1) Core Scope
+## 1. Scope Hierarchy & Technical Boundaries
 
-**Tier 1 (T1)** is specifically defined as:
-> **FastAPI, Docker, Pydantic, and PostgreSQL full-stack web engineering.**
+Work across the project proceeds in strictly separated lanes:
+- **Lane A (`main` branch):** Capstone 2 deliverable. The Tier 1 corpus is **frozen** at 10 files and 97 chunks. Lane A metrics and evaluation gates must never be altered by other lanes.
+- **Lane B (`feat/python-data-corpus` branch):** Extends coverage to Python, NumPy, and pandas as an **isolated, separate collection**. Lane B must never change a Lane A number.
 
-The system is designed to provide actionable, citation-backed technical guidance for students building full-stack Python web applications with FastAPI, Pydantic v2 data models, PostgreSQL relational persistence, and Docker / Docker Compose container orchestration.
+### Status Classifications
 
+| Tier / Domain | Scope Classification | Status | Notes & Operational Boundaries |
+|---|---|---|---|
+| **Tier 1 (T1): Web Engineering Core** | FastAPI, Docker, Pydantic v2, PostgreSQL | **Covered now** | Frozen Capstone 2 corpus: 10 files, 97 chunks in `tutorial_navigator_chunks`. |
+| **Tier 5 (T5): Python Basics** | Language fundamentals & standard library | **In scope, not yet covered** | Core Python 3 tutorial, data structures, control flow, functions, virtual environments, exception handling. |
+| **Tier 6 (T6): NumPy** | Numerical computing & ndarrays | **In scope, not yet covered** | NumPy basics: ndarray creation, vectorization, indexing/slicing, shapes, and broadcasting. |
+| **Tier 7 (T7): pandas** | Tabular data manipulation | **In scope, not yet covered** | Series & DataFrames, 10-min overview, indexing/selection (`.loc`/`.iloc`), missing data, groupby, merge/join. |
+| **matplotlib** | Data visualization & plotting | **OWNER DECISION** | Under consideration. Owner must decide whether 2D plotting is admitted or creates scope dilution away from data manipulation. |
+| **scikit-learn** | Machine learning modeling | **OWNER DECISION** | Under consideration. Borders Out-of-Scope Rule 1 (AI/ML). Owner must decide whether introductory tabular ML pipelines (e.g. regression/trees) are admitted. |
+| **Jupyter** | Interactive notebook environments | **OWNER DECISION** | Under consideration. Environment/IDE tool. Owner must decide whether notebook kernel debugging and cell execution errors are admitted. |
+| **AI/ML Engineering** | Deep Learning / LLMs / MLOps | **OUT OF SCOPE** | Permanent project restriction (PyTorch, TensorFlow, vLLM, Feast, GPU clustering, etc.). |
+| **DSA / Competitive Programming** | LeetCode / Algorithms / Contests | **OUT OF SCOPE** | Permanent project restriction (dynamic programming, segment trees, graph proofs, etc.). |
+| **Career / GitHub Aesthetics** | Salary advice, resume ATS, badges | **OUT OF SCOPE** | Permanent project restriction. |
+
+---
+
+## 2. Detailed Tier Specifications
+
+### Tier 1 (T1) Core Web Scope (Covered now)
 Questions within T1 address:
 - FastAPI routing, middleware (e.g. CORS), request validation, background tasks, dependency injection, and HTTP status codes.
 - Pydantic v2 data models, field/model validators, discriminated unions, schema serialization, and validation error formatting.
 - PostgreSQL transactions, atomic operations, connection pooling, psycopg2/asyncpg drivers, parameterized queries, and schema migrations.
 - Docker & Docker Compose multi-stage builds, runtime vs build-time dependencies, service readiness healthchecks, and volumes.
 
+### Tier 5 (T5) Python Basics (In scope, not yet covered)
+Questions within T5 address:
+- Python 3 basic data types: integers, floats, booleans, strings, lists, dictionaries, tuples, sets.
+- Control flow: `if`/`elif`/`else`, `for` loops, `while` loops, `break`/`continue`/`pass`, and pattern matching.
+- Functions: arguments, default values, `*args`, `**kwargs`, return values, docstrings, and lambda expressions.
+- Modules and packages: import syntax, module search path, and `__name__ == "__main__"`.
+- Exception handling: `try`/`except`/`finally`/`else`, built-in exception hierarchy, raising exceptions, and context managers.
+- Environment management: Python virtual environments (`venv`), dependency isolation, and Debian PEP 668 externally managed environment markers.
+
+### Tier 6 (T6) NumPy (In scope, not yet covered)
+Questions within T6 address:
+- Array creation: `np.array`, `np.zeros`, `np.ones`, `np.arange`, `np.linspace`, and data types (`dtype`).
+- Vectorization: element-wise operations, replacing loops with vectorized expressions, and performance implications.
+- Indexing and slicing: 1D and multidimensional array slicing, boolean indexing, integer array indexing.
+- Array shapes and manipulation: `reshape`, `flatten`, `ravel`, transposing, concatenating, and splitting.
+- Broadcasting: broadcasting rules between compatible and incompatible shapes.
+
+### Tier 7 (T7) pandas (In scope, not yet covered)
+Questions within T7 address:
+- Core data structures: `Series` (1D labeled arrays) and `DataFrame` (2D labeled tabular data).
+- Data ingestion and export: reading and writing CSV, Parquet, and SQL sources.
+- Indexing and selection: label-based indexing (`.loc`), position-based indexing (`.iloc`), and boolean masking.
+- Missing data handling: detecting (`isna`, `notna`), dropping (`dropna`), and imputing (`fillna`) missing values.
+- Groupby operations: split-apply-combine paradigm, aggregations (`agg`, `mean`, `sum`, `count`), transformations, and filtering.
+- Merging and combining: `merge` (inner, outer, left, right), `join`, and `concat` across rows/columns.
+
 ---
 
-## 2. Out of Scope
+## 3. Explicit Out-of-Scope Boundaries
 
 The following domains are explicitly **OUT OF SCOPE** per project requirements. The system must not ingest corpus documents, create gold questions, or provide tutoring in these areas:
 
@@ -32,7 +77,7 @@ The following domains are explicitly **OUT OF SCOPE** per project requirements. 
 
 ---
 
-## 3. Licensing Policy & Removal of Pro Git
+## 4. Licensing Policy & Removal of Pro Git
 
 ### Exclusion of Pro Git
 - **Source:** *Pro Git* (by Scott Chacon and Ben Straub).
@@ -47,6 +92,8 @@ The following domains are explicitly **OUT OF SCOPE** per project requirements. 
 
 ### Permissive Licensing Standard
 All external documentation ingested into the corpus must carry permissive open-source licenses:
+- **Python Software Foundation (PSF) License:** (e.g., Python documentation).
+- **BSD 3-Clause License:** (e.g., NumPy, pandas documentation).
 - **MIT License:** (e.g., FastAPI, Pydantic documentation).
 - **Apache 2.0:** (e.g., Docker documentation).
 - **BSD / PostgreSQL License:** (e.g., psycopg2 documentation).
@@ -54,7 +101,7 @@ All external documentation ingested into the corpus must carry permissive open-s
 
 ---
 
-## 4. Corpus Raw Inventory & T1 Classification
+## 5. Corpus Raw Inventory & T1 Classification
 
 All 13 files currently present in `corpus/raw/` are inventoried below. No files are deleted. Each file is classified as either **IN** or **OUT** of the T1 technical scope:
 
@@ -76,10 +123,10 @@ All 13 files currently present in `corpus/raw/` are inventoried below. No files 
 
 ---
 
-## 5. Scope Audit Summary
+## 6. Scope Audit Summary
 
-- **Total Raw Corpus Files:** 13
+- **Total Raw Corpus Files (Lane A):** 13
 - **Classified as IN T1 (10 files):** `docker_compose.md`, `docker_compose_best_practices.md`, `docker_production_guide.md`, `fastapi_background_tasks.md`, `fastapi_cors.md`, `fastapi_fullstack_guide.md`, `fastapi_validation.md`, `postgresql_psycopg2.md`, `pydantic_models.md`, `pydantic_validation.md`.
 - **Classified as OUT of T1 (3 files):** `cs_engineering_roadmap.pdf`, `git_reference.md`, `python_debugging.md` (plus all external Git / Pro Git book materials).
 - **Pro Git Book Status:** Strictly excluded and removed due to non-permissive CC BY-NC-SA 3.0 license.
-- **HTTP Verification:** All remote source URLs were tested via live HTTP requests on 2026-11-02; all canonical documentation links returned `HTTP 200`. No fabricated or dead links are present.
+- **Lane B Separation Principle:** New collections for Python, NumPy, and pandas created under Lane B reside in independent collections and manifests. No Lane A benchmark or gate is impacted.
