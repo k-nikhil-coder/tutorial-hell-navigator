@@ -232,12 +232,18 @@ __marimo__/
 
 # Vector Database and Runtime Telemetry
 data/qdrant_db/
-logs/*.jsonl
+logs/
+!logs/.gitkeep
 scratch/
 
 # Local personal planning and trackers
 *sprint*.html
 dsa/
+.agents/
+
+# Raw student session logs (sensitive student queries kept local)
+sessions.csv
+eval/sessions.csv
 
 eval/ci_eval_results.json
 eval/ci_eval_report.json

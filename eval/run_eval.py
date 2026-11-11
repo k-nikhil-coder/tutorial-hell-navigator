@@ -5,7 +5,7 @@ import math
 import argparse
 import asyncio
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from datetime import datetime, timezone
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -13,8 +13,35 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.schemas import NavigatorResponse
-from app.client import generate_structured_response_async
+from app.client import generate_structured_response_async, is_transient_error
 from app.rag import retrieve_relevant_chunks
+
+
+async def _generate_with_quota_retry(
+    prompt: str,
+    search_mode: str,
+    qid: str,
+    max_retries: int = 2,
+) -> Tuple[NavigatorResponse, int]:
+    """Invoke live generation and retry only errored quota/rate-limit calls for that question."""
+    retries = 0
+    while True:
+        try:
+            resp = await generate_structured_response_async(prompt, search_mode=search_mode)
+            return resp, retries
+        except Exception as exc:
+            msg = str(exc).lower()
+            is_quota_err = is_transient_error(exc) or any(
+                term in msg for term in ("429", "quota", "resource_exhausted", "rate limit")
+            )
+            if not is_quota_err or retries >= max_retries:
+                raise
+            retries += 1
+            backoff_s = min(5.0 * retries, 15.0)
+            print(
+                f"  [RETRY {qid}] quota/transient error ({exc}); retrying ({retries}/{max_retries}) in {backoff_s:.1f}s..."
+            )
+            await asyncio.sleep(backoff_s)
 
 VAGUE_PHRASES = [
     "keep practicing",
@@ -376,6 +403,10 @@ async def evaluate_benchmark(
     e2e_latencies: List[float] = []
     ttft_latencies: List[float] = []
     prompt_tokens_list: List[int] = []
+    analytic_prompt_tokens_list: List[int] = []
+    completion_tokens_list: List[int] = []
+    token_source_counts: Dict[str, int] = {}
+    retried_questions: Dict[str, int] = {}
 
     # Warm up reranker if requested so cold-start initialization doesn't distort latency metrics
     if "rerank" in search_mode.lower():
@@ -436,16 +467,19 @@ async def evaluate_benchmark(
         total_lat_ms = round(ret_latency_ms + rw_latency_ms, 2)
         total_retrieval_latencies.append(total_lat_ms)
 
-        # Track prompt tokens per question
+        # Track prompt tokens per question (analytic estimate baseline)
         mode_key = search_mode.lower().replace("_", "-")
         if mode_key == "full-context":
-            p_tokens = 33279 + int(len(prompt.split()) * 1.3)
+            analytic_p_tokens = 33279 + int(len(prompt.split()) * 1.3)
         elif mode_key in ("none", "vanilla"):
-            p_tokens = int(len(prompt.split()) * 1.3) + 250
+            analytic_p_tokens = int(len(prompt.split()) * 1.3) + 250
         else:
             ret_chars = sum(len(c.get("text", "")) for c in retrieved_raw)
-            p_tokens = int(len(prompt.split()) * 1.3) + int(ret_chars / 3.8) + 300
-        prompt_tokens_list.append(p_tokens)
+            analytic_p_tokens = int(len(prompt.split()) * 1.3) + int(ret_chars / 3.8) + 300
+        p_tokens = analytic_p_tokens
+        analytic_prompt_tokens_list.append(analytic_p_tokens)
+        if retrieval_only:
+            prompt_tokens_list.append(p_tokens)
 
         retrieved_chunk_ids = [c["chunk_id"] for c in retrieved_raw]
 
@@ -547,14 +581,39 @@ async def evaluate_benchmark(
 
         # 2. End-to-end evaluation with LLM response generation
         t_llm_start = time.perf_counter()
+        quota_retry_count = 0
         try:
-            model_resp = await generate_structured_response_async(prompt, search_mode=search_mode)
+            model_resp, quota_retry_count = await _generate_with_quota_retry(
+                prompt, search_mode=search_mode, qid=qid
+            )
+            if quota_retry_count > 0:
+                retried_questions[qid] = quota_retry_count
             t_llm_end = time.perf_counter()
             llm_lat_ms = round((t_llm_end - t_llm_start) * 1000, 2)
             total_query_lat = round(total_lat_ms + llm_lat_ms, 2)
             e2e_latencies.append(total_query_lat)
-            # Estimate/measure TTFT (time to first token)
-            ttft_lat = round(llm_lat_ms * 0.35, 2)
+
+            # Extract API-reported token & TTFT telemetry with analytic/heuristic fallback
+            api_prompt_tokens = getattr(model_resp, "_prompt_tokens", None)
+            api_completion_tokens = getattr(model_resp, "_completion_tokens", None)
+            token_source = getattr(model_resp, "_token_source", None) or "analytic"
+            api_ttft_ms = getattr(model_resp, "_ttft_ms", None)
+
+            p_tokens = int(api_prompt_tokens) if api_prompt_tokens is not None else analytic_p_tokens
+            prompt_tokens_list.append(p_tokens)
+            if api_completion_tokens is not None:
+                c_tokens = int(api_completion_tokens)
+                completion_tokens_list.append(c_tokens)
+            else:
+                c_tokens = None
+            token_source_counts[token_source] = token_source_counts.get(token_source, 0) + 1
+
+            if api_ttft_ms is not None and float(api_ttft_ms) > 0:
+                ttft_lat = round(float(api_ttft_ms), 2)
+                ttft_source = "measured"
+            else:
+                ttft_lat = round(llm_lat_ms * 0.35, 2)
+                ttft_source = "heuristic"
             ttft_latencies.append(ttft_lat)
 
             result = score_response(model_resp, rubric, negatives)
@@ -591,7 +650,12 @@ async def evaluate_benchmark(
                 "retrieval_metrics": retrieval_metrics,
                 "latency_ms": total_query_lat,
                 "ttft_ms": ttft_lat,
+                "ttft_source": ttft_source,
                 "prompt_tokens": p_tokens,
+                "analytic_prompt_tokens": analytic_p_tokens,
+                "completion_tokens": c_tokens,
+                "token_source": token_source,
+                "quota_retries": quota_retry_count,
                 "score": result,
                 "response": model_resp.model_dump(),
             })
@@ -600,12 +664,15 @@ async def evaluate_benchmark(
             llm_lat_ms = round((t_llm_end - t_llm_start) * 1000, 2)
             e2e_latencies.append(round(total_lat_ms + llm_lat_ms, 2))
             ttft_latencies.append(round(llm_lat_ms * 0.35, 2))
+            if quota_retry_count > 0:
+                retried_questions[qid] = quota_retry_count
             print(f"ERROR: {e}")
             results.append({
                 "id": qid,
                 "category": category,
                 "question": prompt,
                 "error": str(e),
+                "quota_retries": quota_retry_count,
                 "score": {"passed": False, "issues": [str(e)]},
                 "retrieval_metrics": retrieval_metrics,
             })
@@ -640,6 +707,9 @@ async def evaluate_benchmark(
     p95_lat = calculate_percentile(active_latencies, 95.0)
     ttft_p95 = calculate_percentile(active_ttfts, 95.0)
     mean_prompt_tokens = round(sum(prompt_tokens_list) / (len(prompt_tokens_list) or 1), 2) if prompt_tokens_list else 0.0
+    mean_analytic_prompt_tokens = round(sum(analytic_prompt_tokens_list) / (len(analytic_prompt_tokens_list) or 1), 2) if analytic_prompt_tokens_list else 0.0
+    mean_completion_tokens = round(sum(completion_tokens_list) / (len(completion_tokens_list) or 1), 2) if completion_tokens_list else 0.0
+    quota_retry_total = sum(retried_questions.values())
 
     mean_rw_lat = round(sum(rewrite_latencies) / (len(rewrite_latencies) or 1), 2) if rewrite_latencies else 0.0
     mean_search_lat = round(sum(retrieval_latencies) / (len(retrieval_latencies) or 1), 2)
@@ -662,6 +732,12 @@ async def evaluate_benchmark(
     print(f"  • Mean Latency:              {mean_lat:.2f} ms (P50: {p50_lat:.1f}ms, P90: {p90_lat:.1f}ms, P95: {p95_lat:.1f}ms)")
     print(f"  • Time to First Token (p95): {ttft_p95:.2f} ms")
     print(f"  • Mean Prompt Tokens:        {mean_prompt_tokens:.1f}")
+    if not retrieval_only:
+        print(f"  • Mean Analytic Tokens:      {mean_analytic_prompt_tokens:.1f}")
+        print(f"  • Mean Completion Tokens:    {mean_completion_tokens:.1f}")
+        print(f"  • Token Sources:             {token_source_counts}")
+        if retried_questions:
+            print(f"  • Quota Retries Logged:      {quota_retry_total} across {retried_questions}")
     if not retrieval_only:
         print(f"  • LLM Pass Rate:             {passed}/{len(batch)} ({pass_rate:.1f}%)")
         print(f"  • Avg Commands / Plan:       {avg_commands}")
@@ -716,6 +792,11 @@ async def evaluate_benchmark(
             "time_to_first_token_p95": ttft_p95,
             "time_to_first_token_p95_ms": ttft_p95,
             "mean_prompt_tokens": mean_prompt_tokens,
+            "mean_analytic_prompt_tokens": mean_analytic_prompt_tokens,
+            "mean_completion_tokens": mean_completion_tokens,
+            "token_sources": token_source_counts,
+            "quota_retry_count": quota_retry_total,
+            "quota_retried_questions": retried_questions,
             "min_latency_ms": min(active_latencies) if active_latencies else 0.0,
             "max_latency_ms": max(active_latencies) if active_latencies else 0.0,
             "search_latency_mean_ms": mean_search_lat,

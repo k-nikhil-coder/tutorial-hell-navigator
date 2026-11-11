@@ -217,6 +217,8 @@ def test_unstick_button_submission_and_summary_end_to_end(client, tmp_path, monk
 
 def test_tunnel_security_controls_end_to_end(client, monkeypatch):
     """A4: Verify tunnel invite code, per-IP rate limit, and daily request cap."""
+    monkeypatch.setenv("INVITE_CODE", "NAVIGATOR2026")
+    monkeypatch.setenv("TRUST_PROXY", "1")
     tunnel_headers = {"X-Forwarded-Host": "tutorial-navigator.ngrok-free.app"}
 
     # 1. Missing invite code -> 401
@@ -266,3 +268,110 @@ def test_tunnel_security_controls_end_to_end(client, monkeypatch):
     res_capped = client.get("/api", headers=cap_headers)
     assert res_capped.status_code == 429
     assert "daily request cap reached" in res_capped.json()["detail"].lower()
+
+
+def test_tunnel_startup_failure_missing_invite_code(monkeypatch):
+    """Verify application startup fails if TUNNEL_MODE is enabled but INVITE_CODE is missing or empty."""
+    monkeypatch.setenv("TUNNEL_MODE", "1")
+    monkeypatch.delenv("INVITE_CODE", raising=False)
+
+    from app.main import validate_tunnel_config
+    with pytest.raises(RuntimeError) as exc_info:
+        validate_tunnel_config()
+    assert "TUNNEL_MODE is enabled but INVITE_CODE is missing or empty" in str(exc_info.value)
+
+    # Lifespan startup check with TestClient
+    from starlette.testclient import TestClient
+    from app.main import app
+    with pytest.raises(RuntimeError) as lifespan_exc:
+        with TestClient(app):
+            pass
+    assert "TUNNEL_MODE is enabled but INVITE_CODE is missing or empty" in str(lifespan_exc.value)
+
+
+def test_tunnel_startup_success_with_invite_code(monkeypatch):
+    """Verify application starts normally when TUNNEL_MODE is enabled with valid INVITE_CODE."""
+    monkeypatch.setenv("TUNNEL_MODE", "1")
+    monkeypatch.setenv("INVITE_CODE", "MY_VALID_TUNNEL_TOKEN")
+
+    from app.main import validate_tunnel_config
+    validate_tunnel_config()
+
+    from starlette.testclient import TestClient
+    from app.main import app
+    with TestClient(app) as tc:
+        res = tc.get("/api", headers={"X-Tunnel-Request": "true", "X-Invite-Code": "MY_VALID_TUNNEL_TOKEN"})
+        assert res.status_code == 200
+
+
+def test_tunnel_request_without_invite_code(client, monkeypatch):
+    """Verify 401 when tunnel request arrives without an invite code."""
+    monkeypatch.setenv("INVITE_CODE", "PROD_CODE_XYZ")
+    res = client.get("/api", headers={"X-Tunnel-Request": "true"})
+    assert res.status_code == 401
+    assert "requires a valid invite code" in res.json()["detail"].lower()
+
+
+def test_tunnel_request_with_valid_invite_code(client, monkeypatch):
+    """Verify 200 when tunnel request includes the configured invite code header."""
+    monkeypatch.setenv("INVITE_CODE", "PROD_CODE_XYZ")
+    res = client.get("/api", headers={"X-Tunnel-Request": "true", "X-Invite-Code": "PROD_CODE_XYZ"})
+    assert res.status_code == 200
+
+
+def test_tunnel_request_with_invalid_invite_code(client, monkeypatch):
+    """Verify 401 when tunnel request includes an invalid invite code header."""
+    monkeypatch.setenv("INVITE_CODE", "PROD_CODE_XYZ")
+    res = client.get("/api", headers={"X-Tunnel-Request": "true", "X-Invite-Code": "WRONG_TOKEN"})
+    assert res.status_code == 401
+    assert "requires a valid invite code" in res.json()["detail"].lower()
+
+
+def test_client_ip_extraction_without_trust_proxy(monkeypatch):
+    """Verify X-Forwarded-For is ignored when TRUST_PROXY is not enabled."""
+    monkeypatch.delenv("TRUST_PROXY", raising=False)
+    from fastapi import Request
+    from app.main import get_client_ip
+
+    scope = {
+        "type": "http",
+        "client": ("192.168.1.100", 50000),
+        "headers": [(b"x-forwarded-for", b"203.0.113.195, 10.0.0.1")],
+    }
+    request = Request(scope)
+    assert get_client_ip(request) == "192.168.1.100"
+
+
+def test_client_ip_extraction_with_trust_proxy(monkeypatch):
+    """Verify X-Forwarded-For first IP is extracted when TRUST_PROXY=1."""
+    monkeypatch.setenv("TRUST_PROXY", "1")
+    from fastapi import Request
+    from app.main import get_client_ip
+
+    scope = {
+        "type": "http",
+        "client": ("192.168.1.100", 50000),
+        "headers": [(b"x-forwarded-for", b"203.0.113.195, 10.0.0.1")],
+    }
+    request = Request(scope)
+    assert get_client_ip(request) == "203.0.113.195"
+
+
+def test_tunnel_daily_cap_default_is_300(monkeypatch):
+    """Verify daily request cap defaults to 300 when unset and respects environment overrides."""
+    monkeypatch.delenv("TUNNEL_DAILY_REQUEST_CAP", raising=False)
+    monkeypatch.delenv("DAILY_REQUEST_CAP", raising=False)
+    from app.main import get_tunnel_daily_cap, get_tunnel_rate_limit
+
+    # Default check
+    assert get_tunnel_daily_cap() == 300
+    assert get_tunnel_rate_limit() == 10
+
+    # Override via TUNNEL_DAILY_REQUEST_CAP
+    monkeypatch.setenv("TUNNEL_DAILY_REQUEST_CAP", "500")
+    assert get_tunnel_daily_cap() == 500
+
+    # Override via DAILY_REQUEST_CAP
+    monkeypatch.delenv("TUNNEL_DAILY_REQUEST_CAP", raising=False)
+    monkeypatch.setenv("DAILY_REQUEST_CAP", "250")
+    assert get_tunnel_daily_cap() == 250

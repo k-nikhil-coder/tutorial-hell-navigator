@@ -7,6 +7,7 @@ from typing import Optional
 from datetime import datetime, timezone
 from collections import defaultdict
 from threading import Lock
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, FileResponse, JSONResponse
@@ -40,10 +41,33 @@ from app.telemetry import (
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
+
+def validate_tunnel_config() -> None:
+    """Validate tunnel security configuration on application startup.
+
+    If TUNNEL_MODE is enabled ('true', '1', 'yes'), INVITE_CODE must be set and non-empty.
+    Fails application startup with RuntimeError if INVITE_CODE is unset or empty.
+    """
+    tunnel_mode = os.getenv("TUNNEL_MODE", "").lower() in ("true", "1", "yes")
+    invite_code = (os.getenv("INVITE_CODE") or "").strip()
+    if tunnel_mode and not invite_code:
+        raise RuntimeError(
+            "Application startup failed: TUNNEL_MODE is enabled but INVITE_CODE is missing or empty. "
+            "Set INVITE_CODE to a secure token before enabling tunnel mode."
+        )
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    validate_tunnel_config()
+    yield
+
+
 app = FastAPI(
     title="Tutorial Hell Navigator API",
     description="Eval-first mentor API that provides structured action plans and debugging roadmaps for CS students.",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 ALLOWED_ORIGINS = [
@@ -70,6 +94,8 @@ def is_tunnel_request(request: Request) -> bool:
     """Detect if request arrives via tunnel / reverse proxy."""
     if os.getenv("TUNNEL_MODE", "").lower() in ("true", "1", "yes"):
         return True
+    if request.headers.get("x-tunnel-request", "").lower() == "true":
+        return True
     host = request.headers.get("x-forwarded-host") or request.headers.get("host") or ""
     host_clean = host.lower().split(":")[0]
     if host_clean in ("localhost", "127.0.0.1", "testserver", "0.0.0.0", "test"):
@@ -77,18 +103,38 @@ def is_tunnel_request(request: Request) -> bool:
     tunnel_markers = ("ngrok", "localtunnel", "trycloudflare", "pinggy", "serveo", "pagekite", "telebit", "tailscale")
     if any(m in host_clean for m in tunnel_markers):
         return True
-    if request.headers.get("x-tunnel-request", "").lower() == "true":
-        return True
     return False
+
+
+def get_client_ip(request: Request) -> str:
+    """Extract client IP address, trusting X-Forwarded-For ONLY when TRUST_PROXY=1."""
+    trust_proxy = os.getenv("TRUST_PROXY", "").strip() in ("1", "true", "yes")
+    if trust_proxy:
+        xff = request.headers.get("x-forwarded-for")
+        if xff:
+            first_ip = xff.split(",")[0].strip()
+            if first_ip:
+                return first_ip
+    return request.client.host if request.client else "unknown"
+
+
+def get_tunnel_daily_cap() -> int:
+    """Get daily request cap for tunnel access, defaulting to 300/day."""
+    return int(os.getenv("TUNNEL_DAILY_REQUEST_CAP") or os.getenv("DAILY_REQUEST_CAP") or "300")
+
+
+def get_tunnel_rate_limit() -> int:
+    """Get per-IP rate limit per minute for tunnel access, defaulting to 10."""
+    return int(os.getenv("TUNNEL_RATE_LIMIT_PER_MINUTE") or os.getenv("RATE_LIMIT_PER_MINUTE") or "10")
 
 
 @app.middleware("http")
 async def tunnel_security_middleware(request: Request, call_next):
     if is_tunnel_request(request):
         # 1. Invite Code Check
-        expected_code = os.getenv("INVITE_CODE", "NAVIGATOR2026")
+        expected_code = (os.getenv("INVITE_CODE") or "").strip()
         provided_code = request.headers.get("x-invite-code") or request.query_params.get("invite_code")
-        if provided_code != expected_code:
+        if not expected_code or provided_code != expected_code:
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={"detail": "Tunnel access requires a valid invite code."},
@@ -96,12 +142,10 @@ async def tunnel_security_middleware(request: Request, call_next):
 
         now = time.time()
         today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        client_ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (
-            request.client.host if request.client else "unknown"
-        )
+        client_ip = get_client_ip(request)
 
-        rate_limit = int(os.getenv("TUNNEL_RATE_LIMIT_PER_MINUTE", "10"))
-        daily_cap = int(os.getenv("TUNNEL_DAILY_REQUEST_CAP", "100"))
+        rate_limit = get_tunnel_rate_limit()
+        daily_cap = get_tunnel_daily_cap()
 
         with _tunnel_lock:
             # 2. Daily Request Cap Check
@@ -204,6 +248,7 @@ async def navigate(request: QueryRequest) -> NavigatorResponse:
         ttft_ms = getattr(response, "_ttft_ms", None)
         prompt_tokens = getattr(response, "_prompt_tokens", None)
         completion_tokens = getattr(response, "_completion_tokens", None)
+        token_source = getattr(response, "_token_source", None)
 
         log_query_trajectory(
             query=request.query,
@@ -219,6 +264,7 @@ async def navigate(request: QueryRequest) -> NavigatorResponse:
             ttft_ms=ttft_ms,
             prompt_tokens=prompt_tokens,
             completion_tokens=completion_tokens,
+            token_source=token_source,
         )
         return response
     except Exception as e:

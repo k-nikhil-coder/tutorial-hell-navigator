@@ -1186,6 +1186,10 @@
         <span class="scope-pill">Tier 1: FastAPI · Docker · Pydantic · Postgres</span>
       </div>
       <div class="header-actions">
+        <button class="btn-header" id="btn-invite-code" onclick="promptForInviteCode()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span id="invite-code-btn-text">Invite Code</span>
+        </button>
         <button class="btn-header" onclick="openTelemetryModal()">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
           <span>Telemetry</span>
@@ -1324,6 +1328,62 @@
       return sid;
     }
 
+    // --- Tunnel Invite Code & Centralized Fetch Wrapper ---
+    function getInviteCode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const codeFromUrl = urlParams.get('invite_code') || urlParams.get('code');
+      if (codeFromUrl) {
+        localStorage.setItem('thn_invite_code', codeFromUrl.trim());
+        return codeFromUrl.trim();
+      }
+      return (localStorage.getItem('thn_invite_code') || '').trim();
+    }
+
+    function updateInviteCodeButton() {
+      const btnText = document.getElementById('invite-code-btn-text');
+      if (btnText) {
+        btnText.textContent = getInviteCode() ? 'Code Set' : 'Invite Code';
+      }
+    }
+
+    function promptForInviteCode() {
+      const current = getInviteCode();
+      const entered = prompt('Enter your Tunnel Invite Code:', current);
+      if (entered !== null) {
+        localStorage.setItem('thn_invite_code', entered.trim());
+        updateInviteCodeButton();
+        return entered.trim();
+      }
+      return current;
+    }
+
+    function getApiHeaders(customHeaders = {}) {
+      const headers = { ...customHeaders };
+      const inviteCode = getInviteCode();
+      if (inviteCode) {
+        headers['X-Invite-Code'] = inviteCode;
+      }
+      return headers;
+    }
+
+    async function apiFetch(url, options = {}) {
+      const headers = getApiHeaders(options.headers || {});
+      const res = await fetch(url, { ...options, headers });
+      if (res.status === 401) {
+        const currentCode = getInviteCode();
+        const entered = prompt('Tunnel access requires a valid invite code. Please enter your invite code:', currentCode);
+        if (entered !== null && entered.trim()) {
+          localStorage.setItem('thn_invite_code', entered.trim());
+          updateInviteCodeButton();
+          const retryHeaders = getApiHeaders(options.headers || {});
+          return fetch(url, { ...options, headers: retryHeaders });
+        }
+      }
+      return res;
+    }
+
+    updateInviteCodeButton();
+
     function handleInputGrow(element) {
       element.style.height = '44px';
       element.style.height = Math.min(element.scrollHeight, 180) + 'px';
@@ -1460,7 +1520,7 @@
       body.textContent = 'Fetching verbatim source text from verified corpus...';
 
       try {
-        const res = await fetch(`/api/chunks/${encodeURIComponent(chunkId)}`);
+        const res = await apiFetch(`/api/chunks/${encodeURIComponent(chunkId)}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         body.innerHTML = `
@@ -1519,7 +1579,7 @@
       currentAbortController = new AbortController();
 
       try {
-        const res = await fetch('/navigate', {
+        const res = await apiFetch('/navigate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query: query }),
@@ -1772,7 +1832,7 @@
       btn.classList.add(unstuckVal ? 'active-yes' : 'active-no');
 
       try {
-        await fetch('/api/feedback', {
+        await apiFetch('/api/feedback', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1790,7 +1850,7 @@
     async function recordRating(btn, query, ratingVal) {
       btn.style.color = ratingVal === 'positive' ? 'var(--green)' : 'var(--red)';
       try {
-        await fetch('/api/feedback', {
+        await apiFetch('/api/feedback', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1812,8 +1872,8 @@
 
       try {
         const [sumRes, fbRes] = await Promise.all([
-          fetch('/api/feedback/summary'),
-          fetch('/api/feedback?limit=10')
+          apiFetch('/api/feedback/summary'),
+          apiFetch('/api/feedback?limit=10')
         ]);
         const summary = await sumRes.json();
         const fbData = await fbRes.json();

@@ -30,6 +30,7 @@ def log_query_trajectory(
     ttft_ms: Optional[float] = None,
     prompt_tokens: Optional[int] = None,
     completion_tokens: Optional[int] = None,
+    token_source: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Record query, retrieved context, citations, and telemetry metrics for failure taxonomy analysis."""
     init_telemetry()
@@ -57,6 +58,7 @@ def log_query_trajectory(
         "ttft_ms": round(ttft_ms, 2) if ttft_ms is not None else None,
         "prompt_tokens": prompt_tokens,
         "completion_tokens": completion_tokens,
+        "token_source": token_source,
     }
 
     try:

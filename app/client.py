@@ -4,6 +4,7 @@ import json
 import logging
 import asyncio
 import concurrent.futures
+import re
 from typing import AsyncGenerator, Optional, Any, Dict, List, Tuple
 from dotenv import load_dotenv
 import httpx
@@ -11,7 +12,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_excep
 from google import genai
 from google.genai import types, errors
 
-from app.schemas import NavigatorResponse
+from app.schemas import NavigatorResponse, ActionableStep
 from app.tools import AVAILABLE_TOOLS
 from app.rag import (
     retrieve_relevant_chunks_async,
@@ -20,6 +21,25 @@ from app.rag import (
 
 load_dotenv()
 logger = logging.getLogger(__name__)
+
+USER_FACING_REFUSAL_MESSAGE = (
+    "This question is outside the scope of the verified technical documentation. "
+    "Please consult official documentation for assistance."
+)
+
+INTERNAL_REFUSAL_PHRASES = [
+    "verified context is empty",
+    "verified context is completely empty and out-of-bounds",
+    "verified context is empty and out-of-bounds",
+    "out-of-corpus refusal triggered",
+    "out-of-corpus refusal is triggered",
+    "out-of-corpus refusal has been triggered",
+    "out-of-corpus refusal",
+    "[no verified corpus found for this topic - out of bounds]",
+    "strict out-of-corpus refusal rules",
+    "strict compliance rules",
+    "outside the scope of the verified corpus",
+]
 
 PRIMARY_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest")
 FALLBACK_MODELS = list(dict.fromkeys([
@@ -43,10 +63,12 @@ SYSTEM_PROMPT = (
     "You must ground your guidance in the provided verified technical context when available. "
     "\n\nSTRICT CITATION & ACTION RULES:\n"
     "1. CITATIONS: In your action_plan, each ActionableStep MUST include the exact chunk_id (e.g. 'fastapi_fullstack_guide_chunk_2') in its 'citations' list for every technical claim made.\n"
-    "2. OUT-OF-CORPUS REFUSAL: If the provided verified context is empty or does not contain information to answer the question, you MUST:\n"
+    "2. OUT-OF-CORPUS REFUSAL: If the question cannot be answered using the verified technical documentation, you MUST:\n"
     "   - Set is_refusal = True\n"
-    "   - Set refusal_reason = 'Question is out-of-corpus and cannot be verified against the technical documentation.'\n"
-    "   - State clearly in the summary that the question is outside the scope of the verified corpus.\n"
+    "   - Set refusal_reason = 'Question is outside the scope of the verified technical documentation.'\n"
+    "   - In summary, state clearly and professionally: 'This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.'\n"
+    "   - Never leak internal debugging phrases such as 'verified context is empty' or 'out-of-corpus refusal triggered'.\n"
+    "   - Citations MUST be empty (zero citations).\n"
     "   - Provide 1 advisory step pointing to standard documentation resources rather than inventing commands.\n"
     "3. ACTIONABLE CLI COMMANDS: For all in-corpus technical guidance, you MUST provide explicit, runnable terminal CLI commands or code snippets in the 'command' field of your action steps (e.g., project initialization, dependency installs, running dev servers, or verification scripts). Never leave commands null when guiding a student through a stack or solution.\n"
     "4. ANTI-PATTERNS: Provide mandatory, concrete anti-patterns and pitfalls to avoid."
@@ -109,7 +131,7 @@ async def _execute_chat_with_fallback(
     response_mime_type: Optional[str] = None,
     temperature: float = 0.2,
     system_instruction: Optional[str] = None,
-) -> Tuple[str, float]:
+) -> Tuple[str, float, Optional[Any]]:
     client = get_genai_client()
     last_err: Optional[Exception] = None
     active_sys_instruction = system_instruction or SYSTEM_PROMPT
@@ -136,22 +158,26 @@ async def _execute_chat_with_fallback(
                 stream = await chat.send_message_stream(user_query)
                 chunks = []
                 ttft_ms: Optional[float] = None
+                last_usage_metadata: Optional[Any] = None
                 async for chunk in stream:
                     if ttft_ms is None and chunk.text:
                         ttft_ms = (time.perf_counter() - gen_start) * 1000.0
                     if chunk.text:
                         chunks.append(chunk.text)
+                    if hasattr(chunk, "usage_metadata") and chunk.usage_metadata:
+                        last_usage_metadata = chunk.usage_metadata
                 if chunks:
                     if ttft_ms is None:
                         ttft_ms = (time.perf_counter() - gen_start) * 1000.0
-                    return "".join(chunks), ttft_ms
+                    return "".join(chunks), ttft_ms, last_usage_metadata
             except Exception as stream_err:
                 logger.debug("Streaming call failed, falling back to unary send_message: %s", stream_err)
                 gen_start = time.perf_counter()
                 response = await chat.send_message(user_query)
                 ttft_ms = (time.perf_counter() - gen_start) * 1000.0
                 if response and response.text:
-                    return response.text, ttft_ms
+                    usage = getattr(response, "usage_metadata", None)
+                    return response.text, ttft_ms, usage
 
             logger.warning("Model %s returned empty text. Checking fallback...", model_name)
         except Exception as e:
@@ -163,6 +189,82 @@ async def _execute_chat_with_fallback(
     if last_err:
         raise last_err
     raise RuntimeError("All candidate models failed to return a response.")
+
+
+def sanitize_refusal_response(resp_model: NavigatorResponse) -> NavigatorResponse:
+    """Sanitize refusal response: zero citations, eliminate internal phrases, enforce unified user-facing message."""
+    resp_model.is_refusal = True
+
+    # 1. Zero citations
+    resp_model.cited_chunk_ids = []
+    for step in resp_model.action_plan:
+        step.citations = []
+
+    # 2. Unified user-facing refusal summary and reason
+    resp_model.summary = USER_FACING_REFUSAL_MESSAGE
+    resp_model.refusal_reason = "Question is outside the scope of the verified technical documentation."
+
+    # 3. Scrub internal phrases from all steps and takeaways
+    for step in resp_model.action_plan:
+        if step.explanation:
+            for phrase in sorted(INTERNAL_REFUSAL_PHRASES, key=len, reverse=True):
+                pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+                step.explanation = pattern.sub(USER_FACING_REFUSAL_MESSAGE, step.explanation)
+            dup_pattern = re.compile(r'(\s*' + re.escape(USER_FACING_REFUSAL_MESSAGE) + r'\s*)+')
+            step.explanation = dup_pattern.sub(' ' + USER_FACING_REFUSAL_MESSAGE + ' ', step.explanation).strip()
+
+        if step.title:
+            for phrase in sorted(INTERNAL_REFUSAL_PHRASES, key=len, reverse=True):
+                pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+                step.title = pattern.sub("Consult Standard Documentation", step.title)
+            step.title = step.title.strip()
+
+        if step.command:
+            for phrase in sorted(INTERNAL_REFUSAL_PHRASES, key=len, reverse=True):
+                pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+                step.command = pattern.sub("", step.command)
+            step.command = step.command.strip() or None
+
+        if step.verification:
+            for phrase in sorted(INTERNAL_REFUSAL_PHRASES, key=len, reverse=True):
+                pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+                step.verification = pattern.sub("", step.verification)
+            step.verification = step.verification.strip() or None
+
+    if resp_model.key_takeaway:
+        for phrase in sorted(INTERNAL_REFUSAL_PHRASES, key=len, reverse=True):
+            pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+            resp_model.key_takeaway = pattern.sub("", resp_model.key_takeaway)
+        resp_model.key_takeaway = resp_model.key_takeaway.strip() or None
+
+    cleaned_anti_patterns = []
+    for anti in resp_model.anti_patterns_to_avoid:
+        cur = anti
+        for phrase in sorted(INTERNAL_REFUSAL_PHRASES, key=len, reverse=True):
+            pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+            cur = pattern.sub("", cur)
+        cur = cur.strip()
+        if cur:
+            cleaned_anti_patterns.append(cur)
+    if not cleaned_anti_patterns:
+        cleaned_anti_patterns = [
+            "Do not rely on unverified commands or guess configurations when technical documentation is unavailable."
+        ]
+    resp_model.anti_patterns_to_avoid = cleaned_anti_patterns
+
+    if not resp_model.action_plan:
+        resp_model.action_plan = [
+            ActionableStep(
+                step_number=1,
+                title="Consult Official Documentation",
+                explanation=USER_FACING_REFUSAL_MESSAGE,
+                command=None,
+                verification="Check official project documentation and release notes.",
+                citations=[],
+            )
+        ]
+
+    return resp_model
 
 
 @retry(
@@ -207,6 +309,7 @@ async def generate_structured_response_async(
             except Exception as e:
                 logger.warning("RAG retrieval failed (falling back to tools): %s", e)
 
+        is_grounded = True
         if retrieved_chunks:
             if mode_norm == "full-context":
                 context_str = format_retrieved_context(retrieved_chunks)
@@ -235,7 +338,7 @@ async def generate_structured_response_async(
         else:
             prompt = user_query
 
-        raw_output, ttft_ms = await _execute_chat_with_fallback(
+        raw_output, ttft_ms, usage_metadata = await _execute_chat_with_fallback(
             user_query=prompt,
             response_schema=NavigatorResponse,
             response_mime_type="application/json",
@@ -245,17 +348,38 @@ async def generate_structured_response_async(
         cleaned = clean_json_text(raw_output)
         resp_model = NavigatorResponse.model_validate_json(cleaned)
 
-        # Aggregate citations across action steps
-        all_citations = []
-        for step in resp_model.action_plan:
-            if step.citations:
-                all_citations.extend(step.citations)
-        resp_model.cited_chunk_ids = list(dict.fromkeys(all_citations))
+        if not is_grounded:
+            resp_model.is_refusal = True
 
-        prompt_tokens = count_tokens(prompt)
-        if active_instruction:
-            prompt_tokens += count_tokens(active_instruction)
-        completion_tokens = count_tokens(cleaned)
+        if resp_model.is_refusal:
+            resp_model = sanitize_refusal_response(resp_model)
+        else:
+            # Aggregate citations across action steps
+            all_citations = []
+            for step in resp_model.action_plan:
+                if step.citations:
+                    all_citations.extend(step.citations)
+            resp_model.cited_chunk_ids = list(dict.fromkeys(all_citations))
+
+        prompt_tokens: Optional[int] = None
+        completion_tokens: Optional[int] = None
+        token_source: str = "gemini"
+
+        if usage_metadata:
+            if isinstance(usage_metadata, dict):
+                prompt_tokens = usage_metadata.get("prompt_token_count")
+                completion_tokens = usage_metadata.get("candidates_token_count")
+            else:
+                prompt_tokens = getattr(usage_metadata, "prompt_token_count", None)
+                completion_tokens = getattr(usage_metadata, "candidates_token_count", None)
+
+        if prompt_tokens is None or completion_tokens is None:
+            token_source = "tiktoken"
+            fallback_prompt_tokens = count_tokens(prompt)
+            if active_instruction:
+                fallback_prompt_tokens += count_tokens(active_instruction)
+            prompt_tokens = prompt_tokens if prompt_tokens is not None else fallback_prompt_tokens
+            completion_tokens = completion_tokens if completion_tokens is not None else count_tokens(cleaned)
 
         retrieval_ms = getattr(retrieved_chunks, "retrieval_ms", 0.0)
         rerank_ms = getattr(retrieved_chunks, "rerank_ms", 0.0)
@@ -268,6 +392,7 @@ async def generate_structured_response_async(
         object.__setattr__(resp_model, "_ttft_ms", ttft_ms)
         object.__setattr__(resp_model, "_prompt_tokens", prompt_tokens)
         object.__setattr__(resp_model, "_completion_tokens", completion_tokens)
+        object.__setattr__(resp_model, "_token_source", token_source)
 
         return resp_model
 

@@ -36,6 +36,15 @@ st.markdown(
 st.title("🧭 Tutorial Hell Navigator")
 st.caption("Tier 1 Technical Mentor: FastAPI · Docker · Pydantic v2 · PostgreSQL")
 
+# Sidebar Invite Code configuration
+invite_code = st.sidebar.text_input(
+    "Invite Code",
+    value=os.getenv("INVITE_CODE", ""),
+    type="password",
+    help="Enter invite code for tunnel access",
+)
+api_headers = {"X-Invite-Code": invite_code.strip()} if invite_code.strip() else {}
+
 # Session state initialization
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -75,6 +84,7 @@ for idx, msg in enumerate(st.session_state.messages):
                         try:
                             httpx.post(
                                 f"{API_BASE_URL}/api/feedback",
+                                headers=api_headers,
                                 json={"query": msg.get("user_query", ""), "rating": "positive", "cited_chunk_ids": msg.get("citations", [])},
                                 timeout=5.0,
                             )
@@ -87,6 +97,7 @@ for idx, msg in enumerate(st.session_state.messages):
                         try:
                             httpx.post(
                                 f"{API_BASE_URL}/api/feedback",
+                                headers=api_headers,
                                 json={"query": msg.get("user_query", ""), "rating": "negative", "cited_chunk_ids": msg.get("citations", [])},
                                 timeout=5.0,
                             )
@@ -112,6 +123,7 @@ if user_input:
             try:
                 res = httpx.post(
                     f"{API_BASE_URL}/navigate",
+                    headers=api_headers,
                     json={"query": user_input},
                     timeout=30.0,
                 )

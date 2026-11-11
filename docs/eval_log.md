@@ -335,14 +335,14 @@ If any question regresses from Hit to Miss, or any out-of-scope query leaks, `ev
 | **Turnaround Latency (P50)** | **~3,031 ms** (end-to-end) | ~4,201 ms (end-to-end) | **~1.4x faster turnaround** (retrieval-only is ~501 ms) |
 | **Top-3 Evidence Coverage** | **93.55%** (29/31) | 100.0% (est.) | High fidelity with 2 minor chunk displacements |
 | **Top-5 Evidence Coverage** | **100.00%** (31/31) | 100.0% | Perfect evidence capture within candidate pool |
-| **Correctness Trade-off** | **97.5% Reviewer PASS** | 97.5% Reviewer PASS | Settled on Day 47: Paired bootstrap confirms parity |
+| **Correctness Trade-off** | **87.5% AI-assisted hand grade** (35/40) | 85.0% AI-assisted hand grade (34/40) | **No detectable difference on dev** (CI `[-10.0%, +15.0%]`, $p=1.00$); **kept per [`decision_rule.md`](decision_rule.md)** (**caching not evaluated.**) |
 
 ---
 
-# Day 47: Phase 1 Settled — Head-to-Head Dev Benchmark: Hybrid-Rerank RAG vs. Full-Context Baseline
+# Day 47–48: Head-to-Head Dev Benchmark — Hybrid-Rerank RAG vs. Full-Context Baseline
 
-**Date:** 2026-11-09  
-**Sprint Day:** Day 47 of 100  
+**Date:** 2026-11-09 to 2026-11-10  
+**Sprint Days:** Days 47–48 of 100  
 **Phase:** Phase 1 (Trustworthy Evaluation & Baseline Validation)  
 **Author:** Kumbham Nikhil  
 
@@ -350,91 +350,101 @@ If any question regresses from Hit to Miss, or any out-of-scope query leaks, `ev
 
 ### 1. Objective & Motivation
 Throughout Phase 1, the central architectural trade-off remained open:
-> *Does the hybrid-rerank RAG pipeline (Dense + BM25 + RRF + Cross-Encoder) actually provide value over simply stuffing the full 10-file corpus (~33k tokens) into Gemini 2.0 Flash-Lite's 1-million-token context window?*
+> *Does the hybrid-rerank RAG pipeline (Dense + BM25 + RRF + Cross-Encoder) actually provide value over simply stuffing the full 10-file corpus (~33k tokens) into Gemini's context window?*
 
-To settle Phase 1 without guesswork, I ran a full head-to-head empirical evaluation across all 40 questions in the Gold Benchmark v2 DEV split (31 answerable, 9 out-of-scope controls) under live model generation:
-1. **Pipeline A (`hybrid-rerank`):** Retrieves candidate chunks, reranks them with `cross-encoder/ms-marco-MiniLM-L-6-v2`, and injects top-3 chunks (~2,235 prompt tokens).
-2. **Pipeline B (`full-context`):** Injects all 97 chunks from the complete 10-file verified corpus (~33,298 prompt tokens) directly into the model context.
-3. **Blind Grading & Key Generation:** Anonymized all 80 responses into a blind evaluation sheet ([`eval/grading_sheet.csv`](eval/grading_sheet.csv)) with randomized system aliases (`System-A`, `System-B`) and a separate decryption key ([`eval/grading_key.json`](eval/grading_key.json)).
-4. **Automated Reviewer Audit:** Audited all 80 outputs with the remediated Reviewer Agent ([`app/reviewer.py`](app/reviewer.py)) checking faithfulness, groundedness, code correctness, and rubric adherence.
+To evaluate this on the Gold Benchmark v2 DEV split (40 questions: 31 answerable, 9 out-of-scope controls) under live model generation:
+1. **Pipeline A (`hybrid-rerank`):** Retrieves candidate chunks, reranks them with `cross-encoder/ms-marco-MiniLM-L-6-v2`, and injects top-3 chunks (`~2,235` prompt tokens mean).
+2. **Pipeline B (`full-context`):** Injects all 97 chunks from the complete 10-file verified corpus (`~33,298` prompt tokens mean) directly into the model context.
+3. **Blind Grading & Key Generation:** Anonymized all 80 responses into a blind evaluation sheet ([`eval/grading_sheet_fullcontext_vs_hybrid.csv`](../eval/grading_sheet_fullcontext_vs_hybrid.csv)) with **per-question randomized** system aliases (`System-A`, `System-B`, seed=42) and a separate decryption key ([`eval/grading_key_fullcontext_vs_hybrid.json`](../eval/grading_key_fullcontext_vs_hybrid.json)).
+4. **Automated Checks (Before Unblinding):** Recorded both the **LLM Schema-Format Pass Rate** (`40/40` vs `39/40`) and the offline **Reviewer Agent** audit (`39/40` vs `39/40`). Because Day 45–46 showed the Reviewer Agent misses real bugs, I completed AI-assisted human hand-grading on all 80 blinded responses before unblinding.
 
 ---
 
-### 2. Empirical Benchmark Results (n=40 Dev Questions)
+### 2. Automated Benchmark & Cost Metrics (n=40 Dev Questions)
 
 | Evaluation Metric | Hybrid-Rerank RAG | Full-Context Baseline | Delta / Architectural Impact |
 | :--- | :---: | :---: | :--- |
-| **Reviewer Agent Pass Rate** | **97.50%** (39/40) | **97.50%** (39/40) | **Exact Parity (0.0 pts)** |
-| **LLM Format Pass Rate** | **100.00%** (40/40) | 97.50% (39/40) | +2.50 pts (RAG maintains schema compliance) |
-| **Paired Bootstrap Difference** | — | — | **Mean Diff = +0.0250**, 95% CI `[+0.0000, +0.0750]` (Conclusive, Not Significant) |
-| **Prompt Tokens (Mean)** | **2,234.9 tokens** | 33,298.0 tokens | **14.9x Token Reduction (93.3% savings)** |
+| **AI-Assisted Blind Hand Grade (Truth)** | **87.50%** (35/40) | **85.00%** (34/40) | **No detectable difference on dev** (+1 question, 95% CI `[-10.0%, +15.0%]`, $p = 1.0000$) |
+| **Reviewer Agent Pass Rate (Automated)** | 97.50% (39/40) | 97.50% (39/40) | 0.0 pts (Missed 5 RAG & 6 Full-Context bugs) |
+| **LLM Schema-Format Pass Rate** | **100.00%** (40/40) | 97.50% (39/40) | +2.50 pts (`+0.0250`, 95% CI `[+0.0000, +0.0750]` came from format check, *not* Reviewer Agent) |
+| **Prompt Tokens (Mean, API Usage Metadata)** | **2,234.9 tokens** | 33,298.0 tokens | **14.9x Token Reduction (93.3% savings)** |
 | **Turnaround Latency (P50)** | **6,125.6 ms** | 10,134.6 ms | **1.65x Faster Response Turnaround** |
 | **Turnaround Latency (Mean)** | **5,972.0 ms** | 8,918.3 ms | **1.49x Faster Mean Latency** |
 | **Time to First Token (TTFT P95)** | **2,274.0 ms** | 5,037.1 ms | **2.21x Faster Initial Token Delivery** |
-| **Out-of-Scope Refusal Rate** | 88.89% (8/9) | **100.00%** (9/9) | Full-context catches 1 extra borderline query (`GS-V2-50`) |
-| **API Rate-Limit / Quota Errors** | **0 errors (100% clean)** | 5 quota exhaustion delays | Full-context repeatedly hits 250k input tokens/min limits |
+| **API Rate-Limit / Quota Errors** | **0 errors** | 5 quota delays | Full-context repeatedly hits input token/min limits |
 | **Cost per 1,000 Queries (Est.)** | **~$0.17** | ~$2.50 | **$2.33 saved per 1k queries** |
 
----
-
-### 3. Detailed Failure Analysis
-
-Both systems failed on the exact same single question:
-- **`GS-V2-03` (Official Docs, CORS Credentials):**  
-  *Question:* *"How do you allow credentials (cookies, authorization headers) in FastAPI CORS middleware without causing browser security errors?"*  
-  *Failure Cause:* Both models correctly explained that `allow_origins=['*']` cannot be used with `allow_credentials=True`. However, because both models included the prohibited snippet in their explanatory anti-patterns section to warn students against it, the reviewer's static regex rule (`cors_wildcard_with_credentials`) flagged the code. Both scored 0.80.
-
-- **Refusal Behavior on Out-of-Scope Queries (n=9):**  
-  * Full-context correctly refused all 9 out-of-scope queries (100.0%).
-  * Hybrid-rerank correctly refused 8 of 9 queries (88.89%). Only `GS-V2-50` (vLLM with Ray/tensor parallelism) cleared the heuristic dense threshold (`0.40`) due to semantic overlap with fullstack deployment chunks, which is an identified limitation of heuristic gates.
+*(Correction to Day 47 README/log text: earlier wording juxtaposed the `39/40` Reviewer Agent score with the `+0.0250` bootstrap difference from the `40/40 vs 39/40` schema-format metric, and called Phase 1 settled on automated parity before blind hand-grading.)*
 
 ---
 
-### 4. Phase 1 Gate Decision: **KEEP HYBRID-RERANK RAG**
+### 3. Automated Reviewer False Positives vs. Blind Inspection Findings
 
-The Phase 1 Roadmap Gate states:
-> *"If `full-context` matches `hybrid-rerank` on the dev/test benchmark, evaluate whether to delete Qdrant, BM25, RRF, and the cross-encoder."*
+- **Automated Reviewer Agent False Flag (`GS-V2-03`):** Both systems scored `0.80` (FAIL) on the Reviewer Agent regex (`cors_wildcard_with_credentials`) simply because their anti-pattern warnings quoted `allow_origins=['*']` with `allow_credentials=True` while advising against it. Both passed blind human grading.
+- **Unflagged Bugs Caught in Blind Grading:** The Reviewer Agent passed outputs that failed human review (`GS-V2-08`, `27`, `28`, `31`, `38`, `39`, `50`, `51`, `52` across the two systems).
 
-#### Decision Rationale:
-1. **No Correctness Benefit for Full Context:** With 97.5% reviewer pass rate on both sides, stuffing the 10-file corpus into context produces zero improvement in technical correctness.
-2. **Severe Latency & UX Penalty:** Full context adds ~4.0 seconds of latency to every query (10.1s P50 vs 6.1s P50) and slows down time-to-first-token by 2.2x (5.0s vs 2.3s).
-3. **Severe Cost & Rate-Limit Bottleneck:** Full context consumes 15x more tokens per request. In production, 100 students asking 20 questions/day would consume 2 billion tokens/month and constantly trigger Gemini Free/Tier 1 rate limits.
-4. **Final Phase 1 Verdict:** **KEEP THE HYBRID-RERANK RETRIEVAL STACK.** Phase 1 is officially settled.
+---
+
+### 4. Phase 1 Decision Rule Applied ([`decision_rule.md`](decision_rule.md)): **Keep Hybrid-Rerank on Cost & Margin**
+
+Under the formalized Phase 1 decision rule in [`docs/decision_rule.md`](decision_rule.md):
+> *"Keep the Hybrid-Rerank retrieval stack if dev quality is within 10 percentage points (95% CI includes `0`) and RAG is cheaper per query; revisit this architectural choice once the corpus grows past ~100k tokens."*
+
+#### Applied Decision Rationale:
+1. **Inconclusive Dev Quality Within 10-Point Margin:** Single-grader AI-assisted blind grading shows **35/40 (87.5%) vs. 34/40 (85.0%)** (`+2.5%`, 95% bootstrap CI `[-10.0%, +15.0%]`, McNemar exact $p = 1.0000$). At `n=40`, there is no detectable quality difference, the 95% CI includes `0`, and the lower bound meets the 10-point tolerance.
+2. **Per-Query Cost & Latency Advantage (Caching Not Evaluated):** Full-context consumes **14.9x more uncached prompt tokens** per call (`33,298` vs `2,235`), adds ~2.9s to mean latency (`8,918 ms` vs `5,972 ms`) and ~2.8s to P95 TTFT (`5,037 ms` vs `2,274 ms`), and repeatedly triggers rate-limit exhaustion. **Caching not evaluated.**
+3. **Re-Evaluation Trigger (~100k Tokens):** Adding Python, NumPy, and pandas in Lane B roughly triples the corpus past **~100k tokens**, which triggers a formal re-evaluation of the retrieval-vs-context trade-off.
+4. **Applied Verdict & Pre-Declared Test Protocol:** **Keep Hybrid-Rerank RAG** per [`docs/decision_rule.md`](decision_rule.md). On the 25 held-out test questions (`--final`), run **`hybrid-rerank` only** (no full-context on test), report all proportions with **95% Wilson score confidence intervals**, make zero post-run edits, and log/retry errored quota questions only.
 
 ---
 
 ### 5. Artifacts Produced & Verified
-- [`eval/hybrid_rerank_dev_results.json`](eval/hybrid_rerank_dev_results.json): Full 40-question end-to-end benchmark results for hybrid-rerank.
-- [`eval/full_context_dev_results.json`](eval/full_context_dev_results.json): Full 40-question end-to-end benchmark results for full-context baseline.
-- [`eval/phase1_comparison_analysis.json`](eval/phase1_comparison_analysis.json): Machine-readable audit and per-question comparison.
-- [`eval/grading_sheet.csv`](eval/grading_sheet.csv): 80-row randomized blind grading sheet (`System-A` vs `System-B`).
-- [`eval/grading_key.json`](eval/grading_key.json): Decryption key mapping anonymized aliases back to true system modes.
-
+- [`eval/hybrid_rerank_dev_results.json`](../eval/hybrid_rerank_dev_results.json): Full 40-question end-to-end dev benchmark results for hybrid-rerank.
+- [`eval/full_context_dev_results.json`](../eval/full_context_dev_results.json): Full 40-question end-to-end dev benchmark results for full-context baseline.
+- [`eval/phase1_comparison_analysis.json`](../eval/phase1_comparison_analysis.json): Reviewer Agent automated audit (`39/40` vs `39/40`).
+- [`eval/grading_sheet_fullcontext_vs_hybrid.csv`](../eval/grading_sheet_fullcontext_vs_hybrid.csv): 80-row per-question randomized blind grading sheet with AI-assisted notes and owner-verified grades.
+- [`eval/grading_key_fullcontext_vs_hybrid.json`](../eval/grading_key_fullcontext_vs_hybrid.json): Decryption key mapping anonymized aliases back to true system modes.
 
 ---
 
-### 6. Unblinded Human Hand-Grading Results (n=80 Evaluations across 40 Dev Questions)
+### 6. Unblinded AI-Assisted Hand-Grading Results (n=80 Evaluations across 40 Dev Questions)
 
-Following the automated Reviewer Agent audit, all 80 responses were evaluated blind by hand (with randomized system aliases `System-A` and `System-B`). Once all grades and defect notes were committed, the decryption key ([`eval/grading_key_fullcontext_vs_hybrid.json`](../eval/grading_key_fullcontext_vs_hybrid.json)) was applied to calculate ground-truth quality metrics:
+All 80 responses were graded blind before unblinding using **AI-assisted** inspection (starting from AI-proposed defect notes checked and finalized by the owner prior to applying [`eval/grading_key_fullcontext_vs_hybrid.json`](../eval/grading_key_fullcontext_vs_hybrid.json)).
+
+> [!IMPORTANT]
+> **Per-Question Shuffle Note:** `System-A` and `System-B` were shuffled **independently per question** (seed=42), not fixed globally. For 7 of the 9 failing questions, `System-B` was `hybrid-rerank`; however, on **`GS-V2-31`** and **`GS-V2-51`**, **`System-A` was `hybrid-rerank`** and **`System-B` was `full-context`** (verified directly by matching `response_summary` strings against the raw JSON outputs).
 
 | Human Evaluation Metric | Hybrid-Rerank RAG | Full-Context Baseline | Net Difference |
 | :--- | :---: | :---: | :---: |
 | **Overall Pass Grade** | **35 / 40 (87.5%)** | **34 / 40 (85.0%)** | **+1 question (+2.5%)** |
 | **Answer Correctness (`answer_ok`)** | 37 / 40 (92.5%) | 38 / 40 (95.0%) | -1 question (-2.5%) |
 | **Code Correctness (`code_ok`)** | **37 / 40 (92.5%)** | 35 / 40 (87.5%) | **+2 questions (+5.0%)** |
-| *Automated Reviewer Agent (Before)* | *40 / 40 (100.0%)* | *39 / 40 (97.5%)* | *+1 question (+2.5%)* |
+| *Automated Reviewer Agent (Before)* | *39 / 40 (97.5%)* | *39 / 40 (97.5%)* | *0.0 pts (GS-V2-03 false flag)* |
+| *LLM Schema Format Check (Before)* | *40 / 40 (100.0%)* | *39 / 40 (97.5%)* | *+1 question (+2.5%)* |
 
-#### Paired Contingency Table (n=40 Questions)
+#### Paired Contingency Table & Defect Attribution (n=40 Questions)
 - **Both Systems Passed:** 31 questions (77.5%)
-- **Hybrid Won (Pass vs. Fail):** 4 questions (`GS-V2-08`, `GS-V2-27`, `GS-V2-28`, `GS-V2-51`)
-  - Full-context introduced runtime type annotation `NameError`, unhandled exception classes, nested `with` syntax errors, and parametric knowledge leakage on out-of-scope theory.
-- **Full-Context Won (Fail vs. Pass):** 3 questions (`GS-V2-31`, `GS-V2-38`, `GS-V2-52`)
-  - Hybrid suffered from false refusal on `GS-V2-31`, an omitted field validator error on `GS-V2-38`, and hallucinated `man 2 mprotect` on `GS-V2-52`.
-- **Both Systems Failed:** 2 questions (`GS-V2-39`, `GS-V2-50`)
+- **Hybrid Won (Pass vs. Fail — 4 questions):**
+  - `GS-V2-08`: Full-context (`System-A`) had `NameError` from undefined annotation `'background_tasks'` instead of `BackgroundTasks`.
+  - `GS-V2-27`: Full-context (`System-A`) caught `except psycopg2.errors.SyntaxError`, which does not catch `UndefinedColumn` from `SELECT invalid_syntax`.
+  - `GS-V2-28`: Full-context (`System-A`) generated a one-line nested `with conn: with conn.cursor() as cur: cur.execute('...')` statement (`SyntaxError` in Python).
+  - `GS-V2-51`: Full-context (`System-B`) answered the Banker's algorithm from pre-training knowledge while claiming it was out of corpus.
+- **Full-Context Won (Fail vs. Pass — 3 questions):**
+  - `GS-V2-31`: Hybrid (`System-A`) triggered a **false refusal** on an in-scope question even though the right psycopg2 chunk was cited.
+  - `GS-V2-38`: Hybrid (`System-B`) produced an unexecuted snippet defining `ManagerSchema` where omitted field default `None` bypasses `@field_validator` (**empirically verified in Python/Pydantic v2**: `ManagerSchema(operation_type='UPDATE_BACKGROUND_COLOR')` passes silently without raising `ValueError` unless `validate_default=True` is enabled).
+  - `GS-V2-52`: Hybrid (`System-B`) refused cleanly in text, but pointed to unrelated `man 2 mprotect`.
+- **Both Systems Failed (2 questions):**
+  - `GS-V2-39`: Hybrid (`System-B`) triggered a **false refusal** claiming lack of context on model validators despite citing `pydantic_validation` chunks; Full-context (`System-A`) falsely claimed field validators fail on the first error and called `from_exception_data` missing `type` keys.
+  - `GS-V2-50`: Full-context (`System-A`) suggested `pip install vllm` and Hybrid (`System-B`) generated `--tensor-parallel-size 4` install + launch commands while stating the query was out of corpus.
 - **Statistical Significance:**
   - Mean Difference: **$+2.50\%$** (+1 net question)
   - 95% Bootstrap Confidence Interval: **$[-10.00\%, +15.00\%]$** (10,000 paired resamples)
-  - McNemar Exact Binomial Test: **$p = 1.0000$** (4 vs. 3 discordant pairs; no statistically significant difference)
+  - McNemar Exact Binomial Test: **$p = 1.0000$** (4 vs. 3 discordant pairs; statistically indistinguishable)
 
-#### Core Takeaway
-Human grading validates that on a ~33k-token corpus, stuffing the entire context into prompt memory achieves statistical parity with RAG in accuracy. However, RAG reduces prompt token consumption by **93.3%** (2,235 vs 33,298 tokens) and saves ~3 seconds of turnaround latency per query without sacrificing code correctness.
+---
+
+### 7. Day 47 vs. Day 48 CI Gate Output Reconciliation (Errata)
+
+On Day 47 (2026-11-09), an assistant chat summary incorrectly printed legacy-style metrics (`Dev Hit@3: 92.50% (37/40)`, `Refusal Rate: 100.00% (9/9)`, `MRR: 0.8354`) when summarizing the `eval/ci_eval_gate.py` execution. Inspection of the actual Day 47 step log (`.system_generated/steps/4046/output.txt`), `eval/gold_benchmark_v2_dev_results.json`, an isolated detached-worktree run of `b28a03e`, and Day 48 `HEAD` (`eval/diff_day46_vs_head.md`) confirms that:
+- **Which run was wrong:** Only the Day 47 chat summary message (`92.50% / 100.00% / 0.8354`) was erroneous.
+- **Verified actual CI Gate output (both Day 47 and Day 48 `b28a03e` vs `HEAD`):** **Hit@3 = 29/31 (93.55%)**, **Official Docs Hit@3 = 11/13 (84.62%)**, **Owner Guides Hit@3 = 18/18 (100.00%)**, **Refusal Rate = 8/9 (88.89%)**, **Hit@5 = 31/31 (100.00%)**, **MRR = 0.8172**, with **0 per-question differences** across all 40 dev questions.
