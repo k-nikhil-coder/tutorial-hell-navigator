@@ -1,0 +1,1786 @@
+{
+  "benchmark": "Tutorial Hell Navigator Gold Benchmark v2 (Day 43)",
+  "search_mode": "hybrid-rerank",
+  "vector_backend": "qdrant",
+  "sql_filter_applied": false,
+  "collection_name": "tutorial_navigator_chunks",
+  "rewrite_enabled": false,
+  "retrieval_only": false,
+  "timestamp": "2026-11-11T12:07:31.421330+00:00",
+  "total_evaluated": 25,
+  "ground_truth_count": 14,
+  "mean_latency": 6168.1,
+  "time_to_first_token_p95": 5698.43,
+  "mean_prompt_tokens": 1387.52,
+  "retrieval_metrics": {
+    "evidence_coverage_at_3": 85.71,
+    "evidence_coverage_at_5": 92.86,
+    "hit_at_3": 85.71,
+    "hit_at_5": 92.86,
+    "recall_at_3": 85.71,
+    "recall_at_5": 92.86,
+    "mrr": 0.8357,
+    "hit_3_hits": 12,
+    "hit_5_hits": 13,
+    "recall_3_hits": 12,
+    "recall_5_hits": 13,
+    "note": null
+  },
+  "refusal_metrics": {
+    "total_out_of_scope": 11,
+    "refused_count": 4,
+    "refusal_rate": 36.36
+  },
+  "latency_metrics": {
+    "mean_latency": 6168.1,
+    "mean_latency_ms": 6168.1,
+    "p50_latency_ms": 6266.63,
+    "p90_latency_ms": 9391.0,
+    "p95_latency_ms": 9960.61,
+    "time_to_first_token_p95": 5698.43,
+    "time_to_first_token_p95_ms": 5698.43,
+    "mean_prompt_tokens": 1387.52,
+    "mean_analytic_prompt_tokens": 2214.56,
+    "mean_completion_tokens": 376.33,
+    "token_sources": {
+      "gemini": 21
+    },
+    "quota_retry_count": 0,
+    "quota_retried_questions": {},
+    "min_latency_ms": 3151.27,
+    "max_latency_ms": 10241.92,
+    "search_latency_mean_ms": 1571.14,
+    "rewrite_latency_mean_ms": 0.0
+  },
+  "llm_metrics": {
+    "passed": 21,
+    "pass_rate": 84.0,
+    "avg_steps_per_plan": 1.04,
+    "avg_commands_per_plan": 0.92,
+    "avg_citations_per_plan": 0.96,
+    "refusals_handled": 10
+  },
+  "items": [
+    {
+      "id": "GS-V2-10",
+      "category": "General",
+      "question": "What HTTP status code does FastAPI automatically return when incoming JSON fails Pydantic schema validation?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_validation_sweep384_chunk_0",
+        "fastapi_validation_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_15",
+        "fastapi_fullstack_guide_sweep384_chunk_3"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2813.38,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2813.38,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6770.2,
+      "ttft_ms": 1884.19,
+      "ttft_source": "measured",
+      "prompt_tokens": 1510,
+      "analytic_prompt_tokens": 2320,
+      "completion_tokens": 366,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "fastapi_validation_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "FastAPI automatically returns a 422 Unprocessable Entity HTTP status code when incoming request data fails Pydantic schema validation.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Review Default Validation Response Behavior",
+            "command": "curl -X POST \"http://localhost:8000/items/\" -H \"Content-Type: application/json\" -d \"{}\"",
+            "explanation": "Observe the 422 Unprocessable Entity status code and validation details returned by FastAPI when a required field is missing from the request body.",
+            "verification": "Check that the HTTP response code is 422 and the JSON body contains a 'detail' array describing the validation errors.",
+            "citations": [
+              "fastapi_validation_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Manually catching standard JSON decoding errors to return custom 422 responses when FastAPI already handles validation automatically via Pydantic.",
+          "Raising HTTPExceptions inside Pydantic validators instead of letting Pydantic handle standard validation flows."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "FastAPI leverages Pydantic models for strict request validation and automatically translates validation failures into standard 422 Unprocessable Entity responses.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_validation_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-11",
+      "category": "General",
+      "question": "Why does calling await request.body() crash or hang in a custom RequestValidationError handler, and what should be used instead?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_validation_sweep384_chunk_0",
+        "pydantic_validation_sweep384_chunk_7",
+        "pydantic_models_sweep384_chunk_19",
+        "fastapi_validation_sweep384_chunk_2",
+        "pydantic_validation_sweep384_chunk_12"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2269.27,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2269.27,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 9965.16,
+      "ttft_ms": 5241.72,
+      "ttft_source": "measured",
+      "prompt_tokens": 1705,
+      "analytic_prompt_tokens": 2474,
+      "completion_tokens": 521,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 1,
+        "cited_chunks": [
+          "fastapi_validation_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Calling await request.body() inside a custom FastAPI RequestValidationError handler will crash or hang because the underlying request stream has already been consumed during the initial parsing phase. FastAPI provides the raw request body directly on the exception instance via exc.body.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Use exc.body instead of request.body()",
+            "command": "cat << 'EOF' > main.py\nfrom fastapi import FastAPI, Request, status\nfrom fastapi.exceptions import RequestValidationError\nfrom fastapi.responses import JSONResponse\n\napp = FastAPI()\n\n@app.exception_handler(RequestValidationError)\nasync def validation_exception_handler(request: Request, exc: RequestValidationError):\n    errors = exc.errors()\n    body = exc.body\n    return JSONResponse(\n        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,\n        content={\"detail\": errors, \"body\": body},\n    )\nEOF\npython3 -m uvicorn main:app --reload",
+            "explanation": "Because request.body() can only be called once and is consumed before entering the exception handler, you must access the cached body directly from exc.body.",
+            "verification": "curl -X POST http://127.0.0.1:8000/ -H 'Content-Type: application/json' -d '{\"invalid\": \"data\"}'",
+            "citations": [
+              "fastapi_validation_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Calling await request.body() multiple times in middleware or exception handlers",
+          "Assuming request streams can be re-read infinitely without explicitly caching them"
+        ],
+        "architecture_contract": "main.py featuring a customized RequestValidationError handler leveraging exc.body.",
+        "key_takeaway": "The request body stream is single-use; always use exc.body inside a RequestValidationError handler.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_validation_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-12",
+      "category": "General",
+      "question": "Why is React + Python FastAPI recommended for computer science students aiming for modern engineering and AI backend roles?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "fastapi_fullstack_guide_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2501.05,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2501.05,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 9942.42,
+      "ttft_ms": 5025.97,
+      "ttft_source": "measured",
+      "prompt_tokens": 1525,
+      "analytic_prompt_tokens": 2107,
+      "completion_tokens": 560,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 4,
+        "cited_chunks": [
+          "fastapi_fullstack_guide_sweep384_chunk_2",
+          "fastapi_fullstack_guide_sweep384_chunk_0"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "React + Python FastAPI is recommended because Python backend fluency allows computer science students to seamlessly pivot between web development, data science, machine learning APIs, and AI integrations like RAG applications.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Initialize a Python Virtual Environment",
+            "command": "python -m venv venv && source venv/bin/activate",
+            "explanation": "Creates and activates an isolated Python environment for managing your FastAPI backend dependencies.",
+            "verification": "python -c \"import sys; print(sys.prefix)\"",
+            "citations": [
+              "fastapi_fullstack_guide_sweep384_chunk_2",
+              "fastapi_fullstack_guide_sweep384_chunk_0"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Install FastAPI and Uvicorn",
+            "command": "pip install fastapi uvicorn pydantic",
+            "explanation": "Installs the core FastAPI framework, Uvicorn ASGI server, and Pydantic for automated data validation and type safety.",
+            "verification": "python -c \"import fastapi; print(fastapi.__version__)\"",
+            "citations": [
+              "fastapi_fullstack_guide_sweep384_chunk_2",
+              "fastapi_fullstack_guide_sweep384_chunk_0"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Hardcoding backend ports without checking environment variables or handling CORS properly.",
+          "Manual data validation in backend routes instead of leveraging native Pydantic schemas.",
+          "Copying frontend-backend code without understanding the HTTP request-response lifecycle."
+        ],
+        "architecture_contract": "project_root/\n\u251c\u2500\u2500 backend/\n\u2502   \u251c\u2500\u2500 main.py\n\u2502   \u2514\u2500\u2500 requirements.txt\n\u2514\u2500\u2500 frontend/\n    \u2514\u2500\u2500 src/",
+        "key_takeaway": "Python FastAPI provides native automated schema enforcement via Pydantic and optimal ecosystem synergy for AI engineering, MLOps, and enterprise microservices.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_fullstack_guide_sweep384_chunk_2",
+          "fastapi_fullstack_guide_sweep384_chunk_0"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-22",
+      "category": "General",
+      "question": "Why does pip install psycopg2 crash with 'Error: pg_config executable not found' in python:3.12-slim containers?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_sweep384_chunk_1",
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "docker_compose_sweep384_chunk_0",
+        "docker_compose_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2427.01,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2427.01,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6456.21,
+      "ttft_ms": 1581.3,
+      "ttft_source": "measured",
+      "prompt_tokens": 1534,
+      "analytic_prompt_tokens": 2149,
+      "completion_tokens": 506,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "docker_production_guide_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Explains why `psycopg2` fails to build in slim Python container images due to missing native C headers and compilers, and provides solutions using system packages or pre-compiled binaries.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Install System Build Dependencies",
+            "command": "RUN apt-get update && apt-get install -y libpq-dev gcc",
+            "explanation": "Minimal Linux images like python:3.12-slim do not include the C compiler (gcc) or PostgreSQL client header files (libpq-dev) required to compile psycopg2 from source.",
+            "verification": "Docker build completes successfully without throwing the pg_config executable not found error.",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Alternative: Use psycopg2-binary for Local Prototyping",
+            "command": "pip install psycopg2-binary",
+            "explanation": "Switching to psycopg2-binary installs pre-compiled wheels, avoiding the need for native compilation tools during local development.",
+            "verification": "Verify package installation by running python -c 'import psycopg2'.",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Relying on python:slim or alpine base images without installing required development headers when building packages with C extensions.",
+          "Ignoring build-stage dependencies and bloating production images by installing full compilers when pre-compiled wheels or multi-stage builds could be used."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Packages containing C code like psycopg2 require native headers (libpq-dev) and a compiler (gcc) unless you use pre-compiled binary wheels (psycopg2-binary).",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_production_guide_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-23",
+      "category": "General",
+      "question": "How can a developer avoid needing gcc and libpq-dev when prototyping with PostgreSQL in local development?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_compose_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_4"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "first_hit_rank": 2,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2187.69,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2187.69,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6096.63,
+      "ttft_ms": 1886.31,
+      "ttft_source": "measured",
+      "prompt_tokens": 1609,
+      "analytic_prompt_tokens": 2135,
+      "completion_tokens": 472,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "docker_production_guide_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "To avoid installing native compilation tools like gcc and libpq-dev during local prototyping, developers can switch from the source-compiled psycopg2 package to psycopg2-binary, which includes pre-compiled binaries.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Update requirements.txt for Local Prototyping",
+            "command": "sed -i 's/psycopg2/psycopg2-binary/g' requirements.txt",
+            "explanation": "Switching your dependency to psycopg2-binary uses pre-compiled wheels, avoiding the need for native compilation tools like gcc and libpq-dev during local development.",
+            "verification": "cat requirements.txt | grep psycopg2",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_1"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Rebuild the Development Container",
+            "command": "docker compose build --no-cache",
+            "explanation": "Rebuilding the container ensures that the new binary dependency is installed cleanly without relying on stale cache layers.",
+            "verification": "docker compose up",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Do not install heavy build toolchains (gcc, libpq-dev) directly into simple local prototyping setups if pre-built wheels can suffice.",
+          "Do not ignore database initialization timing; ensure you handle container startup health checks properly."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Using pre-compiled binary packages like psycopg2-binary streamlines local prototyping by bypassing the need for native C libraries and compilers in minimal Python environments.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_production_guide_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-24",
+      "category": "General",
+      "question": "How should API keys and database credentials be injected into production Docker containers without leaking secrets?",
+      "error": "Cannot send a request, as the client has been closed.",
+      "quota_retries": 0,
+      "score": {
+        "passed": false,
+        "issues": [
+          "Cannot send a request, as the client has been closed."
+        ]
+      },
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 3415.2,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 3415.2,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      }
+    },
+    {
+      "id": "GS-V2-33",
+      "category": "General",
+      "question": "What combination of ORM and migration tool is recommended for relational persistence with FastAPI and PostgreSQL?",
+      "error": "Cannot send a request, as the client has been closed.",
+      "quota_retries": 0,
+      "score": {
+        "passed": false,
+        "issues": [
+          "Cannot send a request, as the client has been closed."
+        ]
+      },
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2398.23,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2398.23,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      }
+    },
+    {
+      "id": "GS-V2-34",
+      "category": "General",
+      "question": "When and where should Alembic database migrations be executed during production deployment?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_4",
+        "docker_production_guide_sweep384_chunk_0",
+        "docker_compose_best_practices_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2217.79,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2217.79,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 5721.45,
+      "ttft_ms": 1484.37,
+      "ttft_source": "measured",
+      "prompt_tokens": 1514,
+      "analytic_prompt_tokens": 2186,
+      "completion_tokens": 385,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 3,
+        "cited_chunks": [
+          "docker_production_guide_sweep384_chunk_2",
+          "fastapi_fullstack_guide_sweep384_chunk_1",
+          "fastapi_fullstack_guide_sweep384_chunk_4"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Database migrations like Alembic must be executed as a controlled CI/CD build step before new backend server instances launch in production.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Run Alembic Migrations in CI/CD Build Step",
+            "command": "alembic upgrade head",
+            "explanation": "Run database migrations as a CI/CD build step before new server instances launch to ensure the database schema matches the application expectations safely.",
+            "verification": "Check database logs or query the alembic_version table to confirm the head revision is applied.",
+            "citations": [
+              "docker_production_guide_sweep384_chunk_2",
+              "fastapi_fullstack_guide_sweep384_chunk_1",
+              "fastapi_fullstack_guide_sweep384_chunk_4"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Running raw unbacked containers for production databases instead of using managed instances",
+          "Executing migrations blindly inside application startup code without locking or concurrency controls"
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always execute migrations prior to launching new application container instances in production.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "docker_production_guide_sweep384_chunk_2",
+          "fastapi_fullstack_guide_sweep384_chunk_1",
+          "fastapi_fullstack_guide_sweep384_chunk_4"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-35",
+      "category": "General",
+      "question": "How does psycopg2 handle nested with conn: context blocks across sequential database operations?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "postgresql_psycopg2_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "fastapi_fullstack_guide_sweep384_chunk_4"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2815.36,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2815.36,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 7115.04,
+      "ttft_ms": 1630.67,
+      "ttft_source": "measured",
+      "prompt_tokens": 1521,
+      "analytic_prompt_tokens": 2147,
+      "completion_tokens": 615,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 3,
+        "cited_chunks": [
+          "postgresql_psycopg2_sweep384_chunk_0",
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Each nested with conn: block in psycopg2 starts a new transaction. Exiting the block successfully commits the transaction automatically, while an exception triggers an automatic rollback.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Use Connection Context Managers for Atomic Operations",
+            "command": "python -c \"import psycopg2; conn = psycopg2.connect('dbname=test'); \nwith conn:\n    with conn.cursor() as cur:\n        cur.execute('INSERT INTO listing (title) VALUES (%s)', ('test',))\nconn.close()\"",
+            "explanation": "Wrap your connection operations in a 'with conn:' context manager to automatically handle commits on successful execution or rollbacks if an exception occurs.",
+            "verification": "Verify that successful blocks commit data to the database and failed blocks rollback completely without leaving partial state.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_0"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Handle Transaction Abortions and Recoveries",
+            "command": "python -c \"import psycopg2; conn = psycopg2.connect('dbname=test');\ntry:\n    with conn:\n        with conn.cursor() as cur:\n            cur.execute('INVALID SQL')\nexcept psycopg2.Error:\n    conn.rollback()\nconn.close()\"",
+            "explanation": "When a query fails inside a transaction, PostgreSQL marks the transaction as aborted (InFailedSqlTransaction). You must call conn.rollback() to recover before running new commands.",
+            "verification": "Confirm that subsequent queries execute successfully after calling conn.rollback() following a database error.",
+            "citations": [
+              "postgresql_psycopg2_sweep384_chunk_0",
+              "postgresql_psycopg2_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming the connection context manager automatically closes the connection (you must still call conn.close()).",
+          "Ignoring transaction failure states and attempting to run subsequent queries without calling conn.rollback()."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Each nested with conn: block begins a new transaction, providing clean transactional boundaries that automatically commit or rollback depending on whether exceptions occur.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "postgresql_psycopg2_sweep384_chunk_0",
+          "postgresql_psycopg2_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-41",
+      "category": "General",
+      "question": "What primary base class do Pydantic schema models inherit from to define typed attributes?",
+      "error": "Cannot send a request, as the client has been closed.",
+      "quota_retries": 0,
+      "score": {
+        "passed": false,
+        "issues": [
+          "Cannot send a request, as the client has been closed."
+        ]
+      },
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2479.19,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2479.19,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      }
+    },
+    {
+      "id": "GS-V2-42",
+      "category": "General",
+      "question": "What structural guarantee does Pydantic provide when untrusted input data is parsed into a model instance?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_1",
+        "pydantic_models_sweep384_chunk_14",
+        "pydantic_models_sweep384_chunk_7",
+        "pydantic_models_sweep384_chunk_3",
+        "pydantic_models_sweep384_chunk_20"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 0.0,
+        "reciprocal_rank": 0.0,
+        "first_hit_rank": null,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 0,
+        "total_required_items": 1,
+        "search_latency_ms": 2286.27,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2286.27,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 7252.16,
+      "ttft_ms": 2712.71,
+      "ttft_source": "measured",
+      "prompt_tokens": 1612,
+      "analytic_prompt_tokens": 2368,
+      "completion_tokens": 428,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "pydantic_models_sweep384_chunk_1",
+          "pydantic_models_sweep384_chunk_7"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Pydantic guarantees that the output structure post-processing precisely conforms to the specified type hints and constraints, rather than guaranteeing the validity or accuracy of the input data itself.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Define Model with Type Constraints",
+            "command": "cat << 'EOF' > model.py\nfrom pydantic import BaseModel\n\nclass User(BaseModel):\n    id: int\n    username: str\n\nprint(User(id='123', username='alice').model_dump())\nEOF\npython3 model.py",
+            "explanation": "Pydantic performs data conversion and coercion during instantiation to match the defined type hints, assuring the resulting instance adheres strictly to your schema.",
+            "verification": "python3 model.py",
+            "citations": [
+              "pydantic_models_sweep384_chunk_1",
+              "pydantic_models_sweep384_chunk_7"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming Pydantic validates the absolute accuracy or correctness of the external input domain rather than guaranteeing the output model types.",
+          "Ignoring data coercion where inputs are implicitly cast, which can lead to unexpected information loss."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Pydantic guarantees the types and constraints of the output model structure post-parsing, raising a ValidationError if the data cannot be coerced into the specified types.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "pydantic_models_sweep384_chunk_1",
+          "pydantic_models_sweep384_chunk_7"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-43",
+      "category": "General",
+      "question": "In Pydantic terminology, what is the precise meaning of 'validation' regarding output constraints?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_1",
+        "pydantic_models_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_17",
+        "pydantic_models_sweep384_chunk_19",
+        "pydantic_models_sweep384_chunk_34"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2041.9,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2041.9,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 5935.83,
+      "ttft_ms": 1727.3,
+      "ttft_source": "measured",
+      "prompt_tokens": 1590,
+      "analytic_prompt_tokens": 2414,
+      "completion_tokens": 474,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "pydantic_models_sweep384_chunk_0",
+          "pydantic_models_sweep384_chunk_1"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "In Pydantic terminology, validation refers to the process of parsing and instantiating a model or type so that its output strictly conforms to the specified types and constraints, rather than just checking the dictionary accuracy of the input data.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Define and Test a Pydantic Model with Type Constraints",
+            "command": "cat << 'EOF' > test_model.py\nfrom pydantic import BaseModel\n\nclass User(BaseModel):\n    id: int\n    name: str\n\n# Pydantic coerces input and guarantees output types\nuser = User(id=\"123\", name=\"Alice\")\nprint(user, type(user.id))\nEOF\npython3 test_model.py",
+            "explanation": "Demonstrates that Pydantic processes input data during instantiation to guarantee that the resulting model instance strictly conforms to the defined type hints.",
+            "verification": "python3 test_model.py",
+            "citations": [
+              "pydantic_models_sweep384_chunk_0",
+              "pydantic_models_sweep384_chunk_1"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming Pydantic validation only checks if input data dictionary values are already valid without performing coercion or type guarantee on the output structure.",
+          "Using model_construct() when untrusted input data is present, which bypasses parsing and type guarantees."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Pydantic's 'validation' guarantees the types and constraints of the output instance post-processing rather than merely checking input validity.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "pydantic_models_sweep384_chunk_0",
+          "pydantic_models_sweep384_chunk_1"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-44",
+      "category": "General",
+      "question": "Under what specific failure condition does Pydantic raise a ValidationError during model processing?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_20",
+        "fastapi_validation_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_19",
+        "pydantic_validation_sweep384_chunk_13",
+        "pydantic_models_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 0.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 0.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "first_hit_rank": 5,
+        "covered_items_at_3": 0,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 2275.21,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 2275.21,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 10241.92,
+      "ttft_ms": 6098.11,
+      "ttft_source": "measured",
+      "prompt_tokens": 1703,
+      "analytic_prompt_tokens": 2453,
+      "completion_tokens": 403,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 2,
+        "cited_chunks": [
+          "pydantic_models_sweep384_chunk_19",
+          "pydantic_models_sweep384_chunk_20"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Pydantic raises a ValidationError whenever it finds an error in the data it is validating during model processing.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Review Pydantic Error Raising Mechanism",
+            "command": "python -c \"from pydantic import BaseModel, ValidationError\nclass Model(BaseModel):\n    a_float: float\ntry:\n    Model(a_float='not a float')\nexcept ValidationError as e:\n    print(e)\"",
+            "explanation": "Pydantic raises a single ValidationError encompassing all validation errors encountered when invalid data is passed to a model constructor or validation method.",
+            "verification": "The python snippet prints the detailed ValidationError showing the field and input failure type.",
+            "citations": [
+              "pydantic_models_sweep384_chunk_19",
+              "pydantic_models_sweep384_chunk_20"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Assuming Pydantic raises multiple exceptions per failed validation; instead, it raises a single comprehensive ValidationError containing all errors found.",
+          "Overriding custom __init__() methods which bypasses standard validation flows."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Pydantic consolidates all validation errors into a single ValidationError containing detailed information about every failure location and reason.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "pydantic_models_sweep384_chunk_19",
+          "pydantic_models_sweep384_chunk_20"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-45",
+      "category": "General",
+      "question": "How does adding a discriminator field improve validation error responses returned by FastAPI?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_validation_sweep384_chunk_2",
+        "fastapi_validation_sweep384_chunk_0",
+        "fastapi_validation_sweep384_chunk_1",
+        "pydantic_models_sweep384_chunk_20",
+        "pydantic_validation_sweep384_chunk_4"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": true,
+        "evidence_coverage_at_3": 1.0,
+        "evidence_coverage_at_5": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "first_hit_rank": 1,
+        "covered_items_at_3": 1,
+        "covered_items_at_5": 1,
+        "total_required_items": 1,
+        "search_latency_ms": 1957.57,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 1957.57,
+        "is_out_of_scope": false,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 6434.09,
+      "ttft_ms": 1998.04,
+      "ttft_source": "measured",
+      "prompt_tokens": 1554,
+      "analytic_prompt_tokens": 2404,
+      "completion_tokens": 655,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 2,
+        "command_count": 2,
+        "citation_count": 2,
+        "cited_chunks": [
+          "fastapi_validation_sweep384_chunk_2"
+        ],
+        "is_refusal": false
+      },
+      "response": {
+        "summary": "Adding a discriminator field to a Union of Pydantic schemas prevents FastAPI from returning massive, verbose validation errors that enumerate every possible schema attempt. Instead, it targets the specific schema identified by the discriminator tag and returns a short, concise error response.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Define Discriminated Union Schemas",
+            "command": "cat << 'EOF' > models.py\nfrom typing import Annotated, Literal, Union\nfrom pydantic import BaseModel, Field\n\nclass SchemaA(BaseModel):\n    type: Literal[\"A\"]\n    value_a: int\n\nclass SchemaB(BaseModel):\n    type: Literal[\"B\"]\n    value_b: str\n\nMasterRequest = Annotated[\n    Union[SchemaA, SchemaB],\n    Field(discriminator=\"type\")\n]\nEOF",
+            "explanation": "Create Pydantic models using a Literal type and the Field(discriminator=...) annotation so Pydantic knows exactly which schema to evaluate without guessing.",
+            "verification": "python3 -c \"from models import MasterRequest; print('Models loaded successfully')\"",
+            "citations": [
+              "fastapi_validation_sweep384_chunk_2"
+            ]
+          },
+          {
+            "step_number": 2,
+            "title": "Implement FastAPI Endpoint with Discriminated Union",
+            "command": "cat << 'EOF' > main.py\nfrom fastapi import FastAPI\nfrom models import MasterRequest\n\napp = FastAPI()\n\n@app.post(\"/submit\")\ndef submit_request(payload: MasterRequest):\n    return {\"status\": \"success\", \"data\": payload}\nEOF",
+            "explanation": "Wire up the MasterRequest union to a POST route to inspect how FastAPI handles erroneous payloads.",
+            "verification": "uvicorn main:app --reload",
+            "citations": [
+              "fastapi_validation_sweep384_chunk_2"
+            ]
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using a large Union without a discriminator, which forces Pydantic to try validating against every single member and yields an overwhelming, unreadable error array.",
+          "Manually raising HTTPException inside Pydantic validators instead of letting FastAPI and Pydantic handle ValidationError mapping."
+        ],
+        "architecture_contract": "models.py contains the discriminated Union definitions. main.py hosts the FastAPI app utilizing the models.",
+        "key_takeaway": "Discriminators streamline validation feedback loops by pinpointing the exact target schema immediately.",
+        "is_refusal": false,
+        "refusal_reason": null,
+        "cited_chunk_ids": [
+          "fastapi_validation_sweep384_chunk_2"
+        ]
+      }
+    },
+    {
+      "id": "GS-V2-55",
+      "category": "General",
+      "question": "What is the average base salary for an L4 software engineer in London vs Bangalore, and how should I counter-offer?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_21",
+        "pydantic_models_sweep384_chunk_4",
+        "docker_compose_best_practices_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 412.41,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 412.41,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 3510.68,
+      "ttft_ms": 1481.24,
+      "ttft_source": "measured",
+      "prompt_tokens": 403,
+      "analytic_prompt_tokens": 2102,
+      "completion_tokens": 265,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Compensation Resources",
+            "command": "echo \"Please refer to public compensation platforms like Levels.fyi or official company career portals for salary data.\"",
+            "explanation": "Since salary data and negotiation strategies are outside the scope of our verified technical documentation, you should consult verified career resources and aggregate salary platforms.",
+            "verification": "Verify that you are using reliable, up-to-date compensation datasets.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Relying on unverified rumors or outdated salary surveys for compensation negotiations."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always rely on verified domain-specific resources and official documentation for out-of-scope inquiries.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-56",
+      "category": "General",
+      "question": "Should I accept an offer from an early-stage startup with stock options or an established fintech company with higher cash?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_cors_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "pydantic_models_sweep384_chunk_9",
+        "fastapi_cors_sweep384_chunk_3",
+        "docker_compose_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 493.64,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 493.64,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 6447.62,
+      "ttft_ms": 4620.14,
+      "ttft_source": "measured",
+      "prompt_tokens": 401,
+      "analytic_prompt_tokens": 2236,
+      "completion_tokens": 253,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Career Resources",
+            "command": "echo \"Please refer to standard career counseling resources and official financial advisors for evaluating compensation packages.\"",
+            "explanation": "Career and financial decisions regarding startups versus established companies fall outside the scope of technical programming documentation.",
+            "verification": "Check reliable career guidance literature.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Making major financial and career decisions solely based on unverified advice without reviewing formal contracts.",
+          "Ignoring tax implications and vesting schedules when evaluating stock options."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Evaluate offers by weighing risk tolerance, financial goals, and total compensation.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-57",
+      "category": "General",
+      "question": "Is Golang or Rust better for backend developer job openings over the next five years in European tech hubs?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "docker_production_guide_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "fastapi_cors_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 524.0,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 524.0,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 3905.33,
+      "ttft_ms": 1730.13,
+      "ttft_source": "measured",
+      "prompt_tokens": 1618,
+      "analytic_prompt_tokens": 2227,
+      "completion_tokens": 212,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 0,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Official Documentation",
+            "command": null,
+            "explanation": "Review official resources and standard industry reports for language market share rather than relying on unverified assumptions.",
+            "verification": "Cross-reference job boards and language ecosystems directly.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing job market trends without verified corpus data."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always rely on verified technical documentation and context for technical mentorship queries.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-58",
+      "category": "General",
+      "question": "Rank Tier 1 tech companies based on work-life balance and promotion velocity for junior software developers.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_sweep384_chunk_3",
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "docker_production_guide_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 474.28,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 474.28,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 3712.63,
+      "ttft_ms": 1399.75,
+      "ttft_source": "measured",
+      "prompt_tokens": 1397,
+      "analytic_prompt_tokens": 1953,
+      "completion_tokens": 265,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Industry Career Resources",
+            "command": "echo \"Please refer to public career platforms like Levels.fyi or professional engineering mentorship networks for compensation and work-life balance insights.\"",
+            "explanation": "Career rankings and company-specific promotion velocity metrics are outside the scope of our verified technical documentation.",
+            "verification": "Check reliable third-party compensation and career tracking sites.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Relying on unverified hearsay for career decisions",
+          "Ignoring official technical specifications and guides"
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Focus your energy on mastering core software engineering principles and verified architectural patterns rather than subjective company rankings.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-59",
+      "category": "General",
+      "question": "How should I format bullet points on my software engineering resume to pass ATS screening algorithms?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "fastapi_background_tasks_sweep384_chunk_1",
+        "pydantic_models_sweep384_chunk_28",
+        "postgresql_psycopg2_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_2"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 470.68,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 470.68,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 7871.4,
+      "ttft_ms": 5812.61,
+      "ttft_source": "measured",
+      "prompt_tokens": 1630,
+      "analytic_prompt_tokens": 2361,
+      "completion_tokens": 246,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 0,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Professional Resume and Career Guidance Resources",
+            "command": null,
+            "explanation": "Since resume formatting and ATS screening algorithms are outside the scope of the verified technical documentation, please consult official career guides, university career center resources, or standard professional writing guidelines for structuring software engineering resumes.",
+            "verification": null,
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Relying on unverified sources for technical curriculum guidance",
+          "Guessing methodologies outside of verified technical documentation"
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always verify technical questions against official project documentation and scope guidelines.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-60",
+      "category": "General",
+      "question": "Critique my professional profile headline and suggest how often I should post project progress updates to attract tech recruiters.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_2",
+        "docker_compose_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 539.22,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 539.22,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 4143.45,
+      "ttft_ms": 1804.08,
+      "ttft_source": "measured",
+      "prompt_tokens": 1466,
+      "analytic_prompt_tokens": 2150,
+      "completion_tokens": 242,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Professional Networking & Career Guidance Resources",
+            "command": "echo \"Please refer to official career platforms and recruiter guides for professional profile and posting frequency advice.\"",
+            "explanation": "Career advice regarding headline critiques and posting frequency falls outside the scope of the verified technical documentation.",
+            "verification": null,
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Relying on unverified sources for professional career coaching when building technical portfolios."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Focus your portfolio and project efforts on verifiable full-stack engineering principles and documented architectural patterns.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-61",
+      "category": "General",
+      "question": "What color scheme, shields.io badges, and GIF previews make a personal GitHub profile README look aesthetic to hiring managers?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "docker_production_guide_sweep384_chunk_3",
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "fastapi_fullstack_guide_sweep384_chunk_2",
+        "pydantic_models_sweep384_chunk_17",
+        "pydantic_validation_sweep384_chunk_13"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 459.7,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 459.7,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 3828.48,
+      "ttft_ms": 1552.83,
+      "ttft_source": "measured",
+      "prompt_tokens": 1310,
+      "analytic_prompt_tokens": 2128,
+      "completion_tokens": 251,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Official Documentation",
+            "command": "echo 'Refer to official GitHub profile design guidelines and community templates.'",
+            "explanation": "Since profile README aesthetics are outside our technical verification corpus, students should review GitHub's official documentation and design resources for profile customization.",
+            "verification": "Verify that your profile README meets your personal branding goals.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Relying on unverified sources for core engineering configurations",
+          "Ignoring verified architectural and production deployment rules"
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always ground engineering decisions in verified technical specifications and official documentation.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-62",
+      "category": "General",
+      "question": "How many fullstack projects should I list on my one-page software resume when applying for entry-level developer roles?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "fastapi_fullstack_guide_sweep384_chunk_0",
+        "docker_compose_best_practices_sweep384_chunk_1",
+        "fastapi_fullstack_guide_sweep384_chunk_1",
+        "docker_production_guide_sweep384_chunk_2",
+        "docker_production_guide_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 357.87,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 357.87,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 3423.17,
+      "ttft_ms": 1451.77,
+      "ttft_source": "measured",
+      "prompt_tokens": 1419,
+      "analytic_prompt_tokens": 2158,
+      "completion_tokens": 245,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 0,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Career Services and Standard Guidelines",
+            "command": null,
+            "explanation": "Refer to official university career center resources or industry standard resume guides for advice on portfolio project counts.",
+            "verification": "Compare your resume against multiple entry-level tech resume templates.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Listing an overwhelming number of shallow, tutorial-copied projects instead of 2-3 deep, production-ready full-stack applications."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Focus on depth, architecture, and deployment quality over the sheer quantity of resume portfolio entries.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-63",
+      "category": "General",
+      "question": "What is the optimal segment tree implementation with lazy propagation for range minimum queries in online coding competitions?",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_19",
+        "fastapi_background_tasks_sweep384_chunk_2",
+        "fastapi_fullstack_guide_sweep384_chunk_4",
+        "fastapi_fullstack_guide_sweep384_chunk_3",
+        "postgresql_psycopg2_sweep384_chunk_1"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 418.85,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 418.85,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      },
+      "latency_ms": 3151.27,
+      "ttft_ms": 1186.48,
+      "ttft_source": "measured",
+      "prompt_tokens": 397,
+      "analytic_prompt_tokens": 2227,
+      "completion_tokens": 267,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Standard Data Structure Resources",
+            "command": "echo \"Please refer to competitive programming handbooks like CP-Algorithms or standard textbooks for segment tree implementations.\"",
+            "explanation": "Since the query is out of bounds of the verified technical documentation, you should consult standard algorithm repositories and reference materials.",
+            "verification": "Verify implementation against well-known competitive programming test cases.",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Guessing competitive programming data structure implementations without testing edge cases.",
+          "Copying unverified code snippets from random online forums."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always rely on verified technical documentation and thoroughly test complex data structures like segment trees before contests.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    },
+    {
+      "id": "GS-V2-64",
+      "category": "General",
+      "question": "How do I use git filter-branch or BFG Repo-Cleaner to permanently purge a 50MB binary blob from git packfiles and rewrite tree commits?",
+      "error": "Cannot send a request, as the client has been closed.",
+      "quota_retries": 0,
+      "score": {
+        "passed": false,
+        "issues": [
+          "Cannot send a request, as the client has been closed."
+        ]
+      },
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 531.37,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 531.37,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": true
+      }
+    },
+    {
+      "id": "GS-V2-65",
+      "category": "General",
+      "question": "Explain how Python 3.12 handles Debian PEP 668 externally managed environment markers and sys.breakpointhook overriding.",
+      "expected_chunk_ids": [],
+      "retrieved_chunk_ids": [
+        "pydantic_models_sweep384_chunk_35",
+        "pydantic_models_sweep384_chunk_23",
+        "pydantic_models_sweep384_chunk_25",
+        "docker_production_guide_sweep384_chunk_1",
+        "pydantic_models_sweep384_chunk_12"
+      ],
+      "retrieval_metrics": {
+        "has_ground_truth": false,
+        "evidence_coverage_at_3": null,
+        "evidence_coverage_at_5": null,
+        "hit_at_3": null,
+        "hit_at_5": null,
+        "recall_at_3": null,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "first_hit_rank": null,
+        "search_latency_ms": 511.28,
+        "rewrite_latency_ms": 0.0,
+        "latency_ms": 511.28,
+        "is_out_of_scope": true,
+        "refusal_gate_triggered": false
+      },
+      "latency_ms": 4071.91,
+      "ttft_ms": 1706.07,
+      "ttft_source": "measured",
+      "prompt_tokens": 1720,
+      "analytic_prompt_tokens": 2185,
+      "completion_tokens": 272,
+      "token_source": "gemini",
+      "quota_retries": 0,
+      "score": {
+        "passed": true,
+        "issues": [],
+        "step_count": 1,
+        "command_count": 1,
+        "citation_count": 0,
+        "cited_chunks": [],
+        "is_refusal": true
+      },
+      "response": {
+        "summary": "This question is outside the scope of the verified technical documentation. Please consult official documentation for assistance.",
+        "action_plan": [
+          {
+            "step_number": 1,
+            "title": "Consult Official Python and Debian Documentation",
+            "command": "python3 -m venv venv && source venv/bin/activate",
+            "explanation": "Since Debian PEP 668 externally managed environment markers and sys.breakpointhook are outside our verified Pydantic documentation corpus, please check standard Python and system packaging guides.",
+            "verification": "pip --version",
+            "citations": []
+          }
+        ],
+        "anti_patterns_to_avoid": [
+          "Using global pip install on modern Debian-based Linux distributions without an explicit virtual environment.",
+          "Guessing system package manager interactions without consulting official OS documentation."
+        ],
+        "architecture_contract": null,
+        "key_takeaway": "Always rely on verified project documentation and standard virtual environments for package management.",
+        "is_refusal": true,
+        "refusal_reason": "Question is outside the scope of the verified technical documentation.",
+        "cited_chunk_ids": []
+      }
+    }
+  ]
+}

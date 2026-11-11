@@ -1,6 +1,6 @@
 # Phase 1 Decision Rule & Pre-Declared Test Protocol
 
-**Status:** Active (Pre-Final Freeze Declaration, Day 49)  
+**Status:** Active (Pre-Final Freeze Declaration, Day 49) — **Held-out test split is SPENT (`2026-11-11`, executed once on `capstone2-freeze` `16e4413`, no reruns)**  
 **Scope:** Lane A (`main` branch, frozen 10-file / 97-chunk Tier 1 corpus)
 
 ---

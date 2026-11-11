@@ -367,14 +367,14 @@ To evaluate this on the Gold Benchmark v2 DEV split (40 questions: 31 answerable
 | **AI-Assisted Blind Hand Grade (Truth)** | **87.50%** (35/40) | **85.00%** (34/40) | **No detectable difference on dev** (+1 question, 95% CI `[-10.0%, +15.0%]`, $p = 1.0000$) |
 | **Reviewer Agent Pass Rate (Automated)** | 97.50% (39/40) | 97.50% (39/40) | 0.0 pts (Missed 5 RAG & 6 Full-Context bugs) |
 | **LLM Schema-Format Pass Rate** | **100.00%** (40/40) | 97.50% (39/40) | +2.50 pts (`+0.0250`, 95% CI `[+0.0000, +0.0750]` came from format check, *not* Reviewer Agent) |
-| **Prompt Tokens (Mean, API Usage Metadata)** | **2,234.9 tokens** | 33,298.0 tokens | **14.9x Token Reduction (93.3% savings)** |
+| **Prompt Tokens (Mean, Analytic Est.)** | **2,234.9 tokens** | 33,298.0 tokens | **14.9x Analytic Token Reduction** *(see Day 49 `n=3` API-measured tokens below)* |
 | **Turnaround Latency (P50)** | **6,125.6 ms** | 10,134.6 ms | **1.65x Faster Response Turnaround** |
 | **Turnaround Latency (Mean)** | **5,972.0 ms** | 8,918.3 ms | **1.49x Faster Mean Latency** |
 | **Time to First Token (TTFT P95)** | **2,274.0 ms** | 5,037.1 ms | **2.21x Faster Initial Token Delivery** |
 | **API Rate-Limit / Quota Errors** | **0 errors** | 5 quota delays | Full-context repeatedly hits input token/min limits |
-| **Cost per 1,000 Queries (Est.)** | **~$0.17** | ~$2.50 | **$2.33 saved per 1k queries** |
+| **Total Cost / 1,000 Queries (`dev n=3` API-measured, uncached)** | **$1.60 / 1k** (`$0.001596`/q) | $13.31 / 1k (`$0.013307`/q) | **`$11.71` saved per 1k uncached** *(verified `gemini-3.5-flash-lite` `$0.30/$2.50` rates; cached total: `$1.15` vs `$2.52`/1k excl. storage)* |
 
-*(Correction to Day 47 README/log text: earlier wording juxtaposed the `39/40` Reviewer Agent score with the `+0.0250` bootstrap difference from the `40/40 vs 39/40` schema-format metric, and called Phase 1 settled on automated parity before blind hand-grading.)*
+*(Correction to Day 47 README/log text: earlier wording juxtaposed the `39/40` Reviewer Agent score with the `+0.0250` bootstrap difference from the `40/40 vs 39/40` schema-format metric, called Phase 1 settled on automated parity before blind hand-grading, mislabeled the `n=40` analytic token heuristic as API `usage_metadata`, and used stale `$0.075/$0.30` `$0.17 vs $2.50` per 1k cost estimates replaced above and in Day 49.)*
 
 ---
 
@@ -392,9 +392,9 @@ Under the formalized Phase 1 decision rule in [`docs/decision_rule.md`](decision
 
 #### Applied Decision Rationale:
 1. **Inconclusive Dev Quality Within 10-Point Margin:** Single-grader AI-assisted blind grading shows **35/40 (87.5%) vs. 34/40 (85.0%)** (`+2.5%`, 95% bootstrap CI `[-10.0%, +15.0%]`, McNemar exact $p = 1.0000$). At `n=40`, there is no detectable quality difference, the 95% CI includes `0`, and the lower bound meets the 10-point tolerance.
-2. **Per-Query Cost & Latency Advantage (Caching Not Evaluated):** Full-context consumes **14.9x more uncached prompt tokens** per call (`33,298` vs `2,235`), adds ~2.9s to mean latency (`8,918 ms` vs `5,972 ms`) and ~2.8s to P95 TTFT (`5,037 ms` vs `2,274 ms`), and repeatedly triggers rate-limit exhaustion. **Caching not evaluated.**
+2. **Per-Query Cost & Latency Advantage (Caching Recomputed on Day 49):** Full-context consumes more uncached prompt tokens per call (analytic `33,298` vs `2,235`; `dev n=3` API-measured `39,966.00` vs `1,640.67`, a `24.4x` input token ratio), adds ~2.9s to mean latency (`8,918 ms` vs `5,972 ms` at `n=40`), and repeatedly hits rate limits. At Day 48 freeze, caching was not evaluated; Day 49 (`n=3` `dev`) recomputed uncached and `$0.03/1M` cached-read costs under verified `gemini-3.5-flash-lite` pricing (see Day 49 below).
 3. **Re-Evaluation Trigger (~100k Tokens):** Adding Python, NumPy, and pandas in Lane B roughly triples the corpus past **~100k tokens**, which triggers a formal re-evaluation of the retrieval-vs-context trade-off.
-4. **Applied Verdict & Pre-Declared Test Protocol:** **Keep Hybrid-Rerank RAG** per [`docs/decision_rule.md`](decision_rule.md). On the 25 held-out test questions (`--final`), run **`hybrid-rerank` only** (no full-context on test), report all proportions with **95% Wilson score confidence intervals**, make zero post-run edits, and log/retry errored quota questions only.
+4. **Applied Verdict & Pre-Declared Test Protocol:** **Keep Hybrid-Rerank RAG** per [`docs/decision_rule.md`](decision_rule.md). On the 25 held-out test questions (`--final`), run **`hybrid-rerank` only** (no full-context on test), report all proportions with **95% Wilson score confidence intervals**, make zero post-run edits, and log/retry errored quota questions only. *(Executed on Day 49 — see Section 8 / Day 49 below; test split is now spent.)*
 
 ---
 
@@ -448,3 +448,83 @@ All 80 responses were graded blind before unblinding using **AI-assisted** inspe
 On Day 47 (2026-11-09), an assistant chat summary incorrectly printed legacy-style metrics (`Dev Hit@3: 92.50% (37/40)`, `Refusal Rate: 100.00% (9/9)`, `MRR: 0.8354`) when summarizing the `eval/ci_eval_gate.py` execution. Inspection of the actual Day 47 step log (`.system_generated/steps/4046/output.txt`), `eval/gold_benchmark_v2_dev_results.json`, an isolated detached-worktree run of `b28a03e`, and Day 48 `HEAD` (`eval/diff_day46_vs_head.md`) confirms that:
 - **Which run was wrong:** Only the Day 47 chat summary message (`92.50% / 100.00% / 0.8354`) was erroneous.
 - **Verified actual CI Gate output (both Day 47 and Day 48 `b28a03e` vs `HEAD`):** **Hit@3 = 29/31 (93.55%)**, **Official Docs Hit@3 = 11/13 (84.62%)**, **Owner Guides Hit@3 = 18/18 (100.00%)**, **Refusal Rate = 8/9 (88.89%)**, **Hit@5 = 31/31 (100.00%)**, **MRR = 0.8172**, with **0 per-question differences** across all 40 dev questions.
+
+
+---
+
+# Day 49: Held-Out Test Split Final Evaluation (`--final`, `capstone2-freeze`)
+
+**Date:** 2026-11-11  
+**Sprint Day:** Day 49 of 100  
+**Freeze Commit / Tag:** `16e44137542a7207364e2a6439f6441df172b76e` (`capstone2-freeze`)  
+**SHA256 Checksum (`eval/test_ids.sha256`):** `15c7f63b9600cf1ad1f32cd27e79a9ad046103507c9dffa905bde36c65fc9b32` (25 held-out test IDs verified)  
+**Pipeline Evaluated:** `hybrid-rerank` only (`--split-set test --final -m hybrid-rerank`; no `full-context` on test per [`docs/decision_rule.md`](decision_rule.md))  
+**Status:** **Held-out test split is SPENT.** Zero code, threshold, retrieval, corpus, or prompt edits after execution; zero reruns.
+
+---
+
+### 1. Held-Out Test Split Results (All Numbers From [`eval/final_hybrid_rerank_results.json`](../eval/final_hybrid_rerank_results.json))
+
+All retrieval metrics (`Hit@3`, `Hit@5`, `MRR`) and pre-LLM retrieval gate counts come directly from the frozen harness output [`eval/final_hybrid_rerank_results.json`](../eval/final_hybrid_rerank_results.json) (deterministic pre-generation steps over all 25 test questions; **not** from the runtime observer). No pass/fail claims are asserted against 80%.
+
+#### A. Deterministic Retrieval & Pre-LLM Refusal Gate (`n=25`)
+
+| Subset | `n` | Hit@3 (`k/n`, 95% Wilson CI) | Hit@5 (`k/n`, 95% Wilson CI) | MRR | Gate Refusal (`k/n`, 95% Wilson CI) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Answerable (Overall)** | 14 | **12/14 (85.7%)** `[60.1%, 96.0%]` | **13/14 (92.9%)** `[68.5%, 98.7%]` | **0.8357** | — |
+| ↳ `source_kind = official` | 4 | **2/4 (50.0%)** `[15.0%, 85.0%]` | **3/4 (75.0%)** `[30.1%, 95.4%]` | **0.5500** | — |
+| ↳ `source_kind = owner_authored` | 10 | **10/10 (100.0%)** `[72.2%, 100.0%]` | **10/10 (100.0%)** `[72.2%, 100.0%]` | **0.9500** | — |
+| ↳ `origin.kind = student` | 9 | 8/9 (88.9%) `[56.5%, 98.0%]` | 8/9 (88.9%) `[56.5%, 98.0%]` | 0.8333 | — |
+| ↳ `origin.kind = stackoverflow/reddit` | 5 | 4/5 (80.0%) `[37.6%, 96.4%]` | 5/5 (100.0%) `[56.6%, 100.0%]` | 0.8400 | — |
+| **Out-of-Scope / Refusal (`not_answerable`)** | 11 | — | — | — | **4/11 (36.4%)** `[15.2%, 64.6%]` |
+| ↳ `origin.kind = student` | 7 | — | — | — | 2/7 (28.6%) `[8.2%, 64.1%]` |
+| ↳ `origin.kind = reddit/stackoverflow` | 4 | — | — | — | 2/4 (50.0%) `[15.0%, 85.0%]` |
+
+#### B. Live Generation & End-to-End Refusal Behavior (`n=21` Completed / `n=25` Total Counting Errors as Misses)
+
+- **Overall Generation Completions (`n=25` vs `n=21`):** **`21/25 (84.0%, 95% Wilson CI [65.3%, 93.6%])`** passed the harness format/citation/refusal checks when counting the `4` errored IDs (`GS-V2-24`, `GS-V2-33`, `GS-V2-41`, `GS-V2-64`) as misses, and **`21/21 (100.0%, 95% Wilson CI [84.5%, 100.0%])`** passed among completed generations.
+- **Refusal-Type Questions (`not_answerable`, `n=11`):**
+  - Completed generations: `10/11` (`GS-V2-64` errored).
+  - **Refusal responses produced (`response.is_refusal == True`) among completed calls (`n=10`):** **`10/10 (100.0%, 95% Wilson CI [72.2%, 100.0%])`** (`GS-V2-55`, `GS-V2-56`, `GS-V2-57`, `GS-V2-58`, `GS-V2-59`, `GS-V2-60`, `GS-V2-61`, `GS-V2-62`, `GS-V2-63`, `GS-V2-65`).
+  - **Counting `GS-V2-64` as a miss across all 11 out-of-scope test items:** **`10/11 (90.9%, 95% Wilson CI [62.3%, 98.4%])`**.
+  - By origin (`n=10` completed / `n=11` total): `origin.kind = student`: `7/7` (`100.0%`, CI `[64.6%, 100.0%]`); `origin.kind = reddit/stackoverflow`: `3/3` completed (`100.0%`, CI `[43.9%, 100.0%]`) / `3/4` total (`75.0%`, CI `[30.1%, 95.4%]`, `GS-V2-64` errored).
+- **Answerable Questions (`answerable`, `n=14`):**
+  - Completed generations: **`11/14 (78.6%, 95% Wilson CI [52.4%, 92.4%])`** (`3` errored: `GS-V2-24`, `GS-V2-33`, `GS-V2-41`); `11/11 (100.0%, 95% Wilson CI [74.1%, 100.0%])` completed schema passes with **`0/11 (0.0%, 95% Wilson CI [0.0%, 25.9%])`** false refusals (`0/14 [0.0%, CI [0.0%, 21.5%]]` across all answerable items).
+
+---
+
+### 2. Deviation and Errors
+
+1. **Runtime Observer Invocation:** Rather than invoking `eval/run_eval.py` purely as a CLI subprocess, `evaluate_benchmark(..., split_set="test", final=True, search_mode="hybrid-rerank", output_path="eval/final_hybrid_rerank_results.json")` was executed in-process on the exact frozen `capstone2-freeze` codebase (`16e4413`) wrapped with an uncommitted runtime `SpyClient` telemetry observer (not committed; `logs/` excluded). This confirmed that all `21/21` completed generations resolved `gemini-flash-lite-latest` to **`gemini-3.5-flash-lite`** and captured exact per-call `usage_metadata` fields (`thoughts_token_count` and `cached_content_token_count` were `null`/absent on every call).
+2. **4 Generation Errors (`GS-V2-24`, `GS-V2-33`, `GS-V2-41`, `GS-V2-64`):**
+   - Each of the 4 errored calls first failed on the Gemini stream with **`503 UNAVAILABLE`** (`'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.'`, `model_version='gemini-3.5-flash-lite'`).
+   - When `app/client.py` caught the stream exception and entered its unary fallback (`chat.send_message`), `SpyClient` had omitted holding a strong reference (`self._c = c`) to `genai.Client`, causing garbage collection (`genai.Client.__del__`) to schedule closure of `httpx.AsyncClient`. The unary fallback therefore raised **`Cannot send a request, as the client has been closed.`**, masking the `503 UNAVAILABLE` transient error from `FALLBACK_MODELS` and `_generate_with_quota_retry`.
+   - **Quota Retries Logged:** `0` (`quota_retry_count: 0`, `quota_retried_questions: {}`).
+   - **Acceptance Decision:** Per owner decision, the run was accepted as executed with **no reruns and no retries of the 4 errored IDs**. Generation, token, and cost metrics are reported strictly for the **`n=21`** completed generations, while all `4` errored IDs are listed separately above and counted as misses in `n=25` overall proportions. `data/query_embeddings_cache.json` modifications from test query embedding were reverted cleanly via `git checkout -- data/query_embeddings_cache.json`.
+
+---
+
+### 3. Token, Latency & Cost Recomputation (`test n=21` vs. `dev n=3`, Verified Rates)
+
+- **Pricing Source Verified at Run Time (`2026-11-11`):** `https://ai.google.dev/gemini-api/docs/pricing` (redirects to [`https://aistudio.google.com/docs/pricing`](https://aistudio.google.com/docs/pricing))
+- **Model Logged Per Call:** `gemini-flash-lite-latest` -> **`gemini-3.5-flash-lite`** (verified on live `dev` connectivity call and all `21/21` completed test calls)
+- **Verified Official Rates (`gemini-3.5-flash-lite`, Standard Paid Tier):**
+  - Input (uncached): **`$0.30` / 1M tokens**
+  - Output (including thinking tokens): **`$2.50` / 1M tokens**
+  - Context caching read (cached input): **`$0.03` / 1M tokens** *(plus `$1.00` / 1M tokens-hour cache storage, excluded below)*
+- **Thinking & Cached Tokens Status:** **`not captured`** (`usage_metadata.thoughts_token_count` and `usage_metadata.cached_content_token_count` returned `null`/absent by the API across both `test n=21` and `dev n=3` calls; `completion_tokens` = `candidates_token_count`).
+
+| Benchmark Slice (Labeled Sample Size) | Model (`token_source`) | Mean Prompt Tokens | Mean Completion Tokens | Thinking / Cached Tokens | Latency Mean / P50 / P95 / TTFT P95 | Uncached Input Cost / Query | Uncached Total Cost / Query | Cached Input Cost / Query* | Cached Total Cost / Query* |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Test Final (`hybrid-rerank`, `n=21` completed of `25`)** | `gemini-3.5-flash-lite` (`gemini`) | `1,387.52` *(sum `29,138`)* | `376.33` *(sum `7,903`)* | `not captured` | `6,000` / `6,097` / `9,965` / `5,813 ms` *(harness `n=25`: `6,168.1 ms` mean, `5,698.4 ms` TTFT P95)* | **`$0.000416`** (`$0.416`/1k) | **`$0.001357`** (`$1.357`/1k; `$0.0285` total) | `$0.000042` (`$0.042`/1k) | `$0.000982` (`$0.982`/1k) |
+| **Dev Telemetry Check (`hybrid-rerank`, `n=3`: `GS-V2-01..03`)** | `gemini-3.5-flash-lite` (`gemini`) | `1,640.67` *(analytic `2,222.33`)* | `441.33` | `not captured` | `5,005` / `4,618` / `5,738` / `2,130 ms` | **`$0.000492`** (`$0.492`/1k) | **`$0.001596`** (`$1.596`/1k) | `$0.000049` (`$0.049`/1k) | **`$0.001153`** (`$1.153`/1k) |
+| **Dev Telemetry Check (`full-context`, `n=3`: `GS-V2-01..03`)** | `gemini-3.5-flash-lite` (`gemini`) | `39,966.00` *(analytic `33,296.67`)* | `527.00` | `not captured` | `4,071` / `4,143` / `4,392` / `2,636 ms` | **`$0.011990`** (`$11.990`/1k) | **`$0.013307`** (`$13.307`/1k) | `$0.001199` (`$1.199`/1k) | **`$0.002516`** (`$2.516`/1k) |
+
+*\*Cached columns apply the `$0.03/1M` cached-read rate to input tokens plus `$2.50/1M` output tokens, excluding `$1.00/1M` tokens/hour cache storage.*
+
+---
+
+### 4. Artifacts Verified (Zero Post-Run Code Changes)
+- [`eval/final_hybrid_rerank_results.json`](../eval/final_hybrid_rerank_results.json): Official `--final` held-out test split harness output (`hybrid-rerank`, `n=25` total, `n=21` completed generations).
+- [`eval/final_runs.log`](../eval/final_runs.log): Logged `--final` run timestamp (`2026-11-11T12:04:04Z`), commit `16e44137`, and test IDs SHA256 `15c7f63b...`.
+- [`docs/decision_rule.md`](decision_rule.md): Marked held-out test split as **SPENT** (`2026-11-11`, `capstone2-freeze` `16e4413`).
